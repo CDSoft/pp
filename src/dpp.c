@@ -1,0 +1,321 @@
+/*###########################################################################
+# dpp: Diagram PreProcessor (for Pandoc)                                    #
+# --------------------------------------                                    #
+#                                                                           #
+# This software is available at http://cdsoft.fr/dpp                        #
+#                                                                           #
+# Copyright (C) 2015 - 2015 Christophe Delord <cdsoft.fr>                   #
+# This work is free. You can redistribute it and/or modify it under the     #
+# terms of the Do What The Fuck You Want To Public License, Version 2,      #
+# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.  #
+###########################################################################*/
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#define LINE_SIZE 4096
+
+#define MIN_TILDA 3
+
+typedef enum {DIAGRAM, SCRIPT} kind_t;
+typedef enum {GRAPHVIZ, PLANTUML, DITAA, SH, BASH, BAT, PYTHON, HASKELL} cmd_t;
+
+typedef struct {char *name; kind_t kind; cmd_t type; char *header, *footer; char *ext;} command_t;
+
+const command_t commands[] =
+{
+/*   name           kind            cmd         header          footer  ext     */
+
+    {"dot",         DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"neato",       DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"twopi",       DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"circo",       DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"fdp",         DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"sfdp",        DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"patchwork",   DIAGRAM,        GRAPHVIZ,   "",             ""},
+    {"osage",       DIAGRAM,        GRAPHVIZ,   "",             ""},
+
+    {"uml",         DIAGRAM,        PLANTUML,   "@startuml\n",  "@enduml\n"},
+
+    {"ditaa",       DIAGRAM,        DITAA,      "",             ""},
+
+    {"sh",          SCRIPT,         SH,         "",             "",     ".sh"},
+    {"bash",        SCRIPT,         BASH,       "",             "",     ".sh"},
+    {"bat",         SCRIPT,         BAT,        "@echo off\n",  "",     ".bat"},
+    {"python",      SCRIPT,         PYTHON,     "",             "",     ".py"},
+    {"haskell",     SCRIPT,         HASKELL,    "",             "",     ".hs"},
+
+    {NULL}
+};
+
+typedef enum {SAME, DIFFERENT} cmp_t;
+
+#ifdef __MINGW32__
+#define TEMP getenv("TEMP")
+#define null "nul"
+#else
+#define TEMP "/tmp"
+#define null "/dev/null"
+#endif
+
+extern unsigned char plantuml_jar[];
+extern unsigned int plantuml_jar_len;
+
+extern unsigned char ditaa_jar[];
+extern unsigned int ditaa_jar_len;
+
+/* reports an unexpected error and exit */
+void unexpected(const char *fmt, ...)
+{
+    char buffer[LINE_SIZE];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buffer, LINE_SIZE, fmt, args);
+    fprintf(stderr, "dpp - unexpected error: %s\n", buffer);
+    va_end(args);
+    exit(1);
+}
+
+/* removes the trailing spaces */
+void strip(char *s)
+{
+    char *sp;
+    for (sp = s+strlen(s)-1; sp >= s && isspace(*sp); sp--)
+    {
+        *sp = '\0';
+    }
+}
+
+/* checks that a string is made of 3 or more '~' */
+int istilda(const char *s)
+{
+    int n = 0;
+    while (*s == '~') { s++; n++; }
+    return n >= MIN_TILDA && *s == '\0';
+}
+
+/* checks that a string is a valid command */
+const command_t *getcmd(const char *s)
+{
+    int i;
+    for (i = 0; commands[i].name; i++)
+    {
+        if (strcmp(s, commands[i].name) == 0)
+        {
+            return &commands[i];
+        }
+    }
+    return NULL;
+}
+
+/* checks if a file exists */
+int exists(const char *name)
+{
+    struct stat st;
+    return stat(name, &st) == 0;
+}
+
+/* writes a builtin resource */
+const char *resource(const char *name, const unsigned char *data, unsigned int len)
+{
+    static char path[LINE_SIZE];
+    snprintf(path, LINE_SIZE, "%s/%s", TEMP, name);
+    if (!exists(path))
+    {
+        FILE *f = fopen(path, "wb");
+        if (!f) unexpected("can not create file %s", path);
+        fwrite(data, (size_t)len, 1, f);
+        fclose(f);
+    }
+    return path;
+}
+
+/* compares two files */
+cmp_t diff(const char *name1, const char *name2)
+{
+    FILE *f1 = fopen(name1, "rb");
+    FILE *f2 = fopen(name2, "rb");
+    char buf1[LINE_SIZE];
+    char buf2[LINE_SIZE];
+    size_t n1;
+    size_t n2;
+    if (!f1 || !f2) return 1;
+    do
+    {
+        n1 = fread(buf1, sizeof(char), LINE_SIZE, f1);
+        n2 = fread(buf2, sizeof(char), LINE_SIZE, f2);
+        if (n1!=n2 || memcmp(buf1, buf2, n1)!=0)
+        {
+            fclose(f1);
+            fclose(f2);
+            return DIFFERENT;
+        }
+    } while (n1 != 0 || n2 != 0);
+    fclose(f1);
+    fclose(f2);
+    return SAME;
+}
+
+/* writes a source block to a file */
+cmp_t saveblock(const char *name, const command_t *c)
+{
+    char line[LINE_SIZE];
+    char tmpname[LINE_SIZE];
+    FILE *f;
+    snprintf(tmpname, LINE_SIZE, "%s.tmp", name);
+    f = fopen(tmpname, "wt");
+    if (!f) unexpected("can not create file %s", tmpname);
+    fputs(c->header, f);
+    while (fgets(line, LINE_SIZE, stdin))
+    {
+        strip(line);
+        if (istilda(line)) break;
+        fputs(line, f);
+        fputs("\n", f);
+    }
+    fputs(c->footer, f);
+    fclose(f);
+    if (diff(name, tmpname) == DIFFERENT)
+    {
+        rename(tmpname, name);
+        return DIFFERENT;
+    }
+    else
+    {
+        remove(tmpname);
+        return SAME;
+    }
+}
+
+/* process stdin, generates images and stdout */
+int main(int argc, char *argv[])
+{
+    char line[LINE_SIZE];
+
+    if (argc != 1)
+    {
+        fprintf(stderr, "Diagram Preprocessor (for Pandoc)\n"
+                        "(C) Christophe Delord (http://cdsoft.fr/dpp)\n\n"
+                        "dpp just:\n"
+                        "    - takes stdin\n"
+                        "    - generates images with Graphviz, plantUML or ditaa\n"
+                        "    - executes Bash, bat, Python and Haskell scripts\n"
+                        "    - writes stdout\n"
+                        "dpp has no option.\n"
+                        "\nThis work is free and distributed under the WTF Public License.\n"
+                        );
+        exit(1);
+    }
+
+    while (fgets(line, LINE_SIZE, stdin))
+    {
+        char tilda[LINE_SIZE];
+        char cmd[LINE_SIZE];
+        char img[LINE_SIZE];
+        int legend;
+        int n;
+        const command_t *c;
+        /* Graph or diagram block */
+        n = sscanf(line, "%s %s %s %n", tilda, cmd, img, &legend);
+        if (!isspace(line[0]) && n >= 3 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == DIAGRAM)
+        {
+            char png[LINE_SIZE];
+            char txt[LINE_SIZE];
+            char commandline[LINE_SIZE];
+            strip(&line[legend]);
+            snprintf(png, LINE_SIZE, "%s%s", img, ".png");
+            snprintf(txt, LINE_SIZE, "%s%s", img, ".txt");
+            if (saveblock(txt, c) == DIFFERENT || !exists(png))
+            {
+                switch (c->type)
+                {
+                    case GRAPHVIZ:
+                    {
+                        snprintf(commandline, LINE_SIZE, "%s -Tpng -o %s %s 1>"null, cmd, png, txt);
+                        break;
+                    }
+                    case PLANTUML:
+                    {
+                        const char *plantuml = resource("plantuml.jar", plantuml_jar, plantuml_jar_len);
+                        snprintf(commandline, LINE_SIZE, "java -jar %s -charset UTF-8 %s 1>"null, plantuml, txt);
+                        break;
+                    }
+                    case DITAA:
+                    {
+                        const char *ditaa = resource("ditaa.jar", ditaa_jar, ditaa_jar_len);
+                        snprintf(commandline, LINE_SIZE, "java -jar %s -e UTF-8 -o %s %s 1>"null, ditaa, txt, png);
+                        break;
+                    }
+                    default:
+                    {
+                        unexpected("bad diagram type (%d)", c->type);
+                    }
+                }
+                fflush(stdout);
+                system(commandline);
+            }
+            /* The image shall be generated before the markdown output to be sure that Pandoc can read it */
+            /* (the usage of pipe may give the link to pandoc before the external command is terminated)  */
+            printf("![%s](%s)\n", &line[legend], png);
+            continue;
+        }
+        /* Script block */
+        n = sscanf(line, "%s %s", tilda, cmd);
+        if (!isspace(line[0]) && n >= 2 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == SCRIPT)
+        {
+            char script[LINE_SIZE];
+            char commandline[LINE_SIZE];
+            snprintf(script, LINE_SIZE, "%s/dppscript%d%s", TEMP, getpid(), c->ext);
+            saveblock(script, c);
+            switch (c->type)
+            {
+                case SH:
+                {
+                    snprintf(commandline, LINE_SIZE, "sh %s", script);
+                    break;
+                }
+                case BASH:
+                {
+                    snprintf(commandline, LINE_SIZE, "bash %s", script);
+                    break;
+                }
+                case BAT:
+                {
+#ifdef __MINGW32__
+                    snprintf(commandline, LINE_SIZE, "cmd /c %s", script);
+#else
+                    snprintf(commandline, LINE_SIZE, "wine cmd /c %s", script);
+#endif
+                    break;
+                }
+                case PYTHON:
+                {
+                    snprintf(commandline, LINE_SIZE, "python %s", script);
+                    break;
+                }
+                case HASKELL:
+                {
+                    snprintf(commandline, LINE_SIZE, "runhaskell %s", script);
+                    break;
+                }
+                default:
+                {
+                    unexpected("bad script type (%d)", c->type);
+                }
+            }
+            fflush(stdout);
+            system(commandline);
+            remove(script);
+            continue;
+        }
+        /* text line */
+        fputs(line, stdout);
+    }
+    return 0;
+}
