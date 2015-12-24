@@ -27,15 +27,9 @@ import System.Environment
 import System.Directory
 import Data.List
 import Data.Char
---import Data.Maybe
 import System.Process(readProcess)
---import System.Directory
 import System.FilePath
-#ifdef linux_HOST_OS
-import System.Locale
-#endif
 import Data.Time
---import Data.Time.Format
 
 type Chars = String
 type Env = [(String, String)]
@@ -252,14 +246,8 @@ myLocale "fr" = TimeLocale {
                              ,("Octobre","Oct")
                              ,("Novembre","Nov")
                              ,("Décembre","Déc")],
-#ifdef linux_HOST_OS
-                    intervals = [("an","ans"),("mois","mois"),("jour","jours")
-                                ,("heure","heures"),("min","mins"),("sec","secs"),("usec","usecs")],
-#endif
                     amPm = ("AM","PM"),
-#ifdef mingw32_HOST_OS
                     knownTimeZones = [],
-#endif
                     dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y",
                     dateFmt = "%d/%m/%y",
                     timeFmt = "%H:%M:%S",

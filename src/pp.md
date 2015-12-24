@@ -49,12 +49,11 @@ It is not intended to be as powerfull as GPP for instance but is a simple
 implementation for my own needs, as well as an opportunity to play with
 Haskell.
 
-
 `pp` takes strings as input and incrementally builds an environment which is
 a lookup table containing variables and various other information.
 Builtin macros are Haskell functions that takes arguments (strings) and the current
 environment and build a new environment in the IO monad.
-User defined macros are simple definitions, arguments are numbered $1$ to $N$.
+User defined macros are simple definitions, arguments are numbered 1 to N.
 
 `pp` emits the preprocessed document on the standard output. Inputs are listed
 on the command line and concatenated, the standard input is used when no

@@ -65,12 +65,14 @@ gpp: $(CACHE)/$(notdir $(GPP_URL))
 	tar xjf $< -C $(BUILD)/gpp
 	cd $(BUILD)/gpp/gpp-* && ./configure && make
 	cp $(BUILD)/gpp/gpp-*/src/gpp $@
+	strip $@
 
 gpp.exe: $(CACHE)/$(notdir $(GPP_URL))
 	mkdir -p $(BUILD)/gpp.exe
 	tar xjf $< -C $(BUILD)/gpp.exe
 	export CC=$(CCWIN); cd $(BUILD)/gpp.exe/gpp-* && ./configure --host $(shell uname) && make
 	cp $(BUILD)/gpp.exe/gpp-*/src/gpp.exe $@
+	strip $@
 
 $(CACHE)/$(notdir $(GPP_URL)):
 	mkdir -p $(dir $@)
@@ -87,10 +89,12 @@ doc/gpp.html: gpp
 pp: src/pp.hs
 	mkdir -p $(BUILD)/pp
 	ghc -Werror -Wall -O2 -odir $(BUILD)/pp -hidir $(BUILD)/pp -o $@ $<
+	strip $@
 
 pp.exe: src/pp.hs
 	mkdir -p $(BUILD)/pp.exe
 	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILD)/pp.exe -hidir $(BUILD)/pp.exe -o $@ $<
+	strip $@
 
 doc/pp.html: pp dpp
 doc/pp.html: src/pp.md
@@ -115,9 +119,11 @@ DPP_EXTERNAL = -Dplantuml_jar=_cache_$(PLANTUML)_jar \
 
 dpp: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	gcc $(DPP_EXTERNAL) $^ -o $@
+	strip $@
 
 dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	$(CCWIN) $(DPP_EXTERNAL) $^ -o $@
+	strip $@
 
 $(BUILD)/%.c: $(BUILD)/%.jar
 	xxd -i $< $@
