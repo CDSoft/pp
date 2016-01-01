@@ -1,6 +1,6 @@
 % PP - Generic preprocessors (with pandoc in mind)
 % Christophe Delord - <http://cdsoft.fr/dpp>
-% \mdate{src/pp.hs src/dpp.c}
+% \mdate{src/pp.hs src/pp.md src/dpp.c}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
 [pp.tgz]: http://cdsoft.fr/pp/pp.tgz
@@ -733,7 +733,7 @@ Licenses
 PP/DPP
 ------
 
-Copyright (C) 2015 Christophe Delord <br>
+Copyright (C) 2015, 2016 Christophe Delord <br>
 <http://www.cdsoft.fr/pp>
 
 This file is part of [PP].

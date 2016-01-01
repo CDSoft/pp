@@ -2,12 +2,24 @@
 # dpp: Diagram PreProcessor (for Pandoc)                                    #
 # --------------------------------------                                    #
 #                                                                           #
-# This software is available at http://cdsoft.fr/dpp                        #
+# PP                                                                        #
+# Copyright (C) 2015 Christophe Delord                                      #
+# http://www.cdsoft.fr/pp                                                   #
 #                                                                           #
-# Copyright (C) 2015 - 2015 Christophe Delord <cdsoft.fr>                   #
-# This work is free. You can redistribute it and/or modify it under the     #
-# terms of the Do What The Fuck You Want To Public License, Version 2,      #
-# as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.  #
+# This file is part of PP.                                                  #
+#                                                                           #
+# PP is free software: you can redistribute it and/or modify                #
+# it under the terms of the GNU General Public License as published by      #
+# the Free Software Foundation, either version 3 of the License, or         #
+# (at your option) any later version.                                       #
+#                                                                           #
+# PP is distributed in the hope that it will be useful,                     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+# GNU General Public License for more details.                              #
+#                                                                           #
+# You should have received a copy of the GNU General Public License         #
+# along with PP.  If not, see <http://www.gnu.org/licenses/>.               #
 ###########################################################################*/
 
 #include <stdlib.h>

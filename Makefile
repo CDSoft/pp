@@ -1,5 +1,5 @@
 # PP
-# Copyright (C) 2015 Christophe Delord
+# Copyright (C) 2015, 2016 Christophe Delord
 # http://www.cdsoft.fr/pp
 #
 # This file is part of PP.
@@ -25,15 +25,27 @@ OS = $(shell uname)
 
 ifeq "$(OS)" "Linux"
 
-all: gpp gpp.exe pp pp.exe dpp dpp.exe
-all: pp.tgz pp-win.zip
+all: gpp pp dpp 
+all: gpp.exe pp.exe dpp.exe pp-win.zip
+all: pp.tgz
 all: doc/gpp.html doc/pp.html
 
 CCWIN = i686-w64-mingw32-gcc
 WINE = wine
 
 else
+ifeq "$(OS)" "MinGW"
+
+# Target not tested, feedback welcome!
+
+all: gpp.exe pp.exe dpp.exe
+
+CCWIN = gcc
+WINE = 
+
+else
 $(error "Unknown platform: $(OS)")
+endif
 endif
 
 BUILD = .build
@@ -42,7 +54,7 @@ CACHE = .cache
 clean:
 	rm -rf $(BUILD) doc
 	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
-	rm pp.tgz pp-win.zip
+	rm -f pp.tgz pp-win.zip
 
 #####################################################################
 # archives
@@ -60,18 +72,20 @@ pp-win.zip: gpp.exe pp.exe dpp.exe doc/gpp.html doc/pp.html
 
 GPP_URL = http://files.nothingisreal.com/software/gpp/gpp.tar.bz2
 
+gpp: BUILDGPP=$(BUILD)/$@
 gpp: $(CACHE)/$(notdir $(GPP_URL))
-	mkdir -p $(BUILD)/gpp
-	tar xjf $< -C $(BUILD)/gpp
-	cd $(BUILD)/gpp/gpp-* && ./configure && make
-	cp $(BUILD)/gpp/gpp-*/src/gpp $@
+	mkdir -p $(BUILDGPP)
+	tar xjf $< -C $(BUILDGPP)
+	cd $(BUILDGPP)/gpp-* && ./configure && make
+	cp $(BUILDGPP)/gpp-*/src/gpp $@
 	strip $@
 
+gpp.exe: BUILDGPP=$(BUILD)/$@
 gpp.exe: $(CACHE)/$(notdir $(GPP_URL))
-	mkdir -p $(BUILD)/gpp.exe
-	tar xjf $< -C $(BUILD)/gpp.exe
-	export CC=$(CCWIN); cd $(BUILD)/gpp.exe/gpp-* && ./configure --host $(shell uname) && make
-	cp $(BUILD)/gpp.exe/gpp-*/src/gpp.exe $@
+	mkdir -p $(BUILDGPP)
+	tar xjf $< -C $(BUILDGPP)
+	export CC=$(CCWIN); cd $(BUILDGPP)/gpp-* && ./configure --host $(shell uname) && make
+	cp $(BUILDGPP)/gpp-*/src/gpp.exe $@
 	strip $@
 
 $(CACHE)/$(notdir $(GPP_URL)):
@@ -80,20 +94,22 @@ $(CACHE)/$(notdir $(GPP_URL)):
 
 doc/gpp.html: gpp
 	mkdir -p $(dir $@)
-	cp $(BUILD)/gpp/gpp-*/doc/gpp.html $@
+	cp $(BUILD)/$</gpp-*/doc/gpp.html $@
 
 #####################################################################
 # PP
 #####################################################################
 
+pp: BUILDPP=$(BUILD)/$@
 pp: src/pp.hs
-	mkdir -p $(BUILD)/pp
-	ghc -Werror -Wall -O2 -odir $(BUILD)/pp -hidir $(BUILD)/pp -o $@ $<
+	mkdir -p $(BUILDPP)
+	ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $<
 	strip $@
 
+pp.exe: BUILDPP=$(BUILD)/$@
 pp.exe: src/pp.hs
-	mkdir -p $(BUILD)/pp.exe
-	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILD)/pp.exe -hidir $(BUILD)/pp.exe -o $@ $<
+	mkdir -p $(BUILDPP)
+	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $<
 	strip $@
 
 doc/pp.html: pp dpp
@@ -118,11 +134,11 @@ DPP_EXTERNAL = -Dplantuml_jar=_cache_$(PLANTUML)_jar \
                -Dditaa_jar_len=_build_$(DITAA)_jar_len \
 
 dpp: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
-	gcc $(DPP_EXTERNAL) $^ -o $@
+	gcc -Werror -Wall $(DPP_EXTERNAL) $^ -o $@
 	strip $@
 
 dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
-	$(CCWIN) $(DPP_EXTERNAL) $^ -o $@
+	$(CCWIN) -Werror -Wall $(DPP_EXTERNAL) $^ -o $@
 	strip $@
 
 $(BUILD)/%.c: $(BUILD)/%.jar

@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015 Christophe Delord
+Copyright (C) 2015, 2016 Christophe Delord
 
 http://www.cdsoft.fr/pp
 
@@ -27,6 +27,7 @@ import System.Environment
 import System.Directory
 import Data.List
 import Data.Char
+import Data.Maybe
 import System.Process(readProcess)
 import System.FilePath
 import Data.Time
@@ -46,9 +47,7 @@ main = do
                     Just ('C':_) -> "en"
                     Just val -> take 2 val
                     Nothing -> ""
-    let fmt = case lookup "FORMAT" env of
-                    Just val -> val
-                    Nothing -> ""
+    let fmt = fromMaybe "" (lookup "FORMAT" env)
     doc <- doArgs ((langTag, lang) : (formatTag, fmt) : [(envTag++name, val) | (name, val) <- env]) args
     putStr doc
 
@@ -67,10 +66,10 @@ doArgs env [] = case lookup mainTag env of
 
 doArg :: Env -> String -> IO (Env, String)
 
-doArg env ('-':'D':def) = return $ ((n, drop 1 v) : env, "")
+doArg env ('-':'D':def) = return ((n, drop 1 v) : env, "")
     where (n,v) = span (/='=') def
 
-doArg env ('-':'U':name) = return $ ([(n,v) | (n,v)<-env, n/=name], "")
+doArg env ('-':'U':name) = return ([(n,v) | (n,v)<-env, n/=name], "")
 
 doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
 
@@ -78,18 +77,17 @@ doArg env name = ppFile ((mainTag, name) : env) name
 
 ppFile :: Env -> FilePath -> IO (Env, String)
 ppFile env name = do
-    let caller = (getSymbol env currentTag)
+    let caller = getSymbol env currentTag
     content <- readFileUTF8 name
     (env', doc) <- pp ((currentTag, name) : env) content
-    return $ ((currentTag, caller) : env', doc)
+    return ((currentTag, caller) : env', doc)
 
 readFileUTF8 :: String -> IO String
 readFileUTF8 "-" = getContents
 readFileUTF8 name = do
     h <- openFile name ReadMode
     hSetEncoding h utf8
-    doc <- hGetContents h
-    return doc
+    hGetContents h
 
 -- attribute name of the current file in the environment
 currentTag :: String
@@ -143,12 +141,12 @@ builtin = [ ("def", define)         , ("undef", undefine)
           ++ [ (fmt, format fmt) | fmt <- formats]
 
 define :: Macro
-define env [name, value] = return $ ((name, value) : env, "")
+define env [name, value] = return ((name, value) : env, "")
 define env [name] = define env [name, ""]
 define _ _ = arityError "define" [1,2]
 
 undefine :: Macro
-undefine env [name] = return $ ([ (n,v) | (n,v) <- env, n/=name ], "")
+undefine env [name] = return ([ (n,v) | (n,v) <- env, n/=name ], "")
 undefine _ _ = arityError "undefine" [1]
 
 ifdef :: Macro
@@ -190,7 +188,7 @@ locateFile env name = do
     let name' = case name of
                     ('~' : '/' : relname) -> getSymbol env (envTag++"HOME") </> relname
                     _ -> name
-    let path = map (\p -> takeDirectory (getSymbol env p)) [currentTag, mainTag] ++ ["."]
+    let path = map (takeDirectory . getSymbol env) [currentTag, mainTag] ++ ["."]
     found <- findFile path name'
     case found of
         Just foundFile -> return foundFile
@@ -220,9 +218,9 @@ exec _ _ = arityError "exec" [1]
 mdate :: Macro
 mdate env files = do
     (env', files') <- ppAll env files
-    files'' <- mapM (locateFile env) $ (concatMap words files') ++ [getSymbol env mainTag | null files]
+    files'' <- mapM (locateFile env) $ concatMap words files' ++ [getSymbol env mainTag | null files]
     times <- mapM getModificationTime files''
-    let lastTime = (last . sort) times
+    let lastTime = maximum times
     return (env', formatTime (myLocale $ getSymbol env langTag) "%A %-d %B %Y" lastTime)
 
 myLocale :: String -> TimeLocale
@@ -342,12 +340,10 @@ pp env (c0:cs)
                         | otherwise     = level
 
 getSymbol :: Env -> String -> String
-getSymbol env name = case lookup name env of
-                        Just val -> val
-                        Nothing -> ""
+getSymbol env name = fromMaybe "" (lookup name env)
 
 unexpectedEndOfFile :: Env -> t
-unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ (getSymbol env currentTag)
+unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ getSymbol env currentTag
 
 fileNotFound :: String -> t
 fileNotFound name = error $ "File not found: " ++ name
