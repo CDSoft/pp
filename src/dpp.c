@@ -3,7 +3,7 @@
 # --------------------------------------                                    #
 #                                                                           #
 # PP                                                                        #
-# Copyright (C) 2015 Christophe Delord                                      #
+# Copyright (C) 2015, 2016 Christophe Delord                                #
 # http://www.cdsoft.fr/pp                                                   #
 #                                                                           #
 # This file is part of PP.                                                  #
@@ -157,7 +157,12 @@ cmp_t diff(const char *name1, const char *name2)
     char buf2[LINE_SIZE];
     size_t n1;
     size_t n2;
-    if (!f1 || !f2) return 1;
+    if (!f1 || !f2)
+    {
+        if (f1) fclose(f1);
+        if (f2) fclose(f2);
+        return DIFFERENT;
+    }
     do
     {
         n1 = fread(buf1, sizeof(char), LINE_SIZE, f1);
@@ -213,14 +218,14 @@ int main(int argc, char *argv[])
     if (argc != 1)
     {
         fprintf(stderr, "Diagram Preprocessor (for Pandoc)\n"
-                        "(C) Christophe Delord (http://cdsoft.fr/dpp)\n\n"
+                        "(C) Christophe Delord (http://cdsoft.fr/pp)\n\n"
                         "dpp just:\n"
                         "    - takes stdin\n"
                         "    - generates images with Graphviz, plantUML or ditaa\n"
                         "    - executes Bash, bat, Python and Haskell scripts\n"
                         "    - writes stdout\n"
                         "dpp has no option.\n"
-                        "\nThis work is free and distributed under the WTF Public License.\n"
+                        "\nThis work is free and distributed under the GNU General Public License version 3.\n"
                         );
         exit(1);
     }
