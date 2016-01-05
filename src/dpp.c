@@ -200,6 +200,7 @@ cmp_t saveblock(const char *name, const command_t *c)
     fclose(f);
     if (diff(name, tmpname) == DIFFERENT)
     {
+        remove(name);
         rename(tmpname, name);
         return DIFFERENT;
     }

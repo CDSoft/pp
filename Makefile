@@ -34,7 +34,7 @@ CCWIN = i686-w64-mingw32-gcc
 WINE = wine
 
 else
-ifeq "$(OS)" "MinGW"
+ifeq "$(OS)" "MINGW32_NT-6.1"
 
 # Target not tested, feedback welcome!
 
