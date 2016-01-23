@@ -164,8 +164,8 @@ ifndef _ _ = arityError "ifndef" [1, 2]
 ifeq :: Macro
 ifeq env [x, y, t, e] = do (env', x') <- pp env x
                            (env'', y') <- pp env' y
-                           pp env'' (if strip x' == strip y' then t else e)
-                                where strip = filter (not . isSpace)
+                           pp env'' (if noSpace x' == noSpace y' then t else e)
+                                where noSpace = filter (not . isSpace)
 ifeq env [x, y, t] = ifeq env [x, y, t, ""]
 ifeq _ _ = arityError "ifeq" [3, 4]
 
@@ -207,13 +207,16 @@ rawinc _ _ = arityError "rawinclude" [1]
 rawexec :: Macro
 rawexec env [cmd] = do (env', cmd') <- pp env cmd
                        doc <- readProcess "sh" ["-c", cmd'] ""
-                       return (env', doc)
+                       return (env', strip doc)
 rawexec _ _ = arityError "rawexec" [1]
 
 exec :: Macro
 exec env [cmd] = do (doc, env') <- rawexec env [cmd]
                     pp doc env'
 exec _ _ = arityError "exec" [1]
+
+strip :: String -> String
+strip = strip' . strip' where strip' = dropWhile isSpace . reverse
 
 mdate :: Macro
 mdate env files = do
