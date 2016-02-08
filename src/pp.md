@@ -359,15 +359,20 @@ The first line contains:
 - the image name (without the extension)
 - the legend (optional)
 
+Block delimiters are made of three or more tilda or backquotes, at the beginning of the line (no space and no tab).
+Both lines must have the same number of tilda or backquotes.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.dot}
-    ~~~~~ dot path/imagename optional legend
-    graph {
-        "source code of the diagram"
-    }
-    ~~~~~
+````` quote
+~~~~~ dot path/imagename optional legend
+graph {
+    "source code of the diagram"
+}
+~~~~~
+`````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This extremely meaningfull diagram is rendered as `path/imagename.png`
+This extremely meaningful diagram is rendered as `path/imagename.png`
 and looks like:
 
 ~~~~~ dot doc/img/dpp-syntax optional legend
@@ -425,9 +430,11 @@ Scripts are also written in code blocks.
 The first line contains only the kind of script.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.bash}
-    ~~~~~ bash
-    echo Hello World!
-    ~~~~~
+````` quote
+~~~~~ bash
+echo Hello World!
+~~~~~
+`````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With no surprise, this script generates:
@@ -472,6 +479,31 @@ digraph {
 }
 ~~~~~
 
+### Verbatim copy
+
+Blocks can also contain verbatim text that is preserved in the output.
+This is useful to put some diagram example in the documentation of `dpp`!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ quote
+````` quote
+~~~ bash
+# this bash script example won't be executed!
+~~~
+`````
+~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+becomes
+
+~~~~~ quote
+````` quote
+~~~ bash
+# this bash script example won't be executed!
+~~~
+`````
+~~~~~
+
 Examples
 --------
 
@@ -487,18 +519,20 @@ For further details about diagrams' syntax, please read the documentation of
 `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
 ~~~~~~~~~~~~~~ {.dot}
-    ~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
-    digraph {
-        O -> A
-        O -> B
-        O -> C
-        O -> D
-        D -> O
-        A -> B
-        B -> C
-        C -> A
-    }
-    ~~~~~
+````` quote
+~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
+digraph {
+    O -> A
+    O -> B
+    O -> C
+    O -> D
+    D -> O
+    A -> B
+    B -> C
+    C -> A
+}
+~~~~~
+`````
 ~~~~~~~~~~~~~~
 
 - `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
@@ -539,12 +573,14 @@ digraph {
 The lines `@@startuml` and `@@enduml` required by [PlantUML] are added by `dpp`.
 
 ~~~~~~~~~~~~~~
-    ~~~~~ uml doc/img/dpp-plantuml-example This is just a PlantUML diagram example
-    Alice -> Bob: Authentication Request
-    Bob --> Alice: Authentication Response
-    Alice -> Bob: Another authentication Request
-    Alice <-- Bob: another authentication Response
-    ~~~~~
+````` quote
+~~~~~ uml doc/img/dpp-plantuml-example This is just a PlantUML diagram example
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+~~~~~
+`````
 ~~~~~~~~~~~~~~
 
 Once generated the graph looks like:
@@ -564,17 +600,19 @@ Java must be installed.
 [ditaa] is executed when the keyword `ditaa` is used.
 
 ~~~~~~~~~~~~~~~~~~~~~~
-    ~~~~~ ditaa doc/img/dpp-ditaa-example This is just a Ditaa diagram example
-        +--------+   +-------+    +-------+
-        |        | --+ ditaa +--> |       |
-        |  Text  |   +-------+    |diagram|
-        |Document|   |!magic!|    |       |
-        |     {d}|   |       |    |       |
-        +---+----+   +-------+    +-------+
-            :                         ^
-            |       Lots of work      |
-            +-------------------------+
-    ~~~~~
+````` quote
+~~~~~ ditaa doc/img/dpp-ditaa-example This is just a Ditaa diagram example
+    +--------+   +-------+    +-------+
+    |        | --+ ditaa +--> |       |
+    |  Text  |   +-------+    |diagram|
+    |Document|   |!magic!|    |       |
+    |     {d}|   |       |    |       |
+    +---+----+   +-------+    +-------+
+        :                         ^
+        |       Lots of work      |
+        +-------------------------+
+~~~~~
+`````
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Once generated the graph looks like:
@@ -599,18 +637,20 @@ Java must be installed.
 [Bash] is executed when the keyword `bash` is used.
 
 ~~~~~~~~~~ {.bash}
-    ~~~~~ bash
-    echo "Hi, I'm $SHELL $BASH_VERSION"
-    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-    ~~~~~
+````` quote
+~~~~~ bash
+echo "Hi, I'm $SHELL $BASH_VERSION"
+echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+~~~~~
+`````
 ~~~~~~~~~~
 
 This script outputs:
 
 ~~~~~~~~~~ {.bat}
 ~~~~~ bash
-    echo "Hi, I'm $SHELL $BASH_VERSION"
-    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+echo "Hi, I'm $SHELL $BASH_VERSION"
+echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 ~~~~~
 ~~~~~~~~~~
 
@@ -621,28 +661,30 @@ This script outputs:
 [Bat] is executed when the keyword `bat` is used.
 
 ~~~~~~~~~~
-    ~~~~~ bat
-    echo Hi, I'm %COMSPEC%
-    ver
-    if not "%WINELOADER%" == "" (
-        echo This script is run from wine under Linux
-    ) else (
-        echo This script is run from a real Windows
-    )
-    ~~~~~
+````` quote
+~~~~~ bat
+echo Hi, I'm %COMSPEC%
+ver
+if not "%WINELOADER%" == "" (
+    echo This script is run from wine under Linux
+) else (
+    echo This script is run from a real Windows
+)
+~~~~~
+`````
 ~~~~~~~~~~
 
 This script outputs:
 
 ~~~~~~~~~~
 ~~~~~ bat
-    echo Hi, I'm %COMSPEC%
-    ver
-    if "%WINELOADER%" == "" (
-        echo This script is run from a real Windows
-    ) else (
-        echo This script is run from wine under Linux
-    )
+echo Hi, I'm %COMSPEC%
+ver
+if "%WINELOADER%" == "" (
+    echo This script is run from a real Windows
+) else (
+    echo This script is run from wine under Linux
+)
 ~~~~~
 ~~~~~~~~~~
 
@@ -651,15 +693,17 @@ This script outputs:
 [Python] is executed when the keyword `python` is used.
 
 ~~~~~~~~~~ {.python}
-    ~~~~~ python
-    import sys
-    import random
+````` quote
+~~~~~ python
+import sys
+import random
 
-    if __name__ == "__main__":
-        print("Hi, I'm Python %s"%sys.version)
-        randoms = [random.randint(0, 1000) for i in range(3)]
-        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-    ~~~~~
+if __name__ == "__main__":
+    print("Hi, I'm Python %s"%sys.version)
+    randoms = [random.randint(0, 1000) for i in range(3)]
+    print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+~~~~~
+`````
 ~~~~~~~~~~
 
 This script outputs:
@@ -681,40 +725,42 @@ if __name__ == "__main__":
 [Haskell] is executed when the keyword `haskell` is used.
 
 ~~~~~~~~~~ {.haskell}
-    ~~~~~ haskell
-    import System.Info
-    import Data.Version
-    import Data.List
+````` quote
+~~~~~ haskell
+import System.Info
+import Data.Version
+import Data.List
 
-    primes = filterPrime [2..] 
-        where filterPrime (p:xs) = 
-                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+primes = filterPrime [2..] 
+    where filterPrime (p:xs) = 
+            p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-    version = showVersion compilerVersion
-    main = do
-        putStrLn $ "Hi, I'm Haskell " ++ version
-        putStrLn $ "The first 10 prime numbers are: " ++
-                   intercalate " " (map show (take 10 primes))
-    ~~~~~
+version = showVersion compilerVersion
+main = do
+    putStrLn $ "Hi, I'm Haskell " ++ version
+    putStrLn $ "The first 10 prime numbers are: " ++
+                intercalate " " (map show (take 10 primes))
+~~~~~
+`````
 ~~~~~~~~~~
 
 This script outputs:
 
 ~~~~~~~~~~
 ~~~~~ haskell
-    import System.Info
-    import Data.Version
-    import Data.List
+import System.Info
+import Data.Version
+import Data.List
 
-    primes = filterPrime [2..] 
-        where filterPrime (p:xs) = 
-                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+primes = filterPrime [2..] 
+    where filterPrime (p:xs) = 
+            p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-    version = showVersion compilerVersion
-    main = do
-        putStrLn $ "Hi, I'm Haskell " ++ version
-        putStrLn $ "The first 10 prime numbers are: " ++
-                   intercalate " " (map show (take 10 primes))
+version = showVersion compilerVersion
+main = do
+    putStrLn $ "Hi, I'm Haskell " ++ version
+    putStrLn $ "The first 10 prime numbers are: " ++
+                intercalate " " (map show (take 10 primes))
 ~~~~~
 ~~~~~~~~~~
 

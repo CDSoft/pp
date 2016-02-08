@@ -35,14 +35,16 @@
 
 #define MIN_TILDA 3
 
-typedef enum {DIAGRAM, SCRIPT} kind_t;
-typedef enum {GRAPHVIZ, PLANTUML, DITAA, SH, BASH, BAT, PYTHON, HASKELL} cmd_t;
+typedef enum {QUOTE, DIAGRAM, SCRIPT} kind_t;
+typedef enum {NONE, GRAPHVIZ, PLANTUML, DITAA, SH, BASH, BAT, PYTHON, HASKELL} cmd_t;
 
 typedef struct {char *name; kind_t kind; cmd_t type; char *header, *footer; char *ext;} command_t;
 
 const command_t commands[] =
 {
 /*   name           kind            cmd         header          footer  ext     */
+
+    {"quote",       QUOTE,          NONE,       "",             ""},
 
     {"dot",         DIAGRAM,        GRAPHVIZ,   "",             ""},
     {"neato",       DIAGRAM,        GRAPHVIZ,   "",             ""},
@@ -104,12 +106,25 @@ void strip(char *s)
     }
 }
 
-/* checks that a string is made of 3 or more '~' */
+/* checks that a string is made of 3 or more '~' or '`'*/
 int istilda(const char *s)
 {
     int n = 0;
-    while (*s == '~') { s++; n++; }
+    char c = *s;
+    switch (c)
+    {
+        case '~':
+        case '`':
+            while (*s == c) { s++; n++; }
+            break;
+    }
     return n >= MIN_TILDA && *s == '\0';
+}
+
+/* check that two strings contain the same kind of block delimiter */
+int sametilda(const char *s1, const char *s2)
+{
+    return istilda(s1) && (strcmp(s1, s2) == 0);
 }
 
 /* checks that a string is a valid command */
@@ -180,7 +195,7 @@ cmp_t diff(const char *name1, const char *name2)
 }
 
 /* writes a source block to a file */
-cmp_t saveblock(const char *name, const command_t *c)
+cmp_t saveblock(const char *tilda, const char *name, const command_t *c)
 {
     char line[LINE_SIZE];
     char tmpname[LINE_SIZE];
@@ -192,7 +207,7 @@ cmp_t saveblock(const char *name, const command_t *c)
     while (fgets(line, LINE_SIZE, stdin))
     {
         strip(line);
-        if (istilda(line)) break;
+        if (sametilda(tilda, line)) break;
         fputs(line, f);
         fputs("\n", f);
     }
@@ -209,6 +224,21 @@ cmp_t saveblock(const char *name, const command_t *c)
         remove(tmpname);
         return SAME;
     }
+}
+
+/* emits a block verbatim */
+void emitblock(const char *tilda, const command_t *c)
+{
+    char line[LINE_SIZE];
+    fputs(c->header, stdout);
+    while (fgets(line, LINE_SIZE, stdin))
+    {
+        strip(line);
+        if (sametilda(tilda, line)) break;
+        fputs(line, stdout);
+        fputs("\n", stdout);
+    }
+    fputs(c->footer, stdout);
 }
 
 /* process stdin, generates images and stdout */
@@ -240,6 +270,12 @@ int main(int argc, char *argv[])
         int n;
         const command_t *c;
         /* Graph or diagram block */
+        n = sscanf(line, "%s %s", tilda, cmd);
+        if (!isspace(line[0]) && n == 2 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == QUOTE)
+        {
+            emitblock(tilda, c);
+            continue;
+        }
         n = sscanf(line, "%s %s %s %n", tilda, cmd, img, &legend);
         if (!isspace(line[0]) && n >= 3 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == DIAGRAM)
         {
@@ -249,7 +285,7 @@ int main(int argc, char *argv[])
             strip(&line[legend]);
             snprintf(png, LINE_SIZE, "%s%s", img, ".png");
             snprintf(txt, LINE_SIZE, "%s%s", img, ".txt");
-            if (saveblock(txt, c) == DIFFERENT || !exists(png))
+            if (saveblock(tilda,txt, c) == DIFFERENT || !exists(png))
             {
                 switch (c->type)
                 {
@@ -290,7 +326,7 @@ int main(int argc, char *argv[])
             char script[LINE_SIZE];
             char commandline[LINE_SIZE];
             snprintf(script, LINE_SIZE, "%s/dppscript%d%s", TEMP, getpid(), c->ext);
-            saveblock(script, c);
+            saveblock(tilda,script, c);
             switch (c->type)
             {
                 case SH:
