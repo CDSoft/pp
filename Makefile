@@ -112,10 +112,13 @@ pp.exe: src/pp.hs
 	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $<
 	strip $@
 
-doc/pp.html: pp dpp
+doc/pp.html: pp dpp doc/pp.css
 doc/pp.html: src/pp.md
 	mkdir -p doc/img
-	LANG=en pp $< | dpp | pandoc -S --toc --self-contained -c http://cdsoft.fr/cdsoft.css -f markdown -t html5 > $@
+	LANG=en pp $< | dpp | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+
+doc/pp.css:
+	wget http://cdsoft.fr/cdsoft.css -O $@
 
 #####################################################################
 # DPP

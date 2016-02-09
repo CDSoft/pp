@@ -45,13 +45,13 @@ PP
 
 `pp` is a simple preprocessor written in Haskell.
 It's mainly designed for Pandoc but may be used as a generic preprocessor.
-It is not intended to be as powerfull as GPP for instance but is a simple
+It is not intended to be as powerful as GPP for instance but is a simple
 implementation for my own needs, as well as an opportunity to play with
 Haskell.
 
 `pp` takes strings as input and incrementally builds an environment which is
 a lookup table containing variables and various other information.
-Builtin macros are Haskell functions that takes arguments (strings) and the current
+Built-in macros are Haskell functions that takes arguments (strings) and the current
 environment and build a new environment in the IO monad.
 User defined macros are simple definitions, arguments are numbered 1 to N.
 
@@ -67,13 +67,13 @@ It starts with an initial environment containing:
 
 - the environment variables of the current process
 - a `lang` variable containing the current langage
-  (currently only french (`fr`) and english (`en`) are supported)
+  (currently only French (`fr`) and English (`en`) are supported)
 - a `format` variable containing the current output format
   (`html` or `pdf`)
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
-The command line arguments are intensionnaly very basic.
+The command line arguments are intensionally very basic.
 The user can define and undefine variables and list input files.
 
 **-DSYMBOL[=VALUE]**
@@ -94,14 +94,14 @@ Macros
 
 \raw{
 
-Builtin macros are hardcoded in `pp`.
+Built-in macros are hard coded in `pp`.
 User defined macros are simple text substitutions
 that may have any number of parameters (named `!1` to `!n`).
-user macros can be redefined on the command line or in the documents.
+User macros can be redefined on the command line or in the documents.
 
 To get the value of a variable you just have to write its name after a `'!'` or `'\'`.
-Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brakets.
-For instance, the macro `foo` with two arguments can be invoqued as `!foo(x)(y)`,
+Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets.
+For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`,
 `\foo{x}{y}` or even `!foo[x]{y}`.
 
 You can choose the syntax that works better with your favorite editor and
@@ -234,7 +234,7 @@ It now also comes with [PlantUML], [ditaa] and scripting capabilities.
 `dpp` requires [GraphViz] and Java to be installed,
 [PlantUML] and [ditaa] are embedded in `dpp`.
 
-Optionnaly, `dpp` can call [Bash], [Bat], [Python] or [Haskell] to execute general scripts.
+Optionally, `dpp` can call [Bash], [Bat], [Python] or [Haskell] to execute general scripts.
 
 ~~~~~ uml doc/img/dpp-design
 
@@ -293,7 +293,7 @@ box "DDP" #LightBlue
     participant DPP
     participant "PlantUML or ditaa"
 end box
-box "external dependancies" #Yellow
+box "external dependencies" #Yellow
     participant Java
     participant GraphViz
     participant "script languages"
@@ -359,17 +359,17 @@ The first line contains:
 - the image name (without the extension)
 - the legend (optional)
 
-Block delimiters are made of three or more tilda or backquotes, at the beginning of the line (no space and no tab).
-Both lines must have the same number of tilda or backquotes.
+Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab).
+Both lines must have the same number of tilda or back quotes.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.dot}
-````` quote
+`````````` quote
 ~~~~~ dot path/imagename optional legend
 graph {
     "source code of the diagram"
 }
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This extremely meaningful diagram is rendered as `path/imagename.png`
@@ -430,11 +430,11 @@ Scripts are also written in code blocks.
 The first line contains only the kind of script.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.bash}
-````` quote
+`````````` quote
 ~~~~~ bash
 echo Hello World!
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With no surprise, this script generates:
@@ -486,22 +486,22 @@ This is useful to put some diagram example in the documentation of `dpp`!
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~ quote
-````` quote
+`````````` quote
 ~~~ bash
 # this bash script example won't be executed!
 ~~~
-`````
+``````````
 ~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 becomes
 
 ~~~~~ quote
-````` quote
+`````````` quote
 ~~~ bash
 # this bash script example won't be executed!
 ~~~
-`````
+``````````
 ~~~~~
 
 Examples
@@ -519,7 +519,7 @@ For further details about diagrams' syntax, please read the documentation of
 `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
 ~~~~~~~~~~~~~~ {.dot}
-````` quote
+`````````` quote
 ~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
 digraph {
     O -> A
@@ -532,7 +532,7 @@ digraph {
     C -> A
 }
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~~~~~
 
 - `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
@@ -573,14 +573,14 @@ digraph {
 The lines `@@startuml` and `@@enduml` required by [PlantUML] are added by `dpp`.
 
 ~~~~~~~~~~~~~~
-````` quote
+`````````` quote
 ~~~~~ uml doc/img/dpp-plantuml-example This is just a PlantUML diagram example
 Alice -> Bob: Authentication Request
 Bob --> Alice: Authentication Response
 Alice -> Bob: Another authentication Request
 Alice <-- Bob: another authentication Response
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~~~~~
 
 Once generated the graph looks like:
@@ -600,7 +600,7 @@ Java must be installed.
 [ditaa] is executed when the keyword `ditaa` is used.
 
 ~~~~~~~~~~~~~~~~~~~~~~
-````` quote
+`````````` quote
 ~~~~~ ditaa doc/img/dpp-ditaa-example This is just a Ditaa diagram example
     +--------+   +-------+    +-------+
     |        | --+ ditaa +--> |       |
@@ -612,7 +612,7 @@ Java must be installed.
         |       Lots of work      |
         +-------------------------+
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Once generated the graph looks like:
@@ -637,12 +637,12 @@ Java must be installed.
 [Bash] is executed when the keyword `bash` is used.
 
 ~~~~~~~~~~ {.bash}
-````` quote
+`````````` quote
 ~~~~~ bash
 echo "Hi, I'm $SHELL $BASH_VERSION"
 echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~
 
 This script outputs:
@@ -661,7 +661,7 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 [Bat] is executed when the keyword `bat` is used.
 
 ~~~~~~~~~~
-````` quote
+`````````` quote
 ~~~~~ bat
 echo Hi, I'm %COMSPEC%
 ver
@@ -671,7 +671,7 @@ if not "%WINELOADER%" == "" (
     echo This script is run from a real Windows
 )
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~
 
 This script outputs:
@@ -693,7 +693,7 @@ if "%WINELOADER%" == "" (
 [Python] is executed when the keyword `python` is used.
 
 ~~~~~~~~~~ {.python}
-````` quote
+`````````` quote
 ~~~~~ python
 import sys
 import random
@@ -703,7 +703,7 @@ if __name__ == "__main__":
     randoms = [random.randint(0, 1000) for i in range(3)]
     print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~
 
 This script outputs:
@@ -725,7 +725,7 @@ if __name__ == "__main__":
 [Haskell] is executed when the keyword `haskell` is used.
 
 ~~~~~~~~~~ {.haskell}
-````` quote
+`````````` quote
 ~~~~~ haskell
 import System.Info
 import Data.Version
@@ -741,7 +741,7 @@ main = do
     putStrLn $ "The first 10 prime numbers are: " ++
                 intercalate " " (map show (take 10 primes))
 ~~~~~
-`````
+``````````
 ~~~~~~~~~~
 
 This script outputs:
@@ -768,7 +768,7 @@ GPP
 ===
 
 [GPP] is included in [PP] because it's a must have generic text preprocessor
-I was using before writting `pp`.
+I was using before writing `pp`.
 
 Its documentation is here: [gpp.html](gpp.html)
 
@@ -781,8 +781,6 @@ PP/DPP
 
 Copyright (C) 2015, 2016 Christophe Delord <br>
 <http://www.cdsoft.fr/pp>
-
-This file is part of [PP].
 
 PP is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

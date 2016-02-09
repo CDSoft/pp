@@ -106,7 +106,7 @@ void strip(char *s)
     }
 }
 
-/* checks that a string is made of 3 or more '~' or '`'*/
+/* checks that a string is made of 3 or more '~' or '`' */
 int istilda(const char *s)
 {
     int n = 0;
@@ -124,7 +124,7 @@ int istilda(const char *s)
 /* check that two strings contain the same kind of block delimiter */
 int sametilda(const char *s1, const char *s2)
 {
-    return istilda(s1) && (strcmp(s1, s2) == 0);
+    return /* istilda(s1) && */ (strcmp(s1, s2) == 0);
 }
 
 /* checks that a string is a valid command */
@@ -269,13 +269,14 @@ int main(int argc, char *argv[])
         int legend;
         int n;
         const command_t *c;
-        /* Graph or diagram block */
+        /* Verbatim blocks */
         n = sscanf(line, "%s %s", tilda, cmd);
         if (!isspace(line[0]) && n == 2 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == QUOTE)
         {
             emitblock(tilda, c);
             continue;
         }
+        /* Graph or diagram block */
         n = sscanf(line, "%s %s %s %n", tilda, cmd, img, &legend);
         if (!isspace(line[0]) && n >= 3 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == DIAGRAM)
         {
