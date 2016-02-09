@@ -25,7 +25,7 @@ OS = $(shell uname)
 
 ifeq "$(OS)" "Linux"
 
-all: gpp pp dpp 
+all: gpp pp dpp pp-linux-$(shell uname -m).tgz
 all: gpp.exe pp.exe dpp.exe pp-win.zip
 all: pp.tgz
 all: doc/gpp.html doc/pp.html
@@ -54,7 +54,7 @@ CACHE = .cache
 clean:
 	rm -rf $(BUILD) doc
 	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
-	rm -f pp.tgz pp-win.zip
+	rm -f pp.tgz pp-win.zip pp-linux-*.tgz
 
 #####################################################################
 # archives
@@ -65,6 +65,9 @@ pp.tgz: Makefile $(wildcard src/*)
 
 pp-win.zip: gpp.exe pp.exe dpp.exe doc/gpp.html doc/pp.html
 	zip $@ $^
+
+pp-linux-%.tgz: gpp pp dpp doc/gpp.html doc/pp.html
+	tar czf $@ $^
 
 #####################################################################
 # GPP
