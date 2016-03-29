@@ -13,6 +13,7 @@
 [Bat]: https://en.wikipedia.org/wiki/Cmd.exe
 [Python]: https://www.python.org/
 [Haskell]: https://www.haskell.org/
+[GitHub]: https://github.com/CDSoft/pp
 
 Introduction
 ============
@@ -27,6 +28,19 @@ written for my own needs:
 - `dpp` is a diagramm preprocessor
 
 Both are intended to be used with Pandoc.
+
+Open source
+===========
+
+[PP] is an Open source software.
+Any body can contribute on [GitHub] to:
+
+- suggest or add new functionalities
+- report or fix bugs
+- improve the documentation
+- add some nicer examples
+- find new usages
+- ...
 
 Installation
 ============
@@ -358,7 +372,7 @@ Syntax
 Diagrams are written in code blocks.
 The first line contains:
 
-- the diagram generator 
+- the diagram generator
 - the image name (without the extension)
 - the legend (optional)
 
@@ -734,8 +748,8 @@ import System.Info
 import Data.Version
 import Data.List
 
-primes = filterPrime [2..] 
-    where filterPrime (p:xs) = 
+primes = filterPrime [2..]
+    where filterPrime (p:xs) =
             p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
 version = showVersion compilerVersion
@@ -755,8 +769,8 @@ import System.Info
 import Data.Version
 import Data.List
 
-primes = filterPrime [2..] 
-    where filterPrime (p:xs) = 
+primes = filterPrime [2..]
+    where filterPrime (p:xs) =
             p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
 version = showVersion compilerVersion
@@ -838,4 +852,3 @@ Feedback
 
 Your feedback and contributions are welcome.
 You can contact me at <http://cdsoft.fr>
-

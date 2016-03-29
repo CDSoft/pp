@@ -9,6 +9,7 @@
 [Bat]: https://en.wikipedia.org/wiki/Cmd.exe
 [Python]: https://www.python.org/
 [Haskell]: https://www.haskell.org/
+[GitHub]: https://github.com/CDSoft/pp
 
 PP - Generic preprocessors (with pandoc in mind)
 ================================================
@@ -25,6 +26,19 @@ written for my own needs:
 Both are intended to be used with Pandoc.
 
 __Copyright__ (C) 2015, 2016 Christophe Delord
+
+Open source
+===========
+
+[PP] is an Open source software.
+Any body can contribute on [GitHub] to:
+
+- suggest or add new functionalities
+- report or fix bugs
+- improve the documentation
+- add some nicer examples
+- find new usages
+- ...
 
 Installation
 ============
