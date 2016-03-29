@@ -41,7 +41,7 @@ ifeq "$(OS)" "MINGW32_NT-6.1"
 all: gpp.exe pp.exe dpp.exe
 
 CCWIN = gcc
-WINE = 
+WINE =
 
 else
 $(error "Unknown platform: $(OS)")
@@ -60,7 +60,7 @@ clean:
 # archives
 #####################################################################
 
-pp.tgz: Makefile $(wildcard src/*)
+pp.tgz: Makefile $(wildcard src/*) README.md LICENSE .gitignore
 	tar -czf $@ $^
 
 pp-win.zip: gpp.exe pp.exe dpp.exe doc/gpp.html doc/pp.html

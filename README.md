@@ -1,6 +1,3 @@
-% PP - Generic preprocessors (with pandoc in mind)
-% Christophe Delord - <http://cdsoft.fr/dpp>
-
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
 [pp.tgz]: http://cdsoft.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
@@ -26,6 +23,8 @@ written for my own needs:
 - `dpp` is a diagramm preprocessor
 
 Both are intended to be used with Pandoc.
+
+__Copyright__ (C) 2015, 2016 Christophe Delord
 
 Installation
 ============
