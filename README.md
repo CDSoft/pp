@@ -340,7 +340,7 @@ This script outputs:
 
 ``````````````````````````` bat
 Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 32591, 7428, 5580
+Here are a few random numbers: 23542, 238, 12861
 ```````````````````````````
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
@@ -386,7 +386,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 34, 442, 272
+    Here are a few random numbers: 33, 931, 644
 
 ### Haskell
 
