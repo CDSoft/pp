@@ -139,9 +139,9 @@ A classical usage of `dpp` along with `pp` and [Pandoc](http://pandoc.org/) is:
 
 For instance, on any good Unix like system, you can use this command:
 
-``````````````````````````` bash
+``` bash
 $ pp documents... | dpp | pandoc -f markdown -t html5 -o document.html
-```````````````````````````
+```
 
 Design
 ------
@@ -167,13 +167,11 @@ Diagrams are written in code blocks. The first line contains:
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). Both lines must have the same number of tilda or back quotes.
 
-``````````````````````````` dot
-~~~~~ dot path/imagename optional legend
-graph {
-    "source code of the diagram"
-}
-~~~~~
-```````````````````````````
+    ~~~~~ dot path/imagename optional legend
+    graph {
+        "source code of the diagram"
+    }
+    ~~~~~
 
 This extremely meaningful diagram is rendered as `path/imagename.png` and looks like:
 
@@ -200,11 +198,9 @@ The diagram generator can be:
 
 Scripts are also written in code blocks. The first line contains only the kind of script.
 
-``````````````````````````` bash
-~~~~~ bash
-echo Hello World!
-~~~~~
-```````````````````````````
+    ~~~~~ bash
+    echo Hello World!
+    ~~~~~
 
 With no surprise, this script generates:
 
@@ -223,21 +219,21 @@ The script language can be:
 
 ### Verbatim copy
 
-Blocks can also contain verbatim text that is preserved in the output. This is useful to put some diagram example in the documentation of `dpp`!
+Blocks can also contain verbatim text that is preserved in the output.
 
     `````````` quote
     ~~~ bash
     # this bash script example won't be executed!
+    # but only colorized by Pandoc.
     ~~~
     ``````````
 
 becomes
 
-``````````````````````````` quote
-~~~ bash
+``` bash
 # this bash script example won't be executed!
-~~~
-```````````````````````````
+# but only colorized by Pandoc.
+```
 
 Examples
 --------
@@ -250,20 +246,18 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
 
 [GraphViz](http://graphviz.org/) is executed when one of these keywords is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-``````````````````````````` dot
-~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
-digraph {
-    O -> A
-    O -> B
-    O -> C
-    O -> D
-    D -> O
-    A -> B
-    B -> C
-    C -> A
-}
-~~~~~
-```````````````````````````
+    ~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
+    digraph {
+        O -> A
+        O -> B
+        O -> C
+        O -> D
+        D -> O
+        A -> B
+        B -> C
+        C -> A
+    }
+    ~~~~~
 
 -   `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
 -   `doc/img/dpp-graphviz-example` is the name of the image. `dpp` will generate `doc/img/dpp-graphviz-example.dot` and `doc/img/dpp-graphviz-example.png`.
@@ -272,13 +266,13 @@ digraph {
 
 You can use `dpp` in a pipe before [Pandoc](http://pandoc.org/) (as well as `pp` or `gpp`) for instance):
 
-``````````````````````````` bash
+``` bash
 pp file.md | dpp | pandoc -s -S --self-contained -f markdown -t html5 -o file.html
 
 or
 
 cat file.md | gpp -T -x | dpp | pandoc -s -S --self-contained -f markdown -t html5 -o file.html
-```````````````````````````
+```
 
 Once generated the graph looks like:
 
@@ -329,19 +323,15 @@ Once generated the graph looks like:
 
 [Bash](https://www.gnu.org/software/bash/) is executed when the keyword `bash` is used.
 
-``````````````````````````` bash
-~~~~~ bash
-echo "Hi, I'm $SHELL $BASH_VERSION"
-echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-~~~~~
-```````````````````````````
+    ~~~~~ bash
+    echo "Hi, I'm $SHELL $BASH_VERSION"
+    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+    ~~~~~
 
 This script outputs:
 
-``````````````````````````` bat
-Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 23542, 238, 12861
-```````````````````````````
+    Hi, I'm /bin/bash 4.3.30(1)-release
+    Here are a few random numbers: 12403, 32133, 12311
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -370,45 +360,41 @@ This script outputs:
 
 [Python](https://www.python.org/) is executed when the keyword `python` is used.
 
-``````````````````````````` python
-~~~~~ python
-import sys
-import random
+    ~~~~~ python
+    import sys
+    import random
 
-if __name__ == "__main__":
-    print("Hi, I'm Python %s"%sys.version)
-    randoms = [random.randint(0, 1000) for i in range(3)]
-    print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-~~~~~
-```````````````````````````
+    if __name__ == "__main__":
+        print("Hi, I'm Python %s"%sys.version)
+        randoms = [random.randint(0, 1000) for i in range(3)]
+        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+    ~~~~~
 
 This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 33, 931, 644
+    Here are a few random numbers: 750, 349, 515
 
 ### Haskell
 
 [Haskell](https://www.haskell.org/) is executed when the keyword `haskell` is used.
 
-``````````````````````````` haskell
-~~~~~ haskell
-import System.Info
-import Data.Version
-import Data.List
+    ~~~~~ haskell
+    import System.Info
+    import Data.Version
+    import Data.List
 
-primes = filterPrime [2..]
-    where filterPrime (p:xs) =
-            p : filterPrime [x | x <- xs, x `mod` p /= 0]
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-version = showVersion compilerVersion
-main = do
-    putStrLn $ "Hi, I'm Haskell " ++ version
-    putStrLn $ "The first 10 prime numbers are: " ++
-                intercalate " " (map show (take 10 primes))
-~~~~~
-```````````````````````````
+    version = showVersion compilerVersion
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    ~~~~~
 
 This script outputs:
 

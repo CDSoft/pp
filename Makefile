@@ -61,10 +61,9 @@ clean:
 #####################################################################
 
 README.md: gpp pp
-README.md: src/pp.md 
+README.md: src/pp.md
 	mkdir -p doc/img
 	LANG=en pp $< | dpp | pandoc -f markdown -t markdown_github > $@
-	sed -i 's/^```/```````````````````````````/' $@
 
 #####################################################################
 # archives
