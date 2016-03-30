@@ -1,0 +1,25 @@
+digraph {
+
+    subgraph cluster_cmd {
+        label = "diagram generators"
+        dot neato twopi circo fdp sfdp patchwork osage uml ditaa
+    }
+
+    DPP [shape=diamond]
+    dot neato twopi circo fdp sfdp patchwork osage uml ditaa
+    GraphViz [shape=box]
+    PlantUML [shape=box]
+    DITAA [shape=box label=ditaa]
+
+    DPP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa}
+    dot -> GraphViz
+    neato -> GraphViz
+    twopi -> GraphViz
+    circo -> GraphViz
+    fdp -> GraphViz
+    sfdp -> GraphViz
+    patchwork -> GraphViz
+    osage -> GraphViz
+    uml -> PlantUML
+    ditaa -> DITAA
+}

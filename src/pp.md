@@ -15,8 +15,8 @@
 [Haskell]: https://www.haskell.org/
 [GitHub]: https://github.com/CDSoft/pp
 
-Introduction
-============
+% PP - Generic preprocessors (with pandoc in mind)
+==================================================
 
 [PP] contains three preprocessors for [Pandoc].
 
