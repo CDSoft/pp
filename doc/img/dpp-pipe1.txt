@@ -1,0 +1,16 @@
+digraph {
+    rankdir = LR
+    INPUT [label="input documents" shape=folder color=blue]
+    DPP [label=dpp shape=diamond]
+    OUTPUT [label="output document" shape=folder color=blue]
+    IMG [label="images" shape=folder color=blue]
+    ERROR [label="error messages" shape=folder color=red]
+
+    {rank=same; IMG OUTPUT ERROR}
+
+    INPUT -> DPP [label=stdin]
+    DPP -> OUTPUT [label=stdout]
+    DPP -> IMG [label="file system"]
+    DPP -> ERROR [label=stderr]
+    IMG -> OUTPUT [label="hyper links"]
+}

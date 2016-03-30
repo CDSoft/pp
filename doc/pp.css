@@ -1,0 +1,241 @@
+/* links */
+
+a {
+    color: #444499;
+    background-color: white;
+    /* border: thin dotted #444499; */
+    border-radius: 4px;
+}
+
+a:hover {
+    color: white;
+    background-color: #444499;
+    border: thin dotted white;
+    border-radius: 4px;
+}
+
+/* Header */
+
+h1.title {
+    text-align: center;
+    border-radius: 20px;
+    padding: 4px;
+    background-color: #444499;
+    color: #eeeeee;
+    border: thick solid black;
+}
+
+h1.title a {
+    text-decoration: none;
+    background-color: #444499;
+    color: #eeeeee;
+}
+
+h2.author, h3.date {
+    text-align: center;
+    padding: 4px;
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+h2.author a, h3.date a {
+    text-decoration: none;
+    background-color: white;
+    color: #444499;
+}
+
+/* table of content */
+
+div#TOC {
+    border-radius: 20px;
+    padding: 4px;
+    background-color: #ffffee;
+    border: medium solid black;
+}
+
+/* menu / footer */
+
+div.right, div.menu, div.header, div.footer {
+    text-align: center;
+    /*margin-top: 0em;
+    padding-top: 0em;
+    border-top: thin dotted;
+    margin-bottom: 0em;
+    padding-bottom: 0em;
+    border-bottom: thin dotted;*/
+    border: medium outset;
+    border-radius: 10px;
+    /*padding: 1em;*/
+    background-color: #ffffee;
+    line-height: 200%;
+    font-size: 0.75em;
+}
+
+div.right {
+    text-align: left;
+}
+
+div.right, div.menu {
+    margin: 0.5em 0em 0.5em 1em;
+    width: 20%;
+    float: right;
+    clear: right;
+}
+
+div.right {
+    margin: 0 0 0 0;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    width: 15em;
+    line-height: 125%;
+}
+
+div.header {
+    margin: 0em 0em 0em 0em;
+}
+
+div.footer {
+    margin: 1em 0em 0em 0em;
+}
+
+div.menu a, div.header a, div.footer a {
+    text-decoration: none;
+    background-color: #444499;
+    color: #ffffff;
+    padding: 4px;
+    border: thin dotted #ffffff;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+div.menu a:hover, div.header a:hover, div.footer a:hover {
+    background-color: #ffffff;
+    color: #444499;
+    border: thin dotted #444499;
+    border-radius: 4px;
+}
+
+div.nowrap {
+    white-space: nowrap;
+}
+
+/* titles */
+
+h1 {
+    background-color: #444499;
+    color: #ffffff;
+    border: medium solid black;
+    border-radius: 10px;
+    padding: 0 0 0 16px;
+}
+
+h1 a {
+    text-decoration: none;
+    background-color: #444499;
+    color: #ffffff;
+}
+
+h2 {
+    background-color: #666666;
+    color: #ffffff;
+    border: medium solid black;
+    border-radius: 6px;
+    padding: 0 0 0 16px;
+}
+
+h2 a {
+    text-decoration: none;
+    background-color: #666666;
+    color: #ffffff;
+}
+
+h3 h4 h5 h6 {
+    background-color: #cccccc;
+    color: #000000;
+}
+
+/* tables */
+
+table {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+table caption {
+    font-weight: bold;
+    margin: 1em;
+}
+
+table th, table thead tr th {
+    border: 1px solid black;
+    border-bottom: 2px solid black;
+    vertical-align: top;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-weight: bold;
+    white-space: nowrap;
+    background-color: #dddddd;
+}
+
+table td, table tbody tr td {
+    border: 1px solid black;
+    vertical-align: top;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+/* code examples */
+
+pre {
+    font-family: monospace;
+    color: #444499;
+    border: 1px solid gray;
+    padding: 5px;
+    background-color: #dddddd;
+    margin: 0 2em 0 2em;
+}
+
+/* styles pour l'annonce */
+
+div.location
+{
+    font-size: smaller;
+    padding-left: 5em;
+    padding-right: 5em;
+    border: medium dotted red;
+    border-radius: 80px;
+    background-color: #ff0;
+}
+
+div.location a {
+    /*background-color: #ff0;*/
+}
+
+/* fucking cookie notification */
+
+.cookies-notification
+{
+    display: none;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0px;
+    color: white;
+    background-color: #666;
+}
+
+.cookies-notification a {
+    color: white;
+    background-color: black;
+    border: none;
+    padding: 0px;
+}
+
+.cookies-notification a:hover {
+    color: black;
+    background-color: white;
+    border: none;
+}
+

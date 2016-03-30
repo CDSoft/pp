@@ -1,6 +1,5 @@
 .build/
 .cache/
-doc/
 dpp
 dpp.exe
 gpp

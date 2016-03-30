@@ -25,7 +25,7 @@ OS = $(shell uname)
 
 ifeq "$(OS)" "Linux"
 
-all: gpp pp dpp pp-linux-$(shell uname -m).tgz
+all: gpp pp dpp README.md pp-linux-$(shell uname -m).tgz
 all: gpp.exe pp.exe dpp.exe pp-win.zip
 all: pp.tgz
 all: doc/gpp.html doc/pp.html
@@ -55,6 +55,16 @@ clean:
 	rm -rf $(BUILD) doc
 	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
 	rm -f pp.tgz pp-win.zip pp-linux-*.tgz
+
+#####################################################################
+# README
+#####################################################################
+
+README.md: gpp pp
+README.md: src/pp.md 
+	mkdir -p doc/img
+	LANG=en pp $< | dpp | pandoc -f markdown -t markdown_github > $@
+	sed -i 's/^```/```````````````````````````/' $@
 
 #####################################################################
 # archives
