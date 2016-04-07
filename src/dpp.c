@@ -241,6 +241,30 @@ void emitblock(const char *tilda, const command_t *c)
     fputs(c->footer, stdout);
 }
 
+/* extract the actual path of the image and the link to put in the HTML code */
+void splitimg(const char *img, char *png, char *link)
+{
+    int onlyinpath = 0;
+    while (*img)
+    {
+        switch (*img)
+        {
+            case '[':
+                onlyinpath = 1;
+                break;
+            case ']':
+                onlyinpath = 0;
+                break;
+            default:
+                *png++ = *img;
+                if (!onlyinpath) *link++ = *img;
+                break;
+        }
+        img++;
+    }
+    *png = *link = '\0';
+}
+
 /* process stdin, generates images and stdout */
 int main(int argc, char *argv[])
 {
@@ -281,11 +305,14 @@ int main(int argc, char *argv[])
         if (!isspace(line[0]) && n >= 3 && istilda(tilda) && (c=getcmd(cmd)) != NULL && c->kind == DIAGRAM)
         {
             char png[LINE_SIZE];
+            char link[LINE_SIZE];
             char txt[LINE_SIZE];
             char commandline[LINE_SIZE];
             strip(&line[legend]);
-            snprintf(png, LINE_SIZE, "%s%s", img, ".png");
-            snprintf(txt, LINE_SIZE, "%s%s", img, ".txt");
+            splitimg(img, png, link); /* [a/b/]c/d is split into a/b/c/d and c/d */
+            snprintf(txt, LINE_SIZE, "%s%s", png, ".txt");
+            strncat(png, ".png", LINE_SIZE);
+            strncat(link, ".png", LINE_SIZE);
             if (saveblock(tilda,txt, c) == DIFFERENT || !exists(png))
             {
                 switch (c->type)
@@ -317,7 +344,7 @@ int main(int argc, char *argv[])
             }
             /* The image shall be generated before the markdown output to be sure that Pandoc can read it */
             /* (the usage of pipe may give the link to pandoc before the external command is terminated)  */
-            printf("![%s](%s)\n", &line[legend], png);
+            printf("![%s](%s)\n", &line[legend], link);
             continue;
         }
         /* Script block */

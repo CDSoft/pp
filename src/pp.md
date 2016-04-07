@@ -394,6 +394,39 @@ graph {
 }
 ~~~~~
 
+The image link in the output markdown document may have to be different than the
+actual path in the file system. This appends when then `.md` or `.html` are not
+generated in the same path than the source document. Brackets can be used to
+specify the part of the path that belongs to the generated image but not to the
+link in the output document. For instance a diagram declared as:
+
+    ~~~~~ dot [mybuildpath/]img/diag42
+
+will be actually generated in:
+
+    mybuildpath/img/diag42
+
+and the link in the output document will be:
+
+    img/diag42
+
+For instance, if you use Pandoc to generate HTML documents with diagrams in a
+different directory, there are two possibilities:
+
+1. the document is a self contained HTML file (option `--self-contained`), i.e.
+   the CSS and images are stored inside the document:
+   - the CSS path shall be the actual path where the CSS file is stored
+   - the image path in diagrams shall be the actual path where the images are
+     stored (otherwise Pandoc won't find them)
+   - e.g.: `outputpath/img/diag42`
+
+2. the document is not self contained, i.e. the CSS and images are stored appart
+   from the document:
+   - the CSS path shall be relative to the output document
+   - the image path in diagrams shall be relative to output document in HTML
+     links and shall also describe the actual path where the images are stored.
+   - e.g.: `[outputpath/]img/diag42`
+
 The diagram generator can be:
 
 - dot
