@@ -53,7 +53,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">PP - Generic preprocessors (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/dpp" class="uri">http://cdsoft.fr/dpp</a></h2>
-<h3 class="date">Thursday 7 April 2016</h3>
+<h3 class="date">Friday 8 April 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -118,7 +118,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ol>
 <p><code>dpp</code> requires <a href="http://graphviz.org/">Graphviz</a> and Java (<a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a> are embedded in <code>dpp</code>).</p>
 <p>If your are on Windows but don’t have a C and Haskell compiler, you can get already compiled executables here: <a href="http://cdsoft.fr/pp/pp-win.zip" class="uri">http://cdsoft.fr/pp/pp-win.zip</a>.</p>
-<p>You can also download 64 bit linux binaries (built on <code>Linux 4.3.0-0.bpo.1-amd64 #1 SMP Debian 4.3.5-1~bpo8+1 (2016-02-23) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.tgz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.tgz</a>.</p>
+<p>You can also download 64 bit linux binaries (built on <code>Linux 4.4.0-0.bpo.1-amd64 #1 SMP Debian 4.4.6-1~bpo8+1 (2016-03-20) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.tgz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.tgz</a>.</p>
 <h1 id="pp">PP</h1>
 <p><code>pp</code> is a simple preprocessor written in Haskell. It’s mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP for instance but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.</p>
 <p><code>pp</code> takes strings as input and incrementally builds an environment which is a lookup table containing variables and various other information. Built-in macros are Haskell functions that takes arguments (strings) and the current environment and build a new environment in the IO monad. User defined macros are simple definitions, arguments are numbered 1 to N.</p>
@@ -233,12 +233,12 @@ graph {
 <figure>
 <img src="data:image/png;base64,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" alt="optional legend" /><figcaption>optional legend</figcaption>
 </figure>
-<p>The image link in the output markdown document may have to be different than the actual path in the file system. This appends when then <code>.md</code> or <code>.html</code> are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:</p>
+<p>The image link in the output markdown document may have to be different than the actual path in the file system. This happens when then <code>.md</code> or <code>.html</code> files are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:</p>
 <pre><code>~~~~~ dot [mybuildpath/]img/diag42</code></pre>
 <p>will be actually generated in:</p>
-<pre><code>mybuildpath/img/diag42</code></pre>
+<pre><code>mybuildpath/img/diag42.png</code></pre>
 <p>and the link in the output document will be:</p>
-<pre><code>img/diag42</code></pre>
+<pre><code>img/diag42.png</code></pre>
 <p>For instance, if you use Pandoc to generate HTML documents with diagrams in a different directory, there are two possibilities:</p>
 <ol type="1">
 <li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:</li>
@@ -249,7 +249,7 @@ graph {
 <li>e.g.: <code>outputpath/img/diag42</code></li>
 </ul>
 <ol start="2" type="1">
-<li>the document is not self contained, i.e. the CSS and images are stored appart from the document:</li>
+<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:</li>
 </ol>
 <ul>
 <li>the CSS path shall be relative to the output document</li>
@@ -375,7 +375,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 32373, 15134, 19806</code></pre>
+Here are a few random numbers: 22912, 6310, 24487</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
 <p><a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a> is executed when the keyword <code>bat</code> is used.</p>
@@ -407,7 +407,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 638, 721, 719</code></pre>
+Here are a few random numbers: 149, 779, 42</code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
 <pre><code>~~~~~ haskell

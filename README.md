@@ -33,7 +33,7 @@ Installation
 
 If your are on Windows but don't have a C and Haskell compiler, you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.zip>.
 
-You can also download 64 bit linux binaries (built on `Linux 4.3.0-0.bpo.1-amd64 #1 SMP Debian 4.3.5-1~bpo8+1 (2016-02-23) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.tgz>.
+You can also download 64 bit linux binaries (built on `Linux 4.4.0-0.bpo.1-amd64 #1 SMP Debian 4.4.6-1~bpo8+1 (2016-03-20) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.tgz>.
 
 PP
 ==
@@ -177,17 +177,17 @@ This extremely meaningful diagram is rendered as `path/imagename.png` and looks 
 
 ![optional legend](doc/img/dpp-syntax.png)
 
-The image link in the output markdown document may have to be different than the actual path in the file system. This appends when then `.md` or `.html` are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:
+The image link in the output markdown document may have to be different than the actual path in the file system. This happens when then `.md` or `.html` files are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:
 
     ~~~~~ dot [mybuildpath/]img/diag42
 
 will be actually generated in:
 
-    mybuildpath/img/diag42
+    mybuildpath/img/diag42.png
 
 and the link in the output document will be:
 
-    img/diag42
+    img/diag42.png
 
 For instance, if you use Pandoc to generate HTML documents with diagrams in a different directory, there are two possibilities:
 
@@ -197,7 +197,7 @@ For instance, if you use Pandoc to generate HTML documents with diagrams in a di
 -   the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won't find them)
 -   e.g.: `outputpath/img/diag42`
 
-1.  the document is not self contained, i.e. the CSS and images are stored appart from the document:
+1.  the document is not self contained, i.e. the CSS and images are stored apart from the document:
 
 -   the CSS path shall be relative to the output document
 -   the image path in diagrams shall be relative to output document in HTML links and shall also describe the actual path where the images are stored.
@@ -357,7 +357,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 27619, 7959, 20399
+    Here are a few random numbers: 7470, 22685, 16770
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -400,7 +400,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 600, 581, 480
+    Here are a few random numbers: 909, 488, 774
 
 ### Haskell
 
