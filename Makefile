@@ -109,19 +109,44 @@ doc/gpp.html: gpp
 	cp $(BUILD)/$</gpp-*/doc/gpp.html $@
 
 #####################################################################
+# Dependancies
+#####################################################################
+
+PLANTUML = plantuml
+PLANTUML_URL = http://heanet.dl.sourceforge.net/project/plantuml/$(PLANTUML).jar
+
+DITAA_VERSION = 0.9
+DITAA = ditaa0_9
+DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
+
+$(BUILD)/%.c: $(CACHE)/%.jar
+	xxd -i $< $@
+	sed -i 's/_cache_//g' $@
+
+$(CACHE)/$(PLANTUML).jar:
+	wget $(PLANTUML_URL) -O $@
+
+$(CACHE)/$(DITAA).zip:
+	wget $(DITAA_URL) -O $@
+
+$(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
+	unzip $< $(notdir $@) -d $(dir $@)
+	touch $@
+
+#####################################################################
 # PP
 #####################################################################
 
 pp: BUILDPP=$(BUILD)/$@
-pp: src/pp.hs
+pp: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	mkdir -p $(BUILDPP)
-	ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $<
+	ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
-pp.exe: src/pp.hs
+pp.exe: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	mkdir -p $(BUILDPP)
-	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $<
+	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	strip $@
 
 doc/pp.html: pp dpp doc/pp.css
@@ -136,38 +161,10 @@ doc/pp.css:
 # DPP
 #####################################################################
 
-PLANTUML = plantuml
-PLANTUML_URL = http://heanet.dl.sourceforge.net/project/plantuml/$(PLANTUML).jar
-
-DITAA_VERSION = 0.9
-DITAA = ditaa0_9
-DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
-
-DPP_EXTERNAL = -Dplantuml_jar=_cache_$(PLANTUML)_jar \
-               -Dplantuml_jar_len=_cache_$(PLANTUML)_jar_len \
-               -Dditaa_jar=_build_$(DITAA)_jar \
-               -Dditaa_jar_len=_build_$(DITAA)_jar_len \
-
 dpp: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
-	gcc -Werror -Wall $(DPP_EXTERNAL) $^ -o $@
+	gcc -Werror -Wall $^ -o $@
 	strip $@
 
 dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
-	$(CCWIN) -Werror -Wall $(DPP_EXTERNAL) $^ -o $@
+	$(CCWIN) -Werror -Wall $^ -o $@
 	strip $@
-
-$(BUILD)/%.c: $(BUILD)/%.jar
-	xxd -i $< $@
-
-$(BUILD)/%.c: $(CACHE)/%.jar
-	xxd -i $< $@
-
-$(CACHE)/$(PLANTUML).jar:
-	wget $(PLANTUML_URL) -O $@
-
-$(CACHE)/$(DITAA).zip:
-	wget $(DITAA_URL) -O $@
-
-$(BUILD)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
-	unzip $< $(notdir $@) -d $(dir $@)
-	touch $@

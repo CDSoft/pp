@@ -22,20 +22,31 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 {-# LANGUAGE CPP #-}
 
+import Control.Monad
 import System.IO
+import qualified System.IO.Strict as SIO
 import System.Environment
 import System.Directory
 import Data.List
 import Data.Char
 import Data.Maybe
-import System.Process(readProcess)
+import System.Process(callProcess, readProcess)
 import System.FilePath
 import Data.Time
+import Foreign.C.String
+
+#ifdef linux_HOST_OS
+import System.Posix.Process
+#else
+--import System.Win32.Process
+#endif
 
 type Chars = String
 type Env = [(String, String)]
 type Macro = Env -> [String] -> IO (Env, String)
 type Prepro = Env -> String ->  IO (Env, String)
+
+data DiagramRuntime = Graphviz | PlantUML | Ditaa
 
 main :: IO ()
 main = do
@@ -82,12 +93,20 @@ ppFile env name = do
     (env', doc) <- pp ((currentTag, name) : env) content
     return ((currentTag, caller) : env', doc)
 
-readFileUTF8 :: String -> IO String
+readFileUTF8 :: FilePath -> IO String
 readFileUTF8 "-" = getContents
 readFileUTF8 name = do
     h <- openFile name ReadMode
     hSetEncoding h utf8
-    hGetContents h
+    SIO.hGetContents h
+
+writeFileUTF8 :: FilePath -> String -> IO ()
+writeFileUTF8 "-" content = putStr content
+writeFileUTF8 name content = do
+    h <- openFile name WriteMode
+    hSetEncoding h utf8
+    hPutStr h content
+    hClose h
 
 -- attribute name of the current file in the environment
 currentTag :: String
@@ -117,6 +136,18 @@ formats = ["html", "pdf"]
 envTag :: String
 envTag = "$"
 
+-- Graphiviz diagrams
+graphvizDiagrams :: [String]
+graphvizDiagrams = words "dot neato twopi circo fdp sfdp patchwork osage"
+
+-- PlantUML diagrams
+plantumlDiagrams :: [String]
+plantumlDiagrams = words "uml"
+
+-- Ditaa diagrams
+ditaaDiagrams :: [String]
+ditaaDiagrams = words "ditaa"
+
 -- list of macros
 builtin :: [(String, Macro)]
 builtin = [ ("def", define)         , ("undef", undefine)
@@ -136,6 +167,19 @@ builtin = [ ("def", define)         , ("undef", undefine)
 
           , ("add", add)
 
+          ]
+          ++ [ (diag, diagram Graphviz diag "" "") | diag <- graphvizDiagrams]
+          ++ [ (diag, diagram PlantUML diag "@startuml\n" "@enduml\n") | diag <- plantumlDiagrams]
+          ++ [ (diag, diagram Ditaa diag "" "") | diag <- ditaaDiagrams]
+          ++ [ ("sh", script "sh" "sh" "" ".sh")
+             , ("bash", script "bash" "bash" "" ".sh")
+#ifdef linux_HOST_OS
+             , ("bat", script "bat" "cmd /c" "@echo off\n" ".bat")
+#else
+             , ("bat", script "bat" "wine cmd /c" "@echo off\n" ".bat")
+#endif
+             , ("python", script "python" "python" "" ".py")
+             , ("haskell", script "haskell" "runhaskell" "" ".hs")
           ]
           ++ [ (lang, language lang) | lang <- langs]
           ++ [ (fmt, format fmt) | fmt <- formats]
@@ -200,7 +244,7 @@ raw _ _ = arityError "raw" [1]
 
 rawinc :: Macro
 rawinc env [name] = do name' <- locateFile env name
-                       doc <- readFile name'
+                       doc <- readFileUTF8 name'
                        return (env, doc)
 rawinc _ _ = arityError "rawinclude" [1]
 
@@ -282,6 +326,79 @@ atoi :: String -> Integer
 atoi s = case reads s of
             [(i, "")] -> i
             _ -> 0
+
+diagram :: DiagramRuntime -> String -> String -> String -> Macro
+diagram runtime diag header footer env [path, title, code] = do
+    (_, path') <- pp env $ strip path
+    (_, title') <- pp env $ strip title
+    (_, code') <- pp env code
+    let code'' = header ++ code' ++ footer
+    let (gv, img, url) = splitImgUrl path' True
+    oldCodeExists <- doesFileExist gv
+    oldCode <- if oldCodeExists then readFileUTF8 gv else return ""
+    when (code'' /= oldCode) $ do
+        writeFileUTF8 gv code''
+        case runtime of
+            Graphviz -> callProcess diag ["-Tpng", "-o", img, gv]
+            PlantUML -> do plantuml <- resource "plantuml.jar" plantumlJar
+                           callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
+            Ditaa -> do ditaa <- resource "ditaa.jar" ditaaJar
+                        callProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img]
+        return ()
+    return (env, "!["++title'++"]("++url++")")
+diagram runtime diag header footer env [path, code] = diagram runtime diag header footer env [path, "", code]
+diagram _ diag _ _ _ _ = arityError diag [2, 3]
+
+splitImgUrl :: String -> Bool -> (String, String, String)
+splitImgUrl (c:cs) both
+    | c `elem` "(["     = splitImgUrl cs False
+    | c `elem` ")]"     = splitImgUrl cs True
+    | both              = (c:gv, c:img, c:url)
+    | otherwise         = (c:gv, c:img, url)
+    where (gv, img, url) = splitImgUrl cs both
+splitImgUrl [] _ = (".gv", ".png", ".png")
+
+foreign import ccall "plantuml_jar"     _plantuml_jar       :: CString
+foreign import ccall "plantuml_jar_len" _plantuml_jar_len   :: Int
+
+plantumlJar :: CStringLen
+plantumlJar = (_plantuml_jar, _plantuml_jar_len)
+
+foreign import ccall "ditaa0_9_jar"     _ditaa_jar          :: CString
+foreign import ccall "ditaa0_9_jar_len" _ditaa_jar_len      :: Int
+
+ditaaJar :: CStringLen
+ditaaJar = (_ditaa_jar, _ditaa_jar_len)
+
+resource :: String -> CStringLen -> IO FilePath
+resource name content = do
+    tmp <- getTemporaryDirectory
+    let path = tmp </> name
+    alreadyExists <- doesFileExist path
+    unless alreadyExists $ writeFile path =<< peekCStringLen content
+    return path
+
+script :: String -> String -> String -> String -> Macro
+script _lang cmd header ext env [src] = do
+    tmp <- getTemporaryDirectory
+#ifdef linux_HOST_OS
+    pid <- getProcessID
+#else
+    pid <- getCurrentProcessId
+#endif
+    let path = tmp </> "pp" ++ show pid ++ ext
+    (env', src') <- pp env src
+    writeFileUTF8 path $ header ++ src'
+    let (exe:args) = words cmd
+    output <- readProcess exe (args ++ [path]) []
+    return (env', output)
+script lang _ _ _ _ _ = arityError lang [1]
+
+#ifdef linux_HOST_OS
+-- getProcessID already defined
+#else
+foreign import stdcall "GetCurrentProcessId" getCurrentProcessId :: IO Int
+#endif
 
 language :: String -> Macro
 language lang env [src] = case lookup langTag env of

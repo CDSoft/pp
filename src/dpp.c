@@ -81,8 +81,8 @@ typedef enum {SAME, DIFFERENT} cmp_t;
 extern unsigned char plantuml_jar[];
 extern unsigned int plantuml_jar_len;
 
-extern unsigned char ditaa_jar[];
-extern unsigned int ditaa_jar_len;
+extern unsigned char ditaa0_9_jar[];
+extern unsigned int ditaa0_9_jar_len;
 
 /* reports an unexpected error and exit */
 void unexpected(const char *fmt, ...)
@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
                     }
                     case DITAA:
                     {
-                        const char *ditaa = resource("ditaa.jar", ditaa_jar, ditaa_jar_len);
+                        const char *ditaa = resource("ditaa.jar", ditaa0_9_jar, ditaa0_9_jar_len);
                         snprintf(commandline, LINE_SIZE, "java -jar %s -e UTF-8 -o %s %s 1>"null, ditaa, txt, png);
                         break;
                     }

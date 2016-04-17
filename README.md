@@ -6,9 +6,11 @@ PP - Generic preprocessors (with pandoc in mind)
 I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). [GPP](http://en.nothingisreal.com/wiki/GPP) is still included in PP but I now use two more preprocessors that I have written for my own needs:
 
 -   `pp` is a generic text preprocessor inspired by [GPP](http://en.nothingisreal.com/wiki/GPP) and written in Haskel
--   `dpp` is a diagramm preprocessor
+-   `dpp` is a diagram preprocessor
 
 Both are intended to be used with Pandoc.
+
+**News**: `dpp` capabilities are now implemented as `pp` macros. `dpp` is still included for backward compatibility. `pp` can now be used standalone.
 
 Open source
 ===========
@@ -29,11 +31,11 @@ Installation
 2.  Run `make`
 3.  Copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
 
-`dpp` requires [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `dpp`).
+`pp` and `dpp` require [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp` and `dpp`).
 
 If your are on Windows but don't have a C and Haskell compiler, you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.zip>.
 
-You can also download 64 bit linux binaries (built on `Linux 4.4.0-0.bpo.1-amd64 #1 SMP Debian 4.4.6-1~bpo8+1 (2016-03-20) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.tgz>.
+You can also download 64 bit Linux binaries (built on `Linux 4.4.0-0.bpo.1-amd64 #1 SMP Debian 4.4.6-1~bpo8+1 (2016-03-20) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.tgz>.
 
 PP
 ==
@@ -65,7 +67,7 @@ removes the symbol `SYMBOL` from the current environment.
 
 Other arguments are filenames.
 
-File are read and preprocessed using the current state of the environment. The special file name `"-"` can be used to preprocess the standard input.
+Files are read and preprocessed using the current state of the environment. The special file name `"-"` can be used to preprocess the standard input.
 
 Macros
 ------
@@ -98,7 +100,7 @@ if `X` and 'Y' are different `pp` preprocesses `TEXT_IF_DIFFERENT`. Otherwise it
 get the raw (unevaluated) definition of `X`
 
 **`!inc[lude](FILENAME)`**  
-`pp` preprocesses the content of the file named `FILENAME` an include it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
+`pp` preprocesses the content of the file named `FILENAME` and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 
 **`!raw(TEXT)`**  
 `pp` emits `TEXT` without any preprocessing.
@@ -106,14 +108,20 @@ get the raw (unevaluated) definition of `X`
 **`!rawinc[lude](FILE)`**  
 `pp` emits the content of `FILE` without any preprocessing.
 
+**`!exec(COMMAND)`**  
+executes a shell command (with the current shell) and emits the output of the command.
+
+**`!rawexec(COMMAND)`**  
+as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
+
 **`!mdate(FILES)`**  
-returns the modification date of the most recent file
+returns the modification date of the most recent file.
 
 **`!env(VARNAME)`**  
 `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
 
 **`!add(VARNAME)[(INCREMENT)]`**  
-computes `VARNAME+INCREMENT` and stores the result to `VARNAME`.
+computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
 
 **`!fr(...)`** or **`!en(...)`**  
 emits some text only if the current language is *fr* or *en*
@@ -121,8 +129,14 @@ emits some text only if the current language is *fr* or *en*
 **`!html(...)`** or **`!pdf(...)`**  
 emits some text only if the current format is *html* or *pdf*
 
-DPP
-===
+**`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
+renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See DPP for examples. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
+
+**`!sh(SCRIPT)`**  
+executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
+
+DPP (as well as PP diagram examples)
+====================================
 
 Usage
 -----
@@ -132,6 +146,8 @@ Usage
 ![](doc/img/dpp-pipe1.png)
 
 Being a filter, `dpp` can be chained with other preprocessors. Another good generic purpose preprocessor is `pp` or `gpp`.
+
+`pp` now has the same diagram capabilities than `dpp`. This chapter show example for both preprocessors but `dpp` may become obsolete.
 
 A classical usage of `dpp` along with `pp` and [Pandoc](http://pandoc.org/) is:
 
@@ -167,11 +183,21 @@ Diagrams are written in code blocks. The first line contains:
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). Both lines must have the same number of tilda or back quotes.
 
+With `dpp`:
+
     ~~~~~ dot path/imagename optional legend
     graph {
         "source code of the diagram"
     }
     ~~~~~
+
+With `pp`:
+
+    \dot(path/imagename)(optional legend)(
+        graph {
+            "source code of the diagram"
+        }
+    )
 
 This extremely meaningful diagram is rendered as `path/imagename.png` and looks like:
 
@@ -180,6 +206,8 @@ This extremely meaningful diagram is rendered as `path/imagename.png` and looks 
 The image link in the output markdown document may have to be different than the actual path in the file system. This happens when then `.md` or `.html` files are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:
 
     ~~~~~ dot [mybuildpath/]img/diag42
+    or
+    \dot([mybuildpath/]img/diag42)...
 
 will be actually generated in:
 
@@ -224,9 +252,17 @@ The diagram generator can be:
 
 Scripts are also written in code blocks. The first line contains only the kind of script.
 
+`dpp` syntax:
+
     ~~~~~ bash
     echo Hello World!
     ~~~~~
+
+`pp` syntax:
+
+    \bash{
+    echo Hello World!    
+    }
 
 With no surprise, this script generates:
 
@@ -272,6 +308,8 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
 
 [GraphViz](http://graphviz.org/) is executed when one of these keywords is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
+`dpp` syntax:
+
     ~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
     digraph {
         O -> A
@@ -285,12 +323,27 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
     }
     ~~~~~
 
+`pp` syntax:
+
+    \twopi(doc/img/dpp-graphviz-example)(This is just a GraphViz diagram example)(
+    digraph {
+        O -> A
+        O -> B
+        O -> C
+        O -> D
+        D -> O
+        A -> B
+        B -> C
+        C -> A
+    }
+    )}
+
 -   `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
 -   `doc/img/dpp-graphviz-example` is the name of the image. `dpp` will generate `doc/img/dpp-graphviz-example.dot` and `doc/img/dpp-graphviz-example.png`.
 -   the rest of the first line is the legend of the graph.
 -   other lines are written to `doc/img/dpp-graphviz-example.dot` before running [Graphviz](http://graphviz.org/).
 
-You can use `dpp` in a pipe before [Pandoc](http://pandoc.org/) (as well as `pp` or `gpp`) for instance):
+You can use `dpp` in a pipe before [Pandoc](http://pandoc.org/) (as well as `pp` or `gpp`) for instance:
 
 ``` bash
 pp file.md | dpp | pandoc -s -S --self-contained -f markdown -t html5 -o file.html
@@ -308,7 +361,9 @@ Once generated the graph looks like:
 
 ### PlantUML
 
-[PlantUML](http://plantuml.sourceforge.net/) is executed when the keyword `uml` is used. The lines `@@startuml` and `@@enduml` required by [PlantUML](http://plantuml.sourceforge.net/) are added by `dpp`.
+[PlantUML](http://plantuml.sourceforge.net/) is executed when the keyword `uml` is used. The lines `@startuml` and `@enduml` required by [PlantUML](http://plantuml.sourceforge.net/) are added by `dpp`.
+
+`dpp` syntax:
 
     ~~~~~ uml doc/img/dpp-plantuml-example This is just a PlantUML diagram example
     Alice -> Bob: Authentication Request
@@ -316,6 +371,15 @@ Once generated the graph looks like:
     Alice -> Bob: Another authentication Request
     Alice <-- Bob: another authentication Response
     ~~~~~
+
+`pp` syntax:
+
+    \uml(doc/img/dpp-plantuml-example)(This is just a PlantUML diagram example){
+    Alice -> Bob: Authentication Request
+    Bob --> Alice: Authentication Response
+    Alice -> Bob: Another authentication Request
+    Alice <-- Bob: another authentication Response
+    }
 
 Once generated the graph looks like:
 
@@ -326,6 +390,8 @@ Once generated the graph looks like:
 ### Ditaa
 
 [ditaa](http://ditaa.sourceforge.net/) is executed when the keyword `ditaa` is used.
+
+`dpp` syntax:
 
     ~~~~~ ditaa doc/img/dpp-ditaa-example This is just a Ditaa diagram example
         +--------+   +-------+    +-------+
@@ -339,6 +405,20 @@ Once generated the graph looks like:
             +-------------------------+
     ~~~~~
 
+`pp` syntax:
+
+    \ditaa(doc/img/dpp-ditaa-example)(This is just a Ditaa diagram example){
+        +--------+   +-------+    +-------+
+        |        | --+ ditaa +--> |       |
+        |  Text  |   +-------+    |diagram|
+        |Document|   |!magic!|    |       |
+        |     {d}|   |       |    |       |
+        +---+----+   +-------+    +-------+
+            :                         ^
+            |       Lots of work      |
+            +-------------------------+
+    }
+
 Once generated the graph looks like:
 
 ![This is just a Ditaa diagram example](doc/img/dpp-ditaa-example.png)
@@ -349,21 +429,32 @@ Once generated the graph looks like:
 
 [Bash](https://www.gnu.org/software/bash/) is executed when the keyword `bash` is used.
 
+`dpp` syntax:
+
     ~~~~~ bash
     echo "Hi, I'm $SHELL $BASH_VERSION"
     echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ~~~~~
 
+`pp` syntax:
+
+    \bash{
+    echo "Hi, I'm $SHELL $BASH_VERSION"
+    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+    }
+
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 7470, 22685, 16770
+    Here are a few random numbers: 22186, 16369, 10128
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
 ### Bat
 
 [Bat](https://en.wikipedia.org/wiki/Cmd.exe) is executed when the keyword `bat` is used.
+
+`dpp` syntax:
 
     ~~~~~ bat
     echo Hi, I'm %COMSPEC%
@@ -374,6 +465,18 @@ This script outputs:
         echo This script is run from a real Windows
     )
     ~~~~~
+
+`pp` syntax:
+
+    \bat{
+    echo Hi, I'm %COMSPEC%
+    ver
+    if not "%WINELOADER%" == "" (
+        echo This script is run from wine under Linux
+    ) else (
+        echo This script is run from a real Windows
+    )
+    }
 
 This script outputs:
 
@@ -386,6 +489,8 @@ This script outputs:
 
 [Python](https://www.python.org/) is executed when the keyword `python` is used.
 
+`dpp` syntax:
+
     ~~~~~ python
     import sys
     import random
@@ -396,15 +501,29 @@ This script outputs:
         print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
     ~~~~~
 
+`pp` syntax:
+
+    \python{
+    import sys
+    import random
+
+    if __name__ == "__main__":
+        print("Hi, I'm Python %s"%sys.version)
+        randoms = [random.randint(0, 1000) for i in range(3)]
+        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+    }
+
 This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 909, 488, 774
+    Here are a few random numbers: 557, 502, 986
 
 ### Haskell
 
 [Haskell](https://www.haskell.org/) is executed when the keyword `haskell` is used.
+
+`dpp` syntax:
 
     ~~~~~ haskell
     import System.Info
@@ -421,6 +540,24 @@ This script outputs:
         putStrLn $ "The first 10 prime numbers are: " ++
                     intercalate " " (map show (take 10 primes))
     ~~~~~
+
+`pp` syntax:
+
+    \haskell{
+    import System.Info
+    import Data.Version
+    import Data.List
+
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+
+    version = showVersion compilerVersion
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    }
 
 This script outputs:
 
@@ -451,12 +588,12 @@ You should have received a copy of the GNU General Public License along with PP.
 PlantUML
 --------
 
-PlantUML.jar is integrated in [DPP](#dpp). [PlantUML](http://plantuml.sourceforge.net/) is distributed under the [GPL license](http://www.gnu.org/copyleft/gpl.html). See <http://plantuml.sourceforge.net/faq.html>.
+PlantUML.jar is integrated in \[DPP\]. [PlantUML](http://plantuml.sourceforge.net/) is distributed under the [GPL license](http://www.gnu.org/copyleft/gpl.html). See <http://plantuml.sourceforge.net/faq.html>.
 
 ditaa
 -----
 
-ditaa.jar is integrated in [DPP](#dpp). [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See <http://sourceforge.net/projects/ditaa/>.
+ditaa.jar is integrated in \[DPP\]. [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See <http://sourceforge.net/projects/ditaa/>.
 
 GPP
 ---
