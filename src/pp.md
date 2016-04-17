@@ -1,5 +1,5 @@
 % PP - Generic preprocessors (with pandoc in mind)
-% Christophe Delord - <http://cdsoft.fr/dpp>
+% Christophe Delord - <http://cdsoft.fr/pp>
 % \mdate{src/pp.hs src/pp.md src/dpp.c}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"

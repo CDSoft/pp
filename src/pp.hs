@@ -174,9 +174,9 @@ builtin = [ ("def", define)         , ("undef", undefine)
           ++ [ ("sh", script "sh" "sh" "" ".sh")
              , ("bash", script "bash" "bash" "" ".sh")
 #ifdef linux_HOST_OS
-             , ("bat", script "bat" "cmd /c" "@echo off\n" ".bat")
-#else
              , ("bat", script "bat" "wine cmd /c" "@echo off\n" ".bat")
+#else
+             , ("bat", script "bat" "cmd /c" "@echo off\n" ".bat")
 #endif
              , ("python", script "python" "python" "" ".py")
              , ("haskell", script "haskell" "runhaskell" "" ".hs")
