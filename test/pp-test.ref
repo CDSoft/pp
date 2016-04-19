@@ -1,0 +1,145 @@
+% PP test file
+% Christophe Delord
+% Tuesday 19 April 2016
+
+[pp-ref.md]: pp-ref.md
+
+Introduction
+============
+
+This document is a test file for `pp`.
+It is preprocessed and compared with [pp-ref.md].
+
+The document also computes the test results.
+
+    
+   
+
+
+
+
+
+Macros definition
+=================
+
+Definition:                         OK
+Its definition is correct:          OK
+Its evaluation is correct:          OK
+
+Test of an undefined macro:         OK
+Evaluation of an undefined macro:   OK
+
+Definition with arguments:          OK
+Its definition is correct:          OK
+Its evaluation is correct:          OK
+
+Undefinition:                       OK
+
+Definition test:                    OK
+Definition test:                    OK
+Definition test:                    OK
+Definition test:                    OK
+Undefinition test:                  OK
+Undefinition test:                  OK
+Undefinition test:                  OK
+Undefinition test:                  OK
+
+  
+Equality test:                      OK
+Equality test:                      OK
+Equality test:                      OK
+Equality test:                      OK
+Inequality test:                    OK
+Inequality test:                    OK
+Inequality test:                    OK
+Inequality test:                    OK
+
+Raw text:                           OK (should not evaluated: \swap(a)(b))
+
+File inclusion
+==============
+
+Inclusion of `pp-test.i`:
+
+File name of the main file:         OK
+File name of the current file:      OK
+First line of the included file.
+File name of the main file:         OK
+File name of the included file:     OK
+Definitions:                        OK
+Last line of the included file.
+
+Definitions:                        OK
+
+Files can also be included without being preprocessed:
+Undefinition:                       OK
+First line of the included file.
+File name of the main file:         \eq(\main)(test/pp-test.md)
+File name of the included file:     \eq(\file)(test/pp-test.i)
+Definitions:                        \def(answer)(42)\eq(\answer)(42)
+Last line of the included file.
+
+No definitions:                     OK
+
+File modification date
+======================
+
+Current file date:                  OK
+Specific file date:                 OK
+
+Environment variables
+=====================
+
+Environment variable:               OK
+
+Simple arithmetic
+=================
+
+undefined + 1 = 1:                  OK
+1 + 1 = 2:                          OK
+undefined + 3 = 3:                  OK
+3 + 4 = 7:                          OK
+
+Output language and output format
+=================================
+
+The current language is "en":       OK
+Section in english:                 OK
+Section in french:                  OK
+
+The current format is HTML:         OK
+Section for an HTML document:       OK
+Section for a PDF document:         OK
+
+External commands and scripts execution
+=======================================
+
+Command line (current shell):       OK
+`sh` script:                        OK
+`bash` script:                      OK
+`bat` script:                       OK
+`python` script:                    OK
+`haskell` script:                   OK
+
+Diagrams
+========
+
+Diagrams test do not check the generated image, just the link in the output document.
+
+![Test of \1](img/dot-test.png)
+![Test of \1](img/neato-test.png)
+![Test of \1](img/twopi-test.png)
+![Test of \1](img/circo-test.png)
+![Test of \1](img/fdp-test.png)
+![Test of \1](img/patchwork-test.png)
+![Test of \1](img/osage-test.png)
+
+![Test of \1](img/uml-test.png)
+
+Test results
+============
+
+Number of successful tests:     53
+Number of failures:             0
+
+All tests passed!

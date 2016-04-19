@@ -56,9 +56,9 @@ main = do
     env <- getEnvironment
     let lang = case lookup "LANG" env of
                     Just ('C':_) -> "en"
-                    Just val -> take 2 val
+                    Just val -> map toLower $ take 2 val
                     Nothing -> ""
-    let fmt = fromMaybe "" (lookup "FORMAT" env)
+    let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" env)
     doc <- doArgs ((langTag, lang) : (formatTag, fmt) : [(envTag++name, val) | (name, val) <- env]) args
     putStr doc
 
@@ -169,14 +169,14 @@ builtin = [ ("def", define)         , ("undef", undefine)
 
           ]
           ++ [ (diag, diagram Graphviz diag "" "") | diag <- graphvizDiagrams]
-          ++ [ (diag, diagram PlantUML diag "@startuml\n" "@enduml\n") | diag <- plantumlDiagrams]
+          ++ [ (diag, diagram PlantUML diag "@startuml" "@enduml") | diag <- plantumlDiagrams]
           ++ [ (diag, diagram Ditaa diag "" "") | diag <- ditaaDiagrams]
           ++ [ ("sh", script "sh" "sh" "" ".sh")
              , ("bash", script "bash" "bash" "" ".sh")
 #ifdef linux_HOST_OS
-             , ("bat", script "bat" "wine cmd /c" "@echo off\n" ".bat")
+             , ("bat", script "bat" "wine cmd /c" "@echo off" ".bat")
 #else
-             , ("bat", script "bat" "cmd /c" "@echo off\n" ".bat")
+             , ("bat", script "bat" "cmd /c" "@echo off" ".bat")
 #endif
              , ("python", script "python" "python" "" ".py")
              , ("haskell", script "haskell" "runhaskell" "" ".hs")
@@ -185,18 +185,24 @@ builtin = [ ("def", define)         , ("undef", undefine)
           ++ [ (fmt, format fmt) | fmt <- formats]
 
 define :: Macro
-define env [name, value] = return ((name, value) : env, "")
+define env [name, value] = do
+    name' <- pp' env name
+    return ((name', value) : env, "")
 define env [name] = define env [name, ""]
 define _ _ = arityError "define" [1,2]
 
 undefine :: Macro
-undefine env [name] = return ([ (n,v) | (n,v) <- env, n/=name ], "")
+undefine env [name] = do
+    name' <- pp' env name
+    return ([ (n,v) | (n,v) <- env, n/=name' ], "")
 undefine _ _ = arityError "undefine" [1]
 
 ifdef :: Macro
-ifdef env [name, t, e] = case lookup name env of
-                            Just _ -> pp env t
-                            Nothing -> pp env e
+ifdef env [name, t, e] = do
+    name' <- pp' env name
+    case lookup name' env of
+        Just _ -> pp env t
+        Nothing -> pp env e
 ifdef env [name, t] = ifdef env [name, t, ""]
 ifdef _ _ = arityError "ifdef" [1, 2]
 
@@ -206,10 +212,11 @@ ifndef env [name, t] = ifdef env [name, "", t]
 ifndef _ _ = arityError "ifndef" [1, 2]
 
 ifeq :: Macro
-ifeq env [x, y, t, e] = do (env', x') <- pp env x
-                           (env'', y') <- pp env' y
-                           pp env'' (if noSpace x' == noSpace y' then t else e)
-                                where noSpace = filter (not . isSpace)
+ifeq env [x, y, t, e] = do
+    x' <- pp' env x
+    y' <- pp' env y
+    pp env (if noSpace x' == noSpace y' then t else e)
+        where noSpace = filter (not . isSpace)
 ifeq env [x, y, t] = ifeq env [x, y, t, ""]
 ifeq _ _ = arityError "ifeq" [3, 4]
 
@@ -219,12 +226,13 @@ ifne env [x, y, t] = ifeq env [x, y, "", t]
 ifne _ _ = arityError "ifne" [3, 4]
 
 rawdef :: Macro
-rawdef env [name] = return (env, getSymbol env name)
+rawdef env [name] = do
+    name' <- pp' env name
+    return (env, getSymbol env name')
 rawdef _ _ = arityError "rawdef" [1]
 
 include :: Macro
-include env [name] = do name' <- locateFile env name
-                        ppFile env name'
+include env [name] = pp' env name >>= locateFile env >>= ppFile env
 include _ _ = arityError "include" [1]
 
 locateFile :: Env -> FilePath -> IO FilePath
@@ -243,20 +251,22 @@ raw env [src] = return (env, src)
 raw _ _ = arityError "raw" [1]
 
 rawinc :: Macro
-rawinc env [name] = do name' <- locateFile env name
-                       doc <- readFileUTF8 name'
-                       return (env, doc)
+rawinc env [name] = do
+    doc <- pp' env name >>= locateFile env >>= readFileUTF8
+    return (env, doc)
 rawinc _ _ = arityError "rawinclude" [1]
 
 rawexec :: Macro
-rawexec env [cmd] = do (env', cmd') <- pp env cmd
-                       doc <- readProcess "sh" ["-c", cmd'] ""
-                       return (env', strip doc)
+rawexec env [cmd] = do
+    cmd' <- pp' env cmd
+    doc <- readProcess "sh" ["-c", cmd'] ""
+    return (env, strip doc)
 rawexec _ _ = arityError "rawexec" [1]
 
 exec :: Macro
-exec env [cmd] = do (doc, env') <- rawexec env [cmd]
-                    pp doc env'
+exec env [cmd] = do
+    (env', doc) <- rawexec env [cmd]
+    pp env' doc
 exec _ _ = arityError "exec" [1]
 
 strip :: String -> String
@@ -264,11 +274,11 @@ strip = strip' . strip' where strip' = dropWhile isSpace . reverse
 
 mdate :: Macro
 mdate env files = do
-    (env', files') <- ppAll env files
+    files' <- ppAll' env files
     files'' <- mapM (locateFile env) $ concatMap words files' ++ [getSymbol env mainTag | null files]
     times <- mapM getModificationTime files''
     let lastTime = maximum times
-    return (env', formatTime (myLocale $ getSymbol env langTag) "%A %-d %B %Y" lastTime)
+    return (env, formatTime (myLocale $ getSymbol env langTag) "%A %-d %B %Y" lastTime)
 
 myLocale :: String -> TimeLocale
 myLocale "fr" = TimeLocale {
@@ -300,6 +310,11 @@ myLocale "fr" = TimeLocale {
                 }
 myLocale _ = defaultTimeLocale
 
+ppAll' :: Env -> [String] -> IO [String]
+ppAll' env xs = do
+    (_, xs') <- ppAll env xs
+    return xs'
+
 ppAll :: Env -> [String] -> IO (Env, [String])
 ppAll env [] = return (env, [])
 ppAll env (x:xs) = do (env', x') <- pp env x
@@ -308,16 +323,17 @@ ppAll env (x:xs) = do (env', x') <- pp env x
 
 readEnv :: Macro
 readEnv env [name] = case lookup (envTag++name) env of
-                    Just val -> pp env val
-                    Nothing -> return (env, "")
+                        Just val -> pp env val
+                        Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
 
 add :: Macro
 add env [name, val] = do
-    let val0 = getSymbol env name
-    (env', val1) <- pp env val
-    let env'' = (name, show (atoi val0 + atoi val1)) : env'
-    return (env'', "")
+    name' <- pp' env name
+    let val0 = getSymbol env name'
+    val1 <- pp' env val
+    let env' = (name', show (atoi val0 + atoi val1)) : env
+    return (env', "")
 
 add env [name] = add env [name, "1"]
 add _ _ = arityError "add" [1, 2]
@@ -329,10 +345,10 @@ atoi s = case reads s of
 
 diagram :: DiagramRuntime -> String -> String -> String -> Macro
 diagram runtime diag header footer env [path, title, code] = do
-    (_, path') <- pp env $ strip path
-    (_, title') <- pp env $ strip title
-    (_, code') <- pp env code
-    let code'' = header ++ code' ++ footer
+    path' <- pp' env $ strip path
+    title' <- pp' env $ strip title
+    code' <- pp' env code
+    let code'' = unlines [header, code', footer]
     let (gv, img, url) = splitImgUrl path' True
     oldCodeExists <- doesFileExist gv
     oldCode <- if oldCodeExists then readFileUTF8 gv else return ""
@@ -340,8 +356,10 @@ diagram runtime diag header footer env [path, title, code] = do
         writeFileUTF8 gv code''
         case runtime of
             Graphviz -> callProcess diag ["-Tpng", "-o", img, gv]
-            PlantUML -> do plantuml <- resource "plantuml.jar" plantumlJar
-                           callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
+            PlantUML -> do
+                print "here"
+                plantuml <- resource "plantuml.jar" plantumlJar
+                callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
             Ditaa -> do ditaa <- resource "ditaa.jar" ditaaJar
                         callProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img]
         return ()
@@ -372,10 +390,13 @@ ditaaJar = (_ditaa_jar, _ditaa_jar_len)
 
 resource :: String -> CStringLen -> IO FilePath
 resource name content = do
+    putStrLn $ "resource " ++ name
     tmp <- getTemporaryDirectory
     let path = tmp </> name
+    putStrLn $ "path = " ++ path
     alreadyExists <- doesFileExist path
     unless alreadyExists $ writeFile path =<< peekCStringLen content
+    putStrLn "ok"
     return path
 
 script :: String -> String -> String -> String -> Macro
@@ -387,11 +408,11 @@ script _lang cmd header ext env [src] = do
     pid <- getCurrentProcessId
 #endif
     let path = tmp </> "pp" ++ show pid ++ ext
-    (env', src') <- pp env src
-    writeFileUTF8 path $ header ++ src'
+    src' <- pp' env src
+    writeFileUTF8 path $ unlines [header, src']
     let (exe:args) = words cmd
     output <- readProcess exe (args ++ [path]) []
-    return (env', output)
+    return (env, output)
 script lang _ _ _ _ _ = arityError lang [1]
 
 #ifdef linux_HOST_OS
@@ -417,6 +438,11 @@ charsFunc = ['!', '\\']
 
 charsOpenClose :: [(Char, Char)]
 charsOpenClose = [('(', ')'), ('{', '}'), ('[', ']')]
+
+pp' :: Env -> String -> IO String
+pp' env s = do
+    (_, s') <- pp env s
+    return s'
 
 pp :: Prepro
 pp env [] = return (env, "")

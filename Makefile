@@ -168,3 +168,20 @@ dpp: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	$(CCWIN) -Werror -Wall $^ -o $@
 	strip $@
+
+#####################################################################
+# tests
+#####################################################################
+
+.PHONY: test
+test: $(BUILD)/pp-test.output test/pp-test.ref
+	diff $^
+	@echo "Test passed!"
+
+$(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
+	@mkdir -p $(BUILD)/img
+	LANG=en FORMAT=html pp $< > $@
+
+.PHONY: ref
+ref: $(BUILD)/pp-test.output
+	meld $< test/pp-test.ref
