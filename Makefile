@@ -26,12 +26,15 @@ OS = $(shell uname)
 ifeq "$(OS)" "Linux"
 
 all: gpp pp dpp README.md pp-linux-$(shell uname -m).tgz
-all: gpp.exe pp.exe dpp.exe pp-win.zip
 all: pp.tgz
 all: doc/gpp.html doc/pp.html
 
+ifneq "$(shell wine ghc --version)" "" 
+all: gpp.exe pp.exe dpp.exe pp-win.zip
+
 CCWIN = i686-w64-mingw32-gcc
 WINE = wine
+endif
 
 else
 ifeq "$(OS)" "MINGW32_NT-6.1"
@@ -55,6 +58,14 @@ clean:
 	rm -rf $(BUILD) doc
 	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
 	rm -f pp.tgz pp-win.zip pp-linux-*.tgz
+
+dep:
+	cabal update
+	cabal install strict 
+ifneq "$(WINE)" "" 
+	$(WINE) cabal update
+	$(WINE) cabal install strict 
+endif
 
 #####################################################################
 # README
@@ -120,6 +131,7 @@ DITAA = ditaa0_9
 DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
 
 $(BUILD)/%.c: $(CACHE)/%.jar
+	@mkdir -p $(dir $@)
 	xxd -i $< $@
 	sed -i 's/_cache_//g' $@
 
@@ -140,13 +152,13 @@ $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 pp: BUILDPP=$(BUILD)/$@
 pp: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	mkdir -p $(BUILDPP)
-	ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
 pp.exe: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	mkdir -p $(BUILDPP)
-	$(WINE) ghc -Werror -Wall -O2 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	$(WINE) ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	strip $@
 
 doc/pp.html: pp dpp doc/pp.css
