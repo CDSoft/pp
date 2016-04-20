@@ -357,7 +357,6 @@ diagram runtime diag header footer env [path, title, code] = do
         case runtime of
             Graphviz -> callProcess diag ["-Tpng", "-o", img, gv]
             PlantUML -> do
-                print "here"
                 plantuml <- resource "plantuml.jar" plantumlJar
                 callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
             Ditaa -> do ditaa <- resource "ditaa.jar" ditaaJar
