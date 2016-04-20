@@ -116,15 +116,17 @@ Diagrams
 
 Diagrams test do not check the generated image, just the link in the output document.
 
-\dot([.build/]img/dot-test){Test of \1}{ digraph { dot -> { A B } -> C -> dot } }
-\neato([.build/]img/neato-test){Test of \1}{ digraph { neato -> { A B } -> C -> neato } }
-\twopi([.build/]img/twopi-test){Test of \1}{ digraph { twopi -> { A B } -> C -> twopi } }
-\circo([.build/]img/circo-test){Test of \1}{ digraph { circo -> { A B } -> C -> circo } }
-\fdp([.build/]img/fdp-test){Test of \1}{ digraph { fdp -> { A B } -> C -> fdp } }
-\patchwork([.build/]img/patchwork-test){Test of \1}{ digraph { patchwork -> { A B } -> C } }
-\osage([.build/]img/osage-test){Test of \1}{ digraph { osage -> { A B } -> C -> osage } }
+\dot([.build/]img/dot-test){Test of dot}{ digraph { dot -> { A B } -> C -> dot } }
+\neato([.build/]img/neato-test){Test of neato}{ digraph { neato -> { A B } -> C -> neato } }
+\twopi([.build/]img/twopi-test){Test of twopi}{ digraph { twopi -> { A B } -> C -> twopi } }
+\circo([.build/]img/circo-test){Test of circo}{ digraph { circo -> { A B } -> C -> circo } }
+\fdp([.build/]img/fdp-test){Test of fdp}{ digraph { fdp -> { A B } -> C -> fdp } }
+\patchwork([.build/]img/patchwork-test){Test of sfdp}{ digraph { patchwork -> { A B } -> C } }
+\osage([.build/]img/osage-test){Test of osage}{ digraph { osage -> { A B } -> C -> osage } }
 
-\uml([.build/]img/uml-test){Test of \1}{ sender -> receiver }
+\uml([.build/]img/uml-test){Test of uml}{ sender -> receiver }
+
+\ditaa([.build/]img/ditaa-test){Test of ditaa}{ sender -> receiver }
 
 Test results
 ============

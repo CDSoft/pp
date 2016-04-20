@@ -1,6 +1,6 @@
 % PP test file
 % Christophe Delord
-% Tuesday 19 April 2016
+% Wednesday 20 April 2016
 
 [pp-ref.md]: pp-ref.md
 
@@ -126,15 +126,17 @@ Diagrams
 
 Diagrams test do not check the generated image, just the link in the output document.
 
-![Test of \1](img/dot-test.png)
-![Test of \1](img/neato-test.png)
-![Test of \1](img/twopi-test.png)
-![Test of \1](img/circo-test.png)
-![Test of \1](img/fdp-test.png)
-![Test of \1](img/patchwork-test.png)
-![Test of \1](img/osage-test.png)
+![Test of dot](img/dot-test.png)
+![Test of neato](img/neato-test.png)
+![Test of twopi](img/twopi-test.png)
+![Test of circo](img/circo-test.png)
+![Test of fdp](img/fdp-test.png)
+![Test of sfdp](img/patchwork-test.png)
+![Test of osage](img/osage-test.png)
 
-![Test of \1](img/uml-test.png)
+![Test of uml](img/uml-test.png)
+
+![Test of ditaa](img/ditaa-test.png)
 
 Test results
 ============
