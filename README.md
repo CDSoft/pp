@@ -27,9 +27,10 @@ Open source
 Installation
 ============
 
-1.  Download and extract [pp.tgz](http://cdsoft.fr/pp/pp.tgz)
-2.  Run `make`
-3.  Copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
+1.  Download and extract [pp.tgz](http://cdsoft.fr/pp/pp.tgz).
+2.  Run `make dep` to install Haskell required packages.
+3.  Run `make`.
+4.  Copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
 
 `pp` and `dpp` require [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp` and `dpp`).
 
@@ -446,7 +447,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 18307, 30656, 3940
+    Here are a few random numbers: 10009, 2445, 5649
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -517,7 +518,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 136, 410, 281
+    Here are a few random numbers: 149, 194, 271
 
 ### Haskell
 

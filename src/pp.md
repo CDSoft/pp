@@ -49,9 +49,10 @@ Any body can contribute on [GitHub] to:
 Installation
 ============
 
-1. Download and extract [pp.tgz]
-2. Run `make`
-3. Copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
+1. Download and extract [pp.tgz].
+2. Run `make dep` to install Haskell required packages.
+3. Run `make`.
+4. Copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
 
 `pp` and `dpp` require [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp` and `dpp`).
 
