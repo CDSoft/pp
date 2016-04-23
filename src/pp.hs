@@ -59,21 +59,20 @@ main = do
                     Just val -> map toLower $ take 2 val
                     Nothing -> ""
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" env)
-    doc <- doArgs ((langTag, lang) : (formatTag, fmt) : [(envTag++name, val) | (name, val) <- env]) args
+    (env', doc) <- doArgs ((langTag, lang) : (formatTag, fmt) : [(envTag:name, val) | (name, val) <- env]) args
     putStr doc
+    saveLiterateContent env'
 
-doArgs :: Env -> [String] -> IO String
+doArgs :: Env -> [String] -> IO (Env, String)
 doArgs env (arg:args) = do
     (env', doc) <- doArg env arg
-    doc' <- doArgs env' args
-    return $ doc ++ doc'
+    (env'', doc') <- doArgs env' args
+    return (env'', doc ++ doc')
 doArgs env [] = case lookup mainTag env of
-                    Nothing -> -- nothing have been preprocessed, let's try stdin
-                               do
-                                   (_, doc) <- doArg env "-"
-                                   return doc
+                    Nothing -> -- nothing has been preprocessed, let's try stdin
+                               doArg env "-"
                     Just _ -> -- something has already been preprocessed
-                              return ""
+                              return (env, "")
 
 doArg :: Env -> String -> IO (Env, String)
 
@@ -85,6 +84,13 @@ doArg env ('-':'U':name) = return ([(n,v) | (n,v)<-env, n/=name], "")
 doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
 
 doArg env name = ppFile ((mainTag, name) : env) name
+
+saveLiterateContent :: Env -> IO ()
+saveLiterateContent ((tagName@(tag:name), content) : env)
+    | tag == litTag && name == litFlushed = return ()
+    | tag == litTag = writeFileUTF8 name content >> saveLiterateContent [ x | x@(tag', _) <- env, tag' /= tagName ]
+saveLiterateContent (_ : env) = saveLiterateContent env
+saveLiterateContent [] = return ()
 
 ppFile :: Env -> FilePath -> IO (Env, String)
 ppFile env name = do
@@ -133,8 +139,16 @@ formats :: [String]
 formats = ["html", "pdf"]
 
 -- specific character prepend to the process environment variable names in the environment
-envTag :: String
-envTag = "$"
+envTag :: Char
+envTag = '$'
+
+-- literate programming tag (to identify output files)
+litTag :: Char
+litTag = '>'
+
+-- tag meaning that literate programming has been flushed here and that is not necessary to update file that are beyond this tag
+litFlushed :: String
+litFlushed = "<flushed>"
 
 -- Graphiviz diagrams
 graphvizDiagrams :: [String]
@@ -166,6 +180,9 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("env", readEnv)
 
           , ("add", add)
+
+          , ("lit", lit)
+          , ("flushlit", flushlit)
 
           ]
           ++ [ (diag, diagram Graphviz diag "" "") | diag <- graphvizDiagrams]
@@ -238,7 +255,7 @@ include _ _ = arityError "include" [1]
 locateFile :: Env -> FilePath -> IO FilePath
 locateFile env name = do
     let name' = case name of
-                    ('~' : '/' : relname) -> getSymbol env (envTag++"HOME") </> relname
+                    ('~' : '/' : relname) -> getSymbol env (envTag:"HOME") </> relname
                     _ -> name
     let path = map (takeDirectory . getSymbol env) [currentTag, mainTag] ++ ["."]
     found <- findFile path name'
@@ -322,9 +339,11 @@ ppAll env (x:xs) = do (env', x') <- pp env x
                       return (env'', x':x's)
 
 readEnv :: Macro
-readEnv env [name] = case lookup (envTag++name) env of
-                        Just val -> pp env val
-                        Nothing -> return (env, "")
+readEnv env [name] = do
+    name' <- pp' env name
+    case lookup (envTag:name') env of
+        Just val -> pp env val
+        Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
 
 add :: Macro
@@ -343,6 +362,32 @@ atoi s = case reads s of
             [(i, "")] -> i
             _ -> 0
 
+lit :: Macro
+lit env [name, content] = do
+    name' <- pp' env name
+    content' <- pp' env content
+    let tagName = litTag:name'
+    let oldContent = fromMaybe "" $ lookup tagName env
+    let code = replicate 70 '`'
+    return ((tagName, oldContent++content') : env, unlines [code, content', code])
+lit env [name] = do
+    name' <- pp' env name
+    let content = fromMaybe "" $ lookup (litTag:name') env
+    let code = replicate 70 '`'
+    return (env, unlines [code, content, code])
+lit _ _ = arityError "lit" [1, 2]
+
+flushlit :: Macro
+flushlit env [] = saveLiterateContent env >> return ((litTag:litFlushed, "") : env, "")
+flushlit _ _ = arityError "flushlit" [0]
+
+nullFile :: String
+#ifdef linux_HOST_OS
+nullFile = "> /dev/null"
+#else
+nullFile = "> nul"
+#endif
+
 diagram :: DiagramRuntime -> String -> String -> String -> Macro
 diagram runtime diag header footer env [path, title, code] = do
     path' <- pp' env $ strip path
@@ -358,9 +403,9 @@ diagram runtime diag header footer env [path, title, code] = do
             Graphviz -> callProcess diag ["-Tpng", "-o", img, gv]
             PlantUML -> do
                 plantuml <- resource "plantuml.jar" plantumlJar
-                callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
+                callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv, nullFile]
             Ditaa -> do ditaa <- resource "ditaa.jar" ditaaJar
-                        callProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img]
+                        callProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img, nullFile]
         return ()
     return (env, "!["++title'++"]("++url++")")
 diagram runtime diag header footer env [path, code] = diagram runtime diag header footer env [path, "", code]
@@ -389,13 +434,10 @@ ditaaJar = (_ditaa_jar, _ditaa_jar_len)
 
 resource :: String -> CStringLen -> IO FilePath
 resource name content = do
-    putStrLn $ "resource " ++ name
     tmp <- getTemporaryDirectory
     let path = tmp </> name
-    putStrLn $ "path = " ++ path
     alreadyExists <- doesFileExist path
     unless alreadyExists $ writeFile path =<< peekCStringLen content
-    putStrLn "ok"
     return path
 
 script :: String -> String -> String -> String -> Macro

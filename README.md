@@ -136,6 +136,12 @@ renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plant
 **`!sh(SCRIPT)`**  
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
+**!lit(FILENAME)\[(CONTENT)\]**  
+concats `CONTENT` to the file `FILENAME`. Files are actually written when all the documents have been successfully preprocessed. If `CONTENT` is not provided, the macro just emits the current content of `FILENAME`. This macro provides basic literate programming features.
+
+**!flushlit**  
+writes files built with `!lit` before reaching the end of the document.
+
 DPP (as well as PP diagram examples)
 ====================================
 
@@ -447,7 +453,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 10009, 2445, 5649
+    Here are a few random numbers: 24649, 30892, 507
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -518,7 +524,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 149, 194, 271
+    Here are a few random numbers: 404, 740, 878
 
 ### Haskell
 

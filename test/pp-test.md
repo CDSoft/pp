@@ -128,6 +128,73 @@ Diagrams test do not check the generated image, just the link in the output docu
 
 \ditaa([.build/]img/ditaa-test){Test of ditaa}{ sender -> receiver }
 
+Literate programming
+====================
+
+Lets write and test a useful library:
+
+The `fib` function computes fibonacci numbers:
+
+\lit{.build/mylib.h}{
+    int fib(int n);
+}
+\lit{.build/mylib.c}{
+    int fib(int n)
+    {
+        return (n < 2) ? 1 : fib(n-1) + fib(n-2);
+    }
+}
+
+The fact function computes factorials:
+
+\lit{.build/mylib.h}{
+    int fact(int n);
+}
+\lit{.build/mylib.c}{
+    int fact(int n)
+    {
+        return (n <= 1) ? 1 : n * fact(n-1);
+    }
+}
+
+Some test of `mylib.c`:
+
+\lit{.build/mylibtest.c}{
+    #include <stdio.h>
+
+    #include "mylib.h"
+
+    int main(int argc, char *argv[])
+    {
+        int i;
+        for (i = 1; i < argc; i++)
+        {
+            int n = atoi(argv[i]);
+            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
+        }
+        return 0;
+    }
+}
+
+\flushlit\exec(gcc .build/mylib*.c -o .build/mylibtest)
+
+\def(test)(mylibtest 0 1 2 3 4 5)
+\def(result)(\exec(.build/\test))
+
+`\test` outputs:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\result
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+\test:     \eq(\result)[ fact(0) =   1; fib(0) =   1
+                         fact(1) =   1; fib(1) =   1
+                         fact(2) =   2; fib(2) =   2
+                         fact(3) =   6; fib(3) =   3
+                         fact(4) =  24; fib(4) =   5
+                         fact(5) = 120; fib(5) =   8
+                       ]
+
 Test results
 ============
 

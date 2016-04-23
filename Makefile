@@ -25,11 +25,15 @@ OS = $(shell uname)
 
 ifeq "$(OS)" "Linux"
 
+PP 	= pp
+DPP = dpp
+GPP = gpp
+
 all: gpp pp dpp README.md pp-linux-$(shell uname -m).tgz
 all: pp.tgz
 all: doc/gpp.html doc/pp.html
 
-ifneq "$(shell wine ghc --version)" "" 
+ifneq "$(shell wine ghc --version)" ""
 all: gpp.exe pp.exe dpp.exe pp-win.zip
 
 CCWIN = i686-w64-mingw32-gcc
@@ -40,6 +44,10 @@ else
 ifeq "$(OS)" "MINGW32_NT-6.1"
 
 # Target not tested, feedback welcome!
+
+PP 	= pp.exe
+DPP = dpp.exe
+GPP = gpp.exe
 
 all: gpp.exe pp.exe dpp.exe
 
@@ -61,20 +69,22 @@ clean:
 
 dep:
 	cabal update
-	cabal install strict 
-ifneq "$(WINE)" "" 
+	cabal install strict
+ifneq "$(WINE)" ""
 	$(WINE) cabal update
-	$(WINE) cabal install strict 
+	$(WINE) cabal install strict
 endif
+
+.DELETE_ON_ERROR:
 
 #####################################################################
 # README
 #####################################################################
 
-README.md: gpp pp
+README.md: $(PP) $(DPP)
 README.md: src/pp.md
-	mkdir -p doc/img
-	LANG=en pp $< | dpp | pandoc -f markdown -t markdown_github > $@
+	@mkdir -p doc/img
+	LANG=en $(PP) $< | $(DPP) | pandoc -f markdown -t markdown_github > $@
 
 #####################################################################
 # archives
@@ -97,26 +107,26 @@ GPP_URL = http://files.nothingisreal.com/software/gpp/gpp.tar.bz2
 
 gpp: BUILDGPP=$(BUILD)/$@
 gpp: $(CACHE)/$(notdir $(GPP_URL))
-	mkdir -p $(BUILDGPP)
+	@mkdir -p $(BUILDGPP)
 	tar xjf $< -C $(BUILDGPP)
 	cd $(BUILDGPP)/gpp-* && ./configure && make
 	cp $(BUILDGPP)/gpp-*/src/gpp $@
-	strip $@
+	@strip $@
 
 gpp.exe: BUILDGPP=$(BUILD)/$@
 gpp.exe: $(CACHE)/$(notdir $(GPP_URL))
-	mkdir -p $(BUILDGPP)
+	@mkdir -p $(BUILDGPP)
 	tar xjf $< -C $(BUILDGPP)
 	export CC=$(CCWIN); cd $(BUILDGPP)/gpp-* && ./configure --host $(shell uname) && make
 	cp $(BUILDGPP)/gpp-*/src/gpp.exe $@
-	strip $@
+	@strip $@
 
 $(CACHE)/$(notdir $(GPP_URL)):
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	wget $(GPP_URL) -O $@
 
-doc/gpp.html: gpp
-	mkdir -p $(dir $@)
+doc/gpp.html: $(GPP)
+	@mkdir -p $(dir $@)
 	cp $(BUILD)/$</gpp-*/doc/gpp.html $@
 
 #####################################################################
@@ -143,7 +153,7 @@ $(CACHE)/$(DITAA).zip:
 
 $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 	unzip $< $(notdir $@) -d $(dir $@)
-	touch $@
+	@touch $@
 
 #####################################################################
 # PP
@@ -151,20 +161,20 @@ $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 
 pp: BUILDPP=$(BUILD)/$@
 pp: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
-	mkdir -p $(BUILDPP)
+	@mkdir -p $(BUILDPP)
 	ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
-	strip $@
+	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
 pp.exe: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
-	mkdir -p $(BUILDPP)
+	@mkdir -p $(BUILDPP)
 	$(WINE) ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
-	strip $@
+	@strip $@
 
-doc/pp.html: pp dpp doc/pp.css
+doc/pp.html: $(PP) $(DPP) doc/pp.css
 doc/pp.html: src/pp.md
-	mkdir -p doc/img
-	LANG=en pp $< | dpp | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	@mkdir -p doc/img
+	LANG=en $(PP) $< | $(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 doc/pp.css:
 	wget http://cdsoft.fr/cdsoft.css -O $@
@@ -175,11 +185,11 @@ doc/pp.css:
 
 dpp: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	gcc -Werror -Wall $^ -o $@
-	strip $@
+	@strip $@
 
 dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
 	$(CCWIN) -Werror -Wall $^ -o $@
-	strip $@
+	@strip $@
 
 #####################################################################
 # tests
@@ -190,9 +200,10 @@ test: $(BUILD)/pp-test.output test/pp-test.ref
 	diff $^
 	@echo "Test passed!"
 
+$(BUILD)/pp-test.output: $(PP)
 $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
 	@mkdir -p $(BUILD)/img
-	LANG=en FORMAT=html pp $< > $@
+	LANG=en FORMAT=html $(PP) $< > $@
 
 .PHONY: ref
 ref: $(BUILD)/pp-test.output

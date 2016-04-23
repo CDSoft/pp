@@ -201,6 +201,14 @@ syntax colorization.
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
+**!lit(FILENAME)[(CONTENT)]**
+:   concats `CONTENT` to the file `FILENAME`.
+    Files are actually written when all the documents have been successfully preprocessed.
+    If `CONTENT` is not provided, the macro just emits the current content of `FILENAME`.
+    This macro provides basic literate programming features.
+
+**!flushlit**
+:   writes files built with `!lit` before reaching the end of the document.
 }
 
 DPP (as well as PP diagram examples)
