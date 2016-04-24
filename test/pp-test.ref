@@ -1,14 +1,12 @@
 % PP test file
 % Christophe Delord
-% Saturday 23 April 2016
-
-[pp-ref.md]: pp-ref.md
+% Sunday 24 April 2016
 
 Introduction
 ============
 
 This document is a test file for `pp`.
-It is preprocessed and compared with [pp-ref.md].
+It is preprocessed and compared with `pp-test.ref`.
 
 The document also computes the test results.
 
@@ -54,7 +52,7 @@ Inequality test:                    OK
 Inequality test:                    OK
 Inequality test:                    OK
 
-Raw text:                           OK (should not evaluated: \swap(a)(b))
+Raw text:                           OK \swap(a)(b) is not evaluated
 
 File inclusion
 ==============
@@ -131,7 +129,7 @@ Diagrams test do not check the generated image, just the link in the output docu
 ![Test of twopi](img/twopi-test.png)
 ![Test of circo](img/circo-test.png)
 ![Test of fdp](img/fdp-test.png)
-![Test of sfdp](img/patchwork-test.png)
+![Test of patchwork](img/patchwork-test.png)
 ![Test of osage](img/osage-test.png)
 
 ![Test of uml](img/uml-test.png)
@@ -161,7 +159,7 @@ The `fib` function computes fibonacci numbers:
 ``````````````````````````````````````````````````````````````````````
 
 
-The fact function computes factorials:
+The `fact` function computes factorials:
 
 ``````````````````````````````````````````````````````````````````````
 
@@ -218,6 +216,64 @@ fact(5) = 120; fib(5) =   8
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 mylibtest 0 1 2 3 4 5:     OK
+
+The complete source files are:
+
+`mylib.h`:
+
+~~~~~~~~~~~~~~~~~~~ {.c}
+``````````````````````````````````````````````````````````````````````
+
+    int fib(int n);
+
+    int fact(int n);
+
+``````````````````````````````````````````````````````````````````````
+
+~~~~~~~~~~~~~~~~~~~
+
+`mylib.c`:
+
+~~~~~~~~~~~~~~~~~~~ {.c}
+``````````````````````````````````````````````````````````````````````
+
+    int fib(int n)
+    {
+        return (n < 2) ? 1 : fib(n-1) + fib(n-2);
+    }
+
+    int fact(int n)
+    {
+        return (n <= 1) ? 1 : n * fact(n-1);
+    }
+
+``````````````````````````````````````````````````````````````````````
+
+~~~~~~~~~~~~~~~~~~~
+
+`mylibtest.c`:
+
+~~~~~~~~~~~~~~~~~~~ {.c}
+``````````````````````````````````````````````````````````````````````
+
+    #include <stdio.h>
+
+    #include "mylib.h"
+
+    int main(int argc, char *argv[])
+    {
+        int i;
+        for (i = 1; i < argc; i++)
+        {
+            int n = atoi(argv[i]);
+            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
+        }
+        return 0;
+    }
+
+``````````````````````````````````````````````````````````````````````
+
+~~~~~~~~~~~~~~~~~~~
 
 Test results
 ============

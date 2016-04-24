@@ -203,20 +203,23 @@ builtin = [ ("def", define)         , ("undef", undefine)
 
 define :: Macro
 define env [name, value] = do
-    name' <- pp' env name
-    return ((name', value) : env, "")
+    name' <- pp' env name >>= strip'
+    return ((name', value) : clean name' env, "")
 define env [name] = define env [name, ""]
 define _ _ = arityError "define" [1,2]
 
 undefine :: Macro
 undefine env [name] = do
-    name' <- pp' env name
-    return ([ (n,v) | (n,v) <- env, n/=name' ], "")
+    name' <- pp' env name >>= strip'
+    return (clean name' env, "")
 undefine _ _ = arityError "undefine" [1]
+
+clean :: String -> Env -> Env
+clean name env = [ item | item@(name', _) <- env, name' /= name]
 
 ifdef :: Macro
 ifdef env [name, t, e] = do
-    name' <- pp' env name
+    name' <- pp' env name >>= strip'
     case lookup name' env of
         Just _ -> pp env t
         Nothing -> pp env e
@@ -244,12 +247,12 @@ ifne _ _ = arityError "ifne" [3, 4]
 
 rawdef :: Macro
 rawdef env [name] = do
-    name' <- pp' env name
+    name' <- pp' env name >>= strip'
     return (env, getSymbol env name')
 rawdef _ _ = arityError "rawdef" [1]
 
 include :: Macro
-include env [name] = pp' env name >>= locateFile env >>= ppFile env
+include env [name] = pp' env name >>= strip' >>= locateFile env >>= ppFile env
 include _ _ = arityError "include" [1]
 
 locateFile :: Env -> FilePath -> IO FilePath
@@ -269,15 +272,15 @@ raw _ _ = arityError "raw" [1]
 
 rawinc :: Macro
 rawinc env [name] = do
-    doc <- pp' env name >>= locateFile env >>= readFileUTF8
+    doc <- pp' env name >>= strip' >>= locateFile env >>= readFileUTF8
     return (env, doc)
 rawinc _ _ = arityError "rawinclude" [1]
 
 rawexec :: Macro
 rawexec env [cmd] = do
-    cmd' <- pp' env cmd
-    doc <- readProcess "sh" ["-c", cmd'] ""
-    return (env, strip doc)
+    cmd' <- pp' env cmd >>= strip'
+    doc <- readProcess "sh" ["-c", cmd'] "" >>= strip'
+    return (env, doc)
 rawexec _ _ = arityError "rawexec" [1]
 
 exec :: Macro
@@ -287,7 +290,10 @@ exec env [cmd] = do
 exec _ _ = arityError "exec" [1]
 
 strip :: String -> String
-strip = strip' . strip' where strip' = dropWhile isSpace . reverse
+strip = haltStrip . haltStrip where haltStrip = dropWhile isSpace . reverse
+
+strip' :: String -> IO String
+strip' s = return $ strip s
 
 mdate :: Macro
 mdate env files = do
@@ -340,7 +346,7 @@ ppAll env (x:xs) = do (env', x') <- pp env x
 
 readEnv :: Macro
 readEnv env [name] = do
-    name' <- pp' env name
+    name' <- pp' env name >>= strip'
     case lookup (envTag:name') env of
         Just val -> pp env val
         Nothing -> return (env, "")
@@ -348,10 +354,10 @@ readEnv _ _ = arityError "env" [1]
 
 add :: Macro
 add env [name, val] = do
-    name' <- pp' env name
+    name' <- pp' env name >>= strip'
     let val0 = getSymbol env name'
-    val1 <- pp' env val
-    let env' = (name', show (atoi val0 + atoi val1)) : env
+    val1 <- pp' env val >>= strip'
+    let env' = (name', show (atoi val0 + atoi val1)) : clean name' env
     return (env', "")
 
 add env [name] = add env [name, "1"]
@@ -364,34 +370,38 @@ atoi s = case reads s of
 
 lit :: Macro
 lit env [name, content] = do
-    name' <- pp' env name
+    name' <- pp' env name >>= strip'
     content' <- pp' env content
     let tagName = litTag:name'
     let oldContent = fromMaybe "" $ lookup tagName env
     let code = replicate 70 '`'
-    return ((tagName, oldContent++content') : env, unlines [code, content', code])
+    return ((tagName, oldContent++content') : clean tagName env, unlines [code, content', code])
 lit env [name] = do
-    name' <- pp' env name
+    name' <- pp' env name >>= strip'
     let content = fromMaybe "" $ lookup (litTag:name') env
     let code = replicate 70 '`'
     return (env, unlines [code, content, code])
 lit _ _ = arityError "lit" [1, 2]
 
 flushlit :: Macro
-flushlit env [] = saveLiterateContent env >> return ((litTag:litFlushed, "") : env, "")
+flushlit env [] = do
+    let tag = litTag : litFlushed
+    saveLiterateContent env
+    return ((tag, "") : clean tag env, "")
 flushlit _ _ = arityError "flushlit" [0]
 
 nullFile :: String
+nullFile =
 #ifdef linux_HOST_OS
-nullFile = "> /dev/null"
+    "> /dev/null"
 #else
-nullFile = "> nul"
+    "> nul"
 #endif
 
 diagram :: DiagramRuntime -> String -> String -> String -> Macro
 diagram runtime diag header footer env [path, title, code] = do
-    path' <- pp' env $ strip path
-    title' <- pp' env $ strip title
+    path' <- pp' env path >>= strip'
+    title' <- pp' env title >>= strip'
     code' <- pp' env code
     let code'' = unlines [header, code', footer]
     let (gv, img, url) = splitImgUrl path' True
@@ -488,33 +498,42 @@ pp' env s = do
 pp :: Prepro
 pp env [] = return (env, "")
 pp env (c0:cs)
-    | c0 `elem` charsFunc && not (null name) = case lookup name builtin of
-                Just func -> do let (args, cs'') = ppArgs cs'
-                                (env', doc) <- func env args
-                                (env'', doc') <- pp env' cs''
-                                return (env'', doc++doc')
-                Nothing -> case lookup name env of
-                                Just value -> do let (args, cs'') = ppArgs cs'
-                                                 let args' = zip (map show [(1::Int)..]) args
-                                                 (env', doc) <- pp (args'++env) value
-                                                 let env'' = env' \\ args'
-                                                 (env''', doc') <- pp env'' cs''
-                                                 return (env''', doc++doc')
-                                Nothing -> do (env', doc) <- pp env cs'
-                                              return (env', (c0:name)++doc)
-    | otherwise = do (env', doc) <- pp env cs
-                     return (env', c0:doc)
+    | c0 `elem` charsFunc && not (null name) = case (lookup name builtin, lookup name env) of
+                (Just func, _) -> do
+                    let (args, cs'') = ppArgs Nothing cs'
+                    (env', doc) <- func env args
+                    (env'', doc') <- pp env' cs''
+                    return (env'', doc++doc')
+                (Nothing, Just value) -> do
+                    let (args, cs'') = ppArgs Nothing cs'
+                    let args' = zip (map show [(1::Int)..]) args
+                    (env', doc) <- pp (args'++env) value
+                    let env'' = env' \\ args'
+                    (env''', doc') <- pp env'' cs''
+                    return (env''', doc++doc')
+                (Nothing, Nothing) -> do
+                    (env', doc) <- pp env cs'
+                    return (env', (c0:name)++doc)
+    | otherwise = do
+                    (env', doc) <- pp env cs
+                    return (env', c0:doc)
     where
         (name, cs') = span (\c -> isAlphaNum c || c == '_') cs
 
-        ppArgs :: String -> ([String], String)
-        ppArgs (c:s) = case lookup c charsOpenClose of
-                        Just c1 -> (init arg : args, s'')
-                                        where
-                                            (arg, s') = ppArg c c1 1 s
-                                            (args, s'') = ppArgs s'
-                        Nothing -> ([], c:s)
-        ppArgs s = ([], s)
+        ppArgs :: Maybe (Char, Char) -> String -> ([String], String)
+        ppArgs Nothing s = case dropWhile isSpace s of
+            (left:s1) ->
+                case lookup left charsOpenClose of
+                    Just right -> let (arg, s2) = ppArg left right 1 s1
+                                      (args, s3) = ppArgs (Just (left, right)) s2
+                                  in (init arg : args, s3)
+                    Nothing -> ([], s)
+            [] -> ([], s)
+        ppArgs leftright@(Just (left, right)) s = case dropWhile isSpace s of
+            (left':s1) | left' == left -> let (arg, s2) = ppArg left right 1 s1
+                                              (args, s3) = ppArgs leftright s2
+                                          in (init arg : args, s3)
+            _ -> ([], s)
 
         ppArg :: Char -> Char -> Int -> String -> (String, String)
         ppArg _ _ 0 s = ("", s)

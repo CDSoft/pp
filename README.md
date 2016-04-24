@@ -75,7 +75,13 @@ Macros
 
 Built-in macros are hard coded in `pp`. User defined macros are simple text substitutions that may have any number of parameters (named `!1` to `!n`). User macros can be redefined on the command line or in the documents.
 
-To get the value of a variable you just have to write its name after a `'!'` or `'\'`. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x]{y}`.
+To get the value of a variable you just have to write its name after a `'!'` or `'\'`. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:
+
+    \macro(x)(y)
+
+    [link]: foo bar
+
+    Here, [link] is not parsed as a third parameter of \macro
 
 You can choose the syntax that works better with your favorite editor and syntax colorization.
 
@@ -453,7 +459,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 24649, 30892, 507
+    Here are a few random numbers: 24629, 29121, 14512
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -524,7 +530,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 404, 740, 878
+    Here are a few random numbers: 702, 730, 521
 
 ### Haskell
 

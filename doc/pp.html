@@ -53,7 +53,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">PP - Generic preprocessors (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Saturday 23 April 2016</h3>
+<h3 class="date">Sunday 24 April 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -146,7 +146,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Files are read and preprocessed using the current state of the environment. The special file name <code>&quot;-&quot;</code> can be used to preprocess the standard input.</p>
 <h2 id="macros">Macros</h2>
 <p>Built-in macros are hard coded in <code>pp</code>. User defined macros are simple text substitutions that may have any number of parameters (named <code>!1</code> to <code>!n</code>). User macros can be redefined on the command line or in the documents.</p>
-<p>To get the value of a variable you just have to write its name after a <code>'!'</code> or <code>'\'</code>. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>\foo{x}{y}</code> or even <code>!foo[x]{y}</code>.</p>
+<p>To get the value of a variable you just have to write its name after a <code>'!'</code> or <code>'\'</code>. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>\foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:</p>
+<pre><code>\macro(x)(y)
+
+[link]: foo bar
+
+Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <p>You can choose the syntax that works better with your favorite editor and syntax colorization.</p>
 <dl>
 <dt><strong><code>!def[ine](SYMBOL)[(VALUE)]</code></strong></dt>
@@ -451,7 +456,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 }</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 12092, 6485, 17110</code></pre>
+Here are a few random numbers: 19596, 5960, 30752</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
 <p><a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a> is executed when the keyword <code>bat</code> is used.</p>
@@ -505,7 +510,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 696, 733, 614</code></pre>
+Here are a few random numbers: 478, 162, 695</code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
 <p><code>dpp</code> syntax:</p>

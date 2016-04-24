@@ -2,13 +2,11 @@
 % Christophe Delord
 % \mdate
 
-[pp-ref.md]: pp-ref.md
-
 Introduction
 ============
 
 This document is a test file for `pp`.
-It is preprocessed and compared with [pp-ref.md].
+It is preprocessed and compared with `pp-test.ref`.
 
 The document also computes the test results.
 
@@ -54,7 +52,7 @@ Inequality test:                    \eq(\ifne(\one)(\two)(one /= two)           
 Inequality test:                    \eq(\ifne(\one)(\un)(one /= un)(one == un)      )(one == un)
 Inequality test:                    \eq(\ifne(\one)(\two)(one /= two)(one == two)   )(one /= two)
 
-Raw text:                           \ne(\raw(\swap(a)(b)))(ba) (should not evaluated: \raw(\swap(a)(b)))
+Raw text:                           \ne(\raw(\swap(a)(b)))(ba) \raw(\swap(a)(b)) is not evaluated
 
 File inclusion
 ==============
@@ -116,17 +114,17 @@ Diagrams
 
 Diagrams test do not check the generated image, just the link in the output document.
 
-\dot([.build/]img/dot-test){Test of dot}{ digraph { dot -> { A B } -> C -> dot } }
-\neato([.build/]img/neato-test){Test of neato}{ digraph { neato -> { A B } -> C -> neato } }
-\twopi([.build/]img/twopi-test){Test of twopi}{ digraph { twopi -> { A B } -> C -> twopi } }
-\circo([.build/]img/circo-test){Test of circo}{ digraph { circo -> { A B } -> C -> circo } }
-\fdp([.build/]img/fdp-test){Test of fdp}{ digraph { fdp -> { A B } -> C -> fdp } }
-\patchwork([.build/]img/patchwork-test){Test of sfdp}{ digraph { patchwork -> { A B } -> C } }
-\osage([.build/]img/osage-test){Test of osage}{ digraph { osage -> { A B } -> C -> osage } }
+\dot        ([.build/]img/dot-test)         (Test of dot)       ( digraph { dot -> { A B } -> C -> dot } )
+\neato      ([.build/]img/neato-test)       (Test of neato)     ( digraph { neato -> { A B } -> C -> neato } )
+\twopi      ([.build/]img/twopi-test)       (Test of twopi)     ( digraph { twopi -> { A B } -> C -> twopi } )
+\circo      ([.build/]img/circo-test)       (Test of circo)     ( digraph { circo -> { A B } -> C -> circo } )
+\fdp        ([.build/]img/fdp-test)         (Test of fdp)       ( digraph { fdp -> { A B } -> C -> fdp } )
+\patchwork  ([.build/]img/patchwork-test)   (Test of patchwork) ( digraph { patchwork -> { A B } -> C } )
+\osage      ([.build/]img/osage-test)       (Test of osage)     ( digraph { osage -> { A B } -> C -> osage } )
 
-\uml([.build/]img/uml-test){Test of uml}{ sender -> receiver }
+\uml        ([.build/]img/uml-test)         (Test of uml)       ( sender -> receiver )
 
-\ditaa([.build/]img/ditaa-test){Test of ditaa}{ sender -> receiver }
+\ditaa      ([.build/]img/ditaa-test)       (Test of ditaa)     ( sender -> receiver )
 
 Literate programming
 ====================
@@ -138,14 +136,15 @@ The `fib` function computes fibonacci numbers:
 \lit{.build/mylib.h}{
     int fib(int n);
 }
-\lit{.build/mylib.c}{
+\lit { .build/mylib.c }
+{
     int fib(int n)
     {
         return (n < 2) ? 1 : fib(n-1) + fib(n-2);
     }
 }
 
-The fact function computes factorials:
+The `fact` function computes factorials:
 
 \lit{.build/mylib.h}{
     int fact(int n);
@@ -187,13 +186,33 @@ Some test of `mylib.c`:
 \result
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\test:     \eq(\result)[ fact(0) =   1; fib(0) =   1
+\test:     \eq(\result)( fact(0) =   1; fib(0) =   1
                          fact(1) =   1; fib(1) =   1
                          fact(2) =   2; fib(2) =   2
                          fact(3) =   6; fib(3) =   3
                          fact(4) =  24; fib(4) =   5
                          fact(5) = 120; fib(5) =   8
-                       ]
+                       )
+
+The complete source files are:
+
+`mylib.h`:
+
+~~~~~~~~~~~~~~~~~~~ {.c}
+\lit{.build/mylib.h}
+~~~~~~~~~~~~~~~~~~~
+
+`mylib.c`:
+
+~~~~~~~~~~~~~~~~~~~ {.c}
+\lit{.build/mylib.c}
+~~~~~~~~~~~~~~~~~~~
+
+`mylibtest.c`:
+
+~~~~~~~~~~~~~~~~~~~ {.c}
+\lit{.build/mylibtest.c}
+~~~~~~~~~~~~~~~~~~~
 
 Test results
 ============

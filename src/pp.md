@@ -124,7 +124,15 @@ User macros can be redefined on the command line or in the documents.
 To get the value of a variable you just have to write its name after a `'!'` or `'\'`.
 Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets.
 For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`,
-`\foo{x}{y}` or even `!foo[x]{y}`.
+`\foo{x}{y}` or even `!foo[x][y]`.
+Mixing brackets and parenthesis is not possible.
+It helps ending an argument list in some cases:
+
+    \macro(x)(y)
+
+    [link]: foo bar
+
+    Here, [link] is not parsed as a third parameter of \macro
 
 You can choose the syntax that works better with your favorite editor and
 syntax colorization.
