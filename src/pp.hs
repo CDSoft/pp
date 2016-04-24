@@ -53,13 +53,13 @@ main = do
     hSetEncoding stdin utf8
     hSetEncoding stdout utf8
     args <- getArgs
-    env <- getEnvironment
-    let lang = case lookup "LANG" env of
+    envVars <- getEnvironment
+    let lang = case lookup "LANG" envVars of
                     Just ('C':_) -> "en"
                     Just val -> map toLower $ take 2 val
                     Nothing -> ""
-    let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" env)
-    (env', doc) <- doArgs ((langTag, lang) : (formatTag, fmt) : [(envTag:name, val) | (name, val) <- env]) args
+    let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
+    (env', doc) <- doArgs ((langTag, lang) : (formatTag, fmt) : [(envTag:name, val) | (name, val) <- envVars]) args
     putStr doc
     saveLiterateContent env'
 
@@ -76,10 +76,10 @@ doArgs env [] = case lookup mainTag env of
 
 doArg :: Env -> String -> IO (Env, String)
 
-doArg env ('-':'D':def) = return ((n, drop 1 v) : env, "")
-    where (n,v) = span (/='=') def
+doArg env ('-':'D':def) = return ((name, drop 1 value) : env, "")
+    where (name, value) = span (/= '=') def
 
-doArg env ('-':'U':name) = return ([(n,v) | (n,v)<-env, n/=name], "")
+doArg env ('-':'U':name) = return (clean name env, "")
 
 doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
 
@@ -87,8 +87,8 @@ doArg env name = ppFile ((mainTag, name) : env) name
 
 saveLiterateContent :: Env -> IO ()
 saveLiterateContent ((tagName@(tag:name), content) : env)
-    | tag == litTag && name == litFlushed = return ()
-    | tag == litTag = writeFileUTF8 name content >> saveLiterateContent [ x | x@(tag', _) <- env, tag' /= tagName ]
+    | tagName == litFlushed = return ()
+    | tag == litTag = writeFileUTF8 name content >> saveLiterateContent (clean tagName env)
 saveLiterateContent (_ : env) = saveLiterateContent env
 saveLiterateContent [] = return ()
 
@@ -96,15 +96,17 @@ ppFile :: Env -> FilePath -> IO (Env, String)
 ppFile env name = do
     let caller = getSymbol env currentTag
     content <- readFileUTF8 name
-    (env', doc) <- pp ((currentTag, name) : env) content
-    return ((currentTag, caller) : env', doc)
+    (env', doc) <- pp ((currentTag, name) : clean currentTag env) content
+    return ((currentTag, caller) : clean currentTag env', doc)
 
 readFileUTF8 :: FilePath -> IO String
 readFileUTF8 "-" = getContents
 readFileUTF8 name = do
     h <- openFile name ReadMode
     hSetEncoding h utf8
-    SIO.hGetContents h
+    content <- SIO.hGetContents h
+    hClose h
+    return content
 
 writeFileUTF8 :: FilePath -> String -> IO ()
 writeFileUTF8 "-" content = putStr content
@@ -146,7 +148,7 @@ envTag = '$'
 litTag :: Char
 litTag = '>'
 
--- tag meaning that literate programming has been flushed here and that is not necessary to update file that are beyond this tag
+-- tag meaning that literate programming has been flushed here and that is not necessary to update files that are beyond this tag
 litFlushed :: String
 litFlushed = "<flushed>"
 
@@ -293,7 +295,7 @@ strip :: String -> String
 strip = haltStrip . haltStrip where haltStrip = dropWhile isSpace . reverse
 
 strip' :: String -> IO String
-strip' s = return $ strip s
+strip' = return . strip
 
 mdate :: Macro
 mdate env files = do
@@ -334,9 +336,7 @@ myLocale "fr" = TimeLocale {
 myLocale _ = defaultTimeLocale
 
 ppAll' :: Env -> [String] -> IO [String]
-ppAll' env xs = do
-    (_, xs') <- ppAll env xs
-    return xs'
+ppAll' env xs = liftM snd (ppAll env xs)
 
 ppAll :: Env -> [String] -> IO (Env, [String])
 ppAll env [] = return (env, [])
@@ -374,20 +374,69 @@ lit env [name, content] = do
     content' <- pp' env content
     let tagName = litTag:name'
     let oldContent = fromMaybe "" $ lookup tagName env
-    let code = replicate 70 '`'
-    return ((tagName, oldContent++content') : clean tagName env, unlines [code, content', code])
+    let code = replicate 70 '~'
+    return ((tagName, oldContent++content') : clean tagName env, unlines [code ++ scriptLang name' oldContent, content', code])
 lit env [name] = do
     name' <- pp' env name >>= strip'
     let content = fromMaybe "" $ lookup (litTag:name') env
-    let code = replicate 70 '`'
-    return (env, unlines [code, content, code])
+    let code = replicate 70 '~'
+    return (env, unlines [code ++ scriptLang name' "", content, code])
 lit _ _ = arityError "lit" [1, 2]
+
+scriptLang :: FilePath -> String -> String
+scriptLang fileName content = case getScriptLang of
+        "" -> ""
+        lang -> " {."++lang++" .numberLines startFrom=\""++show firstLine++"\"}"
+    where
+        firstLine = 1 + length (lines content)
+        getScriptLang = case splitExtension (map toLower fileName) of
+            (_, ".awk")     -> "awk"
+            (_, ".sh")      -> "bash"
+            (_, ".bash")    -> "bash"
+            (_, ".c")       -> "gcc"
+            (_, ".h")       -> "gcc"
+            (_, ".cc")      -> "gcc"
+            (_, ".cpp")     -> "gcc"
+            (_, ".hpp")     -> "gcc"
+            (_, ".css")     -> "css"
+            (_, ".diff")    -> "diff"
+            (_, ".patch")   -> "diff"
+            (_, ".dot")     -> "dot"
+            (_, ".hs")      -> "haskell"
+            (_, ".lhs")     -> "literatehaskell"
+            (_, ".html")    -> "html"
+            (_, ".ini")     -> "ini"
+            (_, ".java")    -> "java"
+            (_, ".js")      -> "javascript"
+            (_, ".json")    -> "json"
+            (_, ".latex")   -> "latex"
+            (_, ".tex")     -> "latex"
+            (_, ".lex")     -> "lex"
+            (_, ".lua")     -> "lua"
+            ("makefile", _) -> "makefile"
+            (_, ".mak")     -> "makefile"
+            (_, ".md")      -> "markdown"
+            (_, ".ocaml")   -> "ocaml"
+            (_, ".caml")    -> "ocaml"
+            (_, ".ml")      -> "ocaml"
+            (_, ".pas")     -> "pascal"
+            (_, ".p")       -> "pascal"
+            (_, ".pl")      -> "prolog"
+            (_, ".py")      -> "python"
+            (_, ".r")       -> "r"
+            (_, ".rb")      -> "ruby"
+            (_, ".rust")    -> "rust"
+            (_, ".xml")     -> "xml"
+            (_, ".xlst")    -> "xlst"
+            (_, ".yacc")    -> "yacc"
+            (_, ".yaml")    -> "yaml"
+            (_, ".zsh")     -> "zsh"
+            _               -> ""
 
 flushlit :: Macro
 flushlit env [] = do
-    let tag = litTag : litFlushed
     saveLiterateContent env
-    return ((tag, "") : clean tag env, "")
+    return ((litFlushed, "") : clean litFlushed env, "")
 flushlit _ _ = arityError "flushlit" [0]
 
 nullFile :: String
@@ -453,11 +502,7 @@ resource name content = do
 script :: String -> String -> String -> String -> Macro
 script _lang cmd header ext env [src] = do
     tmp <- getTemporaryDirectory
-#ifdef linux_HOST_OS
     pid <- getProcessID
-#else
-    pid <- getCurrentProcessId
-#endif
     let path = tmp </> "pp" ++ show pid ++ ext
     src' <- pp' env src
     writeFileUTF8 path $ unlines [header, src']
@@ -469,7 +514,7 @@ script lang _ _ _ _ _ = arityError lang [1]
 #ifdef linux_HOST_OS
 -- getProcessID already defined
 #else
-foreign import stdcall "GetCurrentProcessId" getCurrentProcessId :: IO Int
+foreign import stdcall "GetCurrentProcessId" getProcessID :: IO Int
 #endif
 
 language :: String -> Macro
@@ -491,9 +536,7 @@ charsOpenClose :: [(Char, Char)]
 charsOpenClose = [('(', ')'), ('{', '}'), ('[', ']')]
 
 pp' :: Env -> String -> IO String
-pp' env s = do
-    (_, s') <- pp env s
-    return s'
+pp' env s = liftM snd (pp env s)
 
 pp :: Prepro
 pp env [] = return (env, "")
