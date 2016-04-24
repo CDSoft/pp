@@ -140,6 +140,12 @@ DITAA_VERSION = 0.9
 DITAA = ditaa0_9
 DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
 
+$(BUILD)/%.o: $(BUILD)/%.c
+	ghc -Werror -Wall -O3 -c -o $@ $^
+
+$(BUILD)/%-win.o: $(BUILD)/%.c
+	$(WINE) ghc -Werror -Wall -O3 -c -o $@ $^
+
 $(BUILD)/%.c: $(CACHE)/%.jar
 	@mkdir -p $(dir $@)
 	xxd -i $< $@
@@ -160,13 +166,13 @@ $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 #####################################################################
 
 pp: BUILDPP=$(BUILD)/$@
-pp: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
+pp: src/pp.hs $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	@mkdir -p $(BUILDPP)
 	ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
-pp.exe: src/pp.hs $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
+pp.exe: src/pp.hs $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	@mkdir -p $(BUILDPP)
 	$(WINE) ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
@@ -183,11 +189,11 @@ doc/pp.css:
 # DPP
 #####################################################################
 
-dpp: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
+dpp: src/dpp.c $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	gcc -Werror -Wall $^ -o $@
 	@strip $@
 
-dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML).c $(BUILD)/$(DITAA).c
+dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	$(CCWIN) -Werror -Wall $^ -o $@
 	@strip $@
 
