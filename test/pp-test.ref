@@ -141,7 +141,7 @@ Literate programming
 
 Lets write and test a useful library:
 
-The `fib` function computes fibonacci numbers:
+The `fib` function computes Fibonacci's numbers:
 
 ``````````````````````````````````````````````````````````````````````
 
@@ -159,7 +159,7 @@ The `fib` function computes fibonacci numbers:
 ``````````````````````````````````````````````````````````````````````
 
 
-The `fact` function computes factorials:
+The `fact` function computes factorial numbers:
 
 ``````````````````````````````````````````````````````````````````````
 

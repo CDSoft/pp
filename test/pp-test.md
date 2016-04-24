@@ -131,7 +131,7 @@ Literate programming
 
 Lets write and test a useful library:
 
-The `fib` function computes fibonacci numbers:
+The `fib` function computes Fibonacci's numbers:
 
 \lit{.build/mylib.h}{
     int fib(int n);
@@ -144,7 +144,7 @@ The `fib` function computes fibonacci numbers:
     }
 }
 
-The `fact` function computes factorials:
+The `fact` function computes factorial numbers:
 
 \lit{.build/mylib.h}{
     int fact(int n);
@@ -175,7 +175,7 @@ Some test of `mylib.c`:
     }
 }
 
-\flushlit\exec(gcc .build/mylib*.c -o .build/mylibtest)
+\flushlit\exec(gcc .build/mylib.c .build/mylibtest.c -o .build/mylibtest)
 
 \def(test)(mylibtest 0 1 2 3 4 5)
 \def(result)(\exec(.build/\test))
