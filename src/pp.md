@@ -209,11 +209,51 @@ syntax colorization.
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
-**!lit(FILENAME)[(CONTENT)]**
-:   concats `CONTENT` to the file `FILENAME`.
+**!lit(FILENAME)(LANG)(CONTENT)**
+:   appends `CONTENT` to the file `FILENAME`.
+    If `FILENAME` starts with `@` it's a macro, not a file.
+    The output is highlighted using the programming language `LANGUAGE`.
+    The list of possible languages is given by `pandoc -v`.
     Files are actually written when all the documents have been successfully preprocessed.
-    If `CONTENT` is not provided, the macro just emits the current content of `FILENAME`.
+    Macros are expanded when the file is written.
     This macro provides basic literate programming features.
+
+**!lit(FILENAME)(CONTENT)**
+:   appends `CONTENT` to the file `FILENAME`.
+    The output is highlighted using the previously given language for this file.
+
+    Example:
+
+        The main program just prints some messages:
+
+        !lit(main.c)(C)(
+        @includes
+        void main()
+        {
+        @messages
+        }
+        )
+
+        First we need to be able to print messages:
+
+        !lit(@includes)(C)(
+        #include <stdio.h>
+        )
+
+        The program must first say "Hello" :
+
+        !lit(@messages)(C)(
+            puts("Hello...\n");
+        )
+
+        And also finally "Goodbye":
+
+        !lit(@messages)(
+            puts("Goodbye.");
+        )
+
+**!lit**
+:   emits the current content of `FILENAME`.
 
 **!flushlit**
 :   writes files built with `!lit` before reaching the end of the document.
@@ -537,7 +577,7 @@ The first line contains only the kind of script.
 `pp` syntax:
 
     \raw{\bash{
-    echo Hello World!    
+    echo Hello World!
     }}
 
 With no surprise, this script generates:

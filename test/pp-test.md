@@ -131,48 +131,55 @@ Literate programming
 
 Lets write and test a useful library:
 
+\lit{.build/mylib.h}{C}{
+// This is a C library
+@functionDeclarations
+}
+
+\lit{.build/mylib.c}{C}{
+// This is a C library
+@functionImplementations
+}
+
 The `fib` function computes Fibonacci's numbers:
 
-\lit{.build/mylib.h}{
-    int fib(int n);
-}
-\lit { .build/mylib.c }
+\lit{@functionDeclarations}{C}{int fib(int n);}
+\lit{@functionImplementations}{C}
 {
-    int fib(int n)
-    {
-        return (n < 2) ? 1 : fib(n-1) + fib(n-2);
-    }
+int fib(int n)
+{
+    return (n < 2) ? 1 : fib(n-1) + fib(n-2);
+}
 }
 
 The `fact` function computes factorial numbers:
 
-\lit{.build/mylib.h}{
-    int fact(int n);
+\lit{@functionDeclarations}{int fact(int n);}
+\lit{@functionImplementations}
+{
+int fact(int n)
+{
+    return (n <= 1) ? 1 : n * fact(n-1);
 }
-\lit{.build/mylib.c}{
-    int fact(int n)
-    {
-        return (n <= 1) ? 1 : n * fact(n-1);
-    }
 }
 
-Some test of `mylib.c`:
+Some tests of `mylib.c`:
 
-\lit{.build/mylibtest.c}{
-    #include <stdio.h>
+\lit{.build/mylibtest.c}{C}{
+#include <stdio.h>
 
-    #include "mylib.h"
+#include "mylib.h"
 
-    int main(int argc, char *argv[])
+int main(int argc, char *argv[])
+{
+    int i;
+    for (i = 1; i < argc; i++)
     {
-        int i;
-        for (i = 1; i < argc; i++)
-        {
-            int n = atoi(argv[i]);
-            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
-        }
-        return 0;
+        int n = atoi(argv[i]);
+        printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
     }
+    return 0;
+}
 }
 
 \flushlit\exec(gcc .build/mylib.c .build/mylibtest.c -o .build/mylibtest)
@@ -198,21 +205,15 @@ The complete source files are:
 
 `mylib.h`:
 
-~~~~~~~~~~~~~~~~~~~ {.c}
 \lit{.build/mylib.h}
-~~~~~~~~~~~~~~~~~~~
 
 `mylib.c`:
 
-~~~~~~~~~~~~~~~~~~~ {.c}
 \lit{.build/mylib.c}
-~~~~~~~~~~~~~~~~~~~
 
 `mylibtest.c`:
 
-~~~~~~~~~~~~~~~~~~~ {.c}
 \lit{.build/mylibtest.c}
-~~~~~~~~~~~~~~~~~~~
 
 Test results
 ============

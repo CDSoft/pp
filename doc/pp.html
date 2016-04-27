@@ -53,7 +53,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">PP - Generic preprocessors (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Sunday 24 April 2016</h3>
+<h3 class="date">Wednesday 27 April 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -211,8 +211,42 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dt><strong><code>!sh(SCRIPT)</code></strong></dt>
 <dd>executes a script and emits its output. The possible programming languages are <code>sh</code>, <code>bash</code>, <code>bat</code>, <code>python</code> and <code>haskell</code>.
 </dd>
-<dt><strong>!lit(FILENAME)[(CONTENT)]</strong></dt>
-<dd>concats <code>CONTENT</code> to the file <code>FILENAME</code>. Files are actually written when all the documents have been successfully preprocessed. If <code>CONTENT</code> is not provided, the macro just emits the current content of <code>FILENAME</code>. This macro provides basic literate programming features.
+<dt><strong>!lit(FILENAME)(LANG)(CONTENT)</strong></dt>
+<dd>appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it’s a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc -v</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file is written. This macro provides basic literate programming features.
+</dd>
+<dt><strong>!lit(FILENAME)(CONTENT)</strong></dt>
+<dd><p>appends <code>CONTENT</code> to the file <code>FILENAME</code>. The output is highlighted using the previously given language for this file.</p>
+<p>Example:</p>
+<pre><code>The main program just prints some messages:
+
+!lit(main.c)(C)(
+@includes
+void main()
+{
+@messages
+}
+)
+
+First we need to be able to print messages:
+
+!lit(@includes)(C)(
+#include &lt;stdio.h&gt;
+)
+
+The program must first say &quot;Hello&quot; :
+
+!lit(@messages)(C)(
+    puts(&quot;Hello...\n&quot;);
+)
+
+And also finally &quot;Goodbye&quot;:
+
+!lit(@messages)(
+    puts(&quot;Goodbye.&quot;);
+)</code></pre>
+</dd>
+<dt><strong>!lit</strong></dt>
+<dd>emits the current content of <code>FILENAME</code>.
 </dd>
 <dt><strong>!flushlit</strong></dt>
 <dd>writes files built with <code>!lit</code> before reaching the end of the document.
@@ -316,7 +350,7 @@ echo Hello World!
 ~~~~~</code></pre>
 <p><code>pp</code> syntax:</p>
 <pre><code>\bash{
-echo Hello World!    
+echo Hello World!
 }</code></pre>
 <p>With no surprise, this script generates:</p>
 <pre><code>Hello World!</code></pre>
@@ -456,7 +490,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 }</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 10083, 27223, 1914</code></pre>
+Here are a few random numbers: 28652, 28757, 25441</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
 <p><a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a> is executed when the keyword <code>bat</code> is used.</p>
@@ -510,7 +544,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 442, 373, 228</code></pre>
+Here are a few random numbers: 415, 43, 798</code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
 <p><code>dpp</code> syntax:</p>

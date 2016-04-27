@@ -1,6 +1,6 @@
 % PP test file
 % Christophe Delord
-% Sunday 24 April 2016
+% Wednesday 27 April 2016
 
 Introduction
 ============
@@ -141,60 +141,72 @@ Literate programming
 
 Lets write and test a useful library:
 
-The `fib` function computes Fibonacci's numbers:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="1"}
-
-    int fib(int n);
+// This is a C library
+@functionDeclarations
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="1"}
 
-    int fib(int n)
-    {
-        return (n < 2) ? 1 : fib(n-1) + fib(n-2);
-    }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+
+// This is a C library
+@functionImplementations
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+The `fib` function computes Fibonacci's numbers:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+int fib(int n);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+
+int fib(int n)
+{
+    return (n < 2) ? 1 : fib(n-1) + fib(n-2);
+}
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 The `fact` function computes factorial numbers:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="3"}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+int fact(int n);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    int fact(int n);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+
+int fact(int n)
+{
+    return (n <= 1) ? 1 : n * fact(n-1);
+}
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="6"}
 
-    int fact(int n)
+Some tests of `mylib.c`:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+
+#include <stdio.h>
+
+#include "mylib.h"
+
+int main(int argc, char *argv[])
+{
+    int i;
+    for (i = 1; i < argc; i++)
     {
-        return (n <= 1) ? 1 : n * fact(n-1);
+        int n = atoi(argv[i]);
+        printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
     }
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-Some test of `mylib.c`:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="1"}
-
-    #include <stdio.h>
-
-    #include "mylib.h"
-
-    int main(int argc, char *argv[])
-    {
-        int i;
-        for (i = 1; i < argc; i++)
-        {
-            int n = atoi(argv[i]);
-            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
-        }
-        return 0;
-    }
+    return 0;
+}
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -221,59 +233,45 @@ The complete source files are:
 
 `mylib.h`:
 
-~~~~~~~~~~~~~~~~~~~ {.c}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="1"}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
-    int fib(int n);
-
-    int fact(int n);
+// This is a C library
+@functionDeclarations
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~
 
 `mylib.c`:
 
-~~~~~~~~~~~~~~~~~~~ {.c}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="1"}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
-    int fib(int n)
-    {
-        return (n < 2) ? 1 : fib(n-1) + fib(n-2);
-    }
-
-    int fact(int n)
-    {
-        return (n <= 1) ? 1 : n * fact(n-1);
-    }
+// This is a C library
+@functionImplementations
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~
 
 `mylibtest.c`:
 
-~~~~~~~~~~~~~~~~~~~ {.c}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.gcc .numberLines startFrom="1"}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
-    #include <stdio.h>
+#include <stdio.h>
 
-    #include "mylib.h"
+#include "mylib.h"
 
-    int main(int argc, char *argv[])
+int main(int argc, char *argv[])
+{
+    int i;
+    for (i = 1; i < argc; i++)
     {
-        int i;
-        for (i = 1; i < argc; i++)
-        {
-            int n = atoi(argv[i]);
-            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
-        }
-        return 0;
+        int n = atoi(argv[i]);
+        printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
     }
+    return 0;
+}
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~
 
 Test results
 ============

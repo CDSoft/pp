@@ -142,8 +142,44 @@ renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plant
 **`!sh(SCRIPT)`**  
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
-**!lit(FILENAME)\[(CONTENT)\]**  
-concats `CONTENT` to the file `FILENAME`. Files are actually written when all the documents have been successfully preprocessed. If `CONTENT` is not provided, the macro just emits the current content of `FILENAME`. This macro provides basic literate programming features.
+**!lit(FILENAME)(LANG)(CONTENT)**  
+appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file is written. This macro provides basic literate programming features.
+
+**!lit(FILENAME)(CONTENT)**  
+appends `CONTENT` to the file `FILENAME`. The output is highlighted using the previously given language for this file.
+
+Example:
+
+    The main program just prints some messages:
+
+    !lit(main.c)(C)(
+    @includes
+    void main()
+    {
+    @messages
+    }
+    )
+
+    First we need to be able to print messages:
+
+    !lit(@includes)(C)(
+    #include <stdio.h>
+    )
+
+    The program must first say "Hello" :
+
+    !lit(@messages)(C)(
+        puts("Hello...\n");
+    )
+
+    And also finally "Goodbye":
+
+    !lit(@messages)(
+        puts("Goodbye.");
+    )
+
+**!lit**  
+emits the current content of `FILENAME`.
 
 **!flushlit**  
 writes files built with `!lit` before reaching the end of the document.
@@ -274,7 +310,7 @@ Scripts are also written in code blocks. The first line contains only the kind o
 `pp` syntax:
 
     \bash{
-    echo Hello World!    
+    echo Hello World!
     }
 
 With no surprise, this script generates:
@@ -459,7 +495,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 20461, 23753, 14992
+    Here are a few random numbers: 7923, 9118, 3971
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -530,7 +566,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 731, 713, 766
+    Here are a few random numbers: 51, 425, 258
 
 ### Haskell
 
