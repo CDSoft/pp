@@ -27,15 +27,6 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
 [GPP] and [DPP] are still included in [PP] but `pp` can now be used standalone.
 
-The documentations of GPP and DPP are available here:
-\ifdef(README)(
-- [DPP](src/dpp.md)
-- [GPP](src/gpp.md)
-)(
-- [DPP](dpp.html)
-- [GPP](gpp.html)
-)
-
 Open source
 ===========
 

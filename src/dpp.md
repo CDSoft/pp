@@ -26,15 +26,6 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
 [GPP] and [DPP] are still included in [PP] but `pp` can now be used standalone.
 
-The documentations of GPP and DPP are available here:
-
-- [DPP](dpp.html)
-- [GPP](gpp.html)
-
-The documentation of PP is here:
-
-- [PP](pp.html)
-
 Open source
 ===========
 

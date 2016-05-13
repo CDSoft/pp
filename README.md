@@ -7,11 +7,6 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 
 [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") are still included in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") but `pp` can now be used standalone.
 
-The documentations of GPP and DPP are available here:
-
--   [DPP](src/dpp.md)
--   [GPP](src/gpp.md)
-
 Open source
 ===========
 
@@ -375,7 +370,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 10465, 25839, 17498
+    Here are a few random numbers: 8632, 17556, 26633
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -420,7 +415,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 94, 245, 988
+    Here are a few random numbers: 760, 472, 195
 
 ### Haskell
 
