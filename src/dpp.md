@@ -1,9 +1,8 @@
-% PP - Generic preprocessor (with pandoc in mind)
+% DPP - Diagram preprocessor (with pandoc in mind)
 % Christophe Delord - <http://cdsoft.fr/pp>
-% \mdate{src/pp.hs src/pp.md src/dpp.c}
+% \mdate{src/dpp.md src/dpp.c}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
-[DPP]: http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)"
 [pp.tgz]: http://cdsoft.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
@@ -16,7 +15,7 @@
 [Haskell]: https://www.haskell.org/
 [GitHub]: https://github.com/CDSoft/pp
 
-PP - Generic preprocessors (with pandoc in mind)
+DPP - Diagram preprocessor (with pandoc in mind)
 ================================================
 
 The [PP] package contains three preprocessors for [Pandoc].
@@ -28,13 +27,13 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 [GPP] and [DPP] are still included in [PP] but `pp` can now be used standalone.
 
 The documentations of GPP and DPP are available here:
-\ifdef(README)(
-- [DPP](doc/dpp.html)
-- [GPP](doc/gpp.html)
-)(
+
 - [DPP](dpp.html)
 - [GPP](gpp.html)
-)
+
+The documentation of PP is here:
+
+- [PP](pp.html)
 
 Open source
 ===========
@@ -68,241 +67,227 @@ they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linu
 Usage
 =====
 
-`pp` is a simple preprocessor written in Haskell.
-It's mainly designed for Pandoc but may be used as a generic preprocessor.
-It is not intended to be as powerful as GPP for instance but is a simple
-implementation for my own needs, as well as an opportunity to play with
-Haskell.
+`dpp` is a filter and has no options.
+It takes some text with embedded diagrams on `stdin` and generates a text with image links on `stdout`.
+Some error messages may be written to `stderr`.
 
-`pp` takes strings as input and incrementally builds an environment which is
-a lookup table containing variables and various other information.
-Built-in macros are Haskell functions that takes arguments (strings) and the current
-environment and build a new environment in the IO monad.
-User defined macros are simple definitions, arguments are numbered 1 to N.
+~~~~~ dot doc/img/dpp-pipe1
+digraph {
+    rankdir = LR
+    INPUT [label="input documents" shape=folder color=blue]
+    DPP [label=dpp shape=diamond]
+    OUTPUT [label="output document" shape=folder color=blue]
+    IMG [label="images" shape=folder color=blue]
+    ERROR [label="error messages" shape=folder color=red]
 
-`pp` emits the preprocessed document on the standard output. Inputs are listed
-on the command line and concatenated, the standard input is used when no
-input is specified.
+    {rank=same; IMG OUTPUT ERROR}
 
-Command line
-------------
+    INPUT -> DPP [label=stdin]
+    DPP -> OUTPUT [label=stdout]
+    DPP -> IMG [label="file system"]
+    DPP -> ERROR [label=stderr]
+    IMG -> OUTPUT [label="hyper links"]
+}
+~~~~~
 
-`pp` executes arguments in the same order than the command line.
-It starts with an initial environment containing:
+Being a filter, `dpp` can be chained with other preprocessors.
+Another good generic purpose preprocessor is `pp` or `gpp`.
 
-- the environment variables of the current process
-- a `lang` variable containing the current langage
-  (currently only French (`fr`) and English (`en`) are supported)
-- a `format` variable containing the current output format
-  (`html` or `pdf`)
+`pp` now has the same diagram capabilities than `dpp`.
+This chapter show example for both preprocessors but `dpp` may become obsolete.
 
-If no input file is specified, `pp` also preprocesses the standard input.
+A classical usage of `dpp` along with `pp` and [Pandoc] is:
 
-The command line arguments are intensionally very basic.
-The user can define and undefine variables and list input files.
+~~~~~ dot doc/img/dpp-pipe2
+digraph {
+    rankdir = LR
+    INPUT [label="input documents" shape=folder color=blue]
+    PP [label=pp shape=diamond]
+    DPP [label=dpp shape=diamond]
+    PANDOC [label=pandoc shape=diamond]
+    IMG [label="images" shape=folder color=blue]
+    OUTPUT [label="output document" shape=folder color=blue]
 
-**-DSYMBOL[=VALUE]**
-:   adds the symbol `SYMBOL` to the current environment and associates it to
-    the optional value `VALUE`. If value is not given the symbol is simply
-    defined with an empty value
+    {rotate=90; rank=same; PP DPP PANDOC}
+    {rank=same; IMG OUTPUT}
 
-**-USYMBOL**
-:   removes the symbol `SYMBOL` from the current environment.
+    INPUT -> PP [label=stdin]
+    PP -> DPP [label=stdout]
+    DPP -> IMG [label="file system"]
+    DPP -> PANDOC [label=stdout]
+    PANDOC -> OUTPUT [label=stdout]
+    IMG -> OUTPUT [label="hyper links"]
+}
+~~~~~
 
-Other arguments are filenames.
+For instance, on any good Unix like system, you can use this command:
 
-Files are read and preprocessed using the current state of the environment.
-The special file name `"-"` can be used to preprocess the standard input.
+~~~~~ {.bash}
+$ pp documents... | dpp | pandoc -f markdown -t html5 -o document.html
+~~~~~
 
-Macros
+Design
 ------
 
-\raw{
+`dpp` was initially a preprocessor for [GraphViz] diagrams.
+It now also comes with [PlantUML], [ditaa] and scripting capabilities.
+`dpp` requires [GraphViz] and Java to be installed,
+[PlantUML] and [ditaa] are embedded in `dpp`.
 
-Built-in macros are hard coded in `pp`.
-User defined macros are simple text substitutions
-that may have any number of parameters (named `!1` to `!n`).
-User macros can be redefined on the command line or in the documents.
+Optionally, `dpp` can call [Bash], [Bat], [Python] or [Haskell] to execute general scripts.
 
-To get the value of a variable you just have to write its name after a `'!'` or `'\'`.
-Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets.
-For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`,
-`\foo{x}{y}` or even `!foo[x][y]`.
-Mixing brackets and parenthesis is not possible.
-It helps ending an argument list in some cases:
+~~~~~ uml doc/img/dpp-design
 
-    \macro(x)(y)
-
-    [link]: foo bar
-
-    Here, [link] is not parsed as a third parameter of \macro
-
-The last argument can also be enclosed between lines of tildas or backquotes
-(of the same length). This is useful for literate programming (see examples later).
-
-Arguments can be on separate lines but must not be separated by blank lines.
-
-You can choose the syntax that works better with your favorite editor and
-syntax colorization.
-
-**`!def[ine](SYMBOL)[(VALUE)]`**
-:   Add the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`.
-    Arguments are denoted by `!1` ... `!n` in `VALUE`.
-
-**`!undef[ine](SYMBOL)`**
-:   Remove the symbol `SYMBOL` from the current environment.
-
-**`!ifdef(SYMBOL)(TEXT_IF_DEFINED)[(TEXT_IF_NOT_DEFINED)]`**
-:   if `SYMBOL` is defined in the current environnement `pp` preprocesses
-    `TEXT_IF_DEFINED`. Otherwise it preprocesses `TEXT_IF_NOT_DEFINED`.
-
-**`!ifndef(SYMBOL)(TEXT_IF_NOT_DEFINED)[(TEXT_IF_DEFINED)]`**
-:   if `SYMBOL` is not defined in the current environnement `pp` preprocesses
-    `TEXT_IF_NOT_DEFINED`. Otherwise it preprocesses `TEXT_IF_DEFINED`.
-
-**`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]`**
-:   if `X` and 'Y' are equal `pp` preprocesses `TEXT_IF_EQUAL`.
-    Otherwise it preprocesses `TEXT_IF_DIFFERENT`.
-    Two pieces of text are equal if all characters are the same,
-    spaces are ignored.
-
-**`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]`**
-:   if `X` and 'Y' are different `pp` preprocesses `TEXT_IF_DIFFERENT`.
-    Otherwise it preprocesses `TEXT_IF_EQUAL`.
-
-**`!rawdef(X)`**
-:   get the raw (unevaluated) definition of `X`
-
-**`!inc[lude](FILENAME)`**
-:   `pp` preprocesses the content of the file named `FILENAME` and includes it
-     in the current document, using the current environment.
-     If the file path is relative it is searched first in the directory of the current file
-     then in the directory of the main file.
-
-**`!raw(TEXT)`**
-:   `pp` emits `TEXT` without any preprocessing.
-
-**`!rawinc[lude](FILE)`**
-:   `pp` emits the content of `FILE` without any preprocessing.
-
-**`!exec(COMMAND)`**
-:   executes a shell command (with the current shell) and
-    emits the output of the command.
-
-**`!rawexec(COMMAND)`**
-:   as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
-
-**`!mdate(FILES)`**
-:   returns the modification date of the most recent file.
-
-**`!env(VARNAME)`**
-:   `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
-
-**`!add(VARNAME)[(INCREMENT)]`**
-:   computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
-
-**`!fr(...)`** or **`!en(...)`**
-:   emits some text only if the current language is *fr* or *en*
-
-**`!html(...)`** or **`!pdf(...)`**
-:   emits some text only if the current format is *html* or *pdf*
-
-**`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**
-:   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].
-    See examples later.
-    The name of the macro is the kind of diagram.
-    The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
-
-**`!sh(SCRIPT)`**
-:   executes a script and emits its output.
-    The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
-
-**`!lit[erate](FILENAME)(LANG)(CONTENT)`**
-:   appends `CONTENT` to the file `FILENAME`.
-    If `FILENAME` starts with `@` it's a macro, not a file.
-    The output is highlighted using the programming language `LANGUAGE`.
-    The list of possible languages is given by `pandoc -v`.
-    Files are actually written when all the documents have been successfully preprocessed.
-    Macros are expanded when the file is written.
-    This macro provides basic literate programming features.
-
-**`!lit[erate](FILENAME)(CONTENT)`**
-:   appends `CONTENT` to the file `FILENAME`.
-    The output is highlighted using the previously given language for this file.
-
-    Example:
-
-        The main program just prints some messages:
-
-        !lit(main.c)(C)
-        ~~~~~~~~~~~~~~~~~~~~
-        @includes
-        void main()
-        {
-        @messages
-        }
-        ~~~~~~~~~~~~~~~~~~~~
-
-        First we need to be able to print messages:
-
-        !lit(@includes)(C)
-        ~~~~~~~~~~~~~~~~~~~~
-        #include <stdio.h>
-        ~~~~~~~~~~~~~~~~~~~~
-
-        The program must first say "Hello" :
-
-        !lit(@messages)(C)
-        ~~~~~~~~~~~~~~~~~~~~
-            puts("Hello...\n");
-        ~~~~~~~~~~~~~~~~~~~~
-
-        And also finally "Goodbye":
-
-        !lit(@messages)
-        ~~~~~~~~~~~~~~~~~~~~
-            puts("Goodbye.");
-        ~~~~~~~~~~~~~~~~~~~~
-
-**!lit[erate]**
-:   emits the current content of `FILENAME`.
-
-**!flushlit[erate]**
-:   writes files built with `!lit` before reaching the end of the document.
+package DPP {
+    stdin -> [Main Processor]
+    [Main Processor] -> stdout
+    [PlantUML.jar]
+    [ditaa.jar]
 }
 
-Diagram and script examples
-===========================
+node "Operating System" {
+    [GraphViz]
+    [Java]
+    [Bash]
+    [Bat]
+    [Python]
+    [Haskell]
+}
+
+database "Filesystem" {
+    folder "input" {
+        [Markdown with diagrams]
+    }
+    folder "output" {
+        [images]
+        [Markdown with image links]
+    }
+}
+
+[Markdown with diagrams] --> stdin
+[Main Processor] --> [GraphViz]
+[Main Processor] --> [Java]
+[Main Processor] --> [Bash]
+[Main Processor] --> [Bat]
+[Main Processor] --> [Python]
+[Main Processor] --> [Haskell]
+[Java] --> [PlantUML.jar]
+[Java] --> [ditaa.jar]
+stdout --> [Markdown with image links]
+[GraphViz] --> [images]
+[PlantUML.jar] -> [images]
+[ditaa.jar] -> [images]
+[Bash] -> stdout
+[Bat] -> stdout
+[Python] -> stdout
+[Haskell] -> stdout
+
+~~~~~
+
+~~~~~ uml doc/img/dpp-design2
+
+box "input" #Green
+    participant stdin
+end box
+box "DDP" #LightBlue
+    participant DPP
+    participant "PlantUML or ditaa"
+end box
+box "external dependencies" #Yellow
+    participant Java
+    participant GraphViz
+    participant "script languages"
+end box
+box "outputs" #Green
+    participant stdout
+    participant images
+end box
+
+group Normal text line
+    stdin -> DPP : non diagram text line
+    activate DPP
+    DPP -> stdout : unmodified line
+    deactivate DPP
+end
+...
+group GraphViz diagram
+    stdin -> DPP : diagram
+    activate DPP
+    DPP -> GraphViz : call
+    activate GraphViz
+    GraphViz -> images : PNG image
+    deactivate GraphViz
+    DPP -> stdout : hyper link
+    deactivate DPP
+end
+...
+group "PlantUML or ditaa" diagram
+    stdin -> DPP : diagram
+    activate DPP
+    DPP -> Java : call
+    activate Java
+    Java -> "PlantUML or ditaa" : call
+    activate "PlantUML or ditaa"
+    "PlantUML or ditaa" -> images : PNG image
+    deactivate "PlantUML or ditaa"
+    deactivate Java
+    DPP -> stdout : hyper link
+    deactivate DPP
+end
+...
+group script languages (Bash, Bat, Python or Haskell)
+    stdin -> DPP : script
+    activate DPP
+    DPP -> "script languages" : call
+    activate "script languages"
+    "script languages" -> stdout : script output
+    deactivate "script languages"
+    deactivate DPP
+end
+
+~~~~~
+
+Syntax
+======
 
 ## Diagrams
 
-Diagrams are written in code blocks as argument of a diagram macro.
-The first line contains the macro:
+Diagrams are written in code blocks.
+The first line contains:
 
-- the diagram generator (the macro name)
-- the image name without the extension (first argument)
-- the legend (second optional argument)
+- the diagram generator
+- the image name (without the extension)
+- the legend (optional)
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab).
 Both lines must have the same number of tilda or back quotes.
 
+With `dpp`:
+
+    ~~~~~ dot path/imagename optional legend
+    graph {
+        "source code of the diagram"
+    }
+    ~~~~~
+
+With `pp`:
+
     \raw{\dot(path/imagename)(optional legend)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         graph {
             "source code of the diagram"
         }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 This extremely meaningful diagram is rendered as `path/imagename.png`
 and looks like:
 
-\dot(doc/img/pp-syntax)(optional legend)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ dot doc/img/dpp-syntax optional legend
 graph {
     "source code of the diagram"
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
 The image link in the output markdown document may have to be different than the
 actual path in the file system. This happens when then `.md` or `.html` files are not
@@ -310,6 +295,8 @@ generated in the same path than the source document. Brackets can be used to
 specify the part of the path that belongs to the generated image but not to the
 link in the output document. For instance a diagram declared as:
 
+    ~~~~~ dot [mybuildpath/]img/diag42
+    or
     \raw(\dot([mybuildpath/]img/diag42)...)
 
 will be actually generated in:
@@ -350,10 +337,9 @@ The diagram generator can be:
 - uml
 - ditaa
 
-`pp` will not create any directory, the path where the image is written must already exist.
+`dpp` will not create any directory, the path where the image is written must already exist.
 
-\dot(doc/img/pp-generators)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ dot doc/img/dpp-generators
 digraph {
 
     subgraph cluster_cmd {
@@ -361,13 +347,13 @@ digraph {
         dot neato twopi circo fdp sfdp patchwork osage uml ditaa
     }
 
-    PP [shape=diamond]
+    DPP [shape=diamond]
     dot neato twopi circo fdp sfdp patchwork osage uml ditaa
     GraphViz [shape=box]
     PlantUML [shape=box]
     DITAA [shape=box label=ditaa]
 
-    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa}
+    DPP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa}
     dot -> GraphViz
     neato -> GraphViz
     twopi -> GraphViz
@@ -379,23 +365,31 @@ digraph {
     uml -> PlantUML
     ditaa -> DITAA
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
 ## Scripts
 
-Scripts are also written in code blocks as arguments of a macro.
+Scripts are also written in code blocks.
+The first line contains only the kind of script.
+
+`dpp` syntax:
+
+    ~~~~~ bash
+    echo Hello World!
+    ~~~~~
+
+`pp` syntax:
 
     \raw{\bash
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hello World!
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 With no surprise, this script generates:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\bash
-~~~~~
+~~~~~ bash
 echo Hello World!
 ~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,10 +401,9 @@ The script language can be:
 - python
 - haskell
 
-`pp` will create a temporary script before calling the associated interpretor.
+`dpp` will create a temporary script before calling the associated interpretor.
 
-\dot(doc/img/pp-scripts)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ dot doc/img/dpp-scripts
 digraph {
 
     subgraph cluster_cmd {
@@ -418,7 +411,7 @@ digraph {
         bash sh bat python haskell
     }
 
-    PP [shape=diamond]
+    DPP [shape=diamond]
     bash sh bat python haskell
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]
@@ -426,30 +419,52 @@ digraph {
     Python [shape=box label="python\nor python.exe"]
     Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
 
-    PP -> {bash sh bat python haskell}
+    DPP -> {bash sh bat python haskell}
     bash -> Bash
     sh -> Sh
     bat -> Bat
     python -> Python
     haskell -> Haskell
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
-## Examples
+## Verbatim copy
 
-The [source code](pp.md) of this document contains some diagrams.
+Blocks can also contain verbatim text that is preserved in the output.
+
+    `````````` quote
+    ~~~ bash
+    # this bash script example won't be executed!
+    # but only colorized by Pandoc.
+    ~~~
+    ``````````
+
+becomes
+
+`````````` quote
+~~~ bash
+# this bash script example won't be executed!
+# but only colorized by Pandoc.
+~~~
+``````````
+
+Examples
+========
+
+The [source code](dpp.md) of this document contains some diagrams.
 
 Here are some simple examples.
 For further details about diagrams' syntax, please read the documentation of
 [GraphViz], [PlantUML] and [ditaa].
 
-### Graphviz
+## Graphviz
 
 [GraphViz] is executed when one of these keywords is used:
 `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-    \raw{\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
     digraph {
         O -> A
         O -> B
@@ -460,18 +475,43 @@ For further details about diagrams' syntax, please read the documentation of
         B -> C
         C -> A
     }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw(\twopi(doc/img/dpp-graphviz-example)(This is just a GraphViz diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    digraph {
+        O -> A
+        O -> B
+        O -> C
+        O -> D
+        D -> O
+        A -> B
+        B -> C
+        C -> A
+    }
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 - `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
-- `doc/img/pp-graphviz-example` is the name of the image. `pp` will generate `doc/img/pp-graphviz-example.dot` and `doc/img/pp-graphviz-example.png`.
+- `doc/img/dpp-graphviz-example` is the name of the image. `dpp` will generate `doc/img/dpp-graphviz-example.dot` and `doc/img/dpp-graphviz-example.png`.
 - the rest of the first line is the legend of the graph.
-- other lines are written to `doc/img/pp-graphviz-example.dot` before running [Graphviz].
+- other lines are written to `doc/img/dpp-graphviz-example.dot` before running [Graphviz].
+
+You can use `dpp` in a pipe before [Pandoc][] (as well as `pp` or `gpp`) for instance):
+
+~~~~~ {.bash}
+pp file.md | dpp | pandoc -s -S --self-contained -f markdown -t html5 -o file.html
+
+or
+
+cat file.md | gpp -T -x | dpp | pandoc -s -S --self-contained -f markdown -t html5 -o file.html
+~~~~~
 
 Once generated the graph looks like:
 
-\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ twopi doc/img/dpp-graphviz-example This is just a GraphViz diagram example
 digraph {
     O -> A
     O -> B
@@ -482,43 +522,54 @@ digraph {
     B -> C
     C -> A
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
 [GraphViz] must be installed.
 
-### PlantUML
+## PlantUML
 
 [PlantUML] is executed when the keyword `uml` is used.
-The lines `@startuml` and `@enduml` required by [PlantUML] are added by `pp`.
+The lines `@startuml` and `@enduml` required by [PlantUML] are added by `dpp`.
 
-    \raw{\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ uml doc/img/dpp-plantuml-example This is just a PlantUML diagram example
     Alice -> Bob: Authentication Request
     Bob --> Alice: Authentication Response
     Alice -> Bob: Another authentication Request
     Alice <-- Bob: another authentication Response
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw{\uml(doc/img/dpp-plantuml-example)(This is just a PlantUML diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Alice -> Bob: Authentication Request
+    Bob --> Alice: Authentication Response
+    Alice -> Bob: Another authentication Request
+    Alice <-- Bob: another authentication Response
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 Once generated the graph looks like:
 
-\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ uml doc/img/dpp-plantuml-example This is just a PlantUML diagram example
 Alice -> Bob: Authentication Request
 Bob --> Alice: Authentication Response
 Alice -> Bob: Another authentication Request
 Alice <-- Bob: another authentication Response
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
-[PlantUML](http://plantuml.sourceforge.net) is written in Java and is embedded in `pp`.
+[PlantUML](http://plantuml.sourceforge.net) is written in Java and is embedded in `dpp`.
 Java must be installed.
 
-### Ditaa
+## Ditaa
 
 [ditaa] is executed when the keyword `ditaa` is used.
 
-    \raw{\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ ditaa doc/img/dpp-ditaa-example This is just a Ditaa diagram example
         +--------+   +-------+    +-------+
         |        | --+ ditaa +--> |       |
         |  Text  |   +-------+    |diagram|
@@ -528,13 +579,27 @@ Java must be installed.
             :                         ^
             |       Lots of work      |
             +-------------------------+
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw{\ditaa(doc/img/dpp-ditaa-example)(This is just a Ditaa diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        +--------+   +-------+    +-------+
+        |        | --+ ditaa +--> |       |
+        |  Text  |   +-------+    |diagram|
+        |Document|   |!magic!|    |       |
+        |     {d}|   |       |    |       |
+        +---+----+   +-------+    +-------+
+            :                         ^
+            |       Lots of work      |
+            +-------------------------+
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 Once generated the graph looks like:
 
-\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~ ditaa doc/img/dpp-ditaa-example This is just a Ditaa diagram example
     +--------+   +-------+    +-------+
     |        | --+ ditaa +--> |       |
     |  Text  |   +-------+    |diagram|
@@ -544,27 +609,35 @@ Once generated the graph looks like:
         :                         ^
         |       Lots of work      |
         +-------------------------+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
 
-[ditaa](http://plantuml.sourceforge.net) is written in Java and is embedded in `pp`.
+[ditaa](http://plantuml.sourceforge.net) is written in Java and is embedded in `dpp`.
 Java must be installed.
 
-### Bash
+## Bash
 
 [Bash] is executed when the keyword `bash` is used.
 
-    \raw{\bash
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ bash
     echo "Hi, I'm $SHELL $BASH_VERSION"
     echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw{\bash
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo "Hi, I'm $SHELL $BASH_VERSION"
+    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 This script outputs:
 
 ~~~~~~~~~~
-\bash
-~~~~~
+~~~~~ bash
 echo "Hi, I'm $SHELL $BASH_VERSION"
 echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 ~~~~~
@@ -572,12 +645,13 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
-### Bat
+## Bat
 
 [Bat] is executed when the keyword `bat` is used.
 
-    \raw{\bat
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ bat
     echo Hi, I'm %COMSPEC%
     ver
     if not "%WINELOADER%" == "" (
@@ -585,14 +659,26 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ) else (
         echo This script is run from a real Windows
     )
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw{\bat
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo Hi, I'm %COMSPEC%
+    ver
+    if not "%WINELOADER%" == "" (
+        echo This script is run from wine under Linux
+    ) else (
+        echo This script is run from a real Windows
+    )
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 This script outputs:
 
 ~~~~~~~~~~
-\bat
-~~~~~
+~~~~~ bat
 echo Hi, I'm %COMSPEC%
 ver
 if "%WINELOADER%" == "" (
@@ -603,12 +689,13 @@ if "%WINELOADER%" == "" (
 ~~~~~
 ~~~~~~~~~~
 
-### Python
+## Python
 
 [Python] is executed when the keyword `python` is used.
 
-    \raw{\python
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ python
     import sys
     import random
 
@@ -616,14 +703,26 @@ if "%WINELOADER%" == "" (
         print("Hi, I'm Python %s"%sys.version)
         randoms = [random.randint(0, 1000) for i in range(3)]
         print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw{\python
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import sys
+    import random
+
+    if __name__ == "__main__":
+        print("Hi, I'm Python %s"%sys.version)
+        randoms = [random.randint(0, 1000) for i in range(3)]
+        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 This script outputs:
 
 ~~~~~~~~~~
-\python
-~~~~~
+~~~~~ python
 import sys
 import random
 
@@ -634,12 +733,13 @@ if __name__ == "__main__":
 ~~~~~
 ~~~~~~~~~~
 
-### Haskell
+## Haskell
 
 [Haskell] is executed when the keyword `haskell` is used.
 
-    \raw{\haskell
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`dpp` syntax:
+
+    ~~~~~ haskell
     import System.Info
     import Data.Version
     import Data.List
@@ -649,19 +749,36 @@ if __name__ == "__main__":
                 p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
     version = showVersion compilerVersion
-
     main = do
         putStrLn $ "Hi, I'm Haskell " ++ version
         putStrLn $ "The first 10 prime numbers are: " ++
                     intercalate " " (map show (take 10 primes))
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~
+
+`pp` syntax:
+
+    \raw{\haskell
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import System.Info
+    import Data.Version
+    import Data.List
+
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+
+    version = showVersion compilerVersion
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
 
 This script outputs:
 
 ~~~~~~~~~~
-\haskell
-~~~~~
+~~~~~ haskell
 import System.Info
 import Data.Version
 import Data.List
@@ -703,14 +820,14 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 PlantUML
 --------
 
-PlantUML.jar is integrated in [PP].
+PlantUML.jar is integrated in [DPP].
 [PlantUML] is distributed under the [GPL license](http://www.gnu.org/copyleft/gpl.html).
 See <http://plantuml.sourceforge.net/faq.html>.
 
 ditaa
 -----
 
-ditaa.jar is integrated in [PP].
+ditaa.jar is integrated in [DPP].
 [ditaa] is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/).
 See <http://sourceforge.net/projects/ditaa/>.
 

@@ -131,42 +131,50 @@ Literate programming
 
 Lets write and test a useful library:
 
-\lit{.build/mylib.h}{C}{
+\lit{.build/mylib.h}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // This is a C library
 @functionDeclarations
-}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\lit{.build/mylib.c}{C}{
+\lit{.build/mylib.c}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // This is a C library
 @functionImplementations
-}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `fib` function computes Fibonacci's numbers:
 
-\lit{@functionDeclarations}{C}{int fib(int n);}
+\lit{@functionDeclarations}{C}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+int fib(int n);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 \lit{@functionImplementations}{C}
-{
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int fib(int n)
 {
     return (n < 2) ? 1 : fib(n-1) + fib(n-2);
 }
-}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `fact` function computes factorial numbers:
 
 \lit{@functionDeclarations}{int fact(int n);}
 \lit{@functionImplementations}
-{
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int fact(int n)
 {
     return (n <= 1) ? 1 : n * fact(n-1);
 }
-}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some tests of `mylib.c`:
 
-\lit{.build/mylibtest.c}{C}{
+\lit{.build/mylibtest.c}{C}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "mylib.h"
 
@@ -180,7 +188,7 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 \flushlit\exec(gcc .build/mylib.c .build/mylibtest.c -o .build/mylibtest)
 
@@ -191,15 +199,18 @@ int main(int argc, char *argv[])
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \result
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\test:     \eq(\result)( fact(0) =   1; fib(0) =   1
-                         fact(1) =   1; fib(1) =   1
-                         fact(2) =   2; fib(2) =   2
-                         fact(3) =   6; fib(3) =   3
-                         fact(4) =  24; fib(4) =   5
-                         fact(5) = 120; fib(5) =   8
-                       )
+\test:     \eq(\result)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fact(0) =   1; fib(0) =   1
+fact(1) =   1; fib(1) =   1
+fact(2) =   2; fib(2) =   2
+fact(3) =   6; fib(3) =   3
+fact(4) =  24; fib(4) =   5
+fact(5) = 120; fib(5) =   8
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The complete source files are:
 

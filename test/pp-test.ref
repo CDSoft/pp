@@ -1,6 +1,6 @@
 % PP test file
 % Christophe Delord
-% Wednesday 27 April 2016
+% Friday 13 May 2016
 
 Introduction
 ============
@@ -160,8 +160,11 @@ Lets write and test a useful library:
 The `fib` function computes Fibonacci's numbers:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+
 int fib(int n);
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
@@ -194,6 +197,7 @@ Some tests of `mylib.c`:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "mylib.h"
 
@@ -225,6 +229,7 @@ fact(2) =   2; fib(2) =   2
 fact(3) =   6; fib(3) =   3
 fact(4) =  24; fib(4) =   5
 fact(5) = 120; fib(5) =   8
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 mylibtest 0 1 2 3 4 5:     OK
@@ -256,6 +261,7 @@ The complete source files are:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "mylib.h"
 

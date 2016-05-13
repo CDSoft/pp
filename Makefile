@@ -31,7 +31,7 @@ GPP = gpp
 
 all: gpp pp dpp README.md pp-linux-$(shell uname -m).tgz
 all: pp.tgz
-all: doc/gpp.html doc/pp.html
+all: doc/gpp.html doc/pp.html doc/dpp.html
 
 ifneq "$(shell wine ghc --version)" ""
 all: gpp.exe pp.exe dpp.exe pp-win.zip
@@ -55,7 +55,22 @@ CCWIN = gcc
 WINE =
 
 else
+ifeq "$(OS)" "CYGWIN_NT-6.1-WOW"
+
+# Target not tested, feedback welcome!
+
+PP 	= pp.exe
+DPP = dpp.exe
+GPP = gpp.exe
+
+all: gpp.exe pp.exe dpp.exe
+
+CCWIN = gcc
+WINE =
+
+else
 $(error "Unknown platform: $(OS)")
+endif
 endif
 endif
 
@@ -81,10 +96,10 @@ endif
 # README
 #####################################################################
 
-README.md: $(PP) $(DPP)
+README.md: $(PP)
 README.md: src/pp.md
 	@mkdir -p doc/img
-	LANG=en $(PP) $< | $(DPP) | pandoc -f markdown -t markdown_github > $@
+	LANG=en $(PP) -DREADME $< | pandoc -f markdown -t markdown_github > $@
 
 #####################################################################
 # archives
@@ -141,10 +156,10 @@ DITAA = ditaa0_9
 DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
 
 $(BUILD)/%.o: $(BUILD)/%.c
-	ghc -Werror -Wall -O3 -c -o $@ $^
+	ghc -Werror -Wall -c -o $@ $^
 
 $(BUILD)/%-win.o: $(BUILD)/%.c
-	$(WINE) ghc -Werror -Wall -O3 -c -o $@ $^
+	$(WINE) ghc -Werror -Wall -c -o $@ $^
 
 $(BUILD)/%.c: $(CACHE)/%.jar
 	@mkdir -p $(dir $@)
@@ -168,19 +183,19 @@ $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 pp: BUILDPP=$(BUILD)/$@
 pp: src/pp.hs $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	@mkdir -p $(BUILDPP)
-	ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	ghc -Werror -Wall -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
 pp.exe: src/pp.hs $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	@mkdir -p $(BUILDPP)
-	$(WINE) ghc -Werror -Wall -O3 -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	$(WINE) ghc -Werror -Wall -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
-doc/pp.html: $(PP) $(DPP) doc/pp.css
+doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: src/pp.md
 	@mkdir -p doc/img
-	LANG=en $(PP) $< | $(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	LANG=en $(PP) $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 doc/pp.css:
 	wget http://cdsoft.fr/cdsoft.css -O $@
@@ -197,13 +212,18 @@ dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	$(CCWIN) -Werror -Wall $^ -o $@
 	@strip $@
 
+doc/dpp.html: $(PP) $(DPP) doc/pp.css
+doc/dpp.html: src/dpp.md
+	@mkdir -p doc/img
+	LANG=en $(PP) $< | $(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+
 #####################################################################
 # tests
 #####################################################################
 
 .PHONY: test
 test: $(BUILD)/pp-test.output test/pp-test.ref
-	diff $^
+	diff -b $^
 	@echo "Test passed!"
 
 $(BUILD)/pp-test.output: $(PP)

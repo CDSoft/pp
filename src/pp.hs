@@ -30,66 +30,104 @@ import System.Directory
 import Data.List
 import Data.Char
 import Data.Maybe
-import System.Process(callProcess, readProcess)
+import System.Process(readProcess)
 import System.FilePath
 import Data.Time
 import Foreign.C.String
 
 #ifdef linux_HOST_OS
 import System.Posix.Process
-#else
---import System.Win32.Process
 #endif
 
 --import Debug.Trace
 
+-- Set of chars
 type Chars = String
+
+-- Preprocessor environment (lookup table)
 type Env = [(String, String)]
+
+-- A macro takes an environment and arguments
+-- and returns a new environment and the result of the macro as a string.
 type Macro = Env -> [String] -> IO (Env, String)
+
+-- A preprocessor takes an environment and a string to preprocess
+-- and returns a new environment and the preprocessed string.
 type Prepro = Env -> String ->  IO (Env, String)
 
+-- Diagram types managed by pp
 data DiagramRuntime = Graphviz | PlantUML | Ditaa
 
+-- The main function builds the initial environment, parses the input
+-- and print the output on stdout.
 main :: IO ()
 main = do
+    -- work with UTF-8 documents
     hSetEncoding stdin utf8
     hSetEncoding stdout utf8
+    -- initial environment
+    -- get $LANG (en, fr, ...)
     envVars <- getEnvironment
     let lang = case lookup "LANG" envVars of
                     Just ('C':_) -> "en"
                     Just val -> map toLower $ take 2 val
                     Nothing -> ""
+    -- get $FORMAT (html or pdf)
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
+    -- the initial environment contains the language, the format and the environment variables
     let env = (langTag, lang) : (formatTag, fmt) : [(envVarTagChar:name, val) | (name, val) <- envVars]
+    -- parse the arguments and produce the preprocessed output
     (env', doc) <- getArgs >>= doArgs env
+    -- just write the preprocessed output to stdout
     putStr doc
+    -- finally save the literate content (if any)
     saveLiterateContent (filter isLitMacro env') env'
 
+-- "doArgs env args" parses the command line arguments
+-- and returns an updated environment and the preprocessed output
 doArgs :: Env -> [String] -> IO (Env, String)
+
+-- Parse all the arguments.
 doArgs env (arg:args) = do
     (env', doc) <- doArg env arg
     (env'', doc') <- doArgs env' args
     return (env'', doc ++ doc')
+
+-- No more argument
+-- mainFileTag is put in the environment only when a file has been preprocessed.
+-- This variable is not set when no file is given on the command line.
+-- In this case, pp preprocesses stdin.
 doArgs env [] = case lookup mainFileTag env of
                     Nothing -> -- nothing has been preprocessed, let's try stdin
                                doArg env "-"
                     Just _ -> -- something has already been preprocessed
                               return (env, "")
 
+-- "doArg env arg" parses one argument
+-- and returns an updated environment and the output produced by the argument.
 doArg :: Env -> String -> IO (Env, String)
 
+-- "doArg env "-Dname=value"" adds a new definition to the environment.
 doArg env ('-':'D':def) = return ((name, drop 1 value) : env, "")
     where (name, value) = span (/= '=') def
 
+-- "doArg env "-Uname"" removes a definition from the environment.
 doArg env ('-':'U':name) = return (clean name env, "")
 
+-- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
 
+-- "doArg env filename" preprocessed the content of a file using the current environment.
+-- The mainFileTag variable is added to the environment.
+-- It contains the name of the file being preprocessed.
 doArg env name = ppFile ((mainFileTag, name) : env) name
 
+-- "saveLiterateContent macros env" saves all the literal contents recorded in the environment.
+-- "macros" is the list of literal content that must not be saved
+-- (they are used as macros to build other literal contents).
 saveLiterateContent :: Env -> Env -> IO ()
 saveLiterateContent macros ((tagName@(tag:name), content) : env)
-    -- ignore files that have not been modified since the last call to flushlit
+    -- ignore files that have not been modified since the last call to flushLit
     | tagName == litFlushedTag  = return ()
     -- macros shall not be saved (macro names start with litMacroTagChar)
     | isLitMacroName tagName    = saveLiterateContent macros (clean tagName env)
@@ -99,29 +137,48 @@ saveLiterateContent macros ((tagName@(tag:name), content) : env)
 saveLiterateContent macros (_ : env) = saveLiterateContent macros env
 saveLiterateContent _ [] = return ()
 
+-- "isLitMacro (name, value)" tells if an environment entry is a literal content macro.
+-- An entry is a literal content if its name is the name of a literal content macro.
 isLitMacro :: (String, String) -> Bool
 isLitMacro = isLitMacroName . fst
 
+-- "isLitMacroName name" tells if a name is a literal content macro name.
+-- A literal content name starts with the character litContentTagChar
+-- and is not a file name (ie starts with litMacroTagChar).
 isLitMacroName :: String -> Bool
 isLitMacroName (tag:c0:_) = tag == litContentTagChar && c0 == litMacroTagChar
 isLitMacroName _ = False
 
+-- "ppFile env name" preprocess a file using the current environment
+-- env returns an updated environment and the preprocessed output.
+-- The environment contains the name of the file in currentFileTag.
 ppFile :: Env -> FilePath -> IO (Env, String)
 ppFile env name = do
+    -- file name of the caller
     let caller = getSymbol env currentFileTag
+    -- read the file to preprocess
     content <- readFileUTF8 name
+    -- preprocess the file in an environment containing the filename
     (env', doc) <- pp ((currentFileTag, name) : clean currentFileTag env) content
+    -- return the environment (with the file nam of the caller) and the preprocessed output
     return ((currentFileTag, caller) : clean currentFileTag env', doc)
 
+-- "readFileUTF8 name" reads an UTF-8 file.
+-- If name is "-", it reads stdin.
 readFileUTF8 :: FilePath -> IO String
 readFileUTF8 "-" = getContents
 readFileUTF8 name = do
     h <- openFile name ReadMode
     hSetEncoding h utf8
+    -- the file must not be read lazily
+    -- (in some case we want to be able to read files
+    -- that have been previously produced by the same document)
     content <- SIO.hGetContents h
     hClose h
     return content
 
+-- "writeFileUTF8 name content" writes an UTF-8 file.
+-- If name is "-", it writes to stdout.
 writeFileUTF8 :: FilePath -> String -> IO ()
 writeFileUTF8 "-" content = putStr content
 writeFileUTF8 name content = do
@@ -205,8 +262,8 @@ builtin = [ ("def", define)         , ("undef", undefine)
 
           , ("add", add)
 
-          , ("lit", lit)
-          , ("flushlit", flushlit)
+          , ("lit", lit)            , ("literate", lit)
+          , ("flushlit", flushlit)  , ("flushliterate", flushlit)
 
           ]
           ++ [ (diag, diagram Graphviz diag ""          "")        | diag <- graphvizDiagrams]
@@ -221,6 +278,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
           ++ [ (lang, language lang) | lang <- langs]
           ++ [ (fmt, format fmt) | fmt <- formats]
 
+-- shell command interpretor for Windows scripts
 cmdexe :: String
 cmdexe =
 #ifdef linux_HOST_OS
@@ -243,7 +301,8 @@ undefine env [name] = do
 undefine _ _ = arityError "undefine" [1]
 
 clean :: String -> Env -> Env
-clean name env = [ item | item@(name', _) <- env, name' /= name]
+--clean name env = [ item | item@(name', _) <- env, name' /= name]
+clean name env = filter ((/=name) . fst) env
 
 ifdef :: Macro
 ifdef env [name, t, e] = do
@@ -403,23 +462,34 @@ lit env [name, content] = do
     name' <- pp' env name >>= strip'
     content' <- pp' env content
     let contentTag = litContentTagChar:name'
-    let litLangTag = litLangTagChar:name'
     let oldContent = fromMaybe "" $ lookup contentTag env
     let env' = (contentTag, oldContent++content') : clean contentTag env
-    let formatedCode = case lookup litLangTag env of
-                        Just lang' -> unlines [codeBlock ++ " {." ++ lang' ++ "}", content', codeBlock]
-                        Nothing    -> unlines [codeBlock, content', codeBlock]
+    let lang' = litLang env' name'
+    let formatedCode = case lang' of
+                        Just lang'' -> unlines [codeBlock ++ " {." ++ lang'' ++ "}", content', codeBlock]
+                        Nothing     -> unlines [codeBlock, content', codeBlock]
     return (env', formatedCode)
 lit env [name] = do
     name' <- pp' env name >>= strip'
     let content = fromMaybe "" $ lookup (litContentTagChar:name') env
-    let litLangTag = litLangTagChar:name'
-    let code = replicate 70 '~'
-    let formatedCode = case lookup litLangTag env of
-                        Just lang' -> unlines [code ++ " {." ++ lang' ++ "}", content, code]
-                        Nothing    -> unlines [code, content, code]
+    let lang' = litLang env name'
+    let formatedCode = case lang' of
+                        Just lang'' -> unlines [codeBlock ++ " {." ++ lang'' ++ "}", content, codeBlock]
+                        Nothing     -> unlines [codeBlock, content, codeBlock]
     return (env, formatedCode)
 lit _ _ = arityError "lit" [1, 2, 3]
+
+litLang :: Env -> String -> Maybe String
+litLang env name = case (lookup (litLangTagChar:name) env, defaultLitLang name) of
+    (Just lang, _) -> Just lang
+    (_, Just lang) -> Just lang
+    _ -> Nothing
+
+defaultLitLang :: String -> Maybe String
+defaultLitLang name = case (takeBaseName name, takeExtension name) of
+    (_, ".c")   -> Just "C"
+    (_, ".h")   -> Just "C"
+    _ -> Nothing
 
 codeBlock :: String
 codeBlock = replicate 70 '~'
@@ -441,14 +511,6 @@ expandLit macros (c0:s)
                         Just content -> expandLit macros content
 expandLit _ [] = []
 
-nullFile :: String
-nullFile =
-#ifdef linux_HOST_OS
-    "> /dev/null"
-#else
-    "> nul"
-#endif
-
 diagram :: DiagramRuntime -> String -> String -> String -> Macro
 diagram runtime diag header footer env [path, title, code] = do
     path' <- pp' env path >>= strip'
@@ -460,13 +522,15 @@ diagram runtime diag header footer env [path, title, code] = do
     oldCode <- if oldCodeExists then readFileUTF8 gv else return ""
     when (code'' /= oldCode) $ do
         writeFileUTF8 gv code''
-        case runtime of
-            Graphviz -> callProcess diag ["-Tpng", "-o", img, gv]
+        _ <- case runtime of
+            Graphviz ->
+                readProcess diag ["-Tpng", "-o", img, gv] []
             PlantUML -> do
                 plantuml <- resource "plantuml.jar" plantumlJar
-                callProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv, nullFile]
-            Ditaa -> do ditaa <- resource "ditaa.jar" ditaaJar
-                        callProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img, nullFile]
+                readProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv] []
+            Ditaa -> do
+                ditaa <- resource "ditaa.jar" ditaaJar
+                readProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img] []
         return ()
     return (env, "!["++title'++"]("++url++")")
 diagram runtime diag header footer env [path, code] = diagram runtime diag header footer env [path, "", code]
@@ -537,6 +601,9 @@ charsFunc = ['!', '\\']
 charsOpenClose :: [(Char, Char)]
 charsOpenClose = [('(', ')'), ('{', '}'), ('[', ']')]
 
+charsBlock :: Chars
+charsBlock = ['~', '`']
+
 pp' :: Env -> String -> IO String
 pp' env s = liftM snd (pp env s)
 
@@ -566,19 +633,30 @@ pp env (c0:cs)
         (name, cs') = span (\c -> isAlphaNum c || c == '_') cs
 
         ppArgs :: Maybe (Char, Char) -> String -> ([String], String)
-        ppArgs Nothing s = case dropWhile isSpace s of
-            (left:s1) ->
+        ppArgs Nothing s = case dropSpaces s of -- case dropWhile isSpace s of
+            Just s1@(c:_) | c `elem` charsBlock -> ppBlock s c s1
+            Just (left:s1) ->
                 case lookup left charsOpenClose of
                     Just right -> let (arg, s2) = ppArg left right 1 s1
                                       (args, s3) = ppArgs (Just (left, right)) s2
                                   in (init arg : args, s3)
                     Nothing -> ([], s)
-            [] -> ([], s)
-        ppArgs leftright@(Just (left, right)) s = case dropWhile isSpace s of
-            (left':s1) | left' == left -> let (arg, s2) = ppArg left right 1 s1
-                                              (args, s3) = ppArgs leftright s2
-                                          in (init arg : args, s3)
             _ -> ([], s)
+        ppArgs leftright@(Just (left, right)) s = case dropSpaces s of -- case dropWhile isSpace s of
+            Just s1@(c:_) | c `elem` charsBlock -> ppBlock s c s1
+            Just (left':s1) | left' == left ->
+                let (arg, s2) = ppArg left right 1 s1
+                    (args, s3) = ppArgs leftright s2
+                in (init arg : args, s3)
+            _ -> ([], s)
+
+        dropSpaces :: String -> Maybe String
+        dropSpaces s
+            | nbNl <= 1 = Just s1
+            | otherwise = Nothing
+            where
+                (spaces, s1) = span isSpace s
+                nbNl = length (filter (=='\n') spaces)
 
         ppArg :: Char -> Char -> Int -> String -> (String, String)
         ppArg _ _ 0 s = ("", s)
@@ -589,6 +667,18 @@ pp env (c0:cs)
                 level'  | c == left     = level + 1
                         | c == right    = level - 1
                         | otherwise     = level
+
+        ppBlock :: String -> Char -> String -> ([String], String)
+        ppBlock s0 c s
+            | startLen >= 3 = ([block], s2)
+            | otherwise = ([], s0)
+            where
+                (start, s1) = span (==c) s
+                startLen = length start
+                (block, s2) = getBlock s1
+                getBlock s' | start `isPrefixOf` s' = ([], drop startLen s')
+                getBlock (c':s') = (c':cs'', s'') where (cs'', s'') = getBlock s'
+                getBlock [] = unexpectedEndOfFile env
 
 getSymbol :: Env -> String -> String
 getSymbol env name = fromMaybe "" (lookup name env)
