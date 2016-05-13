@@ -29,8 +29,8 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
 The documentations of GPP and DPP are available here:
 \ifdef(README)(
-- [DPP](doc/dpp.html)
-- [GPP](doc/gpp.html)
+- [DPP](src/dpp.md)
+- [GPP](src/gpp.md)
 )(
 - [DPP](dpp.html)
 - [GPP](gpp.html)
