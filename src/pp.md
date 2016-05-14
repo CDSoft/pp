@@ -100,6 +100,12 @@ The user can define and undefine variables and list input files.
 **-USYMBOL**
 :   removes the symbol `SYMBOL` from the current environment.
 
+**-fr|-en**
+:   changes the current language.
+
+**-html|-pdf**
+:   changes the current output file format.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment.
@@ -191,6 +197,12 @@ syntax colorization.
 
 **`!add(VARNAME)[(INCREMENT)]`**
 :   computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
+
+**`!lang`**
+:   emits the current language (*fr* or *en*)
+
+**`!format`**
+:   emits the current format (*html* or *pdf*)
 
 **`!fr(...)`** or **`!en(...)`**
 :   emits some text only if the current language is *fr* or *en*

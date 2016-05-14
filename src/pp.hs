@@ -44,8 +44,21 @@ import System.Posix.Process
 -- Set of chars
 type Chars = String
 
+-- symbol type of a definition in the environment
+data Var = Def String           -- user macro definition
+         | EnvVar String        -- environment variable
+         | Lang                 -- current language
+         | FileFormat           -- current file format
+         | MainFile             -- main file name (given on the command line)
+         | CurrentFile          -- current file name (can be included in other files)
+         | LitFile FilePath     -- literate file name
+         | LitMacro String      -- literate macro name
+         | LitLang String       -- language of a literate file or macro
+         | LitFlush             -- tag to flush literate content
+         deriving (Eq)
+
 -- Preprocessor environment (lookup table)
-type Env = [(String, String)]
+type Env = [(Var, String)]
 
 -- A macro takes an environment and arguments
 -- and returns a new environment and the result of the macro as a string.
@@ -75,7 +88,7 @@ main = do
     -- get $FORMAT (html or pdf)
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
     -- the initial environment contains the language, the format and the environment variables
-    let env = (langTag, lang) : (formatTag, fmt) : [(envVarTagChar:name, val) | (name, val) <- envVars]
+    let env = (Lang, lang) : (FileFormat, fmt) : [(EnvVar name, val) | (name, val) <- envVars]
     -- parse the arguments and produce the preprocessed output
     (env', doc) <- getArgs >>= doArgs env
     -- just write the preprocessed output to stdout
@@ -97,7 +110,7 @@ doArgs env (arg:args) = do
 -- mainFileTag is put in the environment only when a file has been preprocessed.
 -- This variable is not set when no file is given on the command line.
 -- In this case, pp preprocesses stdin.
-doArgs env [] = case lookup mainFileTag env of
+doArgs env [] = case lookup MainFile env of
                     Nothing -> -- nothing has been preprocessed, let's try stdin
                                doArg env "-"
                     Just _ -> -- something has already been preprocessed
@@ -108,11 +121,19 @@ doArgs env [] = case lookup mainFileTag env of
 doArg :: Env -> String -> IO (Env, String)
 
 -- "doArg env "-Dname=value"" adds a new definition to the environment.
-doArg env ('-':'D':def) = return ((name, drop 1 value) : env, "")
+doArg env ('-':'D':def) = return ((Def name, drop 1 value) : clean (Def name) env, "")
     where (name, value) = span (/= '=') def
 
 -- "doArg env "-Uname"" removes a definition from the environment.
-doArg env ('-':'U':name) = return (clean name env, "")
+doArg env ('-':'U':name) = return (clean (Def name) env, "")
+
+-- "doArg env "-fr|-en"" changes the current language
+doArg env ('-':lang) | lang' `elem` langs =
+    return ((Lang, lang') : clean Lang env, "") where lang' = map toLower lang
+
+-- "doArg env "-html|-pdf"" changes the current format
+doArg env ('-':fmt) | fmt' `elem` formats =
+    return ((FileFormat, fmt') : clean FileFormat env, "") where fmt' = map toLower fmt
 
 -- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
@@ -120,33 +141,44 @@ doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
 -- "doArg env filename" preprocessed the content of a file using the current environment.
 -- The mainFileTag variable is added to the environment.
 -- It contains the name of the file being preprocessed.
-doArg env name = ppFile ((mainFileTag, name) : env) name
+doArg env name = ppFile ((MainFile, name) : env) name
 
--- "saveLiterateContent macros env" saves all the literal contents recorded in the environment.
--- "macros" is the list of literal content that must not be saved
--- (they are used as macros to build other literal contents).
+-- "saveLiterateContent macros env" saves all the literate contents recorded in the environment.
+-- "macros" is the list of literate content that must not be saved
+-- (they are used as macros to build other literate contents).
 saveLiterateContent :: Env -> Env -> IO ()
-saveLiterateContent macros ((tagName@(tag:name), content) : env)
-    -- ignore files that have not been modified since the last call to flushLit
-    | tagName == litFlushedTag  = return ()
-    -- macros shall not be saved (macro names start with litMacroTagChar)
-    | isLitMacroName tagName    = saveLiterateContent macros (clean tagName env)
-    -- file content shall be expanded with macro contents
-    -- previous definitions of the same file are removed from the list to avoid writing old intermediate definitions
-    | tag == litContentTagChar  = writeFileUTF8 name (expandLit macros content) >> saveLiterateContent macros (clean tagName env)
-saveLiterateContent macros (_ : env) = saveLiterateContent macros env
-saveLiterateContent _ [] = return ()
 
--- "isLitMacro (name, value)" tells if an environment entry is a literal content macro.
--- An entry is a literal content if its name is the name of a literal content macro.
-isLitMacro :: (String, String) -> Bool
+-- ignore files that have not been modified since the last call to flushLit
+saveLiterateContent _ ((LitFlush, _) : _) =
+    return ()
+
+-- macros shall not be saved (macro names start with litMacroTagChar)
+saveLiterateContent macros ((mac@(LitMacro _), _) : env) =
+    saveLiterateContent macros (clean mac env)
+
+-- file content shall be expanded with macro contents
+-- previous definitions of the same file are removed from the list to avoid writing old intermediate definitions
+saveLiterateContent macros ((file@(LitFile name), content) : env) = do
+    writeFileUTF8 name (expandLit macros content)
+    saveLiterateContent macros (clean file env)
+
+-- other definitions are not literate things
+saveLiterateContent macros (_ : env) =
+    saveLiterateContent macros env
+
+saveLiterateContent _ [] =
+    return ()
+
+-- "isLitMacro (name, value)" tells if an environment entry is a literate content macro.
+-- An entry is a literate content if its name is the name of a literate content macro.
+isLitMacro :: (Var, String) -> Bool
 isLitMacro = isLitMacroName . fst
 
--- "isLitMacroName name" tells if a name is a literal content macro name.
--- A literal content name starts with the character litContentTagChar
+-- "isLitMacroName name" tells if a name is a literate content macro name.
+-- A literate content name starts with the character litContentTagChar
 -- and is not a file name (ie starts with litMacroTagChar).
-isLitMacroName :: String -> Bool
-isLitMacroName (tag:c0:_) = tag == litContentTagChar && c0 == litMacroTagChar
+isLitMacroName :: Var -> Bool
+isLitMacroName (LitMacro _) = True
 isLitMacroName _ = False
 
 -- "ppFile env name" preprocess a file using the current environment
@@ -155,13 +187,13 @@ isLitMacroName _ = False
 ppFile :: Env -> FilePath -> IO (Env, String)
 ppFile env name = do
     -- file name of the caller
-    let caller = getSymbol env currentFileTag
+    let caller = getSymbol env CurrentFile
     -- read the file to preprocess
     content <- readFileUTF8 name
     -- preprocess the file in an environment containing the filename
-    (env', doc) <- pp ((currentFileTag, name) : clean currentFileTag env) content
-    -- return the environment (with the file nam of the caller) and the preprocessed output
-    return ((currentFileTag, caller) : clean currentFileTag env', doc)
+    (env', doc) <- pp ((CurrentFile, name) : clean CurrentFile env) content
+    -- return the environment (with the file name of the caller) and the preprocessed output
+    return ((CurrentFile, caller) : clean CurrentFile env', doc)
 
 -- "readFileUTF8 name" reads an UTF-8 file.
 -- If name is "-", it reads stdin.
@@ -187,49 +219,17 @@ writeFileUTF8 name content = do
     hPutStr h content
     hClose h
 
--- attribute name of the current file in the environment
-currentFileTag :: String
-currentFileTag = "file"
-
--- attribute name of the main file in the environment
-mainFileTag :: String
-mainFileTag = "main"
-
--- attribute name of the current language in the environment
-langTag :: String
-langTag = "lang"
-
 -- language list
 langs :: [String]
 langs = ["fr", "en"]
-
--- attribute name of the current output format
-formatTag :: String
-formatTag = "format"
 
 -- format list
 formats :: [String]
 formats = ["html", "pdf"]
 
--- specific character prepend to the process environment variable names in the environment
-envVarTagChar :: Char
-envVarTagChar = '$'
-
--- literate programming tag (to identify output files)
-litContentTagChar :: Char
-litContentTagChar = '>'
-
 -- literate programming macros
 litMacroTagChar :: Char
 litMacroTagChar = '@'
-
--- literate language tag (to identify the language of files and macros)
-litLangTagChar :: Char
-litLangTagChar = '§'
-
--- tag meaning that literate programming has been flushed here and that is not necessary to update files that are beyond this tag
-litFlushedTag :: String
-litFlushedTag = "<flushed>"
 
 -- Graphiviz diagrams
 graphvizDiagrams :: [String]
@@ -259,6 +259,11 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("mdate", mdate)
 
           , ("env", readEnv)
+
+          , ("main", mainFile)
+          , ("file", currentFile)
+          , ("lang", currentLang)
+          , ("format", currentFormat)
 
           , ("add", add)
 
@@ -290,24 +295,24 @@ cmdexe =
 define :: Macro
 define env [name, value] = do
     name' <- pp' env name >>= strip'
-    return ((name', value) : clean name' env, "")
+    return ((Def name', value) : clean (Def name') env, "")
 define env [name] = define env [name, ""]
 define _ _ = arityError "define" [1,2]
 
 undefine :: Macro
 undefine env [name] = do
     name' <- pp' env name >>= strip'
-    return (clean name' env, "")
+    return (clean (Def name') env, "")
 undefine _ _ = arityError "undefine" [1]
 
-clean :: String -> Env -> Env
+clean :: Var -> Env -> Env
 --clean name env = [ item | item@(name', _) <- env, name' /= name]
-clean name env = filter ((/=name) . fst) env
+clean var = filter ((/=var) . fst)
 
 ifdef :: Macro
 ifdef env [name, t, e] = do
     name' <- pp' env name >>= strip'
-    pp env $ case lookup name' env of
+    pp env $ case lookup (Def name') env of
                 Just _ -> t
                 Nothing -> e
 ifdef env [name, t] = ifdef env [name, t, ""]
@@ -335,7 +340,7 @@ ifne _ _ = arityError "ifne" [3, 4]
 rawdef :: Macro
 rawdef env [name] = do
     name' <- pp' env name >>= strip'
-    return (env, getSymbol env name')
+    return (env, getSymbol env (Def name'))
 rawdef _ _ = arityError "rawdef" [1]
 
 include :: Macro
@@ -345,9 +350,9 @@ include _ _ = arityError "include" [1]
 locateFile :: Env -> FilePath -> IO FilePath
 locateFile env name = do
     let name' = case name of
-                    ('~' : '/' : relname) -> getSymbol env (envVarTagChar:"HOME") </> relname
+                    ('~' : '/' : relname) -> getSymbol env (EnvVar "HOME") </> relname
                     _ -> name
-    let path = map (takeDirectory . getSymbol env) [currentFileTag, mainFileTag] ++ ["."]
+    let path = map (takeDirectory . getSymbol env) [CurrentFile, MainFile] ++ ["."]
     found <- findFile path name'
     case found of
         Just foundFile -> return foundFile
@@ -385,10 +390,10 @@ strip' = return . strip
 mdate :: Macro
 mdate env files = do
     files' <- ppAll' env files
-    files'' <- mapM (locateFile env) $ concatMap words files' ++ [getSymbol env mainFileTag | null files]
+    files'' <- mapM (locateFile env) $ concatMap words files' ++ [getSymbol env MainFile | null files]
     times <- mapM getModificationTime files''
     let lastTime = maximum times
-    return (env, formatTime (myLocale $ getSymbol env langTag) "%A %-d %B %Y" lastTime)
+    return (env, formatTime (myLocale $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
 
 myLocale :: String -> TimeLocale
 myLocale "fr" = TimeLocale {
@@ -432,17 +437,33 @@ ppAll env (x:xs) = do (env', x') <- pp env x
 readEnv :: Macro
 readEnv env [name] = do
     name' <- pp' env name >>= strip'
-    case lookup (envVarTagChar:name') env of
+    case lookup (EnvVar name') env of
         Just val -> pp env val
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
 
+mainFile :: Macro
+mainFile env [] = return (env, fromMaybe "-" (lookup MainFile env))
+mainFile _ _ = arityError "main" [0]
+
+currentFile :: Macro
+currentFile env [] = return (env, fromMaybe "-" (lookup CurrentFile env))
+currentFile _ _ = arityError "file" [0]
+
+currentLang :: Macro
+currentLang env [] = return (env, fromMaybe "" (lookup Lang env))
+currentLang _ _ = arityError "lang" [0]
+
+currentFormat :: Macro
+currentFormat env [] = return (env, fromMaybe "" (lookup FileFormat env))
+currentFormat _ _ = arityError "format" [0]
+
 add :: Macro
 add env [name, val] = do
     name' <- pp' env name >>= strip'
-    let val0 = getSymbol env name'
+    let val0 = getSymbol env (Def name')
     val1 <- pp' env val >>= strip'
-    let env' = (name', show (atoi val0 + atoi val1)) : clean name' env
+    let env' = (Def name', show (atoi val0 + atoi val1)) : clean (Def name') env
     return (env', "")
 add env [name] = add env [name, "1"]
 add _ _ = arityError "add" [1, 2]
@@ -455,13 +476,15 @@ atoi s = case reads s of
 lit :: Macro
 lit env [name, lang, content] = do
     name' <- pp' env name >>= strip'
-    let litLangTag = litLangTagChar:name'
+    let litLangTag = LitLang name'
     let env' = (litLangTag, lang) : clean litLangTag env
     lit env' [name, content]
 lit env [name, content] = do
     name' <- pp' env name >>= strip'
     content' <- pp' env content
-    let contentTag = litContentTagChar:name'
+    let contentTag = case name' of
+                        (c:name'') | c == litMacroTagChar -> LitMacro name''
+                        _ -> LitFile name'
     let oldContent = fromMaybe "" $ lookup contentTag env
     let env' = (contentTag, oldContent++content') : clean contentTag env
     let lang' = litLang env' name'
@@ -471,7 +494,10 @@ lit env [name, content] = do
     return (env', formatedCode)
 lit env [name] = do
     name' <- pp' env name >>= strip'
-    let content = fromMaybe "" $ lookup (litContentTagChar:name') env
+    let contentTag = case name' of
+                        (c:name'') | c == litMacroTagChar -> LitMacro name''
+                        _ -> LitFile name'
+    let content = fromMaybe "" $ lookup contentTag env
     let lang' = litLang env name'
     let formatedCode = case lang' of
                         Just lang'' -> unlines [codeBlock ++ " {." ++ lang'' ++ "}", content, codeBlock]
@@ -480,7 +506,7 @@ lit env [name] = do
 lit _ _ = arityError "lit" [1, 2, 3]
 
 litLang :: Env -> String -> Maybe String
-litLang env name = case (lookup (litLangTagChar:name) env, defaultLitLang name) of
+litLang env name = case (lookup (LitLang name) env, defaultLitLang name) of
     (Just lang, _) -> Just lang
     (_, Just lang) -> Just lang
     _ -> Nothing
@@ -497,18 +523,18 @@ codeBlock = replicate 70 '~'
 flushlit :: Macro
 flushlit env [] = do
     saveLiterateContent (filter isLitMacro env) env
-    return ((litFlushedTag, "") : clean litFlushedTag env, "")
+    return ((LitFlush, "") : clean LitFlush env, "")
 flushlit _ _ = arityError "flushlit" [0]
 
 expandLit :: Env -> String -> String
 expandLit macros (c0:s)
     | c0 == litMacroTagChar = content' ++ expandLit macros s'
     | otherwise = c0 : expandLit macros s
-        where
-            (name, s') = span (\c -> isAlphaNum c || c == '_') s
-            content' = case lookup (litContentTagChar:c0:name) macros of
-                        Nothing -> c0:name
-                        Just content -> expandLit macros content
+    where
+        (name, s') = span (\c -> isAlphaNum c || c == '_') s
+        content' = case lookup (LitMacro name) macros of
+                    Nothing -> c0:name
+                    Just content -> expandLit macros content
 expandLit _ [] = []
 
 diagram :: DiagramRuntime -> String -> String -> String -> Macro
@@ -584,13 +610,13 @@ foreign import stdcall "GetCurrentProcessId" getProcessID :: IO Int
 #endif
 
 language :: String -> Macro
-language lang env [src] = case lookup langTag env of
+language lang env [src] = case lookup Lang env of
                             Just val | val == lang -> pp env src
                             _ -> return (env, "")
 language lang _ _ = arityError lang [1]
 
 format :: String -> Macro
-format fmt env [src] = case lookup formatTag env of
+format fmt env [src] = case lookup FileFormat env of
                             Just val | val == fmt -> pp env src
                             _ -> return (env, "")
 format fmt _ _ = arityError fmt [1]
@@ -610,7 +636,7 @@ pp' env s = liftM snd (pp env s)
 pp :: Prepro
 pp env [] = return (env, "")
 pp env (c0:cs)
-    | c0 `elem` charsFunc && not (null name) = case (lookup name builtin, lookup name env) of
+    | c0 `elem` charsFunc && not (null name) = case (lookup name builtin, lookup (Def name) env) of
                 (Just func, _) -> do
                     let (args, cs'') = ppArgs Nothing cs'
                     (env', doc) <- func env args
@@ -618,7 +644,7 @@ pp env (c0:cs)
                     return (env'', doc++doc')
                 (Nothing, Just value) -> do
                     let (args, cs'') = ppArgs Nothing cs'
-                    let args' = zip (map show [(1::Int)..]) args
+                    let args' = zip (map (Def . show) [(1::Int)..]) args
                     (env', doc) <- pp (args'++env) value
                     let env'' = env' \\ args'
                     (env''', doc') <- pp env'' cs''
@@ -680,11 +706,11 @@ pp env (c0:cs)
                 getBlock (c':s') = (c':cs'', s'') where (cs'', s'') = getBlock s'
                 getBlock [] = unexpectedEndOfFile env
 
-getSymbol :: Env -> String -> String
-getSymbol env name = fromMaybe "" (lookup name env)
+getSymbol :: Env -> Var -> String
+getSymbol env var = fromMaybe "" (lookup var env)
 
 unexpectedEndOfFile :: Env -> t
-unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ getSymbol env currentFileTag
+unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ getSymbol env CurrentFile
 
 fileNotFound :: String -> t
 fileNotFound name = error $ "File not found: " ++ name

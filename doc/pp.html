@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Friday 13 May 2016</h3>
+<h3 class="date">Saturday 14 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -93,6 +93,12 @@
 <dt><strong>-USYMBOL</strong></dt>
 <dd>removes the symbol <code>SYMBOL</code> from the current environment.
 </dd>
+<dt><strong>-fr|-en</strong></dt>
+<dd>changes the current language.
+</dd>
+<dt><strong>-html|-pdf</strong></dt>
+<dd>changes the current output file format.
+</dd>
 </dl>
 <p>Other arguments are filenames.</p>
 <p>Files are read and preprocessed using the current state of the environment. The special file name <code>&quot;-&quot;</code> can be used to preprocess the standard input.</p>
@@ -152,6 +158,12 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 </dd>
 <dt><strong><code>!add(VARNAME)[(INCREMENT)]</code></strong></dt>
 <dd>computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
+</dd>
+<dt><strong><code>!lang</code></strong></dt>
+<dd>emits the current language (<em>fr</em> or <em>en</em>)
+</dd>
+<dt><strong><code>!format</code></strong></dt>
+<dd>emits the current format (<em>html</em> or <em>pdf</em>)
 </dd>
 <dt><strong><code>!fr(...)</code></strong> or <strong><code>!en(...)</code></strong></dt>
 <dd>emits some text only if the current language is <em>fr</em> or <em>en</em>
@@ -360,7 +372,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 24537, 12994, 26591
+Here are a few random numbers: 31447, 21135, 11321
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
@@ -396,7 +408,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 990, 71, 967
+Here are a few random numbers: 412, 862, 556
 </code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>

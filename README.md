@@ -61,6 +61,12 @@ adds the symbol `SYMBOL` to the current environment and associates it to the opt
 **-USYMBOL**  
 removes the symbol `SYMBOL` from the current environment.
 
+**-fr|-en**  
+changes the current language.
+
+**-html|-pdf**  
+changes the current output file format.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment. The special file name `"-"` can be used to preprocess the standard input.
@@ -128,6 +134,12 @@ returns the modification date of the most recent file.
 
 **`!add(VARNAME)[(INCREMENT)]`**  
 computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
+
+**`!lang`**  
+emits the current language (*fr* or *en*)
+
+**`!format`**  
+emits the current format (*html* or *pdf*)
 
 **`!fr(...)`** or **`!en(...)`**  
 emits some text only if the current language is *fr* or *en*
@@ -370,7 +382,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 8632, 17556, 26633
+    Here are a few random numbers: 8628, 13494, 14095
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -415,7 +427,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 760, 472, 195
+    Here are a few random numbers: 538, 983, 490
 
 ### Haskell
 
