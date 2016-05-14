@@ -33,7 +33,7 @@ all: gpp pp dpp README.md pp-linux-$(shell uname -m).tgz
 all: pp.tgz
 all: doc/gpp.html doc/pp.html doc/dpp.html
 
-ifneq "$(shell wine ghc --version)" ""
+ifneq "$(shell wine ghc --version || false)" ""
 all: gpp.exe pp.exe dpp.exe pp-win.zip
 
 CCWIN = i686-w64-mingw32-gcc
@@ -167,9 +167,11 @@ $(BUILD)/%.c: $(CACHE)/%.jar
 	sed -i 's/_cache_//g' $@
 
 $(CACHE)/$(PLANTUML).jar:
+	@mkdir -p $(dir $@)
 	wget $(PLANTUML_URL) -O $@
 
 $(CACHE)/$(DITAA).zip:
+	@mkdir -p $(dir $@)
 	wget $(DITAA_URL) -O $@
 
 $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
@@ -194,10 +196,11 @@ pp.exe: src/pp.hs $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 
 doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: src/pp.md
-	@mkdir -p doc/img
+	@mkdir -p $(dir $@) doc/img
 	LANG=en $(PP) $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 doc/pp.css:
+	@mkdir -p $(dir $@)
 	wget http://cdsoft.fr/cdsoft.css -O $@
 
 #####################################################################
@@ -214,7 +217,7 @@ dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 
 doc/dpp.html: $(PP) $(DPP) doc/pp.css
 doc/dpp.html: src/dpp.md
-	@mkdir -p doc/img
+	@mkdir -p $(dir $@) doc/img
 	LANG=en $(PP) $< | $(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 #####################################################################
