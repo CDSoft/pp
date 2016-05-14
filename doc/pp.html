@@ -20,7 +20,7 @@
 </header>
 <nav id="TOC">
 <ul>
-<li><a href="#pp---generic-preprocessors-with-pandoc-in-mind">PP - Generic preprocessors (with pandoc in mind)</a></li>
+<li><a href="#pp---generic-preprocessor-with-pandoc-in-mind">PP - Generic preprocessor (with pandoc in mind)</a></li>
 <li><a href="#open-source">Open source</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#usage">Usage</a><ul>
@@ -49,10 +49,17 @@
 <li><a href="#feedback">Feedback</a></li>
 </ul>
 </nav>
-<h1 id="pp---generic-preprocessors-with-pandoc-in-mind">PP - Generic preprocessors (with pandoc in mind)</h1>
+<h1 id="pp---generic-preprocessor-with-pandoc-in-mind">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p>The <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> package contains three preprocessors for <a href="http://pandoc.org/">Pandoc</a>.</p>
 <p>I started using Markdown and <a href="http://pandoc.org/">Pandoc</a> with <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a>. Then I wrote <a href="http://cdsoft.fr/pp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> to embed diagrams in Markdown documents. And finally <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> which merges the functionalities of <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/pp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a>.</p>
 <p><a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/pp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> are still included in <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> but <code>pp</code> can now be used standalone.</p>
+<p><code>pp</code> now implements:</p>
+<ul>
+<li>macros</li>
+<li>literate programming</li>
+<li><a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a> diagrams</li>
+<li><a href="https://www.gnu.org/software/bash/">Bash</a>, <a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a>, <a href="https://www.python.org/">Python</a> and <a href="https://www.haskell.org/">Haskell</a> scripts</li>
+</ul>
 <h1 id="open-source">Open source</h1>
 <p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is an Open source software. Any body can contribute on <a href="https://github.com/CDSoft/pp">GitHub</a> to:</p>
 <ul>
@@ -110,7 +117,7 @@
 [link]: foo bar
 
 Here, [link] is not parsed as a third parameter of \macro</code></pre>
-<p>The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming (see examples later).</p>
+<p>The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming, diagrams or scripts (see examples later).</p>
 <p>Arguments can be on separate lines but must not be separated by blank lines.</p>
 <p>You can choose the syntax that works better with your favorite editor and syntax colorization.</p>
 <dl>
@@ -372,7 +379,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 31447, 21135, 11321
+Here are a few random numbers: 662, 21927, 32125
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
@@ -408,7 +415,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 412, 862, 556
+Here are a few random numbers: 665, 962, 3
 </code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>

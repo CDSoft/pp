@@ -16,8 +16,8 @@
 [Haskell]: https://www.haskell.org/
 [GitHub]: https://github.com/CDSoft/pp
 
-PP - Generic preprocessors (with pandoc in mind)
-================================================
+PP - Generic preprocessor (with pandoc in mind)
+===============================================
 
 The [PP] package contains three preprocessors for [Pandoc].
 
@@ -26,6 +26,13 @@ Then I wrote [DPP] to embed diagrams in Markdown documents.
 And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
 [GPP] and [DPP] are still included in [PP] but `pp` can now be used standalone.
+
+`pp` now implements:
+
+- macros
+- literate programming
+- [GraphViz], [PlantUML] and [ditaa] diagrams
+- [Bash], [Bat], [Python] and [Haskell] scripts
 
 Open source
 ===========
@@ -135,7 +142,8 @@ It helps ending an argument list in some cases:
     Here, [link] is not parsed as a third parameter of \macro
 
 The last argument can also be enclosed between lines of tildas or backquotes
-(of the same length). This is useful for literate programming (see examples later).
+(of the same length).
+This is useful for literate programming, diagrams or scripts (see examples later).
 
 Arguments can be on separate lines but must not be separated by blank lines.
 

@@ -1,11 +1,18 @@
-PP - Generic preprocessors (with pandoc in mind)
-================================================
+PP - Generic preprocessor (with pandoc in mind)
+===============================================
 
 The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package contains three preprocessors for [Pandoc](http://pandoc.org/).
 
 I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") to embed diagrams in Markdown documents. And finally [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which merges the functionalities of [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)").
 
 [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") are still included in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") but `pp` can now be used standalone.
+
+`pp` now implements:
+
+-   macros
+-   literate programming
+-   [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) diagrams
+-   [Bash](https://www.gnu.org/software/bash/), [Bat](https://en.wikipedia.org/wiki/Cmd.exe), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
 
 Open source
 ===========
@@ -84,7 +91,7 @@ To get the value of a variable you just have to write its name after a `'!'` or 
 
     Here, [link] is not parsed as a third parameter of \macro
 
-The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming (see examples later).
+The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming, diagrams or scripts (see examples later).
 
 Arguments can be on separate lines but must not be separated by blank lines.
 
@@ -382,7 +389,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 8628, 13494, 14095
+    Here are a few random numbers: 26134, 15389, 20039
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -427,7 +434,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 538, 983, 490
+    Here are a few random numbers: 168, 886, 995
 
 ### Haskell
 
