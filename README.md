@@ -389,7 +389,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 26134, 15389, 20039
+    Here are a few random numbers: 13229, 25235, 10881
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -434,7 +434,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 168, 886, 995
+    Here are a few random numbers: 312, 837, 61
 
 ### Haskell
 

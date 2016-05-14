@@ -1,6 +1,6 @@
 % PP test file
 % Christophe Delord
-% Friday 13 May 2016
+% Saturday 14 May 2016
 
 Introduction
 ============
@@ -141,7 +141,7 @@ Literate programming
 
 Lets write and test a useful library:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
 
 // This is a C library
 @functionDeclarations
@@ -149,7 +149,7 @@ Lets write and test a useful library:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
 
 // This is a C library
 @functionImplementations
@@ -201,7 +201,7 @@ Some tests of `mylib.c`:
 
 #include "mylib.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
     int i;
     for (i = 1; i < argc; i++)
@@ -238,7 +238,7 @@ The complete source files are:
 
 `mylib.h`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
 
 // This is a C library
 @functionDeclarations
@@ -248,7 +248,7 @@ The complete source files are:
 
 `mylib.c`:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
 
 // This is a C library
 @functionImplementations
@@ -265,7 +265,7 @@ The complete source files are:
 
 #include "mylib.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
     int i;
     for (i = 1; i < argc; i++)
