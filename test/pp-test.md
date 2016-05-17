@@ -97,51 +97,74 @@ File name of the current file:      \eq(\file)(\main)
 Definitions:                        \eq(\answer)(42)
 ----------------------------------- -----------------------------------------------------------------
 
-Files can also be included without being preprocessed:
+## Files included without preprocessing
+
+----------------------------------- -----------------------------------------------------------------
 Undefinition:                       \undef(answer)\isndef(answer)
+----------------------------------- -----------------------------------------------------------------
+
 \rawinclude(pp-test.i)
+
+----------------------------------- -----------------------------------------------------------------
 No definitions:                     \isndef(answer)
+----------------------------------- -----------------------------------------------------------------
 
 File modification date
 ======================
 
+----------------------------------- -----------------------------------------------------------------
 Current file date:                  \eq(\mdate)(\exec(date +"%A %d %B %Y" -r \file))
 Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(\exec(date +"%A %d %B %Y" -r test/$(ls -t test | head -1)))
+----------------------------------- -----------------------------------------------------------------
 
 Environment variables
 =====================
 
+----------------------------------- -----------------------------------------------------------------
 Environment undefined variable:     \eq(\env(EMPTYENVVAR))(\exec(echo $EMPTYENVVAR))
 Environment variable:               \eq(\env(TESTENVVAR))(\exec(echo $TESTENVVAR))
+----------------------------------- -----------------------------------------------------------------
 
 Simple arithmetic
 =================
 
+----------------------------------- -----------------------------------------------------------------
 undefined + 1 = 1:                  \add(x)\eq(\x)(1)
 1 + 1 = 2:                          \add(x)\eq(\x)(2)
 undefined + 3 = 3:                  \add(y)(3)\eq(\y)(3)
 3 + 4 = 7:                          \add(y)(4)\eq(\y)(7)
+----------------------------------- -----------------------------------------------------------------
 
 Output language and output format
 =================================
 
+## Language
+
+----------------------------------- -----------------------------------------------------------------
 The current language is "en":       \eq(\lang)(en)
 Section in english:                 \eq(\en(Hello World!))(Hello World!)
 Section in french:                  \eq(\fr(Bonjour le monde !))()
+----------------------------------- -----------------------------------------------------------------
 
+## Format
+
+----------------------------------- -----------------------------------------------------------------
 The current format is HTML:         \eq(\format)(html)
 Section for an HTML document:       \eq(\html(Hello World!))(Hello World!)
 Section for a PDF document:         \eq(\pdf(Hello World!))()
+----------------------------------- -----------------------------------------------------------------
 
 External commands and scripts execution
 =======================================
 
+----------------------------------- -----------------------------------------------------------------
 Command line (current shell):       \eq(\exec(echo hi))(hi)
 `sh` script:                        \eq(\sh(echo hi))(hi)
 `bash` script:                      \eq(\bash(echo hi))(hi)
 `bat` script:                       \eq(\bat(echo hi))(hi)
 `python` script:                    \eq(\python(print "hi"))(hi)
 `haskell` script:                   \eq(\haskell(main = putStrLn "hi"))(hi)
+----------------------------------- -----------------------------------------------------------------
 
 Diagrams
 ========
