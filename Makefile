@@ -229,10 +229,11 @@ test: $(BUILD)/pp-test.output test/pp-test.ref
 	diff -b $^
 	@echo "Test passed!"
 
-$(BUILD)/pp-test.output: $(PP)
+$(BUILD)/pp-test.output: $(PP) doc/pp.css
 $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
 	@mkdir -p $(BUILD)/img
-	LANG=en FORMAT=html $(PP) $< > $@
+	TESTENVVAR=42 LANG=en FORMAT=html $(PP) $< > $@
+	pandoc -S --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
 ref: $(BUILD)/pp-test.output

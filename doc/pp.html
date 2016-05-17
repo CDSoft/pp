@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Saturday 14 May 2016</h3>
+<h3 class="date">Tuesday 17 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -185,7 +185,7 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dd>executes a script and emits its output. The possible programming languages are <code>sh</code>, <code>bash</code>, <code>bat</code>, <code>python</code> and <code>haskell</code>.
 </dd>
 <dt><strong><code>!lit[erate](FILENAME)(LANG)(CONTENT)</code></strong></dt>
-<dd>appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it’s a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc -v</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file is written. This macro provides basic literate programming features.
+<dd>appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it’s a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc -v</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
 </dd>
 <dt><strong><code>!lit[erate](FILENAME)(CONTENT)</code></strong></dt>
 <dd><p>appends <code>CONTENT</code> to the file <code>FILENAME</code>. The output is highlighted using the previously given language for this file.</p>
@@ -379,7 +379,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 13587, 1426, 16025
+Here are a few random numbers: 27697, 7044, 10769
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
@@ -415,7 +415,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 689, 981, 866
+Here are a few random numbers: 440, 299, 135
 </code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>

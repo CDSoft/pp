@@ -20,19 +20,34 @@ The document also computes the test results.
 Macros definition
 =================
 
+## Definition
+
+----------------------------------- -----------------------------------------------------------------
 Definition:                         \def(mac1)(This is macro `mac1`)\isdef(mac1)
 Its definition is correct:          \eq(\rawdef(mac1))(This is macro `mac1`)
 Its evaluation is correct:          \eq(\mac1)(This is macro `mac1`)
+----------------------------------- -----------------------------------------------------------------
 
+## Undefinition
+
+----------------------------------- -----------------------------------------------------------------
 Test of an undefined macro:         \isndef(mac2)
 Evaluation of an undefined macro:   \eq(\mac2)(\raw(\mac2))
+----------------------------------- -----------------------------------------------------------------
 
+## Definition with arguments
+
+----------------------------------- -----------------------------------------------------------------
 Definition with arguments:          \define(swap)(!2 !1)\isdef(swap)
 Its definition is correct:          \eq(\rawdef(swap))(\raw(!2 !1))
 Its evaluation is correct:          \eq(\swap(\mac1)(\mac2))(\mac2This is macro `mac1`)
+----------------------------------- -----------------------------------------------------------------
 
+----------------------------------- -----------------------------------------------------------------
 Undefinition:                       \undefine(mac1)\isndef(mac1)
+----------------------------------- -----------------------------------------------------------------
 
+----------------------------------- -----------------------------------------------------------------
 Definition test:                    \eq(\ifdef(mac1)(mac1 is defined)                       )()
 Definition test:                    \eq(\ifdef(swap)(swap is defined)                       )(swap is defined)
 Definition test:                    \eq(\ifdef(mac1)(mac1 is defined)(mac1 is not defined)  )(mac1 is not defined)
@@ -41,8 +56,13 @@ Undefinition test:                  \eq(\ifndef(mac1)(mac1 is not defined)      
 Undefinition test:                  \eq(\ifndef(swap)(swap is not defined)                  )()
 Undefinition test:                  \eq(\ifndef(mac1)(mac1 is not defined)(mac1 is defined) )(mac1 is not defined)
 Undefinition test:                  \eq(\ifndef(swap)(swap is not defined)(swap is defined) )(swap is defined)
+----------------------------------- -----------------------------------------------------------------
+
+## Equality / Inequality
 
 \define(one)(1) \define(un)(1) \define(two)(2)
+
+----------------------------------- -----------------------------------------------------------------
 Equality test:                      \eq(\ifeq(\one)(\un)(one == un)                 )(one == un)
 Equality test:                      \eq(\ifeq(\one)(\two)(one == two)               )()
 Equality test:                      \eq(\ifeq(\one)(\un)(one == un)(one /= un)      )(one == un)
@@ -51,18 +71,31 @@ Inequality test:                    \eq(\ifne(\one)(\un)(one /= un)             
 Inequality test:                    \eq(\ifne(\one)(\two)(one /= two)               )(one /= two)
 Inequality test:                    \eq(\ifne(\one)(\un)(one /= un)(one == un)      )(one == un)
 Inequality test:                    \eq(\ifne(\one)(\two)(one /= two)(one == two)   )(one /= two)
+----------------------------------- -----------------------------------------------------------------
 
-Raw text:                           \ne(\raw(\swap(a)(b)))(ba) \raw(\swap(a)(b)) is not evaluated
+----------------------------------- -----------------------------------------------------------------
+Raw text:                           \ne(\raw(\swap(a)(b)))(ba) `\raw(\swap(a)(b))` is not evaluated
+----------------------------------- -----------------------------------------------------------------
 
 File inclusion
 ==============
 
-Inclusion of `pp-test.i`:
+## Before including `pp-test.i`
 
+----------------------------------- -----------------------------------------------------------------
 File name of the main file:         \eq(\main)(test/pp-test.md)
 File name of the current file:      \eq(\file)(\main)
+----------------------------------- -----------------------------------------------------------------
+
+## Inclusion of `pp-test.i`
+
 \include(pp-test.i)
+
+## After including `pp-test.i`
+
+----------------------------------- -----------------------------------------------------------------
 Definitions:                        \eq(\answer)(42)
+----------------------------------- -----------------------------------------------------------------
 
 Files can also be included without being preprocessed:
 Undefinition:                       \undef(answer)\isndef(answer)
@@ -78,7 +111,8 @@ Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(
 Environment variables
 =====================
 
-Environment variable:               \eq(\env(HOME))(\exec(echo $HOME))
+Environment undefined variable:     \eq(\env(EMPTYENVVAR))(\exec(echo $EMPTYENVVAR))
+Environment variable:               \eq(\env(TESTENVVAR))(\exec(echo $TESTENVVAR))
 
 Simple arithmetic
 =================
@@ -124,7 +158,20 @@ Diagrams test do not check the generated image, just the link in the output docu
 
 \uml        ([.build/]img/uml-test)         (Test of uml)       ( sender -> receiver )
 
-\ditaa      ([.build/]img/ditaa-test)       (Test of ditaa)     ( sender -> receiver )
+\ditaa      ([.build/]img/ditaa-test)       (Test of ditaa)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    +--------+   +-------+    +-------+
+    |        | --+ ditaa +--> |       |
+    |  Text  |   +-------+    |diagram|
+    |Document|   |!magic!|    |       |
+    |     {d}|   |       |    |       |
+    +---+----+   +-------+    +-------+
+        :                         ^
+        |       Lots of work      |
+        +-------------------------+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Literate programming
 ====================
@@ -229,7 +276,9 @@ The complete source files are:
 Test results
 ============
 
+------------------------------- ------------------------
 Number of successful tests:     \nbok
 Number of failures:             \nberr
+------------------------------- ------------------------
 
 \ifeq(\nberr)(0)(All tests passed!)(\nberr tests failed!)

@@ -161,7 +161,7 @@ renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plant
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
-appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file is written. This macro provides basic literate programming features.
+appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
 
 **`!lit[erate](FILENAME)(CONTENT)`**  
 appends `CONTENT` to the file `FILENAME`. The output is highlighted using the previously given language for this file.
@@ -389,7 +389,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 13229, 25235, 10881
+    Here are a few random numbers: 15937, 17902, 19301
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -434,7 +434,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 312, 837, 61
+    Here are a few random numbers: 435, 79, 27
 
 ### Haskell
 

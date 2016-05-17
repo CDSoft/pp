@@ -234,7 +234,7 @@ syntax colorization.
     The output is highlighted using the programming language `LANGUAGE`.
     The list of possible languages is given by `pandoc -v`.
     Files are actually written when all the documents have been successfully preprocessed.
-    Macros are expanded when the file is written.
+    Macros are expanded when the file are written.
     This macro provides basic literate programming features.
 
 **`!lit[erate](FILENAME)(CONTENT)`**

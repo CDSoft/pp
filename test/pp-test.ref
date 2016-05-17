@@ -1,6 +1,6 @@
 % PP test file
 % Christophe Delord
-% Saturday 14 May 2016
+% Tuesday 17 May 2016
 
 Introduction
 ============
@@ -20,19 +20,34 @@ The document also computes the test results.
 Macros definition
 =================
 
+## Definition
+
+----------------------------------- -----------------------------------------------------------------
 Definition:                         OK
 Its definition is correct:          OK
 Its evaluation is correct:          OK
+----------------------------------- -----------------------------------------------------------------
 
+## Undefinition
+
+----------------------------------- -----------------------------------------------------------------
 Test of an undefined macro:         OK
 Evaluation of an undefined macro:   OK
+----------------------------------- -----------------------------------------------------------------
 
+## Definition with arguments
+
+----------------------------------- -----------------------------------------------------------------
 Definition with arguments:          OK
 Its definition is correct:          OK
 Its evaluation is correct:          OK
+----------------------------------- -----------------------------------------------------------------
 
+----------------------------------- -----------------------------------------------------------------
 Undefinition:                       OK
+----------------------------------- -----------------------------------------------------------------
 
+----------------------------------- -----------------------------------------------------------------
 Definition test:                    OK
 Definition test:                    OK
 Definition test:                    OK
@@ -41,40 +56,66 @@ Undefinition test:                  OK
 Undefinition test:                  OK
 Undefinition test:                  OK
 Undefinition test:                  OK
+----------------------------------- -----------------------------------------------------------------
+
+## Equality / Inequality
 
   
-Equality test:                      OK
-Equality test:                      OK
-Equality test:                      OK
-Equality test:                      OK
-Inequality test:                    OK
-Inequality test:                    OK
-Inequality test:                    OK
-Inequality test:                    OK
 
-Raw text:                           OK \swap(a)(b) is not evaluated
+----------------------------------- -----------------------------------------------------------------
+Equality test:                      OK
+Equality test:                      OK
+Equality test:                      OK
+Equality test:                      OK
+Inequality test:                    OK
+Inequality test:                    OK
+Inequality test:                    OK
+Inequality test:                    OK
+----------------------------------- -----------------------------------------------------------------
+
+----------------------------------- -----------------------------------------------------------------
+Raw text:                           OK `\swap(a)(b)` is not evaluated
+----------------------------------- -----------------------------------------------------------------
 
 File inclusion
 ==============
 
-Inclusion of `pp-test.i`:
+## Before including `pp-test.i`
 
+----------------------------------- -----------------------------------------------------------------
 File name of the main file:         OK
 File name of the current file:      OK
+----------------------------------- -----------------------------------------------------------------
+
+## Inclusion of `pp-test.i`
+
 First line of the included file.
-File name of the main file:         OK
-File name of the included file:     OK
-Definitions:                        OK
+
+----------------------------------- -----------------------------------------------------------------
+File name of the main file:         `OK`
+File name of the included file:     `OK`
+Definitions:                        `OK`
+----------------------------------- -----------------------------------------------------------------
+
 Last line of the included file.
 
+
+## After including `pp-test.i`
+
+----------------------------------- -----------------------------------------------------------------
 Definitions:                        OK
+----------------------------------- -----------------------------------------------------------------
 
 Files can also be included without being preprocessed:
 Undefinition:                       OK
 First line of the included file.
-File name of the main file:         \eq(\main)(test/pp-test.md)
-File name of the included file:     \eq(\file)(test/pp-test.i)
-Definitions:                        \def(answer)(42)\eq(\answer)(42)
+
+----------------------------------- -----------------------------------------------------------------
+File name of the main file:         `\eq(\main)(test/pp-test.md)`
+File name of the included file:     `\eq(\file)(\ifeq(\exec(uname))(Linux)(test/pp-test.i)(test\pp-test.i))`
+Definitions:                        `\def(answer)(42)\eq(\answer)(42)`
+----------------------------------- -----------------------------------------------------------------
+
 Last line of the included file.
 
 No definitions:                     OK
@@ -88,6 +129,7 @@ Specific file date:                 OK
 Environment variables
 =====================
 
+Environment undefined variable:     OK
 Environment variable:               OK
 
 Simple arithmetic
@@ -282,7 +324,9 @@ int main(int argc, char * argv[])
 Test results
 ============
 
-Number of successful tests:     54
+------------------------------- ------------------------
+Number of successful tests:     55
 Number of failures:             0
+------------------------------- ------------------------
 
 All tests passed!
