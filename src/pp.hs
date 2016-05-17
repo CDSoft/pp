@@ -217,7 +217,7 @@ readFileUTF8 name = do
 writeFileUTF8 :: FilePath -> String -> IO ()
 writeFileUTF8 "-" content = putStr content
 writeFileUTF8 name content = do
-    h <- openFile name WriteMode
+    h <- openBinaryFile name WriteMode
     hSetEncoding h utf8
     hPutStr h content
     hClose h
