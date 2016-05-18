@@ -53,7 +53,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">DPP - Diagram preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Friday 13 May 2016</h3>
+<h3 class="date">Wednesday 18 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -108,8 +108,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Copy <code>pp</code>, <code>dpp</code> and <code>gpp</code> (<code>.exe</code> files on Windows) where you want.</li>
 </ol>
 <p><code>pp</code> and <code>dpp</code> require <a href="http://graphviz.org/">Graphviz</a> and Java (<a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a> are embedded in <code>pp</code> and <code>dpp</code>).</p>
-<p>If your are on Windows but don’t have a C and Haskell compiler, you can get already compiled executables here: <a href="http://cdsoft.fr/pp/pp-win.zip" class="uri">http://cdsoft.fr/pp/pp-win.zip</a>.</p>
-<p>You can also download 64 bit Linux binaries (built on <code>Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.tgz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.tgz</a>.</p>
+<p>If your are on Windows but don’t have a C and Haskell compiler, you can get already compiled executables here: <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a>.</p>
+<p>You can also download 64 bit Linux binaries (built on <code>Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a>.</p>
 <h1 id="usage">Usage</h1>
 <p><code>dpp</code> is a filter and has no options. It takes some text with embedded diagrams on <code>stdin</code> and generates a text with image links on <code>stdout</code>. Some error messages may be written to <code>stderr</code>.</p>
 <figure>
@@ -354,7 +354,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 4140, 20746, 27859</code></pre>
+Here are a few random numbers: 30505, 14059, 679</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h2 id="bat">Bat</h2>
 <p><a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a> is executed when the keyword <code>bat</code> is used.</p>
@@ -410,7 +410,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 477, 189, 222</code></pre>
+Here are a few random numbers: 212, 651, 149</code></pre>
 <h2 id="haskell">Haskell</h2>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
 <p><code>dpp</code> syntax:</p>

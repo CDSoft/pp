@@ -50,10 +50,10 @@ Installation
 `pp` and `dpp` require [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp` and `dpp`).
 
 If your are on Windows but don't have a C and Haskell compiler,
-you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.zip>.
+you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
 
 You can also download 64 bit Linux binaries (built on `\exec(uname -srvmo)`),
-they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-\exec(uname -m).tgz>.
+they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-\exec(uname -m).txz>.
 
 Usage
 =====

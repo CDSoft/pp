@@ -23,18 +23,20 @@
 
 OS = $(shell uname)
 
+GHCOPT = -Wall -Werror -O2
+
 ifeq "$(OS)" "Linux"
 
 PP 	= pp
 DPP = dpp
 GPP = gpp
 
-all: gpp pp dpp README.md pp-linux-$(shell uname -m).tgz
+all: gpp pp dpp README.md pp-linux-$(shell uname -m).txz
 all: pp.tgz
 all: doc/gpp.html doc/pp.html doc/dpp.html
 
 ifneq "$(shell wine ghc --version || false)" ""
-all: gpp.exe pp.exe dpp.exe pp-win.zip
+all: gpp.exe pp.exe dpp.exe pp-win.7z
 
 CCWIN = i686-w64-mingw32-gcc
 WINE = wine
@@ -80,7 +82,7 @@ CACHE = .cache
 clean:
 	rm -rf $(BUILD) doc
 	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
-	rm -f pp.tgz pp-win.zip pp-linux-*.tgz
+	rm -f pp.tgz pp-win.7z pp-linux-*.txz
 
 dep:
 	cabal update
@@ -105,14 +107,14 @@ README.md: src/pp.md
 # archives
 #####################################################################
 
-pp.tgz: Makefile $(wildcard src/*) README.md LICENSE .gitignore
+pp.tgz: Makefile $(wildcard src/*) $(wildcard test/*) README.md LICENSE .gitignore
 	tar -czf $@ $^
 
-pp-win.zip: gpp.exe pp.exe dpp.exe doc/gpp.html doc/pp.html
-	zip $@ $^
+pp-win.7z: gpp.exe pp.exe dpp.exe doc/gpp.html doc/pp.html doc/dpp.html
+	7z -mx9 a $@ $^
 
-pp-linux-%.tgz: gpp pp dpp doc/gpp.html doc/pp.html
-	tar czf $@ $^
+pp-linux-%.txz: gpp pp dpp doc/gpp.html doc/pp.html doc/dpp.html
+	tar cJf $@ $^
 
 #####################################################################
 # GPP
@@ -156,10 +158,10 @@ DITAA = ditaa0_9
 DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
 
 $(BUILD)/%.o: $(BUILD)/%.c
-	ghc -Werror -Wall -c -o $@ $^
+	ghc $(GHCOPT) -c -o $@ $^
 
 $(BUILD)/%-win.o: $(BUILD)/%.c
-	$(WINE) ghc -Werror -Wall -c -o $@ $^
+	$(WINE) ghc $(GHCOPT) -c -o $@ $^
 
 $(BUILD)/%.c: $(CACHE)/%.jar
 	@mkdir -p $(dir $@)
@@ -178,6 +180,10 @@ $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 	unzip $< $(notdir $@) -d $(dir $@)
 	@touch $@
 
+$(CACHE)/pp.css:
+	@mkdir -p $(dir $@)
+	wget http://cdsoft.fr/cdsoft.css -O $@
+
 #####################################################################
 # PP
 #####################################################################
@@ -185,13 +191,13 @@ $(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
 pp: BUILDPP=$(BUILD)/$@
 pp: src/pp.hs $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	@mkdir -p $(BUILDPP)
-	ghc -Werror -Wall -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
 pp.exe: src/pp.hs $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	@mkdir -p $(BUILDPP)
-	$(WINE) ghc -Werror -Wall -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 doc/pp.html: $(PP) doc/pp.css
@@ -199,9 +205,8 @@ doc/pp.html: src/pp.md
 	@mkdir -p $(dir $@) doc/img
 	LANG=en $(PP) $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
-doc/pp.css:
-	@mkdir -p $(dir $@)
-	wget http://cdsoft.fr/cdsoft.css -O $@
+doc/pp.css: $(CACHE)/pp.css
+	cp $< $@
 
 #####################################################################
 # DPP

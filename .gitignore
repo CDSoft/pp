@@ -6,8 +6,10 @@ gpp
 gpp.exe
 pp
 pp-win.zip
+pp-win.7z
 pp.exe
 pp.tgz
 pp-linux-*.tgz
+pp-linux-*.txz
 *.swp
 tmp

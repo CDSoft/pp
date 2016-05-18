@@ -36,9 +36,9 @@ Installation
 
 `pp` and `dpp` require [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp` and `dpp`).
 
-If your are on Windows but don't have a C and Haskell compiler, you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.zip>.
+If your are on Windows but don't have a C and Haskell compiler, you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
 
-You can also download 64 bit Linux binaries (built on `Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.tgz>.
+You can also download 64 bit Linux binaries (built on `Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.txz>.
 
 Usage
 =====
@@ -389,7 +389,7 @@ Once generated the graph looks like:
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 27233, 4589, 226
+    Here are a few random numbers: 29467, 4078, 26304
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -434,7 +434,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 583, 988, 933
+    Here are a few random numbers: 733, 333, 343
 
 ### Haskell
 

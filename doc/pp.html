@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Tuesday 17 May 2016</h3>
+<h3 class="date">Wednesday 18 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -78,8 +78,8 @@
 <li>Copy <code>pp</code>, <code>dpp</code> and <code>gpp</code> (<code>.exe</code> files on Windows) where you want.</li>
 </ol>
 <p><code>pp</code> and <code>dpp</code> require <a href="http://graphviz.org/">Graphviz</a> and Java (<a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a> are embedded in <code>pp</code> and <code>dpp</code>).</p>
-<p>If your are on Windows but don’t have a C and Haskell compiler, you can get already compiled executables here: <a href="http://cdsoft.fr/pp/pp-win.zip" class="uri">http://cdsoft.fr/pp/pp-win.zip</a>.</p>
-<p>You can also download 64 bit Linux binaries (built on <code>Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.tgz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.tgz</a>.</p>
+<p>If your are on Windows but don’t have a C and Haskell compiler, you can get already compiled executables here: <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a>.</p>
+<p>You can also download 64 bit Linux binaries (built on <code>Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a>.</p>
 <h1 id="usage">Usage</h1>
 <p><code>pp</code> is a simple preprocessor written in Haskell. It’s mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP for instance but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.</p>
 <p><code>pp</code> takes strings as input and incrementally builds an environment which is a lookup table containing variables and various other information. Built-in macros are Haskell functions that takes arguments (strings) and the current environment and build a new environment in the IO monad. User defined macros are simple definitions, arguments are numbered 1 to N.</p>
@@ -379,7 +379,7 @@ echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 16227, 463, 25085
+Here are a few random numbers: 24927, 19129, 16109
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="bat">Bat</h3>
@@ -415,7 +415,7 @@ if __name__ == &quot;__main__&quot;:
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 169, 219, 341
+Here are a few random numbers: 845, 750, 900
 </code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
