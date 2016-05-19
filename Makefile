@@ -35,7 +35,7 @@ all: gpp pp dpp README.md pp-linux-$(shell uname -m).txz
 all: pp.tgz
 all: doc/gpp.html doc/pp.html doc/dpp.html
 
-ifneq "$(shell wine ghc --version || false)" ""
+ifneq "$(shell wine ghc --version 2>/dev/null || false)" ""
 all: gpp.exe pp.exe dpp.exe pp-win.7z
 
 CCWIN = i686-w64-mingw32-gcc
@@ -45,13 +45,12 @@ endif
 else
 ifeq "$(OS)" "MINGW32_NT-6.1"
 
-# Target not tested, feedback welcome!
-
 PP 	= pp.exe
 DPP = dpp.exe
 GPP = gpp.exe
 
 all: gpp.exe pp.exe dpp.exe
+all: doc/gpp.html doc/pp.html doc/dpp.html
 
 CCWIN = gcc
 WINE =
@@ -59,15 +58,14 @@ WINE =
 else
 ifeq "$(OS)" "CYGWIN_NT-6.1-WOW"
 
-# Target not tested, feedback welcome!
-
 PP 	= pp.exe
 DPP = dpp.exe
 GPP = gpp.exe
 
 all: gpp.exe pp.exe dpp.exe
+all: doc/gpp.html doc/pp.html doc/dpp.html
 
-CCWIN = gcc
+CCWIN = mingw32-gcc
 WINE =
 
 else
@@ -206,6 +204,7 @@ doc/pp.html: src/pp.md
 	LANG=en $(PP) $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 doc/pp.css: $(CACHE)/pp.css
+	@mkdir -p $(dir $@)
 	cp $< $@
 
 #####################################################################
