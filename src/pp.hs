@@ -480,12 +480,12 @@ currentFile _ _ = arityError "file" [0]
 
 -- \lang returns the current language ("fr" or "en")
 currentLang :: Macro
-currentLang env [] = return (env, fromMaybe "" (lookup Lang env))
+currentLang env [] = return (env, getSymbol env Lang)
 currentLang _ _ = arityError "lang" [0]
 
 -- \format returns the current output format ("html" or "pdf")
 currentFormat :: Macro
-currentFormat env [] = return (env, fromMaybe "" (lookup FileFormat env))
+currentFormat env [] = return (env, getSymbol env FileFormat)
 currentFormat _ _ = arityError "format" [0]
 
 -- \add(name)(val) preprocesses name and val and adds val to the integer value
@@ -543,7 +543,7 @@ lit _ _ = arityError "lit" [1, 2, 3]
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
 litGet :: Env -> String -> String
-litGet env name = fromMaybe "" (lookup (litContentTag name) env)
+litGet env name = getSymbol env (litContentTag name)
 
 -- "litAppend env name lang content" appends content to a literate file or macro
 -- and record the language lang in the environment
@@ -836,45 +836,89 @@ pp env (c0:cs)
     where
         (name, cs') = span (\c -> isAlphaNum c || c == '_') cs
 
+        -- read a list of arguments
+        -- All the arguments have the same delimiters, except the last one that
+        -- can be a code block.
+        -- The first argument is the argument delimiter (Nothing for the first call)
+        -- There can be spaces before the arguments.
         readArgs :: Maybe (Char, Char) -> String -> ([String], String)
-        readArgs Nothing s = case dropSpaces s of -- case dropWhile isSpace s of
+
+        -- read the first argument
+        readArgs Nothing s = case dropSpaces s of
+            -- code block => it's the last argument
             Just s1@(c:_) | c `elem` charsBlock -> readArgBlock s c s1
+            -- argument starting with an open delimiter
             Just (left:s1) ->
                 case lookup left charsOpenClose of
-                    Just right -> let (arg, s2) = readArg left right 1 s1
-                                      (args, s3) = readArgs (Just (left, right)) s2
-                                  in (init arg : args, s3)
-                    Nothing -> ([], s)
+                    Just right ->
+                        -- read one argument
+                        -- and the following arguments with the same delimiters
+                        let (arg, s2) = readArg left right 1 s1
+                            (args, s3) = readArgs (Just (left, right)) s2
+                        in (init arg : args, s3)
+                    Nothing ->
+                        -- not a delimiter => no more arguments
+                        ([], s)
+            -- not a delimiter => no more arguments
             _ -> ([], s)
-        readArgs leftright@(Just (left, right)) s = case dropSpaces s of -- case dropWhile isSpace s of
+
+        -- read another argument
+        readArgs leftright@(Just (left, right)) s = case dropSpaces s of
+            -- code block => it's the last argument
             Just s1@(c:_) | c `elem` charsBlock -> readArgBlock s c s1
+            -- argument starting with the same delimiter
             Just (left':s1) | left' == left ->
+                -- read one argument
+                -- and the following arguments with the same delimiters
                 let (arg, s2) = readArg left right 1 s1
                     (args, s3) = readArgs leftright s2
                 in (init arg : args, s3)
+            -- not a delimiter => no more arguments
             _ -> ([], s)
 
+        -- skip spaces before arguments
         dropSpaces :: String -> Maybe String
         dropSpaces s
+            -- the number of '\n' is 0 or 1 (no blank line before an argument)
             | nbNl <= 1 = Just s1
             | otherwise = Nothing
             where
                 (spaces, s1) = span isSpace s
                 nbNl = length (filter (=='\n') spaces)
 
+        -- read one argument, taking care of balancing delimiters
+        -- "readArg left right level s" reads one argument delimited by
+        -- left and right (ie left and right must be well balanced).
+        -- level is incremented when left is found and decremented when
+        -- right is found. When level = 0, the end of the argument is found.
+        -- The function returns the argument and the rest of the string.
         readArg :: Char -> Char -> Int -> String -> (String, String)
+
+        -- end of the argument
         readArg _ _ 0 s = ("", s)
+
+        -- end of file => delimiters are not well balanced
         readArg _ _ _ [] = unexpectedEndOfFile env
-        readArg left right level (c:s) = (c:s', s'')
+
+        -- read one char in the argument
+        readArg left right level (c:s) = (c:cs'', s')
             where
-                (s', s'') = readArg left right level' s
+                -- increase or decrease level when a delimiter is found
                 level'  | c == left     = level + 1
                         | c == right    = level - 1
                         | otherwise     = level
+                -- read the rest of the argument
+                (cs'', s') = readArg left right level' s
 
+        -- read an argument as a code block
+        -- readArgBlock s0 c s reads an argument with lines of c as separators.
+        -- If no end separator is found it returns no argument and the rest of
+        -- the string is s0 (ie the string before dropSpaces)
         readArgBlock :: String -> Char -> String -> ([String], String)
         readArgBlock s0 c s
+            -- block with delimiters longer than 3 c
             | startLen >= 3 = ([block], s2)
+            -- no block
             | otherwise = ([], s0)
             where
                 (start, s1) = span (==c) s
@@ -884,15 +928,19 @@ pp env (c0:cs)
                 readBlock (c':s') = (c':cs'', s'') where (cs'', s'') = readBlock s'
                 readBlock [] = unexpectedEndOfFile env
 
+-- get a variable in the environment
 getSymbol :: Env -> Var -> String
 getSymbol env var = fromMaybe "" (lookup var env)
 
+-- raise an end of file error
 unexpectedEndOfFile :: Env -> t
 unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ getSymbol env CurrentFile
 
+-- raise a file not found error
 fileNotFound :: String -> t
 fileNotFound name = error $ "File not found: " ++ name
 
+-- raise an arity error
 arityError :: String -> [Int] -> t
 arityError name arities = error $ "Arity error: " ++ name ++ " expects " ++ nb ++ " argument" ++ s
     where
