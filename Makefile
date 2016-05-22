@@ -77,6 +77,15 @@ endif
 BUILD = .build
 CACHE = .cache
 
+ifeq "$(USER)" "root"
+INSTALL = /usr/local/bin
+else
+INSTALL = ~/bin
+endif
+
+install: $(PP) $(DPP) $(GPP)
+	install -v -C -o $(USER) -g $(USER) $^ $(INSTALL)
+
 clean:
 	rm -rf $(BUILD) doc
 	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
@@ -145,7 +154,7 @@ doc/gpp.html: $(GPP)
 	cp $(BUILD)/$</gpp-*/doc/gpp.html $@
 
 #####################################################################
-# Dependancies
+# Dependencies
 #####################################################################
 
 PLANTUML = plantuml
