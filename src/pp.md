@@ -99,7 +99,7 @@ It starts with an initial environment containing:
 - a `lang` variable containing the current langage
   (currently only French (`fr`) and English (`en`) are supported)
 - a `format` variable containing the current output format
-  (`html` or `pdf`)
+  (`html`, `pdf`, `epub` or `mobi`)
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
@@ -117,7 +117,7 @@ The user can define and undefine variables and list input files.
 **-fr|-en**
 :   changes the current language.
 
-**-html|-pdf**
+**-html|-pdf|-epub|-mobi**
 :   changes the current output file format.
 
 Other arguments are filenames.
@@ -200,9 +200,11 @@ syntax colorization.
 **`!exec(COMMAND)`**
 :   executes a shell command (with the current shell) and
     emits the output of the command.
+    **This macro is obsolete. It is now equivalent to `!sh`.**
 
 **`!rawexec(COMMAND)`**
 :   as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
+    **This macro is obsolete. It is now equivalent to `!sh`.**
 
 **`!mdate(FILES)`**
 :   returns the modification date of the most recent file.
@@ -217,13 +219,13 @@ syntax colorization.
 :   emits the current language (*fr* or *en*)
 
 **`!format`**
-:   emits the current format (*html* or *pdf*)
+:   emits the current format (*html*, *pdf*, *epub* or *mobi*)
 
 **`!fr(...)`** or **`!en(...)`**
 :   emits some text only if the current language is *fr* or *en*
 
 **`!html(...)`** or **`!pdf(...)`**
-:   emits some text only if the current format is *html* or *pdf*
+:   emits some text only if the current format is *html*, *pdf*, *epub* or *mobi*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**
 :   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].
@@ -231,7 +233,7 @@ syntax colorization.
     The name of the macro is the kind of diagram.
     The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!bat(SCRIPT)`**, **`!python(SCRIPT)`**, **`!haskell(SCRIPT)`**
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
@@ -379,7 +381,7 @@ digraph {
         dot neato twopi circo fdp sfdp patchwork osage uml ditaa
     }
 
-    PP [shape=diamond]
+    PP [label="pp" shape=diamond]
     dot neato twopi circo fdp sfdp patchwork osage uml ditaa
     GraphViz [shape=box]
     PlantUML [shape=box]
@@ -436,7 +438,7 @@ digraph {
         bash sh bat python haskell
     }
 
-    PP [shape=diamond]
+    PP [shape=diamond label="pp"]
     bash sh bat python haskell
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]
@@ -574,6 +576,7 @@ Java must be installed.
     \raw{\bash
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo "Hi, I'm $SHELL $BASH_VERSION"
+    RANDOM=42 # seed
     echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
@@ -584,6 +587,7 @@ This script outputs:
 \bash
 ~~~~~
 echo "Hi, I'm $SHELL $BASH_VERSION"
+RANDOM=42 # seed
 echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 ~~~~~
 ~~~~~~~~~~
@@ -632,6 +636,7 @@ if "%WINELOADER%" == "" (
 
     if __name__ == "__main__":
         print("Hi, I'm Python %s"%sys.version)
+        random.seed(42)
         randoms = [random.randint(0, 1000) for i in range(3)]
         print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -647,6 +652,7 @@ import random
 
 if __name__ == "__main__":
     print("Hi, I'm Python %s"%sys.version)
+    random.seed(42)
     randoms = [random.randint(0, 1000) for i in range(3)]
     print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
 ~~~~~

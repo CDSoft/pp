@@ -30,10 +30,9 @@ import System.Directory
 import Data.List
 import Data.Char
 import Data.Maybe
-import System.Process(readProcess)
+import System.Process hiding (env)
 import System.FilePath
 import Data.Time
---import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Ptr
 import Foreign
@@ -41,8 +40,6 @@ import Foreign
 #ifdef linux_HOST_OS
 import System.Posix.Process
 #endif
-
---import Debug.Trace
 
 -- Set of chars
 type Chars = String
@@ -134,7 +131,7 @@ doArg env ('-':'U':name) = return (clean (Def name) env, "")
 doArg env ('-':lang) | lang' `elem` langs =
     return ((Lang, lang') : clean Lang env, "") where lang' = map toLower lang
 
--- "doArg env "-html|-pdf"" changes the current format
+-- "doArg env "-html|-pdf|-epub|-mobi"" changes the current format
 doArg env ('-':fmt) | fmt' `elem` formats =
     return ((FileFormat, fmt') : clean FileFormat env, "") where fmt' = map toLower fmt
 
@@ -222,13 +219,23 @@ writeFileUTF8 name content = do
     hPutStr h content
     hClose h
 
+-- "readProcessUTF8 cmd arg" executes "cmd args"
+-- and returns the standard output produced by the command.
+readProcessUTF8 :: String -> [String] -> IO String
+readProcessUTF8 cmd args = do
+    (_, Just hOut, _, hProc) <- createProcess (proc cmd args) { std_out = CreatePipe }
+    hSetEncoding hOut utf8
+    out <- SIO.hGetContents hOut
+    _ <- waitForProcess hProc
+    return out
+
 -- language list
 langs :: [String]
 langs = ["fr", "en"]
 
 -- format list
 formats :: [String]
-formats = ["html", "pdf"]
+formats = ["html", "pdf", "epub", "mobi"]
 
 -- literate programming macros
 litMacroTagChar :: Char
@@ -257,7 +264,10 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("inc", include)        , ("include", include)
           , ("raw", raw)
           , ("rawinc", rawinc)      , ("rawinclude", rawinc)
-          , ("exec", exec)          , ("rawexec", rawexec)
+
+          -- for backward compatibility, use sh instead
+          , ("exec",    script "exec"    "sh" "" ".sh")
+          , ("rawexec", script "rawexec" "sh" "" ".sh")
 
           , ("mdate", mdate)
 
@@ -346,7 +356,7 @@ ifeq env [x, y, t, e] = do
 ifeq env [x, y, t] = ifeq env [x, y, t, ""]
 ifeq _ _ = arityError "ifeq" [3, 4]
 
--- \ifne(x)(y)(t)(e) is equivlent to \ifeq(x)(y)(e)(t)
+-- \ifne(x)(y)(t)(e) is equivalent to \ifeq(x)(y)(e)(t)
 ifne :: Macro
 ifne env [x, y, t, e] = ifeq env [x, y, e, t]
 ifne env [x, y, t] = ifeq env [x, y, "", t]
@@ -390,21 +400,6 @@ rawinc env [name] = do
     return (env, doc)
 rawinc _ _ = arityError "rawinclude" [1]
 
--- \rawexec(command) preprocesses the command and emits the result (stdout) unpreprocessed
-rawexec :: Macro
-rawexec env [cmd] = do
-    cmd' <- pp' env cmd >>= strip'
-    doc <- readProcess "sh" ["-c", cmd'] "" >>= strip'
-    return (env, doc)
-rawexec _ _ = arityError "rawexec" [1]
-
--- \exec(command) preprocesses the command and preprocesses the result (stdout)
-exec :: Macro
-exec env [cmd] = do
-    (env', doc) <- rawexec env [cmd]
-    pp env' doc
-exec _ _ = arityError "exec" [1]
-
 -- strip removes spaces at the beginning and the end of a string
 strip :: String -> String
 strip = halfStrip . halfStrip where halfStrip = dropWhile isSpace . reverse
@@ -418,7 +413,6 @@ strip' = return . strip
 -- If no file is given, the date of the main file is returned.
 mdate :: Macro
 mdate env files = do
-    --files' <- ppAll' env files
     files' <- mapM (pp' env) files
     files'' <- mapM (locateFile env) $ concatMap words files' ++ [getSymbol env MainFile | null files]
     times <- mapM getModificationTime files''
@@ -753,7 +747,7 @@ script _lang cmd header ext env [src] = do
     src' <- pp' env src
     writeFileUTF8 path $ unlines [header, src']
     let (exe:args) = words cmd
-    output <- readProcess exe (args ++ [path]) []
+    output <- readProcessUTF8 exe (args ++ [path])
     return (env, output)
 script lang _ _ _ _ _ = arityError lang [1]
 

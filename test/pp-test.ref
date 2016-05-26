@@ -1,6 +1,5 @@
 % PP test file
 % Christophe Delord
-% Tuesday 17 May 2016
 
 Introduction
 ============
@@ -176,7 +175,7 @@ External commands and scripts execution
 =======================================
 
 ----------------------------------- -----------------------------------------------------------------
-Command line (current shell):       OK
+Command line (uses sh):             OK
 `sh` script:                        OK
 `bash` script:                      OK
 `bat` script:                       OK

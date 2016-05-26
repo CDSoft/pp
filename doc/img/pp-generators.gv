@@ -7,7 +7,7 @@ digraph {
         dot neato twopi circo fdp sfdp patchwork osage uml ditaa
     }
 
-    PP [shape=diamond]
+    PP [label="pp" shape=diamond]
     dot neato twopi circo fdp sfdp patchwork osage uml ditaa
     GraphViz [shape=box]
     PlantUML [shape=box]

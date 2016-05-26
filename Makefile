@@ -108,7 +108,7 @@ endif
 README.md: $(PP)
 README.md: src/pp.md
 	@mkdir -p doc/img
-	LANG=en $(PP) -DREADME $< | pandoc -f markdown -t markdown_github > $@
+	$(PP) -en -DREADME $< | pandoc -f markdown -t markdown_github > $@
 
 #####################################################################
 # archives
@@ -210,7 +210,7 @@ pp.exe: src/pp.hs $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: src/pp.md
 	@mkdir -p $(dir $@) doc/img
-	LANG=en $(PP) $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	$(PP) -en $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 doc/pp.css: $(CACHE)/pp.css
 	@mkdir -p $(dir $@)
@@ -231,7 +231,7 @@ dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 doc/dpp.html: $(PP) $(DPP) doc/pp.css
 doc/dpp.html: src/dpp.md
 	@mkdir -p $(dir $@) doc/img
-	LANG=en $(PP) $< | $(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	$(PP) -en $< | $(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 #####################################################################
 # tests
@@ -245,7 +245,7 @@ test: $(BUILD)/pp-test.output test/pp-test.ref
 $(BUILD)/pp-test.output: $(PP) doc/pp.css
 $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 LANG=en FORMAT=html $(PP) $< > $@
+	TESTENVVAR=42 $(PP) -en -html $< > $@
 	pandoc -S --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref

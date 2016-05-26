@@ -1,6 +1,5 @@
 % PP test file
 % Christophe Delord
-% \mdate
 
 Introduction
 ============
@@ -113,8 +112,8 @@ File modification date
 ======================
 
 ----------------------------------- -----------------------------------------------------------------
-Current file date:                  \eq(\mdate)(\exec(date +"%A %d %B %Y" -r \file))
-Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(\exec(date +"%A %d %B %Y" -r test/$(ls -t test | head -1)))
+Current file date:                  \eq(\mdate)(\exec(LANG=en date +"%A %d %B %Y" -r \file))
+Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(\exec(LANG=en date +"%A %d %B %Y" -r test/$(ls -t test | head -1)))
 ----------------------------------- -----------------------------------------------------------------
 
 Environment variables
@@ -158,10 +157,10 @@ External commands and scripts execution
 =======================================
 
 ----------------------------------- -----------------------------------------------------------------
-Command line (current shell):       \eq(\exec(echo hi))(hi)
-`sh` script:                        \eq(\sh(echo hi))(hi)
-`bash` script:                      \eq(\bash(echo hi))(hi)
-`bat` script:                       \eq(\bat(echo hi))(hi)
+Command line (uses sh):             \eq(\exec(echo "hi é"))(hi é)
+`sh` script:                        \eq(\sh(echo "hi é"))(hi é)
+`bash` script:                      \eq(\bash(echo hi à))(hi à)
+`bat` script:                       \eq(\bat(echo hi ç))(hi ç)
 `python` script:                    \eq(\python(print "hi"))(hi)
 `haskell` script:                   \eq(\haskell(main = putStrLn "hi"))(hi)
 ----------------------------------- -----------------------------------------------------------------

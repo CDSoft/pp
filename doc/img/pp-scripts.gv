@@ -7,7 +7,7 @@ digraph {
         bash sh bat python haskell
     }
 
-    PP [shape=diamond]
+    PP [shape=diamond label="pp"]
     bash sh bat python haskell
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]

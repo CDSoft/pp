@@ -63,7 +63,7 @@ Command line
 
 -   the environment variables of the current process
 -   a `lang` variable containing the current langage (currently only French (`fr`) and English (`en`) are supported)
--   a `format` variable containing the current output format (`html` or `pdf`)
+-   a `format` variable containing the current output format (`html`, `pdf`, `epub` or `mobi`)
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
@@ -78,7 +78,7 @@ removes the symbol `SYMBOL` from the current environment.
 **-fr|-en**  
 changes the current language.
 
-**-html|-pdf**  
+**-html|-pdf|-epub|-mobi**  
 changes the current output file format.
 
 Other arguments are filenames.
@@ -135,10 +135,10 @@ get the raw (unevaluated) definition of `X`
 `pp` emits the content of `FILE` without any preprocessing.
 
 **`!exec(COMMAND)`**  
-executes a shell command (with the current shell) and emits the output of the command.
+executes a shell command (with the current shell) and emits the output of the command. **This macro is obsolete. It is now equivalent to `!sh`.**
 
 **`!rawexec(COMMAND)`**  
-as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
+as `!exec(COMMAND)` but the output is not preprocessed by `pp`. **This macro is obsolete. It is now equivalent to `!sh`.**
 
 **`!mdate(FILES)`**  
 returns the modification date of the most recent file.
@@ -153,18 +153,18 @@ computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default val
 emits the current language (*fr* or *en*)
 
 **`!format`**  
-emits the current format (*html* or *pdf*)
+emits the current format (*html*, *pdf*, *epub* or *mobi*)
 
 **`!fr(...)`** or **`!en(...)`**  
 emits some text only if the current language is *fr* or *en*
 
 **`!html(...)`** or **`!pdf(...)`**  
-emits some text only if the current format is *html* or *pdf*
+emits some text only if the current format is *html*, *pdf*, *epub* or *mobi*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**  
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!bat(SCRIPT)`**, **`!python(SCRIPT)`**, **`!haskell(SCRIPT)`**  
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
@@ -390,13 +390,14 @@ Once generated the graph looks like:
     \bash
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo "Hi, I'm $SHELL $BASH_VERSION"
+    RANDOM=42 # seed
     echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This script outputs:
 
     Hi, I'm /bin/bash 4.3.30(1)-release
-    Here are a few random numbers: 24942, 13768, 25548
+    Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
@@ -419,7 +420,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Wine CMD Version 5.1.2600 (1.6.2)
+    Wine CMD version 5.1.2600 (1.6.2)
     This script is run from wine under Linux
 
 ### Python
@@ -433,6 +434,7 @@ This script outputs:
 
     if __name__ == "__main__":
         print("Hi, I'm Python %s"%sys.version)
+        random.seed(42)
         randoms = [random.randint(0, 1000) for i in range(3)]
         print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -441,7 +443,7 @@ This script outputs:
 
     Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
     [GCC 4.9.2]
-    Here are a few random numbers: 15, 920, 304
+    Here are a few random numbers: 640, 25, 275
 
 ### Haskell
 
