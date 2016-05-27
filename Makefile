@@ -77,14 +77,8 @@ endif
 BUILD = .build
 CACHE = .cache
 
-ifeq "$(USER)" "root"
-INSTALL = /usr/local/bin
-else
-INSTALL = ~/bin
-endif
-
 install: $(PP) $(DPP) $(GPP)
-	install -v -C -o $(USER) -g $(USER) $^ $(INSTALL)
+	install -v -C $^ $(shell (ls -d /usr/local/bin || echo /usr/bin) 2>/dev/null)
 
 clean:
 	rm -rf $(BUILD) doc
