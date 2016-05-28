@@ -53,7 +53,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">DPP - Diagram preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Wednesday 18 May 2016</h3>
+<h3 class="date">Saturday 28 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -160,29 +160,34 @@ graph {
 </figure>
 <p>The image link in the output markdown document may have to be different than the actual path in the file system. This happens when then <code>.md</code> or <code>.html</code> files are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:</p>
 <pre><code>~~~~~ dot [mybuildpath/]img/diag42
+...
+~~~~~
+
 or
-\dot([mybuildpath/]img/diag42)...</code></pre>
+
+\dot([mybuildpath/]img/diag42)
+~~~~~
+...
+~~~~~</code></pre>
 <p>will be actually generated in:</p>
 <pre><code>mybuildpath/img/diag42.png</code></pre>
 <p>and the link in the output document will be:</p>
 <pre><code>img/diag42.png</code></pre>
 <p>For instance, if you use Pandoc to generate HTML documents with diagrams in a different directory, there are two possibilities:</p>
 <ol type="1">
-<li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:</li>
-</ol>
+<li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:
 <ul>
 <li>the CSS path shall be the actual path where the CSS file is stored</li>
 <li>the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won’t find them)</li>
 <li>e.g.: <code>outputpath/img/diag42</code></li>
-</ul>
-<ol start="2" type="1">
-<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:</li>
-</ol>
+</ul></li>
+<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:
 <ul>
 <li>the CSS path shall be relative to the output document</li>
 <li>the image path in diagrams shall be relative to output document in HTML links and shall also describe the actual path where the images are stored.</li>
 <li>e.g.: <code>[outputpath/]img/diag42</code></li>
-</ul>
+</ul></li>
+</ol>
 <p>The diagram generator can be:</p>
 <ul>
 <li>dot</li>
@@ -344,17 +349,19 @@ Alice &lt;-- Bob: another authentication Response
 <p><code>dpp</code> syntax:</p>
 <pre><code>~~~~~ bash
 echo &quot;Hi, I'm $SHELL $BASH_VERSION&quot;
+RANDOM=42 # seed
 echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~</code></pre>
 <p><code>pp</code> syntax:</p>
 <pre><code>\bash
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo &quot;Hi, I'm $SHELL $BASH_VERSION&quot;
+RANDOM=42 # seed
 echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
-Here are a few random numbers: 15966, 3620, 6803</code></pre>
+Here are a few random numbers: 17766, 11151, 23481</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h2 id="bat">Bat</h2>
 <p><a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a> is executed when the keyword <code>bat</code> is used.</p>
@@ -393,6 +400,7 @@ import random
 
 if __name__ == &quot;__main__&quot;:
     print(&quot;Hi, I'm Python %s&quot;%sys.version)
+    random.seed(42)
     randoms = [random.randint(0, 1000) for i in range(3)]
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~</code></pre>
@@ -404,13 +412,14 @@ import random
 
 if __name__ == &quot;__main__&quot;:
     print(&quot;Hi, I'm Python %s&quot;%sys.version)
+    random.seed(42)
     randoms = [random.randint(0, 1000) for i in range(3)]
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
-Here are a few random numbers: 646, 756, 749</code></pre>
+Here are a few random numbers: 640, 25, 275</code></pre>
 <h2 id="haskell">Haskell</h2>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
 <p><code>dpp</code> syntax:</p>

@@ -287,8 +287,16 @@ specify the part of the path that belongs to the generated image but not to the
 link in the output document. For instance a diagram declared as:
 
     ~~~~~ dot [mybuildpath/]img/diag42
+    ...
+    ~~~~~
+
     or
-    \raw(\dot([mybuildpath/]img/diag42)...)
+
+    \raw(\dot([mybuildpath/]img/diag42)
+    ~~~~~
+    ...
+    ~~~~~
+    )
 
 will be actually generated in:
 
@@ -303,17 +311,17 @@ different directory, there are two possibilities:
 
 1. the document is a self contained HTML file (option `--self-contained`), i.e.
    the CSS and images are stored inside the document:
-   - the CSS path shall be the actual path where the CSS file is stored
-   - the image path in diagrams shall be the actual path where the images are
-     stored (otherwise Pandoc won't find them)
-   - e.g.: `outputpath/img/diag42`
+    - the CSS path shall be the actual path where the CSS file is stored
+    - the image path in diagrams shall be the actual path where the images are
+      stored (otherwise Pandoc won't find them)
+    - e.g.: `outputpath/img/diag42`
 
 2. the document is not self contained, i.e. the CSS and images are stored apart
    from the document:
-   - the CSS path shall be relative to the output document
-   - the image path in diagrams shall be relative to output document in HTML
-     links and shall also describe the actual path where the images are stored.
-   - e.g.: `[outputpath/]img/diag42`
+    - the CSS path shall be relative to the output document
+    - the image path in diagrams shall be relative to output document in HTML
+      links and shall also describe the actual path where the images are stored.
+    - e.g.: `[outputpath/]img/diag42`
 
 The diagram generator can be:
 
@@ -613,6 +621,7 @@ Java must be installed.
 
     ~~~~~ bash
     echo "Hi, I'm $SHELL $BASH_VERSION"
+    RANDOM=42 # seed
     echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ~~~~~
 
@@ -621,6 +630,7 @@ Java must be installed.
     \raw{\bash
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo "Hi, I'm $SHELL $BASH_VERSION"
+    RANDOM=42 # seed
     echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
@@ -630,6 +640,7 @@ This script outputs:
 ~~~~~~~~~~
 ~~~~~ bash
 echo "Hi, I'm $SHELL $BASH_VERSION"
+RANDOM=42 # seed
 echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 ~~~~~
 ~~~~~~~~~~
@@ -692,6 +703,7 @@ if "%WINELOADER%" == "" (
 
     if __name__ == "__main__":
         print("Hi, I'm Python %s"%sys.version)
+        random.seed(42)
         randoms = [random.randint(0, 1000) for i in range(3)]
         print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
     ~~~~~
@@ -705,6 +717,7 @@ if "%WINELOADER%" == "" (
 
     if __name__ == "__main__":
         print("Hi, I'm Python %s"%sys.version)
+        random.seed(42)
         randoms = [random.randint(0, 1000) for i in range(3)]
         print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -719,6 +732,7 @@ import random
 
 if __name__ == "__main__":
     print("Hi, I'm Python %s"%sys.version)
+    random.seed(42)
     randoms = [random.randint(0, 1000) for i in range(3)]
     print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
 ~~~~~
