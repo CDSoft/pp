@@ -148,9 +148,13 @@ It helps ending an argument list in some cases:
 
     Here, [link] is not parsed as a third parameter of \macro
 
+Arguments are stripped. Removing leading and ending spaces helps preserving
+line structure in the document.
+
 The last argument can also be enclosed between lines of tildas or backquotes
 (of the same length).
 This is useful for literate programming, diagrams or scripts (see examples later).
+Code block arguments are not stripped to preserve leading and ending spaces or blank lines.
 
 Arguments can be on separate lines but must not be separated by blank lines.
 
@@ -304,7 +308,7 @@ The first line contains the macro:
 - the legend (second optional argument)
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab).
-Both lines must have the same number of tilda or back quotes.
+The end delimiter must at least as long as the beginning delimiter.
 
     \raw{\dot(path/imagename)(optional legend)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -345,17 +349,17 @@ different directory, there are two possibilities:
 
 1. the document is a self contained HTML file (option `--self-contained`), i.e.
    the CSS and images are stored inside the document:
-   - the CSS path shall be the actual path where the CSS file is stored
-   - the image path in diagrams shall be the actual path where the images are
-     stored (otherwise Pandoc won't find them)
-   - e.g.: `outputpath/img/diag42`
+    - the CSS path shall be the actual path where the CSS file is stored
+    - the image path in diagrams shall be the actual path where the images are
+      stored (otherwise Pandoc won't find them)
+    - e.g.: `outputpath/img/diag42`
 
 2. the document is not self contained, i.e. the CSS and images are stored apart
    from the document:
-   - the CSS path shall be relative to the output document
-   - the image path in diagrams shall be relative to output document in HTML
-     links and shall also describe the actual path where the images are stored.
-   - e.g.: `[outputpath/]img/diag42`
+    - the CSS path shall be relative to the output document
+    - the image path in diagrams shall be relative to output document in HTML
+      links and shall also describe the actual path where the images are stored.
+    - e.g.: `[outputpath/]img/diag42`
 
 The diagram generator can be:
 

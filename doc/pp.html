@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Wednesday 25 May 2016</h3>
+<h3 class="date">Saturday 28 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -123,7 +123,8 @@
 [link]: foo bar
 
 Here, [link] is not parsed as a third parameter of \macro</code></pre>
-<p>The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming, diagrams or scripts (see examples later).</p>
+<p>Arguments are stripped. Removing leading and ending spaces helps preserving line structure in the document.</p>
+<p>The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming, diagrams or scripts (see examples later). Code block arguments are not stripped to preserve leading and ending spaces or blank lines.</p>
 <p>Arguments can be on separate lines but must not be separated by blank lines.</p>
 <p>You can choose the syntax that works better with your favorite editor and syntax colorization.</p>
 <dl>
@@ -243,7 +244,7 @@ And also finally &quot;Goodbye&quot;:
 <li>the image name without the extension (first argument)</li>
 <li>the legend (second optional argument)</li>
 </ul>
-<p>Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). Both lines must have the same number of tilda or back quotes.</p>
+<p>Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). The end delimiter must at least as long as the beginning delimiter.</p>
 <pre><code>\dot(path/imagename)(optional legend)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     graph {
@@ -262,21 +263,19 @@ And also finally &quot;Goodbye&quot;:
 <pre><code>img/diag42.png</code></pre>
 <p>For instance, if you use Pandoc to generate HTML documents with diagrams in a different directory, there are two possibilities:</p>
 <ol type="1">
-<li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:</li>
-</ol>
+<li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:
 <ul>
 <li>the CSS path shall be the actual path where the CSS file is stored</li>
 <li>the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won’t find them)</li>
 <li>e.g.: <code>outputpath/img/diag42</code></li>
-</ul>
-<ol start="2" type="1">
-<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:</li>
-</ol>
+</ul></li>
+<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:
 <ul>
 <li>the CSS path shall be relative to the output document</li>
 <li>the image path in diagrams shall be relative to output document in HTML links and shall also describe the actual path where the images are stored.</li>
 <li>e.g.: <code>[outputpath/]img/diag42</code></li>
-</ul>
+</ul></li>
+</ol>
 <p>The diagram generator can be:</p>
 <ul>
 <li>dot</li>

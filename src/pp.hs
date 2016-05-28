@@ -57,12 +57,16 @@ data Var = Def String           -- user macro definition
          | LitFlush             -- tag to flush literate content
          deriving (Eq)
 
+data Val = Val String           -- regular (stripped) value
+         | Block String         -- code block (unstripped) value
+         deriving (Eq)
+
 -- Preprocessor environment (lookup table)
-type Env = [(Var, String)]
+type Env = [(Var, Val)]
 
 -- A macro takes an environment and arguments
 -- and returns a new environment and the result of the macro as a string.
-type Macro = Env -> [String] -> IO (Env, String)
+type Macro = Env -> [Val] -> IO (Env, String)
 
 -- A preprocessor takes an environment and a string to preprocess
 -- and returns a new environment and the preprocessed string.
@@ -88,7 +92,7 @@ main = do
     -- get $FORMAT (html or pdf)
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
     -- the initial environment contains the language, the format and the environment variables
-    let env = (Lang, lang) : (FileFormat, fmt) : [(EnvVar name, val) | (name, val) <- envVars]
+    let env = (Lang, Val lang) : (FileFormat, Val fmt) : [(EnvVar name, Val val) | (name, val) <- envVars]
     -- parse the arguments and produce the preprocessed output
     (env', doc) <- getArgs >>= doArgs env
     -- just write the preprocessed output to stdout
@@ -111,17 +115,17 @@ doArgs env (arg:args) = do
 -- This variable is not set when no file is given on the command line.
 -- In this case, pp preprocesses stdin.
 doArgs env [] = case lookup MainFile env of
-                    Nothing -> -- nothing has been preprocessed, let's try stdin
-                               doArg env "-"
-                    Just _ -> -- something has already been preprocessed
-                              return (env, "")
+    -- nothing has been preprocessed, let's try stdin
+    Nothing -> doArg env "-"
+    -- something has already been preprocessed
+    Just _ -> return (env, "")
 
 -- "doArg env arg" parses one argument
 -- and returns an updated environment and the output produced by the argument.
 doArg :: Env -> String -> IO (Env, String)
 
 -- "doArg env "-Dname=value"" adds a new definition to the environment.
-doArg env ('-':'D':def) = return ((Def name, drop 1 value) : clean (Def name) env, "")
+doArg env ('-':'D':def) = return ((Def name, Val (drop 1 value)) : clean (Def name) env, "")
     where (name, value) = span (/= '=') def
 
 -- "doArg env "-Uname"" removes a definition from the environment.
@@ -129,11 +133,11 @@ doArg env ('-':'U':name) = return (clean (Def name) env, "")
 
 -- "doArg env "-fr|-en"" changes the current language
 doArg env ('-':lang) | lang' `elem` langs =
-    return ((Lang, lang') : clean Lang env, "") where lang' = map toLower lang
+    return ((Lang, Val lang') : clean Lang env, "") where lang' = map toLower lang
 
 -- "doArg env "-html|-pdf|-epub|-mobi"" changes the current format
 doArg env ('-':fmt) | fmt' `elem` formats =
-    return ((FileFormat, fmt') : clean FileFormat env, "") where fmt' = map toLower fmt
+    return ((FileFormat, Val fmt') : clean FileFormat env, "") where fmt' = map toLower fmt
 
 -- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
@@ -141,7 +145,7 @@ doArg _ ('-':arg) | not (null arg) = error $ "Unexpected argument: " ++ arg
 -- "doArg env filename" preprocessed the content of a file using the current environment.
 -- The mainFileTag variable is added to the environment.
 -- It contains the name of the file being preprocessed.
-doArg env name = ppFile ((MainFile, name) : env) name
+doArg env name = ppFile ((MainFile, Val name) : env) name
 
 -- "saveLiterateContent macros env" saves all the literate contents recorded in the environment.
 -- "macros" is the list of literate content that must not be saved
@@ -159,7 +163,7 @@ saveLiterateContent macros ((mac@(LitMacro _), _) : env) =
 -- file content shall be expanded with macro contents
 -- previous definitions of the same file are removed from the list to avoid writing old intermediate definitions
 saveLiterateContent macros ((file@(LitFile name), content) : env) = do
-    writeFileUTF8 name (expandLit macros content)
+    writeFileUTF8 name (expandLit macros (fromVal content))
     saveLiterateContent macros (clean file env)
 
 -- other definitions are not literate things
@@ -171,7 +175,7 @@ saveLiterateContent _ [] =
 
 -- "isLitMacro (name, value)" tells if an environment entry is a literate content macro.
 -- An entry is a literate content if its name is the name of a literate content macro.
-isLitMacro :: (Var, String) -> Bool
+isLitMacro :: (Var, Val) -> Bool
 isLitMacro = isLitMacroName . fst
 
 -- "isLitMacroName name" tells if a name is a literate content macro name.
@@ -191,7 +195,7 @@ ppFile env name = do
     -- read the file to preprocess
     content <- readFileUTF8 name
     -- preprocess the file in an environment containing the filename
-    (env', doc) <- pp ((CurrentFile, name) : clean CurrentFile env) content
+    (env', doc) <- pp ((CurrentFile, Val name) : clean CurrentFile env) content
     -- return the environment (with the file name of the caller) and the preprocessed output
     return ((CurrentFile, caller) : clean CurrentFile env', doc)
 
@@ -305,20 +309,35 @@ cmdexe =
     "cmd /c"
 #endif
 
+fromVal :: Val -> String
+fromVal (Val s) = s
+fromVal (Block s) = s
+
+ppAndStrip :: Env -> Val -> IO (Env, String)
+ppAndStrip env (Val s) = do
+    (env', doc) <- pp env s
+    return (env', strip doc)
+ppAndStrip env (Block s) =
+    pp env s
+
+ppAndStrip' :: Env -> Val -> IO String
+ppAndStrip' env val = fmap snd (ppAndStrip env val)
+
 -- \define(name)(value) adds (Def name, value) to the environment.
 -- name is preprocessed but not value. The value of the macro is preprocessed
 -- when the macro is evaluated (to allow macros with parameters).
 define :: Macro
 define env [name, value] = do
-    name' <- pp' env name >>= strip'
+    name' <- ppAndStrip' env name      -- TODO : strip uniquement pour Arg, par pour Block => ajouter un argument à strip' pour activer ou non le strip ou une fonction p'' qui stripe ou non
+    -- TODO : si l'environnement contient MacroArg au lieu de String, on peut généraliser plus facilement
     return ((Def name', value) : clean (Def name') env, "")
-define env [name] = define env [name, ""]
+define env [name] = define env [name, Val ""]
 define _ _ = arityError "define" [1,2]
 
 -- \undefine(name) removes (Def name) from the environment
 undefine :: Macro
 undefine env [name] = do
-    name' <- pp' env name >>= strip'
+    name' <- ppAndStrip' env name
     return (clean (Def name') env, "")
 undefine _ _ = arityError "undefine" [1]
 
@@ -331,17 +350,17 @@ clean var = filter ((/=var) . fst)
 -- e is optional.
 ifdef :: Macro
 ifdef env [name, t, e] = do
-    name' <- pp' env name >>= strip'
-    pp env $ case lookup (Def name') env of
+    name' <- ppAndStrip' env name
+    ppAndStrip env $ case lookup (Def name') env of
                 Just _ -> t
                 Nothing -> e
-ifdef env [name, t] = ifdef env [name, t, ""]
+ifdef env [name, t] = ifdef env [name, t, Val ""]
 ifdef _ _ = arityError "ifdef" [1, 2]
 
 -- \ifndef(name)(t)(e) is equivalent to \ifdef(name)(e)(t)
 ifndef :: Macro
 ifndef env [name, t, e] = ifdef env [name, e, t]
-ifndef env [name, t] = ifdef env [name, "", t]
+ifndef env [name, t] = ifdef env [name, Val "", t]
 ifndef _ _ = arityError "ifndef" [1, 2]
 
 -- \ifeq(x)(y)(t)(e) preprocesses x and y. If they are equal
@@ -349,30 +368,30 @@ ifndef _ _ = arityError "ifndef" [1, 2]
 -- e is optional.
 ifeq :: Macro
 ifeq env [x, y, t, e] = do
-    x' <- pp' env x
-    y' <- pp' env y
-    pp env (if noSpace x' == noSpace y' then t else e)
+    x' <- ppAndStrip' env x
+    y' <- ppAndStrip' env y
+    ppAndStrip env (if noSpace x' == noSpace y' then t else e)
         where noSpace = filter (not . isSpace)
-ifeq env [x, y, t] = ifeq env [x, y, t, ""]
+ifeq env [x, y, t] = ifeq env [x, y, t, Val ""]
 ifeq _ _ = arityError "ifeq" [3, 4]
 
 -- \ifne(x)(y)(t)(e) is equivalent to \ifeq(x)(y)(e)(t)
 ifne :: Macro
 ifne env [x, y, t, e] = ifeq env [x, y, e, t]
-ifne env [x, y, t] = ifeq env [x, y, "", t]
+ifne env [x, y, t] = ifeq env [x, y, Val "", t]
 ifne _ _ = arityError "ifne" [3, 4]
 
 -- \rawdef(name) preprocesses name and emits the raw definition
 -- (no preprocessing)
 rawdef :: Macro
 rawdef env [name] = do
-    name' <- pp' env name >>= strip'
-    return (env, getSymbol env (Def name'))
+    name' <- ppAndStrip' env name
+    return (env, fromVal (getSymbol env (Def name')))
 rawdef _ _ = arityError "rawdef" [1]
 
 -- \include(name) preprocesses name, locates the file and preprocesses its content
 include :: Macro
-include env [name] = pp' env name >>= strip' >>= locateFile env >>= ppFile env
+include env [name] = ppAndStrip' env name >>= locateFile env >>= ppFile env
 include _ _ = arityError "include" [1]
 
 -- "locateFile env name" searches for a file in the directory of the main file
@@ -380,9 +399,9 @@ include _ _ = arityError "include" [1]
 locateFile :: Env -> FilePath -> IO FilePath
 locateFile env name = do
     let name' = case name of
-                    ('~' : '/' : relname) -> getSymbol env (EnvVar "HOME") </> relname
+                    ('~' : '/' : relname) -> fromVal (getSymbol env (EnvVar "HOME")) </> relname
                     _ -> name
-    let path = map (takeDirectory . getSymbol env) [CurrentFile, MainFile] ++ ["."]
+    let path = map (takeDirectory . fromVal . getSymbol env) [CurrentFile, MainFile] ++ ["."]
     found <- findFile path name'
     case found of
         Just foundFile -> return foundFile
@@ -390,13 +409,13 @@ locateFile env name = do
 
 -- \raw(text) emits text unpreprocessed
 raw :: Macro
-raw env [src] = return (env, src)
+raw env [src] = return (env, fromVal src)
 raw _ _ = arityError "raw" [1]
 
 -- \rawinclude(name) preprocesses name, locates the file and emits it unpreprocessed
 rawinc :: Macro
 rawinc env [name] = do
-    doc <- pp' env name >>= strip' >>= locateFile env >>= readFileUTF8
+    doc <- ppAndStrip' env name >>= locateFile env >>= readFileUTF8
     return (env, doc)
 rawinc _ _ = arityError "rawinclude" [1]
 
@@ -404,20 +423,16 @@ rawinc _ _ = arityError "rawinclude" [1]
 strip :: String -> String
 strip = halfStrip . halfStrip where halfStrip = dropWhile isSpace . reverse
 
--- strip' removes spaces at the beginning and the end of a string (in the IO monad)
-strip' :: String -> IO String
-strip' = return . strip
-
 -- \mdate(file1 ... filen)(file'1 ... file'n)... preprocesses the list of
 -- filenames (space separated) and returns the most recent modification date.
 -- If no file is given, the date of the main file is returned.
 mdate :: Macro
 mdate env files = do
-    files' <- mapM (pp' env) files
-    files'' <- mapM (locateFile env) $ concatMap words files' ++ [getSymbol env MainFile | null files]
+    files' <- mapM (ppAndStrip' env) files
+    files'' <- mapM (locateFile env) $ concatMap words files' ++ [fromVal (getSymbol env MainFile) | null files]
     times <- mapM getModificationTime files''
     let lastTime = maximum times
-    return (env, formatTime (myLocale $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
+    return (env, formatTime (myLocale $ fromVal $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
 
 -- "myLocale lang" returns the date format description for a given language.
 myLocale :: String -> TimeLocale
@@ -456,42 +471,42 @@ myLocale _ = defaultTimeLocale
 -- and preprocessed the value of the environment variable.
 readEnv :: Macro
 readEnv env [name] = do
-    name' <- pp' env name >>= strip'
+    name' <- ppAndStrip' env name
     case lookup (EnvVar name') env of
-        Just val -> pp env val
+        Just val -> ppAndStrip env val
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
 
 -- \main returns the name of the main file (given on the command line)
 mainFile :: Macro
-mainFile env [] = return (env, fromMaybe "-" (lookup MainFile env))
+mainFile env [] = return (env, fromVal (fromMaybe (Val "-") (lookup MainFile env)))
 mainFile _ _ = arityError "main" [0]
 
 -- \file returns the name of the current file (\main or any file included from \main)
 currentFile :: Macro
-currentFile env [] = return (env, fromMaybe "-" (lookup CurrentFile env))
+currentFile env [] = return (env, fromVal (fromMaybe (Val "-") (lookup CurrentFile env)))
 currentFile _ _ = arityError "file" [0]
 
 -- \lang returns the current language ("fr" or "en")
 currentLang :: Macro
-currentLang env [] = return (env, getSymbol env Lang)
+currentLang env [] = return (env, fromVal (getSymbol env Lang))
 currentLang _ _ = arityError "lang" [0]
 
 -- \format returns the current output format ("html" or "pdf")
 currentFormat :: Macro
-currentFormat env [] = return (env, getSymbol env FileFormat)
+currentFormat env [] = return (env, fromVal (getSymbol env FileFormat))
 currentFormat _ _ = arityError "format" [0]
 
 -- \add(name)(val) preprocesses name and val and adds val to the integer value
 -- stored in name. If name is not defined its value is 0.
 add :: Macro
 add env [name, val] = do
-    name' <- pp' env name >>= strip'
-    let val0 = getSymbol env (Def name')
-    val1 <- pp' env val >>= strip'
-    let env' = (Def name', show (atoi val0 + atoi val1)) : clean (Def name') env
+    name' <- ppAndStrip' env name
+    let val0 = fromVal $ getSymbol env (Def name')
+    val1 <- ppAndStrip' env val
+    let env' = (Def name', Val (show (atoi val0 + atoi val1))) : clean (Def name') env
     return (env', "")
-add env [name] = add env [name, "1"]
+add env [name] = add env [name, Val "1"]
 add _ _ = arityError "add" [1, 2]
 
 -- atoi s converts s to an integer (0 if empty or not an integer)
@@ -506,27 +521,27 @@ lit :: Macro
 -- \lit(name)(lang)(content) appends content to the file or macro name.
 -- In the markdown output, the content will be colored according to the language lang.
 lit env [name, lang, content] = do
-    name' <- pp' env name >>= strip'
-    lang' <- pp' env lang >>= strip'
-    content' <- pp' env content
+    name' <- ppAndStrip' env name
+    lang' <- ppAndStrip' env lang
+    content' <- ppAndStrip' env content
     let env' = litAppend env name' (Just lang') content'
-    let formatedCode = litShow (Just lang') content
+    let formatedCode = litShow (Just lang') content'        -- TODO : avant : content au lieu de content' ??? pourquoi
     return (env', formatedCode)
 
 -- \lit(name)(lang)(content) appends content to the file or macro name.
 -- The current language is the previously defined language or the default
 -- one according to name.
 lit env [name, content] = do
-    name' <- pp' env name >>= strip'
-    content' <- pp' env content
+    name' <- ppAndStrip' env name
+    content' <- ppAndStrip' env content
     let lang = litLang env name'
     let env' = litAppend env name' lang content'
-    let formatedCode = litShow lang content
+    let formatedCode = litShow lang content'            -- TODO pourquoi content au lieu de content'
     return (env', formatedCode)
 
 -- \lit(name) emits the current content of a literate file or macro.
 lit env [name] = do
-    name' <- pp' env name >>= strip'
+    name' <- ppAndStrip' env name
     let lang = litLang env name'
     let content = litGet env name'
     let formatedCode = litShow lang content
@@ -537,7 +552,7 @@ lit _ _ = arityError "lit" [1, 2, 3]
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
 litGet :: Env -> String -> String
-litGet env name = getSymbol env (litContentTag name)
+litGet env name = fromVal $ getSymbol env (litContentTag name)
 
 -- "litAppend env name lang content" appends content to a literate file or macro
 -- and record the language lang in the environment
@@ -546,9 +561,9 @@ litAppend env name lang content = env''
     where
         contentTag = litContentTag name
         oldContent = litGet env name
-        env' = (contentTag, oldContent++content) : (clean contentTag . clean (LitLang name)) env
+        env' = (contentTag, Val (oldContent++content)) : (clean contentTag . clean (LitLang name)) env
         env'' = case lang of
-            Just lang' -> (LitLang name, lang') : env'
+            Just lang' -> (LitLang name, Val lang') : env'
             _ -> env'
 
 -- "litShow lang content" format content using the language lang.
@@ -572,7 +587,7 @@ litContentTag name = LitFile name
 -- from its name.
 litLang :: Env -> String -> Maybe String
 litLang env name = case (lookup (LitLang name) env, defaultLitLang name) of
-    (Just lang, _) -> Just lang
+    (Just lang, _) -> Just (fromVal lang)
     (_, Just lang) -> Just lang
     _ -> Nothing
 
@@ -652,7 +667,7 @@ defaultLitLang name = case (map toLower (takeBaseName name), map toLower (takeEx
 flushlit :: Macro
 flushlit env [] = do
     saveLiterateContent (filter isLitMacro env) env
-    return ((LitFlush, "") : clean LitFlush env, "")
+    return ((LitFlush, Val "") : clean LitFlush env, "")
 flushlit _ _ = arityError "flushlit" [0]
 
 -- "expandLit macros text" expand literal macros in a string.
@@ -665,15 +680,15 @@ expandLit macros (c0:s)
         (name, s') = span (\c -> isAlphaNum c || c == '_') s
         content' = case lookup (LitMacro name) macros of
                     Nothing -> c0:name
-                    Just content -> expandLit macros content
+                    Just content -> expandLit macros (fromVal content)
 expandLit _ [] = []
 
 -- diagram generates a GraphViz, PlantUML or ditaa diagram.
 diagram :: DiagramRuntime -> String -> String -> String -> Macro
 diagram runtime diag header footer env [path, title, code] = do
-    path' <- pp' env path >>= strip'
-    title' <- pp' env title >>= strip'
-    code' <- pp' env code
+    path' <- ppAndStrip' env path
+    title' <- ppAndStrip' env title
+    code' <- pp' env (fromVal code)
     let code'' = unlines [header, code', footer]
     let (gv, img, url) = splitImgUrl path' True
     oldCodeExists <- doesFileExist gv
@@ -691,7 +706,7 @@ diagram runtime diag header footer env [path, title, code] = do
                 readProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img] []
         return ()
     return (env, "!["++title'++"]("++url++")")
-diagram runtime diag header footer env [path, code] = diagram runtime diag header footer env [path, "", code]
+diagram runtime diag header footer env [path, code] = diagram runtime diag header footer env [path, Val "", code]
 diagram _ diag _ _ _ _ = arityError diag [2, 3]
 
 -- splitImgUrl extracts path to generate the scripts and images and path to put in the
@@ -738,17 +753,22 @@ resource name (array, len) = do
         hClose h
     return path
 
+-- TODO : si le code est dans un bloc il n'est pas "strippé"
+-- PB : comment mémoriser le séparateur d'argument ? ajouter une information au type
+
 -- script executes a script and emits the output of the script.
 script :: String -> String -> String -> String -> Macro
 script _lang cmd header ext env [src] = do
     tmp <- getTemporaryDirectory
     pid <- getProcessID
     let path = tmp </> "pp" ++ show pid ++ ext
-    src' <- pp' env src
+    src' <- pp' env (fromVal src)
     writeFileUTF8 path $ unlines [header, src']
     let (exe:args) = words cmd
     output <- readProcessUTF8 exe (args ++ [path])
-    return (env, output)
+    case src of
+        Val _ -> return (env, strip output)
+        Block _ -> return (env, output)
 script lang _ _ _ _ _ = arityError lang [1]
 
 #ifdef linux_HOST_OS
@@ -761,7 +781,7 @@ foreign import stdcall "GetCurrentProcessId" getProcessID :: IO Int
 -- language preprocesses src only if the current language is lang.
 language :: String -> Macro
 language lang env [src] = case lookup Lang env of
-    Just val | val == lang -> pp env src
+    Just val | fromVal val == lang -> ppAndStrip env src
     _ -> return (env, "")
 language lang _ _ = arityError lang [1]
 
@@ -769,7 +789,7 @@ language lang _ _ = arityError lang [1]
 -- format preprocesses src only if the current format is fmt.
 format :: String -> Macro
 format fmt env [src] = case lookup FileFormat env of
-    Just val | val == fmt -> pp env src
+    Just val | fromVal val == fmt -> ppAndStrip env src
     _ -> return (env, "")
 format fmt _ _ = arityError fmt [1]
 
@@ -814,7 +834,7 @@ pp env (c0:cs)
                     -- the value of the macro is preprocessed in an environment
                     -- containing the arguments
                     let args' = zip (map (Def . show) [(1::Int)..]) args
-                    (env', doc) <- pp (args'++env) value
+                    (env', doc) <- ppAndStrip (args'++env) value
                     -- removes the arguments but keep the side effects of the macro
                     let env'' = env' \\ args'
                     (env''', doc') <- pp env'' cs''
@@ -823,10 +843,22 @@ pp env (c0:cs)
                 (Nothing, Nothing) -> do
                     (env', doc) <- pp env cs'
                     return (env', (c0:name)++doc)
-    -- not e macro
+
+    -- if c0 is ~ or `, it may be the beginning of a regular code block
+    -- the end delimiter must not be seen as an argument of a macro that would be at the end of the block
+    | c0 `elem` charsBlock = case readArgBlock c0 (c0:cs) of
+        Just (start, block, end, s2) -> do
+            (env', docBlock) <- pp env block
+            (env'', doc) <- pp env' s2
+            return (env'', start ++ docBlock ++ end ++ doc)
+        Nothing -> do
+            (env', doc) <- pp env cs
+            return (env', c0:doc)
+
+    -- not a macro
     | otherwise = do
-                    (env', doc) <- pp env cs
-                    return (env', c0:doc)
+        (env', doc) <- pp env cs
+        return (env', c0:doc)
     where
         (name, cs') = span (\c -> isAlphaNum c || c == '_') cs
 
@@ -835,12 +867,14 @@ pp env (c0:cs)
         -- can be a code block.
         -- The first argument is the argument delimiter (Nothing for the first call)
         -- There can be spaces before the arguments.
-        readArgs :: Maybe (Char, Char) -> String -> ([String], String)
+        readArgs :: Maybe (Char, Char) -> String -> ([Val], String)
 
         -- read the first argument
         readArgs Nothing s = case dropSpaces s of
             -- code block => it's the last argument
-            Just s1@(c:_) | c `elem` charsBlock -> readArgBlock s c s1
+            Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock c s1 of
+                Just (_, block, _, s2) -> ([Block block], s2)
+                Nothing -> ([], s)
             -- argument starting with an open delimiter
             Just (left:s1) ->
                 case lookup left charsOpenClose of
@@ -849,7 +883,7 @@ pp env (c0:cs)
                         -- and the following arguments with the same delimiters
                         let (arg, s2) = readArg left right 1 s1
                             (args, s3) = readArgs (Just (left, right)) s2
-                        in (init arg : args, s3)
+                        in (Val (init arg) : args, s3)
                     Nothing ->
                         -- not a delimiter => no more arguments
                         ([], s)
@@ -859,14 +893,16 @@ pp env (c0:cs)
         -- read another argument
         readArgs leftright@(Just (left, right)) s = case dropSpaces s of
             -- code block => it's the last argument
-            Just s1@(c:_) | c `elem` charsBlock -> readArgBlock s c s1
+            Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock c s1 of
+                Just (_, block, _, s2) -> ([Block block], s2)
+                Nothing -> ([], s)
             -- argument starting with the same delimiter
             Just (left':s1) | left' == left ->
                 -- read one argument
                 -- and the following arguments with the same delimiters
                 let (arg, s2) = readArg left right 1 s1
                     (args, s3) = readArgs leftright s2
-                in (init arg : args, s3)
+                in (Val (init arg) : args, s3)
             -- not a delimiter => no more arguments
             _ -> ([], s)
 
@@ -905,30 +941,29 @@ pp env (c0:cs)
                 (cs'', s') = readArg left right level' s
 
         -- read an argument as a code block
-        -- readArgBlock s0 c s reads an argument with lines of c as separators.
-        -- If no end separator is found it returns no argument and the rest of
-        -- the string is s0 (ie the string before dropSpaces)
-        readArgBlock :: String -> Char -> String -> ([String], String)
-        readArgBlock s0 c s
+        -- readArgBlock c s reads an argument with lines of c as separators.
+        -- If a block with valid start and end separator is found, it returns
+        -- a tuple with start, the block, end, the rest of the string.
+        readArgBlock :: Char -> String -> Maybe (String, String, String, String)
+        readArgBlock c s
             -- block with delimiters longer than 3 c
-            | startLen >= 3 = ([block], s2)
+            | length start >= 3 = Just (start, block, end, s2)
             -- no block
-            | otherwise = ([], s0)
+            | otherwise = Nothing
             where
                 (start, s1) = span (==c) s
-                startLen = length start
-                (block, s2) = readBlock s1
-                readBlock s' | start `isPrefixOf` s' = ([], drop startLen s')
-                readBlock (c':s') = (c':cs'', s'') where (cs'', s'') = readBlock s'
+                (block, (end, s2)) = readBlock s1
+                readBlock s' | start `isPrefixOf` s' = ([], span (==c) s')
+                readBlock (c':s') = (c':cs'', (end', s'')) where (cs'', (end', s'')) = readBlock s'
                 readBlock [] = unexpectedEndOfFile env
 
 -- get a variable in the environment
-getSymbol :: Env -> Var -> String
-getSymbol env var = fromMaybe "" (lookup var env)
+getSymbol :: Env -> Var -> Val
+getSymbol env var = fromMaybe (Val "") (lookup var env)
 
 -- raise an end of file error
 unexpectedEndOfFile :: Env -> t
-unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ getSymbol env CurrentFile
+unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ fromVal (getSymbol env CurrentFile)
 
 -- raise a file not found error
 fileNotFound :: String -> t
