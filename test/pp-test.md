@@ -163,6 +163,8 @@ Command line (uses sh):             \eq(\exec(echo "hi é"))(hi é)
 `bat` script:                       \eq(\bat(echo hi ç))(hi ç)
 `python` script:                    \eq(\python(print "hi"))(hi)
 `haskell` script:                   \eq(\haskell(main = putStrLn "hi"))(hi)
+`exec` script:                      \eq(\exec(\raw(echo "\\def(x)(42)\\x")))(42)
+`rawexec` script:                   \eq(\rawexec(\raw(echo "\\def(x)(42)\\x")))(\raw(\def(x)(42)\x))
 ----------------------------------- -----------------------------------------------------------------
 
 Diagrams

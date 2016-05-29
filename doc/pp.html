@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Saturday 28 May 2016</h3>
+<h3 class="date">Sunday 29 May 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -159,10 +159,10 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dd><code>pp</code> emits the content of <code>FILE</code> without any preprocessing.
 </dd>
 <dt><strong><code>!exec(COMMAND)</code></strong></dt>
-<dd>executes a shell command (with the current shell) and emits the output of the command. <strong>This macro is obsolete. It is now equivalent to <code>!sh</code>.</strong>
+<dd>executes a shell command (with the current shell) and preprocesses the output of the command.
 </dd>
 <dt><strong><code>!rawexec(COMMAND)</code></strong></dt>
-<dd>as <code>!exec(COMMAND)</code> but the output is not preprocessed by <code>pp</code>. <strong>This macro is obsolete. It is now equivalent to <code>!sh</code>.</strong>
+<dd>as <code>!exec(COMMAND)</code> but the output is not preprocessed by <code>pp</code>.
 </dd>
 <dt><strong><code>!mdate(FILES)</code></strong></dt>
 <dd>returns the modification date of the most recent file.

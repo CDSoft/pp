@@ -269,8 +269,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("raw", raw)
           , ("rawinc", rawinc)      , ("rawinclude", rawinc)
 
-          -- for backward compatibility, use sh instead
-          , ("exec",    script "exec"    "sh" "" ".sh")
+          , ("exec",    macropp (script "exec"    "sh" "" ".sh"))
           , ("rawexec", script "rawexec" "sh" "" ".sh")
 
           , ("mdate", mdate)
@@ -328,8 +327,7 @@ ppAndStrip' env val = fmap snd (ppAndStrip env val)
 -- when the macro is evaluated (to allow macros with parameters).
 define :: Macro
 define env [name, value] = do
-    name' <- ppAndStrip' env name      -- TODO : strip uniquement pour Arg, par pour Block => ajouter un argument à strip' pour activer ou non le strip ou une fonction p'' qui stripe ou non
-    -- TODO : si l'environnement contient MacroArg au lieu de String, on peut généraliser plus facilement
+    name' <- ppAndStrip' env name
     return ((Def name', value) : clean (Def name') env, "")
 define env [name] = define env [name, Val ""]
 define _ _ = arityError "define" [1,2]
@@ -525,7 +523,7 @@ lit env [name, lang, content] = do
     lang' <- ppAndStrip' env lang
     content' <- ppAndStrip' env content
     let env' = litAppend env name' (Just lang') content'
-    let formatedCode = litShow (Just lang') content'        -- TODO : avant : content au lieu de content' ??? pourquoi
+    let formatedCode = litShow (Just lang') content'
     return (env', formatedCode)
 
 -- \lit(name)(lang)(content) appends content to the file or macro name.
@@ -536,7 +534,7 @@ lit env [name, content] = do
     content' <- ppAndStrip' env content
     let lang = litLang env name'
     let env' = litAppend env name' lang content'
-    let formatedCode = litShow lang content'            -- TODO pourquoi content au lieu de content'
+    let formatedCode = litShow lang content'
     return (env', formatedCode)
 
 -- \lit(name) emits the current content of a literate file or macro.
@@ -753,9 +751,6 @@ resource name (array, len) = do
         hClose h
     return path
 
--- TODO : si le code est dans un bloc il n'est pas "strippé"
--- PB : comment mémoriser le séparateur d'argument ? ajouter une information au type
-
 -- script executes a script and emits the output of the script.
 script :: String -> String -> String -> String -> Macro
 script _lang cmd header ext env [src] = do
@@ -770,6 +765,13 @@ script _lang cmd header ext env [src] = do
         Val _ -> return (env, strip output)
         Block _ -> return (env, output)
 script lang _ _ _ _ _ = arityError lang [1]
+
+-- macropp executes a macro and preprocess its output.
+-- It is used by exec to preprocess the standard output of a shell command.
+macropp :: Macro -> Macro
+macropp macro env args = do
+    (env', src) <- macro env args
+    pp env' src
 
 #ifdef linux_HOST_OS
 -- getProcessID already defined
@@ -928,7 +930,7 @@ pp env (c0:cs)
         readArg _ _ 0 s = ("", s)
 
         -- end of file => delimiters are not well balanced
-        readArg _ _ _ [] = unexpectedEndOfFile env
+        readArg _ _ _ [] = unexpectedEndOfFile env name
 
         -- read one char in the argument
         readArg left right level (c:s) = (c:cs'', s')
@@ -955,15 +957,16 @@ pp env (c0:cs)
                 (block, (end, s2)) = readBlock s1
                 readBlock s' | start `isPrefixOf` s' = ([], span (==c) s')
                 readBlock (c':s') = (c':cs'', (end', s'')) where (cs'', (end', s'')) = readBlock s'
-                readBlock [] = unexpectedEndOfFile env
+                readBlock [] = unexpectedEndOfFile env name
 
 -- get a variable in the environment
 getSymbol :: Env -> Var -> Val
 getSymbol env var = fromMaybe (Val "") (lookup var env)
 
 -- raise an end of file error
-unexpectedEndOfFile :: Env -> t
-unexpectedEndOfFile env = error $ "Unexpected end of file in " ++ fromVal (getSymbol env CurrentFile)
+unexpectedEndOfFile :: Env -> String -> t
+unexpectedEndOfFile env name = error $ "Unexpected end of file in " ++ fromVal (getSymbol env CurrentFile) ++
+                                       "\nAn argument of the macro \"" ++ name ++ "\" may not be correctly delimited."
 
 -- raise a file not found error
 fileNotFound :: String -> t

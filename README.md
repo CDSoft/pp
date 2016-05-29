@@ -137,10 +137,10 @@ get the raw (unevaluated) definition of `X`
 `pp` emits the content of `FILE` without any preprocessing.
 
 **`!exec(COMMAND)`**  
-executes a shell command (with the current shell) and emits the output of the command. **This macro is obsolete. It is now equivalent to `!sh`.**
+executes a shell command (with the current shell) and preprocesses the output of the command.
 
 **`!rawexec(COMMAND)`**  
-as `!exec(COMMAND)` but the output is not preprocessed by `pp`. **This macro is obsolete. It is now equivalent to `!sh`.**
+as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
 
 **`!mdate(FILES)`**  
 returns the modification date of the most recent file.

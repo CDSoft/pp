@@ -181,6 +181,8 @@ Command line (uses sh):             OK
 `bat` script:                       OK
 `python` script:                    OK
 `haskell` script:                   OK
+`exec` script:                      OK
+`rawexec` script:                   OK
 ----------------------------------- -----------------------------------------------------------------
 
 Diagrams
@@ -293,7 +295,6 @@ fact(2) =   2; fib(2) =   2
 fact(3) =   6; fib(3) =   3
 fact(4) =  24; fib(4) =   5
 fact(5) = 120; fib(5) =   8
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 mylibtest 0 1 2 3 4 5:     OK
@@ -347,7 +348,7 @@ Test results
 ============
 
 ------------------------------- ------------------------
-Number of successful tests:     55
+Number of successful tests:     57
 Number of failures:             0
 ------------------------------- ------------------------
 
