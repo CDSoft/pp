@@ -87,10 +87,10 @@ clean:
 
 dep:
 	cabal update
-	cabal install strict
+	cabal install strict temporary
 ifneq "$(WINE)" ""
 	$(WINE) cabal update
-	$(WINE) cabal install strict
+	$(WINE) cabal install strict temporary
 endif
 
 .DELETE_ON_ERROR:
