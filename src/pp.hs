@@ -153,7 +153,7 @@ saveLiterateContent :: Env -> Env -> IO ()
 saveLiterateContent _ ((LitFlush, _) : _) =
     return ()
 
--- macros shall not be saved (macro names start with litMacroTagChar)
+-- macros shall not be saved
 saveLiterateContent macros ((mac@(LitMacro _), _) : env) =
     saveLiterateContent macros (clean mac env)
 
@@ -176,8 +176,6 @@ isLitMacro :: (Var, Val) -> Bool
 isLitMacro = isLitMacroName . fst
 
 -- "isLitMacroName name" tells if a name is a literate content macro name.
--- A literate content name starts with the character litContentTagChar
--- and is not a file name (ie starts with litMacroTagChar).
 isLitMacroName :: Var -> Bool
 isLitMacroName (LitMacro _) = True
 isLitMacroName _ = False

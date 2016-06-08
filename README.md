@@ -1,11 +1,13 @@
 PP - Generic preprocessor (with pandoc in mind)
 ===============================================
 
-The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package contains three preprocessors for [Pandoc](http://pandoc.org/).
+[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a text preprocessor designed for Pandoc (and more generally Markdown).
+
+The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package used to contain three preprocessors for [Pandoc](http://pandoc.org/).
 
 I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") to embed diagrams in Markdown documents. And finally [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which merges the functionalities of [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)").
 
-[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") are still included in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") but `pp` can now be used standalone.
+[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") are not included anymore in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") repository.
 
 `pp` now implements:
 
@@ -37,15 +39,15 @@ Installation
 
 **Installation**:
 
--   Run `make install` to copy `pp`, `dpp` and `gpp` in `~/bin`
--   or run `sudo make install` to copy `pp`, `dpp` and `gpp` in `/usr/local/bin`
--   or copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
+-   Run `make install` to copy `pp` in `~/bin`
+-   or run `sudo make install` to copy `pp` in `/usr/local/bin`
+-   or copy `pp` (`pp.exe` on Windows) where you want.
 
-`pp` and `dpp` require [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp` and `dpp`).
+`pp` requires [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
 
-If your are on Windows but don't have a C and Haskell compiler, you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
+If your are on Windows but don't have an Haskell compiler, you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
 
-You can also download 64 bit Linux binaries (built on `Linux 4.5.0-0.bpo.1-amd64 #1 SMP Debian 4.5.1-1~bpo8+1 (2016-04-20) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.txz>.
+You can also download 64 bit Linux binaries (built on `Linux 4.5.0-0.bpo.2-amd64 #1 SMP Debian 4.5.4-1~bpo8+1 (2016-05-13) x86_64 GNU/Linux`), they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-x86_64.txz>.
 
 Usage
 =====
@@ -229,12 +231,14 @@ Diagrams are written in code blocks as argument of a diagram macro. The first li
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). The end delimiter must at least as long as the beginning delimiter.
 
-    \dot(path/imagename)(optional legend)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        graph {
-            "source code of the diagram"
-        }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``` dot
+\dot(path/imagename)(optional legend)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    graph {
+        "source code of the diagram"
+    }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 This extremely meaningful diagram is rendered as `path/imagename.png` and looks like:
 
@@ -277,7 +281,7 @@ The diagram generator can be:
 -   uml
 -   ditaa
 
-`pp` will not create any directory, the path where the image is written must already exist.
+`pp` will not create any directory,i the path where the image is written must already exist.
 
 ![](doc/img/pp-generators.png)
 
@@ -286,10 +290,12 @@ Scripts
 
 Scripts are also written in code blocks as arguments of a macro.
 
-    \bash
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo Hello World!
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``` bash
+\bash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo Hello World!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 With no surprise, this script generates:
 
@@ -317,21 +323,23 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
 
 [GraphViz](http://graphviz.org/) is executed when one of these keywords is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-    \twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    digraph {
-        O -> A
-        O -> B
-        O -> C
-        O -> D
-        D -> O
-        A -> B
-        B -> C
-        C -> A
-    }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``` dot
+\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+digraph {
+    O -> A
+    O -> B
+    O -> C
+    O -> D
+    D -> O
+    A -> B
+    B -> C
+    C -> A
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
--   `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
+-   `twopi` is the kind of graphi (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
 -   `doc/img/pp-graphviz-example` is the name of the image. `pp` will generate `doc/img/pp-graphviz-example.dot` and `doc/img/pp-graphviz-example.png`.
 -   the rest of the first line is the legend of the graph.
 -   other lines are written to `doc/img/pp-graphviz-example.dot` before running [Graphviz](http://graphviz.org/).
@@ -387,12 +395,14 @@ Once generated the graph looks like:
 
 [Bash](https://www.gnu.org/software/bash/) is executed when the keyword `bash` is used.
 
-    \bash
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo "Hi, I'm $SHELL $BASH_VERSION"
-    RANDOM=42 # seed
-    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``` bash
+\bash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo "Hi, I'm $SHELL $BASH_VERSION"
+RANDOM=42 # seed
+echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 This script outputs:
 
@@ -427,17 +437,19 @@ This script outputs:
 
 [Python](https://www.python.org/) is executed when the keyword `python` is used.
 
-    \python
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    import sys
-    import random
+``` python
+\python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import sys
+import random
 
-    if __name__ == "__main__":
-        print("Hi, I'm Python %s"%sys.version)
-        random.seed(42)
-        randoms = [random.randint(0, 1000) for i in range(3)]
-        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if __name__ == "__main__":
+    print("Hi, I'm Python %s"%sys.version)
+    random.seed(42)
+    randoms = [random.randint(0, 1000) for i in range(3)]
+    print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 This script outputs:
 
@@ -449,23 +461,25 @@ This script outputs:
 
 [Haskell](https://www.haskell.org/) is executed when the keyword `haskell` is used.
 
-    \haskell
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    import System.Info
-    import Data.Version
-    import Data.List
+``` haskell
+\haskell
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import System.Info
+import Data.Version
+import Data.List
 
-    primes = filterPrime [2..]
-        where filterPrime (p:xs) =
-                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+primes = filterPrime [2..]
+    where filterPrime (p:xs) =
+            p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-    version = showVersion compilerVersion
+version = showVersion compilerVersion
 
-    main = do
-        putStrLn $ "Hi, I'm Haskell " ++ version
-        putStrLn $ "The first 10 prime numbers are: " ++
-                    intercalate " " (map show (take 10 primes))
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+main = do
+    putStrLn $ "Hi, I'm Haskell " ++ version
+    putStrLn $ "The first 10 prime numbers are: " ++
+                intercalate " " (map show (take 10 primes))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 This script outputs:
 
@@ -475,8 +489,8 @@ This script outputs:
 Licenses
 ========
 
-PP/DPP
-------
+PP
+--
 
 Copyright (C) 2015, 2016 Christophe Delord <br> <http://www.cdsoft.fr/pp>
 
@@ -495,19 +509,6 @@ ditaa
 -----
 
 ditaa.jar is integrated in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"). [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See <http://sourceforge.net/projects/ditaa/>.
-
-GPP
----
-
-[GPP](http://en.nothingisreal.com/wiki/GPP) is included in the binary distribution of PP. I have just recompiled the original sources of [GPP](http://en.nothingisreal.com/wiki/GPP).
-
-GPP was written by Denis Auroux <auroux@math.mit.edu>. Since version 2.12 it has been maintained by Tristan Miller <psychonaut@nothingisreal.com>.
-
-Copyright (C) 1996-2001 Denis Auroux.<br> Copyright (C) 2003, 2004 Tristan Miller.
-
-Permission is granted to anyone to make or distribute verbatim copies of this document as received, in any medium, provided that the copyright notice and this permission notice are preserved, thus giving the recipient permission to redistribute in turn.
-
-Permission is granted to distribute modified versions of this document, or of portions of it, under the above conditions, provided also that they carry prominent notices stating who last changed them.
 
 Feedback
 ========

@@ -1,6 +1,6 @@
 % PP - Generic preprocessor (with pandoc in mind)
 % Christophe Delord - <http://cdsoft.fr/pp>
-% \mdate{src/pp.hs src/pp.md src/dpp.c}
+% \mdate{src/pp.hs src/pp.md}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
 [DPP]: http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)"
@@ -19,13 +19,16 @@
 PP - Generic preprocessor (with pandoc in mind)
 ===============================================
 
-The [PP] package contains three preprocessors for [Pandoc].
+[PP] is a text preprocessor designed for Pandoc (and more generally Markdown).
+
+The [PP] package used to contain three preprocessors for [Pandoc].
 
 I started using Markdown and [Pandoc] with [GPP].
 Then I wrote [DPP] to embed diagrams in Markdown documents.
 And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
-[GPP] and [DPP] are still included in [PP] but `pp` can now be used standalone.
+[GPP] and [DPP] are not included anymore in [PP] as `pp` can now be used standalone.
+`dpp` and `gpp` can be found in the legacy [DPP] repository.
 
 `pp` now implements:
 
@@ -58,17 +61,18 @@ Installation
 
 **Installation**:
 
-- Run `make install` to copy `pp`, `dpp` and `gpp` in `~/bin`
-- or run `sudo make install` to copy `pp`, `dpp` and `gpp` in `/usr/local/bin`
-- or copy `pp`, `dpp` and `gpp` (`.exe` files on Windows) where you want.
+- Run `make install` to copy `pp` in `~/bin`
+- or run `sudo make install` to copy `pp` in `/usr/local/bin`
+- or copy `pp` (`pp.exe` on Windows) where you want.
 
-`pp` and `dpp` require [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp` and `dpp`).
+`pp` requires [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
 
-If your are on Windows but don't have a C and Haskell compiler,
+If your are on Windows but don't have an Haskell compiler,
 you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
 
 You can also download 64 bit Linux binaries (built on `\exec(uname -srvmo)`),
-they may or may not work on your specific platform: <http://cdsoft.fr/pp/pp-linux-\exec(uname -m).txz>.
+they may or may not work on your specific platform:
+<http://cdsoft.fr/pp/pp-linux-\exec(uname -m).txz>.
 
 Usage
 =====
@@ -136,7 +140,8 @@ that may have any number of parameters (named `!1` to `!n`).
 User macros can be redefined on the command line or in the documents.
 
 To get the value of a variable you just have to write its name after a `'!'` or `'\'`.
-Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets.
+Macros can be given arguments.
+Each argument is enclosed in parenthesis, curly or square brackets.
 For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`,
 `\foo{x}{y}` or even `!foo[x][y]`.
 Mixing brackets and parenthesis is not possible.
@@ -154,7 +159,8 @@ line structure in the document.
 The last argument can also be enclosed between lines of tildas or backquotes
 (of the same length).
 This is useful for literate programming, diagrams or scripts (see examples later).
-Code block arguments are not stripped to preserve leading and ending spaces or blank lines.
+Code block arguments are not stripped to preserve leading and ending spaces
+or blank lines.
 
 Arguments can be on separate lines but must not be separated by blank lines.
 
@@ -162,7 +168,8 @@ You can choose the syntax that works better with your favorite editor and
 syntax colorization.
 
 **`!def[ine](SYMBOL)[(VALUE)]`**
-:   Add the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`.
+:   Add the symbol `SYMBOL` to the current environment
+    and associate it with the optional value `VALUE`.
     Arguments are denoted by `!1` ... `!n` in `VALUE`.
 
 **`!undef[ine](SYMBOL)`**
@@ -192,7 +199,8 @@ syntax colorization.
 **`!inc[lude](FILENAME)`**
 :   `pp` preprocesses the content of the file named `FILENAME` and includes it
      in the current document, using the current environment.
-     If the file path is relative it is searched first in the directory of the current file
+     If the file path is relative it is searched
+     first in the directory of the current file
      then in the directory of the main file.
 
 **`!raw(TEXT)`**
@@ -215,7 +223,8 @@ syntax colorization.
 :   `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
 
 **`!add(VARNAME)[(INCREMENT)]`**
-:   computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
+:   computes `VARNAME+INCREMENT` and stores the result to `VARNAME`.
+    The default value of the increment is 1.
 
 **`!lang`**
 :   emits the current language (*fr* or *en*)
@@ -233,7 +242,9 @@ syntax colorization.
 :   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].
     See examples later.
     The name of the macro is the kind of diagram.
-    The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
+    The possible diagrams are:
+    `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
+    `uml` and `ditaa`.
 
 **`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!bat(SCRIPT)`**, **`!python(SCRIPT)`**, **`!haskell(SCRIPT)`**
 :   executes a script and emits its output.
@@ -305,16 +316,19 @@ The first line contains the macro:
 - the image name without the extension (first argument)
 - the legend (second optional argument)
 
-Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab).
+Block delimiters are made of three or more tilda or back quotes,
+at the beginning of the line (no space and no tab).
 The end delimiter must at least as long as the beginning delimiter.
 
-    \raw{\dot(path/imagename)(optional legend)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        graph {
-            "source code of the diagram"
-        }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`````{.dot}
+\raw{\dot(path/imagename)(optional legend)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    graph {
+        "source code of the diagram"
     }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 This extremely meaningful diagram is rendered as `path/imagename.png`
 and looks like:
@@ -372,7 +386,8 @@ The diagram generator can be:
 - uml
 - ditaa
 
-`pp` will not create any directory, the path where the image is written must already exist.
+`pp` will not create any directory,i
+the path where the image is written must already exist.
 
 \dot(doc/img/pp-generators)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,11 +422,13 @@ digraph {
 
 Scripts are also written in code blocks as arguments of a macro.
 
-    \raw{\bash
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo Hello World!
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+`````{.bash}
+\raw{\bash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo Hello World!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 With no surprise, this script generates:
 
@@ -470,23 +487,28 @@ For further details about diagrams' syntax, please read the documentation of
 [GraphViz] is executed when one of these keywords is used:
 `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-    \raw{\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    digraph {
-        O -> A
-        O -> B
-        O -> C
-        O -> D
-        D -> O
-        A -> B
-        B -> C
-        C -> A
-    }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+`````{.dot}
+\raw{\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+digraph {
+    O -> A
+    O -> B
+    O -> C
+    O -> D
+    D -> O
+    A -> B
+    B -> C
+    C -> A
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
-- `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
-- `doc/img/pp-graphviz-example` is the name of the image. `pp` will generate `doc/img/pp-graphviz-example.dot` and `doc/img/pp-graphviz-example.png`.
+- `twopi` is the kind of graphi
+  (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
+- `doc/img/pp-graphviz-example` is the name of the image.
+  `pp` will generate `doc/img/pp-graphviz-example.dot`
+  and `doc/img/pp-graphviz-example.png`.
 - the rest of the first line is the legend of the graph.
 - other lines are written to `doc/img/pp-graphviz-example.dot` before running [Graphviz].
 
@@ -513,14 +535,16 @@ digraph {
 [PlantUML] is executed when the keyword `uml` is used.
 The lines `@startuml` and `@enduml` required by [PlantUML] are added by `pp`.
 
-    \raw{\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Alice -> Bob: Authentication Request
-    Bob --> Alice: Authentication Response
-    Alice -> Bob: Another authentication Request
-    Alice <-- Bob: another authentication Response
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+`````
+\raw{\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 Once generated the graph looks like:
 
@@ -539,19 +563,21 @@ Java must be installed.
 
 [ditaa] is executed when the keyword `ditaa` is used.
 
-    \raw{\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        +--------+   +-------+    +-------+
-        |        | --+ ditaa +--> |       |
-        |  Text  |   +-------+    |diagram|
-        |Document|   |!magic!|    |       |
-        |     {d}|   |       |    |       |
-        +---+----+   +-------+    +-------+
-            :                         ^
-            |       Lots of work      |
-            +-------------------------+
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+`````
+\raw{\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    +--------+   +-------+    +-------+
+    |        | --+ ditaa +--> |       |
+    |  Text  |   +-------+    |diagram|
+    |Document|   |!magic!|    |       |
+    |     {d}|   |       |    |       |
+    +---+----+   +-------+    +-------+
+        :                         ^
+        |       Lots of work      |
+        +-------------------------+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 Once generated the graph looks like:
 
@@ -575,13 +601,15 @@ Java must be installed.
 
 [Bash] is executed when the keyword `bash` is used.
 
-    \raw{\bash
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo "Hi, I'm $SHELL $BASH_VERSION"
-    RANDOM=42 # seed
-    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+````{.bash}
+\raw{\bash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo "Hi, I'm $SHELL $BASH_VERSION"
+RANDOM=42 # seed
+echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 This script outputs:
 
@@ -600,17 +628,19 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 [Bat] is executed when the keyword `bat` is used.
 
-    \raw{\bat
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo Hi, I'm %COMSPEC%
-    ver
-    if not "%WINELOADER%" == "" (
-        echo This script is run from wine under Linux
-    ) else (
-        echo This script is run from a real Windows
-    )
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+`````
+\raw{\bat
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo Hi, I'm %COMSPEC%
+ver
+if not "%WINELOADER%" == "" (
+    echo This script is run from wine under Linux
+) else (
+    echo This script is run from a real Windows
+)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 This script outputs:
 
@@ -631,18 +661,20 @@ if "%WINELOADER%" == "" (
 
 [Python] is executed when the keyword `python` is used.
 
-    \raw{\python
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    import sys
-    import random
+`````{.python}
+\raw{\python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import sys
+import random
 
-    if __name__ == "__main__":
-        print("Hi, I'm Python %s"%sys.version)
-        random.seed(42)
-        randoms = [random.randint(0, 1000) for i in range(3)]
-        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+if __name__ == "__main__":
+    print("Hi, I'm Python %s"%sys.version)
+    random.seed(42)
+    randoms = [random.randint(0, 1000) for i in range(3)]
+    print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 This script outputs:
 
@@ -664,24 +696,26 @@ if __name__ == "__main__":
 
 [Haskell] is executed when the keyword `haskell` is used.
 
-    \raw{\haskell
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    import System.Info
-    import Data.Version
-    import Data.List
+`````{.haskell}
+\raw{\haskell
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import System.Info
+import Data.Version
+import Data.List
 
-    primes = filterPrime [2..]
-        where filterPrime (p:xs) =
-                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+primes = filterPrime [2..]
+    where filterPrime (p:xs) =
+            p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-    version = showVersion compilerVersion
+version = showVersion compilerVersion
 
-    main = do
-        putStrLn $ "Hi, I'm Haskell " ++ version
-        putStrLn $ "The first 10 prime numbers are: " ++
-                    intercalate " " (map show (take 10 primes))
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    }
+main = do
+    putStrLn $ "Hi, I'm Haskell " ++ version
+    putStrLn $ "The first 10 prime numbers are: " ++
+                intercalate " " (map show (take 10 primes))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+`````
 
 This script outputs:
 
@@ -707,8 +741,8 @@ main = do
 Licenses
 ========
 
-PP/DPP
-------
+PP
+--
 
 Copyright (C) 2015, 2016 Christophe Delord <br>
 <http://www.cdsoft.fr/pp>
@@ -739,27 +773,6 @@ ditaa
 ditaa.jar is integrated in [PP].
 [ditaa] is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/).
 See <http://sourceforge.net/projects/ditaa/>.
-
-GPP
----
-
-[GPP] is included in the binary distribution of PP.
-I have just recompiled the original sources of [GPP].
-
-GPP was written by Denis Auroux <auroux@math.mit.edu>.
-Since version 2.12 it has been maintained by Tristan Miller <psychonaut@nothingisreal.com>.
-
-Copyright (C) 1996-2001 Denis Auroux.<br>
-Copyright (C) 2003, 2004 Tristan Miller.
-
-Permission is granted to anyone to make or distribute verbatim copies
-of this document as received, in any medium, provided that the
-copyright notice and this permission notice are preserved, thus giving
-the recipient permission to redistribute in turn.
-
-Permission is granted to distribute modified versions of this
-document, or of portions of it, under the above conditions, provided
-also that they carry prominent notices stating who last changed them.
 
 Feedback
 ========

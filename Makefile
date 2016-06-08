@@ -28,15 +28,14 @@ GHCOPT = -Wall -Werror -O2
 ifeq "$(OS)" "Linux"
 
 PP 	= pp
-DPP = dpp
-GPP = gpp
 
-all: gpp pp dpp README.md pp-linux-$(shell uname -m).txz
+all: pp
+all: README.md doc/pp.html
 all: pp.tgz
-all: doc/gpp.html doc/pp.html doc/dpp.html
+all: pp-linux-$(shell uname -m).txz
 
 ifneq "$(shell wine ghc --version 2>/dev/null || false)" ""
-all: gpp.exe pp.exe dpp.exe pp-win.7z
+all: pp.exe pp-win.7z
 
 CCWIN = i686-w64-mingw32-gcc
 WINE = wine
@@ -46,11 +45,9 @@ else
 ifeq "$(OS)" "MINGW32_NT-6.1"
 
 PP 	= pp.exe
-DPP = dpp.exe
-GPP = gpp.exe
 
-all: gpp.exe pp.exe dpp.exe
-all: doc/gpp.html doc/pp.html doc/dpp.html
+all: pp.exe
+all: doc/pp.html
 
 CCWIN = gcc
 WINE =
@@ -59,11 +56,9 @@ else
 ifeq "$(OS)" "CYGWIN_NT-6.1-WOW"
 
 PP 	= pp.exe
-DPP = dpp.exe
-GPP = gpp.exe
 
-all: gpp.exe pp.exe dpp.exe
-all: doc/gpp.html doc/pp.html doc/dpp.html
+all: pp.exe
+all: doc/pp.html
 
 CCWIN = mingw32-gcc
 WINE =
@@ -77,13 +72,16 @@ endif
 BUILD = .build
 CACHE = .cache
 
-install: $(PP) $(DPP) $(GPP)
+install: $(PP)
 	install -v -C $^ $(shell (ls -d /usr/local/bin || echo /usr/bin) 2>/dev/null)
 
 clean:
 	rm -rf $(BUILD) doc
-	rm -f gpp gpp.exe pp pp.exe dpp dpp.exe
+	rm -f pp pp.exe
 	rm -f pp.tgz pp-win.7z pp-linux-*.txz
+
+distclean: clean
+	rm -rf $(CACHE)
 
 dep:
 	cabal update
@@ -111,41 +109,11 @@ README.md: src/pp.md
 pp.tgz: Makefile $(wildcard src/*) $(wildcard test/*) README.md LICENSE .gitignore
 	tar -czf $@ $^
 
-pp-win.7z: gpp.exe pp.exe dpp.exe doc/gpp.html doc/pp.html doc/dpp.html
+pp-win.7z: pp.exe doc/pp.html
 	7z -mx9 a $@ $^
 
-pp-linux-%.txz: gpp pp dpp doc/gpp.html doc/pp.html doc/dpp.html
+pp-linux-%.txz: pp doc/pp.html
 	tar cJf $@ $^
-
-#####################################################################
-# GPP
-#####################################################################
-
-GPP_URL = http://files.nothingisreal.com/software/gpp/gpp.tar.bz2
-
-gpp: BUILDGPP=$(BUILD)/$@
-gpp: $(CACHE)/$(notdir $(GPP_URL))
-	@mkdir -p $(BUILDGPP)
-	tar xjf $< -C $(BUILDGPP)
-	cd $(BUILDGPP)/gpp-* && ./configure && make
-	cp $(BUILDGPP)/gpp-*/src/gpp $@
-	@strip $@
-
-gpp.exe: BUILDGPP=$(BUILD)/$@
-gpp.exe: $(CACHE)/$(notdir $(GPP_URL))
-	@mkdir -p $(BUILDGPP)
-	tar xjf $< -C $(BUILDGPP)
-	export CC=$(CCWIN); cd $(BUILDGPP)/gpp-* && ./configure --host $(shell uname) && make
-	cp $(BUILDGPP)/gpp-*/src/gpp.exe $@
-	@strip $@
-
-$(CACHE)/$(notdir $(GPP_URL)):
-	@mkdir -p $(dir $@)
-	wget $(GPP_URL) -O $@
-
-doc/gpp.html: $(GPP)
-	@mkdir -p $(dir $@)
-	cp $(BUILD)/$</gpp-*/doc/gpp.html $@
 
 #####################################################################
 # Dependencies
@@ -209,23 +177,6 @@ doc/pp.html: src/pp.md
 doc/pp.css: $(CACHE)/pp.css
 	@mkdir -p $(dir $@)
 	cp $< $@
-
-#####################################################################
-# DPP
-#####################################################################
-
-dpp: src/dpp.c $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
-	gcc -Werror -Wall $^ -o $@
-	@strip $@
-
-dpp.exe: src/dpp.c $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
-	$(CCWIN) -Werror -Wall $^ -o $@
-	@strip $@
-
-doc/dpp.html: $(PP) $(DPP) doc/pp.css
-doc/dpp.html: src/dpp.md
-	@mkdir -p $(dir $@) doc/img
-	./$(PP) -en $< | ./$(DPP) | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 #####################################################################
 # tests

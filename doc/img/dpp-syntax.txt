@@ -1,3 +1,0 @@
-graph {
-    "source code of the diagram"
-}
