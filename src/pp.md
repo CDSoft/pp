@@ -320,15 +320,13 @@ Block delimiters are made of three or more tilda or back quotes,
 at the beginning of the line (no space and no tab).
 The end delimiter must at least as long as the beginning delimiter.
 
-`````{.dot}
-\raw{\dot(path/imagename)(optional legend)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    graph {
-        "source code of the diagram"
+    \raw{\dot(path/imagename)(optional legend)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        graph {
+            "source code of the diagram"
+        }
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
 
 This extremely meaningful diagram is rendered as `path/imagename.png`
 and looks like:
@@ -422,13 +420,11 @@ digraph {
 
 Scripts are also written in code blocks as arguments of a macro.
 
-`````{.bash}
-\raw{\bash
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo Hello World!
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    \raw{\bash
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo Hello World!
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 With no surprise, this script generates:
 
@@ -487,22 +483,20 @@ For further details about diagrams' syntax, please read the documentation of
 [GraphViz] is executed when one of these keywords is used:
 `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-`````{.dot}
-\raw{\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-digraph {
-    O -> A
-    O -> B
-    O -> C
-    O -> D
-    D -> O
-    A -> B
-    B -> C
-    C -> A
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    \raw{\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    digraph {
+        O -> A
+        O -> B
+        O -> C
+        O -> D
+        D -> O
+        A -> B
+        B -> C
+        C -> A
+    }
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 - `twopi` is the kind of graphi
   (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
@@ -535,16 +529,14 @@ digraph {
 [PlantUML] is executed when the keyword `uml` is used.
 The lines `@startuml` and `@enduml` required by [PlantUML] are added by `pp`.
 
-`````
-\raw{\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    \raw{\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Alice -> Bob: Authentication Request
+    Bob --> Alice: Authentication Response
+    Alice -> Bob: Another authentication Request
+    Alice <-- Bob: another authentication Response
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 Once generated the graph looks like:
 
@@ -563,21 +555,19 @@ Java must be installed.
 
 [ditaa] is executed when the keyword `ditaa` is used.
 
-`````
-\raw{\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    +--------+   +-------+    +-------+
-    |        | --+ ditaa +--> |       |
-    |  Text  |   +-------+    |diagram|
-    |Document|   |!magic!|    |       |
-    |     {d}|   |       |    |       |
-    +---+----+   +-------+    +-------+
-        :                         ^
-        |       Lots of work      |
-        +-------------------------+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    \raw{\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        +--------+   +-------+    +-------+
+        |        | --+ ditaa +--> |       |
+        |  Text  |   +-------+    |diagram|
+        |Document|   |!magic!|    |       |
+        |     {d}|   |       |    |       |
+        +---+----+   +-------+    +-------+
+            :                         ^
+            |       Lots of work      |
+            +-------------------------+
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 Once generated the graph looks like:
 
@@ -601,15 +591,13 @@ Java must be installed.
 
 [Bash] is executed when the keyword `bash` is used.
 
-````{.bash}
-\raw{\bash
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo "Hi, I'm $SHELL $BASH_VERSION"
-RANDOM=42 # seed
-echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    \raw{\bash
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo "Hi, I'm $SHELL $BASH_VERSION"
+    RANDOM=42 # seed
+    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 This script outputs:
 
@@ -628,19 +616,17 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 [Bat] is executed when the keyword `bat` is used.
 
-`````
-\raw{\bat
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo Hi, I'm %COMSPEC%
-ver
-if not "%WINELOADER%" == "" (
-    echo This script is run from wine under Linux
-) else (
-    echo This script is run from a real Windows
-)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    \raw{\bat
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo Hi, I'm %COMSPEC%
+    ver
+    if not "%WINELOADER%" == "" (
+        echo This script is run from wine under Linux
+    ) else (
+        echo This script is run from a real Windows
+    )
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 This script outputs:
 
@@ -661,20 +647,18 @@ if "%WINELOADER%" == "" (
 
 [Python] is executed when the keyword `python` is used.
 
-`````{.python}
-\raw{\python
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import sys
-import random
+    \raw{\python
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import sys
+    import random
 
-if __name__ == "__main__":
-    print("Hi, I'm Python %s"%sys.version)
-    random.seed(42)
-    randoms = [random.randint(0, 1000) for i in range(3)]
-    print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    if __name__ == "__main__":
+        print("Hi, I'm Python %s"%sys.version)
+        random.seed(42)
+        randoms = [random.randint(0, 1000) for i in range(3)]
+        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 This script outputs:
 
@@ -696,26 +680,24 @@ if __name__ == "__main__":
 
 [Haskell] is executed when the keyword `haskell` is used.
 
-`````{.haskell}
-\raw{\haskell
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import System.Info
-import Data.Version
-import Data.List
+    \raw{\haskell
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import System.Info
+    import Data.Version
+    import Data.List
 
-primes = filterPrime [2..]
-    where filterPrime (p:xs) =
-            p : filterPrime [x | x <- xs, x `mod` p /= 0]
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-version = showVersion compilerVersion
+    version = showVersion compilerVersion
 
-main = do
-    putStrLn $ "Hi, I'm Haskell " ++ version
-    putStrLn $ "The first 10 prime numbers are: " ++
-                intercalate " " (map show (take 10 primes))
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-}
-`````
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
 
 This script outputs:
 

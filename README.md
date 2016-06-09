@@ -231,14 +231,12 @@ Diagrams are written in code blocks as argument of a diagram macro. The first li
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). The end delimiter must at least as long as the beginning delimiter.
 
-``` dot
-\dot(path/imagename)(optional legend)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    graph {
-        "source code of the diagram"
-    }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+    \dot(path/imagename)(optional legend)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        graph {
+            "source code of the diagram"
+        }
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This extremely meaningful diagram is rendered as `path/imagename.png` and looks like:
 
@@ -290,12 +288,10 @@ Scripts
 
 Scripts are also written in code blocks as arguments of a macro.
 
-``` bash
-\bash
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo Hello World!
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+    \bash
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo Hello World!
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With no surprise, this script generates:
 
@@ -323,21 +319,19 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
 
 [GraphViz](http://graphviz.org/) is executed when one of these keywords is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-``` dot
-\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-digraph {
-    O -> A
-    O -> B
-    O -> C
-    O -> D
-    D -> O
-    A -> B
-    B -> C
-    C -> A
-}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+    \twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    digraph {
+        O -> A
+        O -> B
+        O -> C
+        O -> D
+        D -> O
+        A -> B
+        B -> C
+        C -> A
+    }
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -   `twopi` is the kind of graphi (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
 -   `doc/img/pp-graphviz-example` is the name of the image. `pp` will generate `doc/img/pp-graphviz-example.dot` and `doc/img/pp-graphviz-example.png`.
@@ -395,14 +389,12 @@ Once generated the graph looks like:
 
 [Bash](https://www.gnu.org/software/bash/) is executed when the keyword `bash` is used.
 
-``` bash
-\bash
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo "Hi, I'm $SHELL $BASH_VERSION"
-RANDOM=42 # seed
-echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+    \bash
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo "Hi, I'm $SHELL $BASH_VERSION"
+    RANDOM=42 # seed
+    echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This script outputs:
 
@@ -437,19 +429,17 @@ This script outputs:
 
 [Python](https://www.python.org/) is executed when the keyword `python` is used.
 
-``` python
-\python
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import sys
-import random
+    \python
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import sys
+    import random
 
-if __name__ == "__main__":
-    print("Hi, I'm Python %s"%sys.version)
-    random.seed(42)
-    randoms = [random.randint(0, 1000) for i in range(3)]
-    print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+    if __name__ == "__main__":
+        print("Hi, I'm Python %s"%sys.version)
+        random.seed(42)
+        randoms = [random.randint(0, 1000) for i in range(3)]
+        print("Here are a few random numbers: %s"%(", ".join(map(str, randoms))))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This script outputs:
 
@@ -461,25 +451,23 @@ This script outputs:
 
 [Haskell](https://www.haskell.org/) is executed when the keyword `haskell` is used.
 
-``` haskell
-\haskell
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import System.Info
-import Data.Version
-import Data.List
+    \haskell
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import System.Info
+    import Data.Version
+    import Data.List
 
-primes = filterPrime [2..]
-    where filterPrime (p:xs) =
-            p : filterPrime [x | x <- xs, x `mod` p /= 0]
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
 
-version = showVersion compilerVersion
+    version = showVersion compilerVersion
 
-main = do
-    putStrLn $ "Hi, I'm Haskell " ++ version
-    putStrLn $ "The first 10 prime numbers are: " ++
-                intercalate " " (map show (take 10 primes))
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This script outputs:
 

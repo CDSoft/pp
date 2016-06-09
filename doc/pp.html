@@ -7,43 +7,6 @@
   <meta name="author" content="Christophe Delord - http://cdsoft.fr/pp">
   <title>PP - Generic preprocessor (with pandoc in mind)</title>
   <style type="text/css">code{white-space: pre;}</style>
-  <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-  </style>
   <link href="data:text/css;charset=utf-8,%0Aa%20%7B%0Acolor%3A%20%23444499%3B%0Abackground%2Dcolor%3A%20white%3B%0A%0Aborder%2Dradius%3A%204px%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20white%3B%0Abackground%2Dcolor%3A%20%23444499%3B%0Aborder%3A%20thin%20dotted%20white%3B%0Aborder%2Dradius%3A%204px%3B%0A%7D%0A%0Ah1%2Etitle%20%7B%0Atext%2Dalign%3A%20center%3B%0Aborder%2Dradius%3A%2020px%3B%0Apadding%3A%204px%3B%0Abackground%2Dcolor%3A%20%23444499%3B%0Acolor%3A%20%23eeeeee%3B%0Aborder%3A%20thick%20solid%20black%3B%0A%7D%0Ah1%2Etitle%20a%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Abackground%2Dcolor%3A%20%23444499%3B%0Acolor%3A%20%23eeeeee%3B%0A%7D%0Ah2%2Eauthor%2C%20h3%2Edate%20%7B%0Atext%2Dalign%3A%20center%3B%0Apadding%3A%204px%3B%0Abackground%2Dcolor%3A%20white%3B%0Acolor%3A%20black%3B%0Aborder%3A%20none%3B%0A%7D%0Ah2%2Eauthor%20a%2C%20h3%2Edate%20a%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Abackground%2Dcolor%3A%20white%3B%0Acolor%3A%20%23444499%3B%0A%7D%0A%0Adiv%23TOC%20%7B%0Aborder%2Dradius%3A%2020px%3B%0Apadding%3A%204px%3B%0Abackground%2Dcolor%3A%20%23ffffee%3B%0Aborder%3A%20medium%20solid%20black%3B%0A%7D%0A%0Adiv%2Eright%2C%20div%2Emenu%2C%20div%2Eheader%2C%20div%2Efooter%20%7B%0Atext%2Dalign%3A%20center%3B%0A%0Aborder%3A%20medium%20outset%3B%0Aborder%2Dradius%3A%2010px%3B%0A%0Abackground%2Dcolor%3A%20%23ffffee%3B%0Aline%2Dheight%3A%20200%25%3B%0Afont%2Dsize%3A%200%2E75em%3B%0A%7D%0Adiv%2Eright%20%7B%0Atext%2Dalign%3A%20left%3B%0A%7D%0Adiv%2Eright%2C%20div%2Emenu%20%7B%0Amargin%3A%200%2E5em%200em%200%2E5em%201em%3B%0Awidth%3A%2020%25%3B%0Afloat%3A%20right%3B%0Aclear%3A%20right%3B%0A%7D%0Adiv%2Eright%20%7B%0Amargin%3A%200%200%200%200%3B%0Apadding%2Dtop%3A%200%2E5em%3B%0Apadding%2Dbottom%3A%200%2E5em%3B%0Apadding%2Dleft%3A%200%2E5em%3B%0Apadding%2Dright%3A%200%2E5em%3B%0Awidth%3A%2015em%3B%0Aline%2Dheight%3A%20125%25%3B%0A%7D%0Adiv%2Eheader%20%7B%0Amargin%3A%200em%200em%200em%200em%3B%0A%7D%0Adiv%2Efooter%20%7B%0Amargin%3A%201em%200em%200em%200em%3B%0A%7D%0Adiv%2Emenu%20a%2C%20div%2Eheader%20a%2C%20div%2Efooter%20a%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Abackground%2Dcolor%3A%20%23444499%3B%0Acolor%3A%20%23ffffff%3B%0Apadding%3A%204px%3B%0Aborder%3A%20thin%20dotted%20%23ffffff%3B%0Aborder%2Dradius%3A%204px%3B%0Awhite%2Dspace%3A%20nowrap%3B%0A%7D%0Adiv%2Emenu%20a%3Ahover%2C%20div%2Eheader%20a%3Ahover%2C%20div%2Efooter%20a%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23ffffff%3B%0Acolor%3A%20%23444499%3B%0Aborder%3A%20thin%20dotted%20%23444499%3B%0Aborder%2Dradius%3A%204px%3B%0A%7D%0Adiv%2Enowrap%20%7B%0Awhite%2Dspace%3A%20nowrap%3B%0A%7D%0A%0Ah1%20%7B%0Abackground%2Dcolor%3A%20%23444499%3B%0Acolor%3A%20%23ffffff%3B%0Aborder%3A%20medium%20solid%20black%3B%0Aborder%2Dradius%3A%2010px%3B%0Apadding%3A%200%200%200%2016px%3B%0A%7D%0Ah1%20a%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Abackground%2Dcolor%3A%20%23444499%3B%0Acolor%3A%20%23ffffff%3B%0A%7D%0Ah2%20%7B%0Abackground%2Dcolor%3A%20%23666666%3B%0Acolor%3A%20%23ffffff%3B%0Aborder%3A%20medium%20solid%20black%3B%0Aborder%2Dradius%3A%206px%3B%0Apadding%3A%200%200%200%2016px%3B%0A%7D%0Ah2%20a%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Abackground%2Dcolor%3A%20%23666666%3B%0Acolor%3A%20%23ffffff%3B%0A%7D%0Ah3%20h4%20h5%20h6%20%7B%0Abackground%2Dcolor%3A%20%23cccccc%3B%0Acolor%3A%20%23000000%3B%0A%7D%0A%0Atable%20%7B%0Aborder%3A%202px%20solid%20black%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20caption%20%7B%0Afont%2Dweight%3A%20bold%3B%0Amargin%3A%201em%3B%0A%7D%0Atable%20th%2C%20table%20thead%20tr%20th%20%7B%0Aborder%3A%201px%20solid%20black%3B%0Aborder%2Dbottom%3A%202px%20solid%20black%3B%0Avertical%2Dalign%3A%20top%3B%0Apadding%2Dleft%3A%200%2E5em%3B%0Apadding%2Dright%3A%200%2E5em%3B%0Afont%2Dweight%3A%20bold%3B%0Awhite%2Dspace%3A%20nowrap%3B%0Abackground%2Dcolor%3A%20%23dddddd%3B%0A%7D%0Atable%20td%2C%20table%20tbody%20tr%20td%20%7B%0Aborder%3A%201px%20solid%20black%3B%0Avertical%2Dalign%3A%20top%3B%0Apadding%2Dleft%3A%200%2E5em%3B%0Apadding%2Dright%3A%200%2E5em%3B%0A%7D%0A%0Apre%20%7B%0Afont%2Dfamily%3A%20monospace%3B%0Acolor%3A%20%23444499%3B%0Aborder%3A%201px%20solid%20gray%3B%0Apadding%3A%205px%3B%0Abackground%2Dcolor%3A%20%23dddddd%3B%0Amargin%3A%200%202em%200%202em%3B%0A%7D%0A%0Adiv%2Elocation%0A%7B%0Afont%2Dsize%3A%20smaller%3B%0Apadding%2Dleft%3A%205em%3B%0Apadding%2Dright%3A%205em%3B%0Aborder%3A%20medium%20dotted%20red%3B%0Aborder%2Dradius%3A%2080px%3B%0Abackground%2Dcolor%3A%20%23ff0%3B%0A%7D%0Adiv%2Elocation%20a%20%7B%0A%0A%7D%0A%0A%2Ecookies%2Dnotification%0A%7B%0Adisplay%3A%20none%3B%0Aborder%2Dradius%3A%204px%3B%0Amargin%3A%200%3B%0Apadding%3A%200px%3B%0Acolor%3A%20white%3B%0Abackground%2Dcolor%3A%20%23666%3B%0A%7D%0A%2Ecookies%2Dnotification%20a%20%7B%0Acolor%3A%20white%3B%0Abackground%2Dcolor%3A%20black%3B%0Aborder%3A%20none%3B%0Apadding%3A%200px%3B%0A%7D%0A%2Ecookies%2Dnotification%20a%3Ahover%20%7B%0Acolor%3A%20black%3B%0Abackground%2Dcolor%3A%20white%3B%0Aborder%3A%20none%3B%0A%7D%0A" rel="stylesheet">
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
@@ -53,7 +16,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Wednesday 8 June 2016</h3>
+<h3 class="date">Thursday 9 June 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -282,12 +245,12 @@ And also finally &quot;Goodbye&quot;:
 <li>the legend (second optional argument)</li>
 </ul>
 <p>Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). The end delimiter must at least as long as the beginning delimiter.</p>
-<div class="sourceCode"><pre class="sourceCode dot"><code class="sourceCode dot">\<span class="fu">dot</span><span class="ot">(</span><span class="fu">path</span><span class="co">/</span><span class="fu">imagename</span><span class="ot">)(</span><span class="fu">optional</span><span class="co"> </span><span class="fu">legend</span><span class="ot">)</span>
+<pre><code>\dot(path/imagename)(optional legend)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    <span class="fu">graph</span> <span class="ot">{</span>
-<span class="co">        </span><span class="st">&quot;source code of the diagram&quot;</span>
-<span class="co">    </span><span class="ot">}</span>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre></div>
+    graph {
+        &quot;source code of the diagram&quot;
+    }
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This extremely meaningful diagram is rendered as <code>path/imagename.png</code> and looks like:</p>
 <figure>
 <img src="data:image/png;base64,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" alt="optional legend" /><figcaption>optional legend</figcaption>
@@ -332,10 +295,10 @@ And also finally &quot;Goodbye&quot;:
 </figure>
 <h2 id="scripts">Scripts</h2>
 <p>Scripts are also written in code blocks as arguments of a macro.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">\<span class="kw">bash</span>
-<span class="kw">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-<span class="kw">echo</span> Hello World!
-<span class="kw">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></code></pre></div>
+<pre><code>\bash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo Hello World!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>With no surprise, this script generates:</p>
 <pre><code>Hello World!
 </code></pre>
@@ -355,19 +318,19 @@ And also finally &quot;Goodbye&quot;:
 <p>Here are some simple examples. For further details about diagrams’ syntax, please read the documentation of <a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a>.</p>
 <h3 id="graphviz">Graphviz</h3>
 <p><a href="http://graphviz.org/">GraphViz</a> is executed when one of these keywords is used: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>, <code>osage</code></p>
-<div class="sourceCode"><pre class="sourceCode dot"><code class="sourceCode dot">\<span class="fu">twopi</span><span class="ot">(</span><span class="fu">doc</span><span class="co">/</span><span class="fu">img</span><span class="co">/</span><span class="fu">pp</span><span class="co">-</span><span class="fu">graphviz</span><span class="co">-</span><span class="fu">example</span><span class="ot">)(</span><span class="fu">This</span><span class="co"> </span><span class="fu">is</span><span class="co"> </span><span class="fu">just</span><span class="co"> </span><span class="fu">a</span><span class="co"> </span><span class="fu">GraphViz</span><span class="co"> </span><span class="fu">diagram</span><span class="co"> </span><span class="fu">example</span><span class="ot">)</span>
+<pre><code>\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<span class="kw">digraph</span> <span class="ot">{</span>
-<span class="co">    </span><span class="fu">O</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">A</span>
-<span class="co">    </span><span class="fu">O</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">B</span>
-<span class="co">    </span><span class="fu">O</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">C</span>
-<span class="co">    </span><span class="fu">O</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">D</span>
-<span class="co">    </span><span class="fu">D</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">O</span>
-<span class="co">    </span><span class="fu">A</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">B</span>
-<span class="co">    </span><span class="fu">B</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">C</span>
-<span class="co">    </span><span class="fu">C</span><span class="co"> </span><span class="ot">-&gt;</span><span class="co"> </span><span class="fu">A</span>
-<span class="ot">}</span>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre></div>
+digraph {
+    O -&gt; A
+    O -&gt; B
+    O -&gt; C
+    O -&gt; D
+    D -&gt; O
+    A -&gt; B
+    B -&gt; C
+    C -&gt; A
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <ul>
 <li><code>twopi</code> is the kind of graphi (possible graph types: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>).</li>
 <li><code>doc/img/pp-graphviz-example</code> is the name of the image. <code>pp</code> will generate <code>doc/img/pp-graphviz-example.dot</code> and <code>doc/img/pp-graphviz-example.png</code>.</li>
@@ -387,8 +350,7 @@ Alice -&gt; Bob: Authentication Request
 Bob --&gt; Alice: Authentication Response
 Alice -&gt; Bob: Another authentication Request
 Alice &lt;-- Bob: another authentication Response
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-</code></pre>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>Once generated the graph looks like:</p>
 <figure>
 <img src="data:image/png;base64,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" alt="This is just a PlantUML diagram example" /><figcaption>This is just a PlantUML diagram example</figcaption>
@@ -407,8 +369,7 @@ Alice &lt;-- Bob: another authentication Response
         :                         ^
         |       Lots of work      |
         +-------------------------+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-</code></pre>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>Once generated the graph looks like:</p>
 <figure>
 <img src="data:image/png;base64,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" alt="This is just a Ditaa diagram example" /><figcaption>This is just a Ditaa diagram example</figcaption>
@@ -416,12 +377,12 @@ Alice &lt;-- Bob: another authentication Response
 <p><a href="http://plantuml.sourceforge.net">ditaa</a> is written in Java and is embedded in <code>pp</code>. Java must be installed.</p>
 <h3 id="bash">Bash</h3>
 <p><a href="https://www.gnu.org/software/bash/">Bash</a> is executed when the keyword <code>bash</code> is used.</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">\<span class="kw">bash</span>
-<span class="kw">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-<span class="kw">echo</span> <span class="st">&quot;Hi, I'm </span><span class="ot">$SHELL</span><span class="st"> </span><span class="ot">$BASH_VERSION</span><span class="st">&quot;</span>
-<span class="ot">RANDOM=</span>42 <span class="co"># seed</span>
-<span class="kw">echo</span> <span class="st">&quot;Here are a few random numbers: </span><span class="ot">$RANDOM</span><span class="st">, </span><span class="ot">$RANDOM</span><span class="st">, </span><span class="ot">$RANDOM</span><span class="st">&quot;</span>
-<span class="kw">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></code></pre></div>
+<pre><code>\bash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo &quot;Hi, I'm $SHELL $BASH_VERSION&quot;
+RANDOM=42 # seed
+echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
 Here are a few random numbers: 17766, 11151, 23481
@@ -438,8 +399,7 @@ if not &quot;%WINELOADER%&quot; == &quot;&quot; (
 ) else (
     echo This script is run from a real Windows
 )
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-</code></pre>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm C:\windows\system32\cmd.exe
 
@@ -448,17 +408,17 @@ This script is run from wine under Linux
 </code></pre>
 <h3 id="python">Python</h3>
 <p><a href="https://www.python.org/">Python</a> is executed when the keyword <code>python</code> is used.</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="op">\</span>python
-<span class="op">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-<span class="im">import</span> sys
-<span class="im">import</span> random
+<pre><code>\python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import sys
+import random
 
-<span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:
-    <span class="bu">print</span>(<span class="st">&quot;Hi, I'm Python </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">%</span>sys.version)
-    random.seed(<span class="dv">42</span>)
-    randoms <span class="op">=</span> [random.randint(<span class="dv">0</span>, <span class="dv">1000</span>) <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(<span class="dv">3</span>)]
-    <span class="bu">print</span>(<span class="st">&quot;Here are a few random numbers: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">%</span>(<span class="st">&quot;, &quot;</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, randoms))))
-<span class="op">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></code></pre></div>
+if __name__ == &quot;__main__&quot;:
+    print(&quot;Hi, I'm Python %s&quot;%sys.version)
+    random.seed(42)
+    randoms = [random.randint(0, 1000) for i in range(3)]
+    print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
 [GCC 4.9.2]
@@ -466,23 +426,23 @@ Here are a few random numbers: 640, 25, 275
 </code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">\haskell
-<span class="fu">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-<span class="kw">import </span><span class="dt">System.Info</span>
-<span class="kw">import </span><span class="dt">Data.Version</span>
-<span class="kw">import </span><span class="dt">Data.List</span>
+<pre><code>\haskell
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import System.Info
+import Data.Version
+import Data.List
 
-primes <span class="fu">=</span> filterPrime [<span class="dv">2</span><span class="fu">..</span>]
-    <span class="kw">where</span> filterPrime (p<span class="fu">:</span>xs) <span class="fu">=</span>
-            p <span class="fu">:</span> filterPrime [x <span class="fu">|</span> x <span class="ot">&lt;-</span> xs, x <span class="ot">`mod`</span> p <span class="fu">/=</span> <span class="dv">0</span>]
+primes = filterPrime [2..]
+    where filterPrime (p:xs) =
+            p : filterPrime [x | x &lt;- xs, x `mod` p /= 0]
 
-version <span class="fu">=</span> showVersion compilerVersion
+version = showVersion compilerVersion
 
-main <span class="fu">=</span> <span class="kw">do</span>
-    putStrLn <span class="fu">$</span> <span class="st">&quot;Hi, I'm Haskell &quot;</span> <span class="fu">++</span> version
-    putStrLn <span class="fu">$</span> <span class="st">&quot;The first 10 prime numbers are: &quot;</span> <span class="fu">++</span>
-                intercalate <span class="st">&quot; &quot;</span> (map show (take <span class="dv">10</span> primes))
-<span class="fu">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></code></pre></div>
+main = do
+    putStrLn $ &quot;Hi, I'm Haskell &quot; ++ version
+    putStrLn $ &quot;The first 10 prime numbers are: &quot; ++
+                intercalate &quot; &quot; (map show (take 10 primes))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
 <pre><code>Hi, I'm Haskell 7.10
 The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
