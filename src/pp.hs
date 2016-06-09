@@ -765,17 +765,19 @@ resource name (array, len) = do
     return path
 
 -- script executes a script and emits the output of the script.
+-- Literate contents are flushed to be usable by the script.
 script :: String -> String -> String -> String -> Macro
 script _lang cmd header ext env [src] = do
-    src' <- pp' env (fromVal src)
+    (env', _) <- flushlit env []
+    src' <- pp' env' (fromVal src)
     let (exe:args) = words cmd
     output <- withSystemTempFile ("pp."++ext) $ \path handle -> do
         hWriteFileUTF8 handle $ unlines [header, src']
         hClose handle
         readProcessUTF8 exe (args ++ [path])
     case src of
-        Val _ -> return (env, strip output)
-        Block _ -> return (env, output)
+        Val _ -> return (env', strip output)
+        Block _ -> return (env', output)
 script lang _ _ _ _ _ = arityError lang [1]
 
 -- macropp executes a macro and preprocess its output.
