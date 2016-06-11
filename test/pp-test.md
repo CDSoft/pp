@@ -261,7 +261,7 @@ int main(int argc, char * argv[])
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\flushlit\exec(gcc .build/mylib.c .build/mylibtest.c -o .build/mylibtest)
+\exec(gcc .build/mylib.c .build/mylibtest.c -o .build/mylibtest)
 
 \def(test)(mylibtest 0 1 2 3 4 5)
 \def(result)(\exec(.build/\test))
@@ -295,6 +295,13 @@ The complete source files are:
 `mylibtest.c`:
 
 \lit{.build/mylibtest.c}
+
+A source file, not necessarily generated with \raw(\lit) can be
+formated with \raw(\source or \src):
+
+`mylib.h`:
+
+\src{.build/mylib.h}
 
 Test results
 ============

@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Thursday 9 June 2016</h3>
+<h3 class="date">Saturday 11 June 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -233,7 +233,10 @@ And also finally &quot;Goodbye&quot;:
 <dd>emits the current content of <code>FILENAME</code>.
 </dd>
 <dt><strong>!flushlit[erate]</strong></dt>
-<dd>writes files built with <code>!lit</code> before reaching the end of the document.
+<dd>writes files built with <code>!lit</code> before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with !src.
+</dd>
+<dt><strong>!src(FILENAME)[(LANG)]</strong>, <strong>!source(FILENAME)[(LANG)]</strong></dt>
+<dd>formats an existing source file in a colorized code block.
 </dd>
 </dl>
 <h1 id="diagram-and-script-examples">Diagram and script examples</h1>

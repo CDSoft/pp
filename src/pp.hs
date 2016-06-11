@@ -285,6 +285,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
 
           , ("lit", lit)            , ("literate", lit)
           , ("flushlit", flushlit)  , ("flushliterate", flushlit)
+          , ("src", source)         , ("source", source)
 
           ]
           ++ [ (diag, diagram Graphviz diag ""          "")        | diag <- graphvizDiagrams]
@@ -546,6 +547,31 @@ lit env [name] = do
     return (env, formatedCode)
 
 lit _ _ = arityError "lit" [1, 2, 3]
+
+-- source file inclusion
+source :: Macro
+
+-- \src(name)(lang) reads a source file.
+-- In the markdown output, the content will be colored according to the language lang.
+source env [name, lang] = do
+    (env', _) <- flushlit env []
+    name' <- ppAndStrip' env' name
+    lang' <- ppAndStrip' env' lang
+    content <- readFileUTF8 name'
+    let formatedCode = litShow (Just lang') content
+    return (env', formatedCode)
+
+-- \src(name) reads a source file.
+-- The language is the default one according to name.
+source env [name] = do
+    (env', _) <- flushlit env []
+    name' <- ppAndStrip' env' name
+    let lang = litLang env' name'
+    content <- readFileUTF8 name'
+    let formatedCode = litShow lang content
+    return (env', formatedCode)
+
+source _ _ = arityError "src" [1, 2]
 
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
