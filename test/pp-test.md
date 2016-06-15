@@ -197,6 +197,18 @@ Diagrams test do not check the generated image, just the link in the output docu
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+\dot    ([.build/]img/size_small    {.img width=50})                        (digraph { small })
+
+\dot    ([.build/]img/size_smallt   {.img width=50})    (Small with title)  (digraph { small })
+
+\dot    ([.build/]img/size_normal   {.img width=100})                       (digraph { normal })
+
+\dot    ([.build/]img/size_normalt  {.img width=100})   (Normal with title) (digraph { normal })
+
+\dot    ([.build/]img/size_big      {.img width=150})                       (digraph { big })
+
+\dot    ([.build/]img/size_bigt     {.img width=150})   (Big with title)    (digraph { big })
+
 Literate programming
 ====================
 

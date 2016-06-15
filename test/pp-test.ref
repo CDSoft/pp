@@ -202,6 +202,18 @@ Diagrams test do not check the generated image, just the link in the output docu
 
 ![Test of ditaa](img/ditaa-test.png)
 
+![](img/size_small.png){.img width=50}
+
+![Small with title](img/size_smallt.png){.img width=50}
+
+![](img/size_normal.png){.img width=100}
+
+![Normal with title](img/size_normalt.png){.img width=100}
+
+![](img/size_big.png){.img width=150}
+
+![Big with title](img/size_bigt.png){.img width=150}
+
 Literate programming
 ====================
 

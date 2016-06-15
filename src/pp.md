@@ -376,6 +376,16 @@ different directory, there are two possibilities:
       links and shall also describe the actual path where the images are stored.
     - e.g.: `[outputpath/]img/diag42`
 
+Pandoc also accepts additional attributes on images (`link_attributes` extension).
+These attributes can be added between curly brackets to the first argument.
+e.g.:
+
+    \raw(\dot(image.png { width=50 % })(caption)(...))
+
+will generate the following link in the markdown output:
+
+    ![caption](image.png){ width=50 % }
+
 The diagram generator can be:
 
 - dot

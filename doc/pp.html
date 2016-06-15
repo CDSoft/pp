@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Saturday 11 June 2016</h3>
+<h3 class="date">Wednesday 15 June 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -279,6 +279,10 @@ And also finally &quot;Goodbye&quot;:
 <li>e.g.: <code>[outputpath/]img/diag42</code></li>
 </ul></li>
 </ol>
+<p>Pandoc also accepts additional attributes on images (<code>link_attributes</code> extension). These attributes can be added between curly brackets to the first argument. e.g.:</p>
+<pre><code>\dot(image.png { width=50 % })(caption)(...)</code></pre>
+<p>will generate the following link in the markdown output:</p>
+<pre><code>![caption](image.png){ width=50 % }</code></pre>
 <p>The diagram generator can be:</p>
 <ul>
 <li>dot</li>
