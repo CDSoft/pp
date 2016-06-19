@@ -132,7 +132,7 @@ doArg env ('-':'U':name) = return (clean (Def name) env, "")
 doArg env ('-':lang) | lang' `elem` langs =
     return ((Lang, Val lang') : clean Lang env, "") where lang' = map toLower lang
 
--- "doArg env "-html|-pdf|-epub|-mobi"" changes the current format
+-- "doArg env "-html|-pdf|-odt|-epub|-mobi"" changes the current format
 doArg env ('-':fmt) | fmt' `elem` formats =
     return ((FileFormat, Val fmt') : clean FileFormat env, "") where fmt' = map toLower fmt
 
@@ -239,7 +239,7 @@ langs = ["fr", "en"]
 
 -- format list
 formats :: [String]
-formats = ["html", "pdf", "epub", "mobi"]
+formats = ["html", "pdf", "odt", "epub", "mobi"]
 
 -- literate programming macros
 litMacroTagChar :: Char
@@ -491,7 +491,7 @@ currentLang :: Macro
 currentLang env [] = return (env, fromVal (getSymbol env Lang))
 currentLang _ _ = arityError "lang" [0]
 
--- \format returns the current output format ("html", "pdf", "epub" or "mobi")
+-- \format returns the current output format ("html", "pdf", "odt", "epub" or "mobi")
 currentFormat :: Macro
 currentFormat env [] = return (env, fromVal (getSymbol env FileFormat))
 currentFormat _ _ = arityError "format" [0]
@@ -839,7 +839,7 @@ language lang env [src] = case lookup Lang env of
     _ -> return (env, "")
 language lang _ _ = arityError lang [1]
 
--- format implements the macros \html, \pdf, \epub and \mobi.
+-- format implements the macros \html, \pdf, \odt, \epub and \mobi.
 -- format preprocesses src only if the current format is fmt.
 format :: String -> Macro
 format fmt env [src] = case lookup FileFormat env of

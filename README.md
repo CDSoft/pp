@@ -65,7 +65,7 @@ Command line
 
 -   the environment variables of the current process
 -   a `lang` variable containing the current langage (currently only French (`fr`) and English (`en`) are supported)
--   a `format` variable containing the current output format (`html`, `pdf`, `epub` or `mobi`)
+-   a `format` variable containing the current output format (`html`, `pdf`, `odt`, `epub` or `mobi`)
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
@@ -80,7 +80,7 @@ removes the symbol `SYMBOL` from the current environment.
 **-fr|-en**  
 changes the current language.
 
-**-html|-pdf|-epub|-mobi**  
+**-html|-pdf|-odt|-epub|-mobi**  
 changes the current output file format.
 
 Other arguments are filenames.
@@ -157,13 +157,13 @@ computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default val
 emits the current language (*fr* or *en*)
 
 **`!format`**  
-emits the current format (*html*, *pdf*, *epub* or *mobi*)
+emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
 
 **`!fr(...)`** or **`!en(...)`**  
 emits some text only if the current language is *fr* or *en*
 
-**`!html(...)`** or **`!pdf(...)`**  
-emits some text only if the current format is *html*, *pdf*, *epub* or *mobi*
+**`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**  
+emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.

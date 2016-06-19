@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Wednesday 15 June 2016</h3>
+<h3 class="date">Saturday 18 June 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -95,7 +95,7 @@
 <ul>
 <li>the environment variables of the current process</li>
 <li>a <code>lang</code> variable containing the current langage (currently only French (<code>fr</code>) and English (<code>en</code>) are supported)</li>
-<li>a <code>format</code> variable containing the current output format (<code>html</code>, <code>pdf</code>, <code>epub</code> or <code>mobi</code>)</li>
+<li>a <code>format</code> variable containing the current output format (<code>html</code>, <code>pdf</code>, <code>odt</code>, <code>epub</code> or <code>mobi</code>)</li>
 </ul>
 <p>If no input file is specified, <code>pp</code> also preprocesses the standard input.</p>
 <p>The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.</p>
@@ -109,7 +109,7 @@
 <dt><strong>-fr|-en</strong></dt>
 <dd>changes the current language.
 </dd>
-<dt><strong>-html|-pdf|-epub|-mobi</strong></dt>
+<dt><strong>-html|-pdf|-odt|-epub|-mobi</strong></dt>
 <dd>changes the current output file format.
 </dd>
 </dl>
@@ -177,13 +177,13 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dd>emits the current language (<em>fr</em> or <em>en</em>)
 </dd>
 <dt><strong><code>!format</code></strong></dt>
-<dd>emits the current format (<em>html</em>, <em>pdf</em>, <em>epub</em> or <em>mobi</em>)
+<dd>emits the current format (<em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>)
 </dd>
 <dt><strong><code>!fr(...)</code></strong> or <strong><code>!en(...)</code></strong></dt>
 <dd>emits some text only if the current language is <em>fr</em> or <em>en</em>
 </dd>
-<dt><strong><code>!html(...)</code></strong> or <strong><code>!pdf(...)</code></strong></dt>
-<dd>emits some text only if the current format is <em>html</em>, <em>pdf</em>, <em>epub</em> or <em>mobi</em>
+<dt><strong><code>!html(...)</code></strong>, <strong><code>!pdf(...)</code></strong>, <strong><code>!odt(...)</code></strong>, <strong><code>!epub(...)</code></strong> or <strong><code>!mobi(...)</code></strong></dt>
+<dd>emits some text only if the current format is <em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>
 </dd>
 <dt><strong><code>!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)</code></strong></dt>
 <dd>renders a diagram with <a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">Ditaa</a>. See examples later. The name of the macro is the kind of diagram. The possible diagrams are: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>, <code>osage</code>, <code>uml</code> and <code>ditaa</code>.

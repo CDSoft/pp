@@ -103,7 +103,7 @@ It starts with an initial environment containing:
 - a `lang` variable containing the current langage
   (currently only French (`fr`) and English (`en`) are supported)
 - a `format` variable containing the current output format
-  (`html`, `pdf`, `epub` or `mobi`)
+  (`html`, `pdf`, `odt`, `epub` or `mobi`)
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
@@ -121,7 +121,7 @@ The user can define and undefine variables and list input files.
 **-fr|-en**
 :   changes the current language.
 
-**-html|-pdf|-epub|-mobi**
+**-html|-pdf|-odt|-epub|-mobi**
 :   changes the current output file format.
 
 Other arguments are filenames.
@@ -230,13 +230,13 @@ syntax colorization.
 :   emits the current language (*fr* or *en*)
 
 **`!format`**
-:   emits the current format (*html*, *pdf*, *epub* or *mobi*)
+:   emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
 
 **`!fr(...)`** or **`!en(...)`**
 :   emits some text only if the current language is *fr* or *en*
 
-**`!html(...)`** or **`!pdf(...)`**
-:   emits some text only if the current format is *html*, *pdf*, *epub* or *mobi*
+**`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**
+:   emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**
 :   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].
