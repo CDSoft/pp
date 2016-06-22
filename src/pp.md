@@ -70,9 +70,11 @@ Installation
 If your are on Windows but don't have an Haskell compiler,
 you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
 
+\ifeq(\exec(uname -s))(Linux)(
 You can also download 64 bit Linux binaries (built on `\exec(uname -srvmo)`),
 they may or may not work on your specific platform:
 <http://cdsoft.fr/pp/pp-linux-\exec(uname -m).txz>.
+)
 
 Usage
 =====
