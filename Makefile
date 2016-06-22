@@ -42,6 +42,15 @@ WINE = wine
 endif
 
 else
+ifeq "$(OS)" "Darwin"
+
+PP 	= pp
+
+all: pp
+all: README.md doc/pp.html
+all: pp.tgz
+all: pp-darwin-$(shell uname -m).txz
+else
 ifeq "$(OS)" "MINGW32_NT-6.1"
 
 PP 	= pp.exe
@@ -65,6 +74,7 @@ WINE =
 
 else
 $(error "Unknown platform: $(OS)")
+endif
 endif
 endif
 endif
@@ -115,6 +125,9 @@ pp-win.7z: pp.exe doc/pp.html
 pp-linux-%.txz: pp doc/pp.html
 	tar cJf $@ $^
 
+pp-darwin-%.txz: pp doc/pp.html
+	tar cJf $@ $^
+
 #####################################################################
 # Dependencies
 #####################################################################
@@ -135,7 +148,7 @@ $(BUILD)/%-win.o: $(BUILD)/%.c
 $(BUILD)/%.c: $(CACHE)/%.jar
 	@mkdir -p $(dir $@)
 	xxd -i $< $@
-	sed -i 's/_cache_//g' $@
+	sed -i -e 's/_cache_//g' $@
 
 $(CACHE)/$(PLANTUML).jar:
 	@mkdir -p $(dir $@)
