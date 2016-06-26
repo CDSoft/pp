@@ -41,6 +41,16 @@ all: pp.exe pp-win.7z
 WINE = wine
 endif
 
+# MacOS
+else ifeq "$(OS)" "Darwin"
+
+PP 	= pp
+
+all: pp
+all: README.md doc/pp.html
+all: pp.tgz
+all: pp-darwin-$(shell uname -m).txz
+
 # Windows
 else ifeq "$(shell echo $(OS) | grep 'MSYS\|MINGW\|CYGWIN' >/dev/null && echo Windows)" "Windows"
 
@@ -65,7 +75,7 @@ install: $(PP)
 clean:
 	rm -rf $(BUILD) doc
 	rm -f pp pp.exe
-	rm -f pp.tgz pp-win.7z pp-linux-*.txz
+	rm -f pp.tgz pp-win.7z pp-linux-*.txz pp-darwin-*.txz
 
 distclean: clean
 	rm -rf $(CACHE)
@@ -102,6 +112,9 @@ pp-win.7z: pp.exe doc/pp.html
 pp-linux-%.txz: pp doc/pp.html
 	tar cJf $@ $^
 
+pp-darwin-%.txz: pp doc/pp.html
+	tar cJf $@ $^
+
 #####################################################################
 # Dependencies
 #####################################################################
@@ -122,7 +135,7 @@ $(BUILD)/%-win.o: $(BUILD)/%.c
 $(BUILD)/%.c: $(CACHE)/%.jar
 	@mkdir -p $(dir $@)
 	xxd -i $< $@
-	sed -i 's/_cache_//g' $@
+	sed -i -e 's/_cache_//g' $@
 
 $(CACHE)/$(PLANTUML).jar:
 	@mkdir -p $(dir $@)
