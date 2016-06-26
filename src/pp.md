@@ -61,18 +61,18 @@ Installation
 
 **Installation**:
 
-- Run `make install` to copy `pp` in `~/bin`
-- or run `sudo make install` to copy `pp` in `/usr/local/bin`
+- Run `make install` to copy `pp` in `/usr/local/bin` or `/usr/bin`.
 - or copy `pp` (`pp.exe` on Windows) where you want.
 
 `pp` requires [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
 
-If your are on Windows but don't have an Haskell compiler,
-you can get already compiled executables here: <http://cdsoft.fr/pp/pp-win.7z>.
+**Precompiled binaries**:
 
-You can also download 64 bit Linux binaries (built on `\exec(uname -srvmo)`),
-they may or may not work on your specific platform:
-<http://cdsoft.fr/pp/pp-linux-\exec(uname -m).txz>.
+The recommended way to get PP binaries is to compile them from the sources.
+Anyway if you have no Haskell compiler, you can try these precompiled binaries:
+
+- Debian (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+- Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
 
 Usage
 =====
