@@ -36,7 +36,7 @@ import System.FilePath
 import Data.Time
 import Foreign.C.Types
 import Foreign.Ptr
-import Foreign
+import Foreign hiding (void)
 
 -- Set of chars
 type Chars = String
@@ -86,7 +86,7 @@ main = do
                     Just ('C':_) -> "en"
                     Just val -> map toLower $ take 2 val
                     Nothing -> ""
-    -- get $FORMAT (html or pdf)
+    -- get $FORMAT (html, pdf, ...)
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
     -- the initial environment contains the language, the format and the environment variables
     let env = (Lang, Val lang) : (FileFormat, Val fmt) : [(EnvVar name, Val val) | (name, val) <- envVars]
@@ -732,7 +732,7 @@ diagram runtime diag header footer env [path, title, code] = do
     when (code'' /= oldCode || metaData /= oldMetaData) $ do
         writeFileUTF8 dat metaData
         writeFileUTF8 gv code''
-        _ <- case runtime of
+        void $ case runtime of
             Graphviz ->
                 readProcess diag ["-Tpng", "-o", img, gv] []
             PlantUML -> do
@@ -741,7 +741,6 @@ diagram runtime diag header footer env [path, title, code] = do
             Ditaa -> do
                 ditaa <- resource "ditaa.jar" ditaaJar
                 readProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img] []
-        return ()
     return (env, "!["++title'++"]("++url++")"++attrs)
 diagram runtime diag header footer env [path, code] =
     diagram runtime diag header footer env [path, Val "", code]

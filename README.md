@@ -482,7 +482,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 7.10
+    Hi, I'm Haskell 8.0
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 Licenses
