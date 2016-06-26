@@ -25,6 +25,7 @@ OS = $(shell uname)
 
 GHCOPT = -Wall -Werror -O2
 
+# Linux
 ifeq "$(OS)" "Linux"
 
 PP 	= pp
@@ -37,36 +38,22 @@ all: pp-linux-$(shell uname -m).txz
 ifneq "$(shell wine ghc --version 2>/dev/null || false)" ""
 all: pp.exe pp-win.7z
 
-CCWIN = i686-w64-mingw32-gcc
 WINE = wine
 endif
 
-else
-ifeq "$(OS)" "MINGW32_NT-6.1"
+# Windows
+else ifeq "$(shell echo $(OS) | grep 'MSYS\|MINGW\|CYGWIN' >/dev/null && echo Windows)" "Windows"
 
 PP 	= pp.exe
 
 all: pp.exe
 all: doc/pp.html
 
-CCWIN = gcc
 WINE =
 
-else
-ifeq "$(OS)" "CYGWIN_NT-6.1-WOW"
-
-PP 	= pp.exe
-
-all: pp.exe
-all: doc/pp.html
-
-CCWIN = mingw32-gcc
-WINE =
-
+# Unknown platform (please contribute ;-)
 else
 $(error "Unknown platform: $(OS)")
-endif
-endif
 endif
 
 BUILD = .build
@@ -195,4 +182,4 @@ $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
 
 .PHONY: ref
 ref: $(BUILD)/pp-test.output
-	meld $< test/pp-test.ref
+	meld $< test/pp-test.ref 2>/dev/null
