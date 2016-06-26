@@ -79,13 +79,16 @@
 </ol>
 <p><strong>Installation</strong>:</p>
 <ul>
-<li>Run <code>make install</code> to copy <code>pp</code> in <code>~/bin</code></li>
-<li>or run <code>sudo make install</code> to copy <code>pp</code> in <code>/usr/local/bin</code></li>
+<li>Run <code>make install</code> to copy <code>pp</code> in <code>/usr/local/bin</code> or <code>/usr/bin</code>.</li>
 <li>or copy <code>pp</code> (<code>pp.exe</code> on Windows) where you want.</li>
 </ul>
 <p><code>pp</code> requires <a href="http://graphviz.org/">Graphviz</a> and Java (<a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a> are embedded in <code>pp</code>).</p>
-<p>If your are on Windows but don’t have an Haskell compiler, you can get already compiled executables here: <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a>.</p>
-<p>You can also download 64 bit Linux binaries (built on <code>Linux 4.5.0-0.bpo.2-amd64 #1 SMP Debian 4.5.4-1~bpo8+1 (2016-05-13) x86_64 GNU/Linux</code>), they may or may not work on your specific platform: <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a>.</p>
+<p><strong>Precompiled binaries</strong>:</p>
+<p>The recommended way to get PP binaries is to compile them from the sources. Anyway if you have no Haskell compiler, you can try these precompiled binaries:</p>
+<ul>
+<li>Debian (64 bit binaries): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
+<li>Windows (32 bit binaries running on both 32 and 64 bit Windows): <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a></li>
+</ul>
 <h1 id="usage">Usage</h1>
 <p><code>pp</code> is a simple preprocessor written in Haskell. It’s mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP for instance but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.</p>
 <p><code>pp</code> takes strings as input and incrementally builds an environment which is a lookup table containing variables and various other information. Built-in macros are Haskell functions that takes arguments (strings) and the current environment and build a new environment in the IO monad. User defined macros are simple definitions, arguments are numbered 1 to N.</p>
