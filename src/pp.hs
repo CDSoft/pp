@@ -303,7 +303,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
 -- shell command interpretor for Windows .bat scripts
 cmdexe :: String
 cmdexe =
-#ifdef linux_HOST_OS
+#if linux_HOST_OS || darwin_HOST_OS
     "wine cmd /c"
 #else
     "cmd /c"

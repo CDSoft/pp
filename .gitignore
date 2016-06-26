@@ -11,5 +11,7 @@ pp.exe
 pp.tgz
 pp-linux-*.tgz
 pp-linux-*.txz
+pp-darwin-*.tgz
+pp-darwin-*.txz
 *.swp
 tmp
