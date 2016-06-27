@@ -50,6 +50,7 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 
 -   Debian (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
 -   Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
+-   Mac OS X (64 bit binaries): <http://cdsoft.fr/pp/pp-darwin-x86_64.txz>
 
 Usage
 =====
