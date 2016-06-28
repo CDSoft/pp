@@ -50,6 +50,7 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 
 -   Debian (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
 -   Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
+-   Mac OS (64 bit binaries): <https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz>
 
 Usage
 =====
@@ -346,7 +347,7 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
     }
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--   `twopi` is the kind of graphi (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
+-   `twopi` is the kind of graph (possible graph types: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
 -   `doc/img/pp-graphviz-example` is the name of the image. `pp` will generate `doc/img/pp-graphviz-example.dot` and `doc/img/pp-graphviz-example.png`.
 -   the rest of the first line is the legend of the graph.
 -   other lines are written to `doc/img/pp-graphviz-example.dot` before running [Graphviz](http://graphviz.org/).

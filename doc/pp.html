@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Sunday 26 June 2016</h3>
+<h3 class="date">Tuesday 28 June 2016</h3>
 </header>
 <nav id="TOC">
 <ul>
@@ -88,6 +88,7 @@
 <ul>
 <li>Debian (64 bit binaries): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
 <li>Windows (32 bit binaries running on both 32 and 64 bit Windows): <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a></li>
+<li>Mac OS (64 bit binaries): <a href="https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz" class="uri">https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz</a></li>
 </ul>
 <h1 id="usage">Usage</h1>
 <p><code>pp</code> is a simple preprocessor written in Haskell. It’s mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP for instance but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.</p>
@@ -342,7 +343,7 @@ digraph {
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <ul>
-<li><code>twopi</code> is the kind of graphi (possible graph types: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>).</li>
+<li><code>twopi</code> is the kind of graph (possible graph types: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>).</li>
 <li><code>doc/img/pp-graphviz-example</code> is the name of the image. <code>pp</code> will generate <code>doc/img/pp-graphviz-example.dot</code> and <code>doc/img/pp-graphviz-example.png</code>.</li>
 <li>the rest of the first line is the legend of the graph.</li>
 <li>other lines are written to <code>doc/img/pp-graphviz-example.dot</code> before running <a href="http://graphviz.org/">Graphviz</a>.</li>
