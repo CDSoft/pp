@@ -5,9 +5,9 @@ PP - Generic preprocessor (with pandoc in mind)
 
 The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package used to contain three preprocessors for [Pandoc](http://pandoc.org/).
 
-I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") to embed diagrams in Markdown documents. And finally [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which merges the functionalities of [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)").
+I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") to embed diagrams in Markdown documents. And finally [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which merges the functionalities of [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
 
-[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") are not included anymore in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)") repository.
+[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") are not included anymore in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") repository.
 
 `pp` now implements:
 

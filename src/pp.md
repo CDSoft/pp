@@ -3,7 +3,7 @@
 % \mdate{src/pp.hs src/pp.md}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
-[DPP]: http://cdsoft.fr/pp "DPP - Diagram Preprocessor (for Pandoc)"
+[DPP]: http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"
 [pp.tgz]: http://cdsoft.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
