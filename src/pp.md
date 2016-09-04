@@ -125,6 +125,9 @@ The user can define and undefine variables and list input files.
 **-html|-pdf|-odt|-epub|-mobi**
 :   changes the current output file format.
 
+**-img=PREFIX**
+:   changes the prefix of the images output path.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment.
@@ -337,7 +340,7 @@ The end delimiter must at least as long as the beginning delimiter.
 This extremely meaningful diagram is rendered as `path/imagename.png`
 and looks like:
 
-\dot(doc/img/pp-syntax)(optional legend)
+\dot(pp-syntax)(optional legend)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 graph {
     "source code of the diagram"
@@ -403,7 +406,7 @@ The diagram generator can be:
 `pp` will not create any directory,i
 the path where the image is written must already exist.
 
-\dot(doc/img/pp-generators)
+\dot(pp-generators)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 digraph {
 
@@ -460,7 +463,7 @@ The script language can be:
 
 `pp` will create a temporary script before calling the associated interpretor.
 
-\dot(doc/img/pp-scripts)
+\dot(pp-scripts)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 digraph {
 
@@ -521,10 +524,11 @@ For further details about diagrams' syntax, please read the documentation of
   and `doc/img/pp-graphviz-example.png`.
 - the rest of the first line is the legend of the graph.
 - other lines are written to `doc/img/pp-graphviz-example.dot` before running [Graphviz].
+- if the command line argument `-img=prefix`, `prefix` is added at the beginning of the image path.
 
 Once generated the graph looks like:
 
-\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+\twopi(pp-graphviz-example)(This is just a GraphViz diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 digraph {
     O -> A
@@ -545,7 +549,7 @@ digraph {
 [PlantUML] is executed when the keyword `uml` is used.
 The lines `@startuml` and `@enduml` required by [PlantUML] are added by `pp`.
 
-    \raw{\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
+    \raw{\uml(pp-plantuml-example)(This is just a PlantUML diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Alice -> Bob: Authentication Request
     Bob --> Alice: Authentication Response
@@ -556,7 +560,7 @@ The lines `@startuml` and `@enduml` required by [PlantUML] are added by `pp`.
 
 Once generated the graph looks like:
 
-\uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
+\uml(pp-plantuml-example)(This is just a PlantUML diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Alice -> Bob: Authentication Request
 Bob --> Alice: Authentication Response
@@ -571,7 +575,7 @@ Java must be installed.
 
 [ditaa] is executed when the keyword `ditaa` is used.
 
-    \raw{\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
+    \raw{\ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         +--------+   +-------+    +-------+
         |        | --+ ditaa +--> |       |
@@ -587,7 +591,7 @@ Java must be installed.
 
 Once generated the graph looks like:
 
-\ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
+\ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     +--------+   +-------+    +-------+
     |        | --+ ditaa +--> |       |

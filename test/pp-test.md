@@ -112,8 +112,8 @@ File modification date
 ======================
 
 ----------------------------------- -----------------------------------------------------------------
-Current file date:                  \eq(\mdate)(\exec(LANG=en date +"%A %d %B %Y" -r \file))
-Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(\exec(LANG=en date +"%A %d %B %Y" -r test/$(ls -t test | head -1)))
+Current file date:                  \eq(\mdate)(\exec(LANG=en date +"%A %e %B %Y" -r \file))
+Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(\exec(LANG=en date +"%A %e %B %Y" -r test/$(ls -t test | head -1)))
 ----------------------------------- -----------------------------------------------------------------
 
 Environment variables
@@ -172,17 +172,17 @@ Diagrams
 
 Diagrams test do not check the generated image, just the link in the output document.
 
-\dot        ([.build/]img/dot-test)         (Test of dot)       ( digraph { dot -> { A B } -> C -> dot } )
-\neato      ([.build/]img/neato-test)       (Test of neato)     ( digraph { neato -> { A B } -> C -> neato } )
-\twopi      ([.build/]img/twopi-test)       (Test of twopi)     ( digraph { twopi -> { A B } -> C -> twopi } )
-\circo      ([.build/]img/circo-test)       (Test of circo)     ( digraph { circo -> { A B } -> C -> circo } )
-\fdp        ([.build/]img/fdp-test)         (Test of fdp)       ( digraph { fdp -> { A B } -> C -> fdp } )
-\patchwork  ([.build/]img/patchwork-test)   (Test of patchwork) ( digraph { patchwork -> { A B } -> C } )
-\osage      ([.build/]img/osage-test)       (Test of osage)     ( digraph { osage -> { A B } -> C -> osage } )
+\dot        (dot-test)         (Test of dot)       ( digraph { dot -> { A B } -> C -> dot } )
+\neato      (neato-test)       (Test of neato)     ( digraph { neato -> { A B } -> C -> neato } )
+\twopi      (twopi-test)       (Test of twopi)     ( digraph { twopi -> { A B } -> C -> twopi } )
+\circo      (circo-test)       (Test of circo)     ( digraph { circo -> { A B } -> C -> circo } )
+\fdp        (fdp-test)         (Test of fdp)       ( digraph { fdp -> { A B } -> C -> fdp } )
+\patchwork  (patchwork-test)   (Test of patchwork) ( digraph { patchwork -> { A B } -> C } )
+\osage      (osage-test)       (Test of osage)     ( digraph { osage -> { A B } -> C -> osage } )
 
-\uml        ([.build/]img/uml-test)         (Test of uml)       ( sender -> receiver )
+\uml        (uml-test)         (Test of uml)       ( sender -> receiver )
 
-\ditaa      ([.build/]img/ditaa-test)       (Test of ditaa)
+\ditaa      (ditaa-test)       (Test of ditaa)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     +--------+   +-------+    +-------+
@@ -197,17 +197,17 @@ Diagrams test do not check the generated image, just the link in the output docu
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\dot    ([.build/]img/size_small    {.img width=50})                        (digraph { small })
+\dot    (size_small    {.img width=50})                        (digraph { small })
 
-\dot    ([.build/]img/size_smallt   {.img width=50})    (Small with title)  (digraph { small })
+\dot    (size_smallt   {.img width=50})    (Small with title)  (digraph { small })
 
-\dot    ([.build/]img/size_normal   {.img width=100})                       (digraph { normal })
+\dot    (size_normal   {.img width=100})                       (digraph { normal })
 
-\dot    ([.build/]img/size_normalt  {.img width=100})   (Normal with title) (digraph { normal })
+\dot    (size_normalt  {.img width=100})   (Normal with title) (digraph { normal })
 
-\dot    ([.build/]img/size_big      {.img width=150})                       (digraph { big })
+\dot    (size_big      {.img width=150})                       (digraph { big })
 
-\dot    ([.build/]img/size_bigt     {.img width=150})   (Big with title)    (digraph { big })
+\dot    (size_bigt     {.img width=150})   (Big with title)    (digraph { big })
 
 Literate programming
 ====================

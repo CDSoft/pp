@@ -86,6 +86,9 @@ changes the current language.
 **-html|-pdf|-odt|-epub|-mobi**  
 changes the current output file format.
 
+**-img=PREFIX**  
+changes the prefix of the images output path.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment. The special file name `"-"` can be used to preprocess the standard input.
@@ -351,6 +354,7 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
 -   `doc/img/pp-graphviz-example` is the name of the image. `pp` will generate `doc/img/pp-graphviz-example.dot` and `doc/img/pp-graphviz-example.png`.
 -   the rest of the first line is the legend of the graph.
 -   other lines are written to `doc/img/pp-graphviz-example.dot` before running [Graphviz](http://graphviz.org/).
+-   if the command line argument `-img=prefix`, `prefix` is added at the beginning of the image path.
 
 Once generated the graph looks like:
 
@@ -362,7 +366,7 @@ Once generated the graph looks like:
 
 [PlantUML](http://plantuml.sourceforge.net/) is executed when the keyword `uml` is used. The lines `@startuml` and `@enduml` required by [PlantUML](http://plantuml.sourceforge.net/) are added by `pp`.
 
-    \uml(doc/img/pp-plantuml-example)(This is just a PlantUML diagram example)
+    \uml(pp-plantuml-example)(This is just a PlantUML diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Alice -> Bob: Authentication Request
     Bob --> Alice: Authentication Response
@@ -380,7 +384,7 @@ Once generated the graph looks like:
 
 [ditaa](http://ditaa.sourceforge.net/) is executed when the keyword `ditaa` is used.
 
-    \ditaa(doc/img/pp-ditaa-example)(This is just a Ditaa diagram example)
+    \ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         +--------+   +-------+    +-------+
         |        | --+ ditaa +--> |       |
