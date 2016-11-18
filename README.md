@@ -461,7 +461,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.9 (default, Mar  1 2015, 12:57:24) 
+    Hi, I'm Python 2.7.9 (default, Jun 29 2016, 13:08:31) 
     [GCC 4.9.2]
     Here are a few random numbers: 640, 25, 275
 
