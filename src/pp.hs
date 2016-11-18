@@ -778,7 +778,8 @@ parseImageAttributes env s = ( localPath ++ ".gv"
             in (strip local, strip link, "{" ++ strip xs ++ "}")
         parseLocalAndLink cs local link =
             let (xs, cs') = span (`notElem` "([{") cs
-            in parseLocalAndLink cs' (local++xs) (link++xs)
+                xs' = map (\c -> if c == '\\' then '/' else c) xs
+            in parseLocalAndLink cs' (local++xs) (link++xs')
         extract right cs =
             let (xs, cs') = span (/=right) cs
             in (xs, dropWhile (==right) cs')
