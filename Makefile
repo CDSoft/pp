@@ -70,6 +70,7 @@ BUILD = .build
 CACHE = .cache
 
 TAG = src/Tag.hs
+$(shell tag.sh $(TAG))
 SOURCES = $(wildcard src/*.hs)
 
 install: $(PP)
@@ -163,15 +164,13 @@ $(CACHE)/pp.css:
 pp: BUILDPP=$(BUILD)/$@
 pp: $(SOURCES) $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	@mkdir -p $(BUILDPP)
-	./tag.sh $(TAG)
-	ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $(sort $^ $(TAG))
+	ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
 pp.exe: $(SOURCES) $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	@mkdir -p $(BUILDPP)
-	./tag.sh $(TAG)
-	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $(sort $^ $(TAG))
+	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 doc/pp.html: $(PP) doc/pp.css
