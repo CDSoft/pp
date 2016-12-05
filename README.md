@@ -74,6 +74,12 @@ If no input file is specified, `pp` also preprocesses the standard input.
 
 The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.
 
+**-h**  
+displays some help and exits
+
+**-v**  
+displays the current version and exits
+
 **-DSYMBOL\[=VALUE\]**  
 adds the symbol `SYMBOL` to the current environment and associates it to the optional value `VALUE`. If value is not given the symbol is simply defined with an empty value
 

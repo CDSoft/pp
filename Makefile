@@ -69,13 +69,16 @@ endif
 BUILD = .build
 CACHE = .cache
 
+TAG = src/Tag.hs
+SOURCES = $(wildcard src/*.hs)
+
 install: $(PP)
 	install -v -C $^ $(shell (ls -d /usr/local/bin || echo /usr/bin) 2>/dev/null)
 
 clean:
 	rm -rf $(BUILD) doc
 	rm -f pp pp.exe
-	rm -f pp.tgz pp-win.7z pp-linux-*.txz pp-darwin-*.txz
+	rm -f pp*.tgz pp-win.7z pp-linux-*.txz pp-darwin-*.txz
 
 distclean: clean
 	rm -rf $(CACHE)
@@ -158,15 +161,17 @@ $(CACHE)/pp.css:
 #####################################################################
 
 pp: BUILDPP=$(BUILD)/$@
-pp: src/pp.hs $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
+pp: $(SOURCES) $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	@mkdir -p $(BUILDPP)
-	ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	./tag.sh $(TAG)
+	ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $(sort $^ $(TAG))
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
-pp.exe: src/pp.hs $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
+pp.exe: $(SOURCES) $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
 	@mkdir -p $(BUILDPP)
-	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	./tag.sh $(TAG)
+	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $(sort $^ $(TAG))
 	@strip $@
 
 doc/pp.html: $(PP) doc/pp.css
