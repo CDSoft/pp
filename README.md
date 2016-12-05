@@ -180,8 +180,8 @@ emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *m
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!bat(SCRIPT)`**, **`!python(SCRIPT)`**, **`!haskell(SCRIPT)`**  
-executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!bat(SCRIPT)`**, **`!python[23](SCRIPT)`**, **`!haskell(SCRIPT)`**  
+executes a script and emits its output. The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
 appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.

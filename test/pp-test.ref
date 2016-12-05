@@ -180,6 +180,8 @@ Command line (uses sh):             OK
 `bash` script:                      OK
 `bat` script:                       OK
 `python` script:                    OK
+`python2` script:                   OK
+`python3` script:                   OK
 `haskell` script:                   OK
 `exec` script:                      OK
 `rawexec` script:                   OK
@@ -375,7 +377,7 @@ Test results
 ============
 
 ------------------------------- ------------------------
-Number of successful tests:     57
+Number of successful tests:     59
 Number of failures:             0
 ------------------------------- ------------------------
 

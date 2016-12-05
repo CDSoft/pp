@@ -102,6 +102,8 @@ builtin = [ ("def", define)         , ("undef", undefine)
              , ("bash",    script "bash"    "bash"       ""          ".sh")
              , ("bat",     script "bat"     cmdexe       "@echo off" ".bat")
              , ("python",  script "python"  "python"     ""          ".py")
+             , ("python2", script "python2" "python2"    ""          ".py")
+             , ("python3", script "python3" "python3"    ""          ".py")
              , ("haskell", script "haskell" "runhaskell" ""          ".hs")
           ]
           ++ [ (lang, language lang) | lang <- langs]
