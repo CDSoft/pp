@@ -41,4 +41,4 @@ describe = "$(git describe --tags)"
 
 EOF
 
-diff -q $TMPTAG $TAG 2>/dev/null || cp $TMPTAG $TAG
+diff -q $TMPTAG $TAG >/dev/null 2>&1 || cp $TMPTAG $TAG
