@@ -70,7 +70,7 @@ BUILD = .build
 CACHE = .cache
 
 TAG = src/Tag.hs
-$(shell tag.sh $(TAG))
+$(shell ./tag.sh $(TAG))
 SOURCES = $(wildcard src/*.hs)
 
 install: $(PP)
