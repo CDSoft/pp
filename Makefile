@@ -35,7 +35,15 @@ all: README.md doc/pp.html
 all: pp.tgz
 all: pp-linux-$(shell uname -m).txz
 
-ifneq "$(shell wine ghc --version 2>/dev/null || false)" ""
+WINEGHC = $(shell wine ghc --version 2>/dev/null || false)
+GCCVERSION = $(shell gcc --version | head -1 | sed 's/.* \([0-9][0-9]*\)\..*/\1/')
+
+# On Ubuntu 16.10, ghc 8.0.1 fails compiling hCalc with gcc 6 without -no-pie
+ifeq "$(GCCVERSION)" "6"
+GHCOPT_LINUX = -optl-no-pie
+endif
+
+ifneq "$(WINEGHC)" ""
 all: pp.exe pp-win.7z
 
 WINE = wine
@@ -58,8 +66,6 @@ PP 	= pp.exe
 
 all: pp.exe
 all: doc/pp.html
-
-WINE =
 
 # Unknown platform (please contribute ;-)
 else
@@ -164,7 +170,7 @@ $(CACHE)/pp.css:
 pp: BUILDPP=$(BUILD)/$@
 pp: $(SOURCES) $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
 	@mkdir -p $(BUILDPP)
-	ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
+	ghc $(GHCOPT) $(GHCOPT_LINUX) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
