@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
+SHELL = /bin/bash
+.SHELLFLAGS = -o pipefail -c
+
 #####################################################################
 # Platform detection
 #####################################################################
