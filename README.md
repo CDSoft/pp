@@ -445,7 +445,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 6.1.7601 (1.9.20)
+    Microsoft Windows 10.0.14393 (1.9.20)
     This script is run from wine under Linux
 
 ### Python
