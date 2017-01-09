@@ -647,7 +647,7 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hi, I'm %COMSPEC%
     ver
-    if not "%WINELOADER%" == "" (
+    if "%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%" == "" (
         echo This script is run from wine under Linux
     ) else (
         echo This script is run from a real Windows
@@ -662,7 +662,7 @@ This script outputs:
 ~~~~~
 echo Hi, I'm %COMSPEC%
 ver
-if "%WINELOADER%" == "" (
+if "%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%" == "" (
     echo This script is run from a real Windows
 ) else (
     echo This script is run from wine under Linux

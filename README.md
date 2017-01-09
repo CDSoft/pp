@@ -275,7 +275,6 @@ For instance, if you use Pandoc to generate HTML documents with diagrams in a di
     -   the CSS path shall be the actual path where the CSS file is stored
     -   the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won't find them)
     -   e.g.: `outputpath/img/diag42`
-
 2.  the document is not self contained, i.e. the CSS and images are stored apart from the document:
     -   the CSS path shall be relative to the output document
     -   the image path in diagrams shall be relative to output document in HTML links and shall also describe the actual path where the images are stored.
@@ -422,7 +421,7 @@ Once generated the graph looks like:
 
 This script outputs:
 
-    Hi, I'm /bin/bash 4.3.30(1)-release
+    Hi, I'm /bin/bash 4.3.46(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
@@ -435,7 +434,7 @@ This script outputs:
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hi, I'm %COMSPEC%
     ver
-    if not "%WINELOADER%" == "" (
+    if "%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%" == "" (
         echo This script is run from wine under Linux
     ) else (
         echo This script is run from a real Windows
@@ -446,7 +445,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Wine CMD version 5.1.2600 (1.6.2)
+    Microsoft Windows 6.1.7601 (1.9.20)
     This script is run from wine under Linux
 
 ### Python
@@ -467,8 +466,8 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.9 (default, Jun 29 2016, 13:08:31) 
-    [GCC 4.9.2]
+    Hi, I'm Python 2.7.12+ (default, Sep 17 2016, 12:08:02) 
+    [GCC 6.2.0 20160914]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell
@@ -495,7 +494,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 8.0
+    Hi, I'm Haskell 7.10
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 Licenses

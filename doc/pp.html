@@ -15,8 +15,8 @@
 <body>
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
-<h2 class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></h2>
-<h3 class="date">Monday 5 December 2016</h3>
+<p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
+<p class="date">Monday 9 January 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -405,7 +405,7 @@ RANDOM=42 # seed
 echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm /bin/bash 4.3.30(1)-release
+<pre><code>Hi, I'm /bin/bash 4.3.46(1)-release
 Here are a few random numbers: 17766, 11151, 23481
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
@@ -415,7 +415,7 @@ Here are a few random numbers: 17766, 11151, 23481
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo Hi, I'm %COMSPEC%
 ver
-if not &quot;%WINELOADER%&quot; == &quot;&quot; (
+if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
     echo This script is run from wine under Linux
 ) else (
     echo This script is run from a real Windows
@@ -424,7 +424,7 @@ if not &quot;%WINELOADER%&quot; == &quot;&quot; (
 <p>This script outputs:</p>
 <pre><code>Hi, I'm C:\windows\system32\cmd.exe
 
-Wine CMD version 5.1.2600 (1.6.2)
+Microsoft Windows 6.1.7601 (1.9.20)
 This script is run from wine under Linux
 </code></pre>
 <h3 id="python">Python</h3>
@@ -441,8 +441,8 @@ if __name__ == &quot;__main__&quot;:
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Python 2.7.9 (default, Jun 29 2016, 13:08:31) 
-[GCC 4.9.2]
+<pre><code>Hi, I'm Python 2.7.12+ (default, Sep 17 2016, 12:08:02) 
+[GCC 6.2.0 20160914]
 Here are a few random numbers: 640, 25, 275
 </code></pre>
 <h3 id="haskell">Haskell</h3>
@@ -465,7 +465,7 @@ main = do
                 intercalate &quot; &quot; (map show (take 10 primes))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Haskell 8.0
+<pre><code>Hi, I'm Haskell 7.10
 The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 </code></pre>
 <h1 id="licenses">Licenses</h1>
