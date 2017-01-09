@@ -24,12 +24,12 @@ module Preprocessor where
 
 import Control.Monad
 import System.IO
+import System.IO.Error
 import System.IO.Temp
 import System.Directory
 import Data.List
 import Data.Char
 import Data.Maybe
-import System.Process hiding (env)
 import System.FilePath
 import Data.Time
 import Foreign.C.Types
@@ -534,6 +534,17 @@ atoi s = case reads s of
 -- Script macros
 ---------------------------------------------------------------------
 
+-- try runs an IO action  on an executable and its arguments.
+-- It returns the output of the IO action or raises an error.
+try :: (String -> [String] -> IO String) -> String -> [String] -> IO String
+try io exe args = do
+    result <- tryIOError (io exe args)
+    case result of
+        Left e -> error $ "Error while executing `" ++
+                          intercalate " " (exe:args) ++
+                          "`: " ++ show e
+        Right output -> return output
+
 -- script executes a script and emits the output of the script.
 -- Literate contents are flushed to be usable by the script.
 script :: String -> String -> String -> String -> Macro
@@ -544,7 +555,7 @@ script _lang cmd header ext env [src] = do
     output <- withSystemTempFile ("pp."++ext) $ \path handle -> do
         hWriteFileUTF8 handle $ unlines [header, src']
         hClose handle
-        readProcessUTF8 exe (args ++ [path])
+        try readProcessUTF8 exe (args ++ [path])
     case src of
         Val _ -> return (env', strip output)
         Block _ -> return (env', output)
@@ -596,13 +607,13 @@ diagram runtime diag header footer env [path, title, code] = do
         writeFileUTF8 gv code''
         void $ case runtime of
             Graphviz ->
-                readProcess diag ["-Tpng", "-o", img, gv] []
+                try readProcessUTF8 diag ["-Tpng", "-o", img, gv]
             PlantUML -> do
                 plantuml <- resource "plantuml.jar" plantumlJar
-                readProcess "java" ["-jar", plantuml, "-charset", "UTF-8", gv] []
+                try readProcessUTF8 "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
             Ditaa -> do
                 ditaa <- resource "ditaa.jar" ditaaJar
-                readProcess "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img] []
+                try readProcessUTF8 "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img]
     return (env, "!["++title'++"]("++url++")"++attrs)
 diagram runtime diag header footer env [path, code] =
     diagram runtime diag header footer env [path, Val "", code]
