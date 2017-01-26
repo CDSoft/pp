@@ -24,6 +24,11 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 module OSAbstraction where
 
+#if linux_HOST_OS || darwin_HOST_OS
+#else
+import Data.Char
+#endif
+
 -- shell command interpretor for Windows .bat scripts
 cmdexe :: String
 cmdexe =
@@ -31,4 +36,12 @@ cmdexe =
     "wine cmd /c"
 #else
     "cmd /c"
+#endif
+
+-- environment variable storage (should be case-insensitive on Windows)
+envVarStorage :: String -> String
+#if linux_HOST_OS || darwin_HOST_OS
+envVarStorage = id
+#else
+envVarStorage = map toUpper
 #endif

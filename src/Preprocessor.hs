@@ -416,8 +416,8 @@ include _ _ = arityError "include" [1]
 locateFile :: Env -> FilePath -> IO FilePath
 locateFile env name = do
     let name' = case name of
-                    ('~' : '/' : relname) -> fromVal (getSymbol env (EnvVar "HOME")) </> relname
-                    _ -> name
+            ('~' : '/' : relname) -> fromVal (getSymbol env (EnvVar (envVarStorage "HOME"))) </> relname
+            _ -> name
     let path = map (takeDirectory . fromVal . getSymbol env) [CurrentFile, MainFile] ++ ["."]
     found <- findFile path name'
     case found of
@@ -503,7 +503,7 @@ currentFile _ _ = arityError "file" [0]
 readEnv :: Macro
 readEnv env [name] = do
     name' <- ppAndStrip' env name
-    case lookup (EnvVar name') env of
+    case lookup (EnvVar (envVarStorage name')) env of
         Just val -> ppAndStrip env val
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]

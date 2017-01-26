@@ -26,6 +26,8 @@ import Data.Char
 import Data.Maybe
 import System.Environment
 
+import OSAbstraction
+
 -- symbol type of a definition in the environment
 data Var = Def String           -- user macro definition
          | EnvVar String        -- environment variable
@@ -72,4 +74,4 @@ initialEnvironment = do
     -- get $FORMAT (html, pdf, ...)
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
     -- the initial environment contains the language, the format and the environment variables
-    return $ (Lang, Val lang) : (FileFormat, Val fmt) : [(EnvVar name, Val val) | (name, val) <- envVars]
+    return $ (Lang, Val lang) : (FileFormat, Val fmt) : [(EnvVar (envVarStorage name), Val val) | (name, val) <- envVars]
