@@ -172,11 +172,11 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dt><strong><code>!rawinc[lude](FILE)</code></strong></dt>
 <dd><code>pp</code> emits the content of <code>FILE</code> without any preprocessing.
 </dd>
-<dt><strong><code>!exec(COMMAND)</code></strong></dt>
-<dd>executes a shell command (with the current shell) and preprocesses the output of the command.
+<dt><strong><code>!exec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
+<dd>executes a shell command (with the current <code>sh</code> shell) and preprocesses the output of the command. This macro is deprecated. Consider using <code>sh</code> instead.
 </dd>
-<dt><strong><code>!rawexec(COMMAND)</code></strong></dt>
-<dd>as <code>!exec(COMMAND)</code> but the output is not preprocessed by <code>pp</code>.
+<dt><strong><code>!rawexec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
+<dd>as <code>!exec(COMMAND)</code> but the output is not preprocessed by <code>pp</code>. This macro is deprecated. Consider using <code>sh</code> instead.
 </dd>
 <dt><strong><code>!mdate(FILES)</code></strong></dt>
 <dd>returns the modification date of the most recent file.

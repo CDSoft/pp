@@ -150,11 +150,11 @@ get the raw (unevaluated) definition of `X`
 **`!rawinc[lude](FILE)`**  
 `pp` emits the content of `FILE` without any preprocessing.
 
-**`!exec(COMMAND)`**  
-executes a shell command (with the current shell) and preprocesses the output of the command.
+**`!exec(COMMAND)`** (*deprecated*)  
+executes a shell command (with the current `sh` shell) and preprocesses the output of the command. This macro is deprecated. Consider using `sh` instead.
 
-**`!rawexec(COMMAND)`**  
-as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
+**`!rawexec(COMMAND)`** (*deprecated*)  
+as `!exec(COMMAND)` but the output is not preprocessed by `pp`. This macro is deprecated. Consider using `sh` instead.
 
 **`!mdate(FILES)`**  
 returns the modification date of the most recent file.
