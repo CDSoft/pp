@@ -14,7 +14,7 @@ cat <<EOF > $TMPTAG
 
 {- PP
 
-Copyright (C) 2015, 2016 Christophe Delord
+Copyright (C) 2015, 2016, 2017 Christophe Delord
 
 http://www.cdsoft.fr/pp
 

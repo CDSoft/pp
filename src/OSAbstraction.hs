@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015, 2016 Christophe Delord
+Copyright (C) 2015, 2016, 2017 Christophe Delord
 
 http://www.cdsoft.fr/pp
 
@@ -39,6 +39,7 @@ cmdexe =
 #endif
 
 -- environment variable storage (should be case-insensitive on Windows)
+-- Thanks to tajmone (https://github.com/tajmone) for pointing out this difference.
 envVarStorage :: String -> String
 #if linux_HOST_OS || darwin_HOST_OS
 envVarStorage = id

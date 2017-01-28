@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015, 2016 Christophe Delord
+Copyright (C) 2015, 2016, 2017 Christophe Delord
 
 http://www.cdsoft.fr/pp
 
@@ -36,7 +36,7 @@ author :: String
 author = "Christophe Delord"
 
 dates :: [Int]
-dates = [2015, 2016]
+dates = [2015, 2016, 2017]
 
 url :: String
 url = "http://cdsoft.fr/" ++ name
