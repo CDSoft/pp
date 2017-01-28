@@ -747,6 +747,13 @@ main = do
 ~~~~~
 ~~~~~~~~~~
 
+Third-party documentations and tutorials
+========================================
+
+- <https://github.com/tajmone/markdown-guide/tree/master/pp>:
+  PP tutorial written by [tajmone](https://github.com/tajmone).
+  It is a good starting point for beginners.
+
 Licenses
 ========
 

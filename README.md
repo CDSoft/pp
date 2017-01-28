@@ -497,6 +497,11 @@ This script outputs:
     Hi, I'm Haskell 7.10
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
+Third-party documentations and tutorials
+========================================
+
+-   <https://github.com/tajmone/markdown-guide/tree/master/pp>: PP tutorial written by [tajmone](https://github.com/tajmone). It is a good starting point for beginners.
+
 Licenses
 ========
 
