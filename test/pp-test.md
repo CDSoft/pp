@@ -156,23 +156,28 @@ Section for a PDF document:         \eq(\pdf(Hello World!))()
 External commands and scripts execution
 =======================================
 
------------------------------------ -----------------------------------------------------------------
+\def(mymacro)(mymacro(!1) has been evaluated!)
+
+----------------------------------- ------------------------------------------------------------------------------
 Command line (uses sh):             \eq(\exec(echo "hi é"))(hi é)
 `sh` script:                        \eq(\sh(echo "hi é"))(hi é)
 `bash` script:                      \eq(\bash(echo hi à))(hi à)
 `bat` script:                       \eq(\bat(echo hi ç))(hi ç)
+`cmd` script:                       \eq(\cmd(echo hi ç))(hi ç)
 `python` script:                    \eq(\python(print("hi")))(hi)
 `python2` script:                   \eq(\python2(print "hi" ))(hi)
 `python3` script:                   \eq(\python3(print("hi")))(hi)
 `haskell` script:                   \eq(\haskell(main = putStrLn "hi"))(hi)
 `exec` script:                      \eq(\exec(\raw(echo "\\def(x)(42)\\x")))(42)
 `rawexec` script:                   \eq(\rawexec(\raw(echo "\\def(x)(42)\\x")))(\raw(\def(x)(42)\x))
------------------------------------ -----------------------------------------------------------------
+Raw script output:                  \eq(\sh(printf "\\%s(%d)" mymacro 42))(\raw(\mymacro(42)))
+Preprocessed script output:         \eq(\pp[\sh(printf "\\%s(%d)" mymacro 42)])(mymacro(42) has been evaluated!)
+----------------------------------- ------------------------------------------------------------------------------
 
 Diagrams
 ========
 
-Diagrams test do not check the generated image, just the link in the output document.
+The diagram test does not check the generated images, just the links in the output document.
 
 \dot        (dot-test)         (Test of dot)       ( digraph { dot -> { A B } -> C -> dot } )
 \neato      (neato-test)       (Test of neato)     ( digraph { neato -> { A B } -> C -> neato } )

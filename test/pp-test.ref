@@ -174,23 +174,28 @@ Section for a PDF document:         OK
 External commands and scripts execution
 =======================================
 
------------------------------------ -----------------------------------------------------------------
+
+
+----------------------------------- ------------------------------------------------------------------------------
 Command line (uses sh):             OK
 `sh` script:                        OK
 `bash` script:                      OK
 `bat` script:                       OK
+`cmd` script:                       OK
 `python` script:                    OK
 `python2` script:                   OK
 `python3` script:                   OK
 `haskell` script:                   OK
 `exec` script:                      OK
 `rawexec` script:                   OK
------------------------------------ -----------------------------------------------------------------
+Raw script output:                  OK
+Preprocessed script output:         OK
+----------------------------------- ------------------------------------------------------------------------------
 
 Diagrams
 ========
 
-Diagrams test do not check the generated image, just the link in the output document.
+The diagram test does not check the generated images, just the links in the output document.
 
 ![Test of dot](img/dot-test.png)
 ![Test of neato](img/neato-test.png)
@@ -377,7 +382,7 @@ Test results
 ============
 
 ------------------------------- ------------------------
-Number of successful tests:     59
+Number of successful tests:     62
 Number of failures:             0
 ------------------------------- ------------------------
 

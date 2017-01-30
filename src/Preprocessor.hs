@@ -76,8 +76,9 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("raw", raw)
           , ("rawinc", rawinc)      , ("rawinclude", rawinc)
 
-          , ("exec",    macropp (script "exec"    "sh" "" ".sh"))
-          , ("rawexec", script "rawexec" "sh" "" ".sh")
+          , ("exec",    macropp (script "exec"    "sh" "" ".sh"))               -- deprecated
+          , ("rawexec", script "rawexec" "sh" "" ".sh")                         -- deprecated
+          , ("pp", forcepp)
 
           , ("mdate", mdate)
 
@@ -100,7 +101,8 @@ builtin = [ ("def", define)         , ("undef", undefine)
           ++ [ (diag, diagram Ditaa    diag ""          "")        | diag <- ditaaDiagrams]
           ++ [ ("sh",      script "sh"      "sh"         ""          ".sh")
              , ("bash",    script "bash"    "bash"       ""          ".sh")
-             , ("bat",     script "bat"     cmdexe       "@echo off" ".bat")
+             , ("cmd",     script "cmd"     cmdexe       "@echo off" ".bat")
+             , ("bat",     script "bat"     cmdexe       "@echo off" ".bat")    -- deprecated
              , ("python",  script "python"  "python"     ""          ".py")
              , ("python2", script "python2" "python2"    ""          ".py")
              , ("python3", script "python3" "python3"    ""          ".py")
@@ -133,7 +135,7 @@ ppAndStrip env (Val s) = do
 ppAndStrip env (Block s) =
     pp env s
 
--- ppAndStip' works as ppAndStrip but only returns the preprocessed value 
+-- ppAndStrip' works as ppAndStrip but only returns the preprocessed value 
 ppAndStrip' :: Env -> Val -> IO String
 ppAndStrip' env val = fmap snd (ppAndStrip env val)
 
@@ -435,6 +437,14 @@ rawinc env [name] = do
     doc <- ppAndStrip' env name >>= locateFile env >>= readFileUTF8
     return (env, doc)
 rawinc _ _ = arityError "rawinclude" [1]
+
+-- \pp(text) preprocesses text. text can be the output of a script macro containing generated macro calls
+forcepp :: Macro
+forcepp env [text] = do
+    (env', text') <- pp env (fromVal text)
+    (env'', text'') <- pp env' text'
+    return (env'', text'')
+forcepp _ _ = arityError "pp" [1]
 
 ---------------------------------------------------------------------
 -- File macros

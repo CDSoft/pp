@@ -219,6 +219,11 @@ syntax colorization.
 **`!rawinc[lude](FILE)`**
 :   `pp` emits the content of `FILE` without any preprocessing.
 
+**`!pp(TEXT)`**
+:   `pp` forces the evaluation of `TEXT`.
+    This macro is useful to preprocess the output of script macros
+    for instance (`sh`, `python`, ...).
+
 **`!exec(COMMAND)`** (*deprecated*)
 :   executes a shell command (with the current `sh` shell) and
     preprocesses the output of the command.
@@ -258,10 +263,13 @@ syntax colorization.
     `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
     `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!bat(SCRIPT)`**, **`!python[23](SCRIPT)`**, **`!haskell(SCRIPT)`**
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[23](SCRIPT)`**, **`!haskell(SCRIPT)`**
 :   executes a script and emits its output.
-    The possible programming languages are `sh`, `bash`, `bat`, `python` and `haskell`.
+    The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`.
     Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
+
+**`!bat(SCRIPT)`** (*deprecated*)
+:   same as `cmd`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**
 :   appends `CONTENT` to the file `FILENAME`.
