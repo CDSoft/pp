@@ -94,6 +94,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("lit", lit)            , ("literate", lit)
           , ("flushlit", flushlit)  , ("flushliterate", flushlit)
           , ("src", source)         , ("source", source)
+          , ("codeblock", codeblock)
 
           ]
           ++ [ (diag, diagram Graphviz diag ""          "")        | diag <- graphvizDiagrams]
@@ -135,7 +136,7 @@ ppAndStrip env (Val s) = do
 ppAndStrip env (Block s) =
     pp env s
 
--- ppAndStrip' works as ppAndStrip but only returns the preprocessed value 
+-- ppAndStrip' works as ppAndStrip but only returns the preprocessed value
 ppAndStrip' :: Env -> Val -> IO String
 ppAndStrip' env val = fmap snd (ppAndStrip env val)
 
@@ -746,7 +747,7 @@ lit env [name, lang, content] = do
     lang' <- ppAndStrip' env lang
     content' <- ppAndStrip' env content
     let env' = litAppend env name' (Just lang') content'
-    let formatedCode = litShow (Just lang') content'
+    let formatedCode = litShow env (Just lang') content'
     return (env', formatedCode)
 
 -- \lit(name)(lang)(content) appends content to the file or macro name.
@@ -757,7 +758,7 @@ lit env [name, content] = do
     content' <- ppAndStrip' env content
     let lang = litLang env name'
     let env' = litAppend env name' lang content'
-    let formatedCode = litShow lang content'
+    let formatedCode = litShow env lang content'
     return (env', formatedCode)
 
 -- \lit(name) emits the current content of a literate file or macro.
@@ -765,7 +766,7 @@ lit env [name] = do
     name' <- ppAndStrip' env name
     let lang = litLang env name'
     let content = litGet env name'
-    let formatedCode = litShow lang content
+    let formatedCode = litShow env lang content
     return (env, formatedCode)
 
 lit _ _ = arityError "lit" [1, 2, 3]
@@ -780,7 +781,7 @@ source env [name, lang] = do
     name' <- ppAndStrip' env' name
     lang' <- ppAndStrip' env' lang
     content <- readFileUTF8 name'
-    let formatedCode = litShow (Just lang') content
+    let formatedCode = litShow env (Just lang') content
     return (env', formatedCode)
 
 -- \src(name) reads a source file.
@@ -790,10 +791,27 @@ source env [name] = do
     name' <- ppAndStrip' env' name
     let lang = litLang env' name'
     content <- readFileUTF8 name'
-    let formatedCode = litShow lang content
+    let formatedCode = litShow env lang content
     return (env', formatedCode)
 
 source _ _ = arityError "src" [1, 2]
+
+codeblock :: Macro
+
+-- "codeblock env len ch" stores the new codeblock separator (ch repeated len times)
+codeblock env [len, ch] = do
+    len' <- (fromIntegral . atoi) <$> ppAndStrip' env len
+    when (len' < 3) $ codeblockError
+    s' <- ppAndStrip' env ch
+    let line = case s' of
+                [c] | c `elem` "~`" -> replicate len' c
+                _ -> codeblockError
+    return ((CodeBlock, Val line) : clean CodeBlock env, "")
+
+-- "codeblock env len" stores the new codeblock separator ('~' repeated len times)
+codeblock env [len] = codeblock env [len, Val "~"]
+
+codeblock _ _ = arityError "codeblock" [1, 2]
 
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
@@ -814,12 +832,15 @@ litAppend env name lang content = env''
 
 -- "litShow lang content" format content using the language lang.
 -- The real format will be made by Pandoc.
-litShow :: Maybe String -> String -> String
-litShow lang content = case lang of
+litShow :: Env -> Maybe String -> String -> String
+litShow env lang content = case lang of
             Just lang' -> unlines [codeBlock ++ " {." ++ lang' ++ "}", content, codeBlock]
             Nothing    -> unlines [codeBlock, content, codeBlock]
     where
-        codeBlock = replicate 70 '~'
+        codeBlock = case lookup CodeBlock env of
+                        Just (Val line) -> line
+                        Just (Block line) -> line
+                        Nothing -> replicate 70 '~'
 
 -- litContentTag generates an entry for a literate file or macro
 -- in the environment.

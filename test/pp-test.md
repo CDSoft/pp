@@ -322,6 +322,20 @@ formated with \raw(\source or \src):
 
 \src{.build/mylib.h}
 
+And with a different codeblock separator:
+
+15 '~':
+
+\codeblock(15)(~)\src{.build/mylib.h}
+
+20 '`':
+
+\codeblock(20)(`)\src{.build/mylib.h}
+
+25 '~' (default character):
+
+\codeblock(25)\src{.build/mylib.h}
+
 Test results
 ============
 

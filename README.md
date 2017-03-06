@@ -229,14 +229,17 @@ Example:
         puts("Goodbye.");
     ~~~~~~~~~~~~~~~~~~~~
 
-**!lit\[erate\]**  
+**`!lit[erate]`**  
 emits the current content of `FILENAME`.
 
-**!flushlit\[erate\]**  
+**`!flushlit[erate]`**  
 writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with !src.
 
-**!src(FILENAME)\[(LANG)\]**, **!source(FILENAME)\[(LANG)\]**  
+**`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**  
 formats an existing source file in a colorized code block.
+
+**`!codeblock(LENGTH)[(CHAR)]`**  
+sets the default line separator for code blocks. The default value is a 70 tilda row (`!codeclock(70)(~)`).
 
 Diagram and script examples
 ===========================
@@ -427,7 +430,7 @@ Once generated the graph looks like:
 
 This script outputs:
 
-    Hi, I'm /bin/bash 4.3.46(1)-release
+    Hi, I'm /bin/bash 4.3.43(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
@@ -451,7 +454,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.14393 (1.9.20)
+    Microsoft Windows 10.0.14393 (2.2)
     This script is run from wine under Linux
 
 ### Python
@@ -472,8 +475,8 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.12+ (default, Sep 17 2016, 12:08:02) 
-    [GCC 6.2.0 20160914]
+    Hi, I'm Python 2.7.13 (default, Jan 12 2017, 17:59:37) 
+    [GCC 6.3.1 20161221 (Red Hat 6.3.1-1)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell

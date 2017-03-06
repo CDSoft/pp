@@ -46,3 +46,7 @@ arityError name arities = error $ "Arity error: " ++ name ++ " expects " ++ nb +
                     [0, 1] -> ("0 or 1", "")
                     [x] -> (show x, "s")
                     xs -> (intercalate ", " (map show (init xs)) ++ " or " ++ show (last xs), "s")
+
+-- raise a wrong codeblock specification error
+codeblockError :: t
+codeblockError = error "codeblock expects a length higher than 3 and either a tilda or a backtick."

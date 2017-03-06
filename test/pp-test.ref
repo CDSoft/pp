@@ -378,6 +378,44 @@ int fact(int n);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+And with a different codeblock separator:
+
+15 '~':
+
+~~~~~~~~~~~~~~~ {.c}
+
+// This is a C library
+
+int fib(int n);
+int fact(int n);
+
+~~~~~~~~~~~~~~~
+
+
+20 '`':
+
+```````````````````` {.c}
+
+// This is a C library
+
+int fib(int n);
+int fact(int n);
+
+````````````````````
+
+
+25 '~' (default character):
+
+~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
+
+// This is a C library
+
+int fib(int n);
+int fact(int n);
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 Test results
 ============
 

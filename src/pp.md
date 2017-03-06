@@ -318,16 +318,20 @@ syntax colorization.
             puts("Goodbye.");
         ~~~~~~~~~~~~~~~~~~~~
 
-**!lit[erate]**
+**`!lit[erate]`**
 :   emits the current content of `FILENAME`.
 
-**!flushlit[erate]**
+**`!flushlit[erate]`**
 :   writes files built with `!lit` before reaching the end of the document.
     This macro is automatically executed before any script execution
     or file inclusion with !src.
 
-**!src(FILENAME)[(LANG)]**, **!source(FILENAME)[(LANG)]**
+**`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**
 :   formats an existing source file in a colorized code block.
+
+**`!codeblock(LENGTH)[(CHAR)]`**
+:   sets the default line separator for code blocks.
+    The default value is a 70 tilda row (`!codeclock(70)(~)`).
 }
 
 Diagram and script examples
