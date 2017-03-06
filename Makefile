@@ -133,11 +133,11 @@ pp-darwin-%.txz: pp doc/pp.html
 #####################################################################
 
 PLANTUML = plantuml
-PLANTUML_URL = http://heanet.dl.sourceforge.net/project/plantuml/$(PLANTUML).jar
+PLANTUML_URL = http://sourceforge.net/projects/plantuml/files/$(PLANTUML).jar
 
 DITAA_VERSION = 0.9
 DITAA = ditaa0_9
-DITAA_URL = http://freefr.dl.sourceforge.net/project/ditaa/ditaa/$(DITAA_VERSION)/$(DITAA).zip
+DITAA_URL = https://sourceforge.net/projects/ditaa/files/ditaa/$(DITAA_VERSION)/$(DITAA).zip
 
 $(BUILD)/%.o: $(BUILD)/%.c
 	ghc $(GHCOPT) -c -o $@ $^
