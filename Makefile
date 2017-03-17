@@ -95,7 +95,7 @@ distclean: clean
 
 dep:
 	cabal update
-	cabal install strict temporary
+	cabal install strict temporary --ghc-options="$(GHCOPT_LINUX)"
 ifneq "$(WINE)" ""
 	$(WINE) cabal update
 	$(WINE) cabal install strict temporary
@@ -135,10 +135,6 @@ pp-darwin-%.txz: pp doc/pp.html
 PLANTUML = plantuml
 PLANTUML_URL = http://sourceforge.net/projects/plantuml/files/$(PLANTUML).jar
 
-DITAA_VERSION = 0.9
-DITAA = ditaa0_9
-DITAA_URL = https://sourceforge.net/projects/ditaa/files/ditaa/$(DITAA_VERSION)/$(DITAA).zip
-
 $(BUILD)/%.o: $(BUILD)/%.c
 	ghc $(GHCOPT) -c -o $@ $^
 
@@ -154,14 +150,6 @@ $(CACHE)/$(PLANTUML).jar:
 	@mkdir -p $(dir $@)
 	wget $(PLANTUML_URL) -O $@
 
-$(CACHE)/$(DITAA).zip:
-	@mkdir -p $(dir $@)
-	wget $(DITAA_URL) -O $@
-
-$(CACHE)/$(DITAA).jar: $(CACHE)/$(DITAA).zip
-	unzip $< $(notdir $@) -d $(dir $@)
-	@touch $@
-
 $(CACHE)/pp.css:
 	@mkdir -p $(dir $@)
 	wget http://cdsoft.fr/cdsoft.css -O $@
@@ -171,13 +159,13 @@ $(CACHE)/pp.css:
 #####################################################################
 
 pp: BUILDPP=$(BUILD)/$@
-pp: $(SOURCES) $(BUILD)/$(PLANTUML).o $(BUILD)/$(DITAA).o
+pp: $(SOURCES) $(BUILD)/$(PLANTUML).o
 	@mkdir -p $(BUILDPP)
 	ghc $(GHCOPT) $(GHCOPT_LINUX) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@
 
 pp.exe: BUILDPP=$(BUILD)/$@
-pp.exe: $(SOURCES) $(BUILD)/$(PLANTUML)-win.o $(BUILD)/$(DITAA)-win.o
+pp.exe: $(SOURCES) $(BUILD)/$(PLANTUML)-win.o
 	@mkdir -p $(BUILDPP)
 	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
 	@strip $@

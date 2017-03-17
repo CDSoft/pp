@@ -454,7 +454,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.14393 (2.2)
+    Microsoft Windows 10.0.14393 (2.3)
     This script is run from wine under Linux
 
 ### Python
@@ -533,7 +533,7 @@ PlantUML.jar is integrated in [PP](http://cdsoft.fr/pp "PP - Generic Preprocesso
 ditaa
 -----
 
-ditaa.jar is integrated in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"). [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See <http://sourceforge.net/projects/ditaa/>.
+ditaa.jar is not integrated anymore in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"). The [ditaa](http://ditaa.sourceforge.net/) version used is the one already integrated in [PlantUML](http://plantuml.sourceforge.net/). [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See <http://sourceforge.net/projects/ditaa/>.
 
 Feedback
 ========

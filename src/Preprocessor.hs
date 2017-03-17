@@ -97,9 +97,9 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("codeblock", codeblock)
 
           ]
-          ++ [ (diag, diagram Graphviz diag ""          "")        | diag <- graphvizDiagrams]
-          ++ [ (diag, diagram PlantUML diag "@startuml" "@enduml") | diag <- plantumlDiagrams]
-          ++ [ (diag, diagram Ditaa    diag ""          "")        | diag <- ditaaDiagrams]
+          ++ [ (diag, diagram Graphviz diag ""            "")             | diag <- graphvizDiagrams]
+          ++ [ (diag, diagram PlantUML diag "@startuml"   "@enduml")      | diag <- plantumlDiagrams]
+          ++ [ (diag, diagram PlantUML diag "@startditaa" "@endditaa")    | diag <- ditaaDiagrams]
           ++ [ ("sh",      script "sh"      "sh"         ""          ".sh")
              , ("bash",    script "bash"    "bash"       ""          ".sh")
              , ("cmd",     script "cmd"     cmdexe       "@echo off" ".bat")
@@ -577,7 +577,7 @@ script lang _ _ _ _ _ = arityError lang [1]
 ---------------------------------------------------------------------
 
 -- Diagram types managed by pp
-data DiagramRuntime = Graphviz | PlantUML | Ditaa deriving (Show)
+data DiagramRuntime = Graphviz | PlantUML deriving (Show)
 
 -- Graphiviz diagrams
 graphvizDiagrams :: [String]
@@ -622,9 +622,6 @@ diagram runtime diag header footer env [path, title, code] = do
             PlantUML -> do
                 plantuml <- resource "plantuml.jar" plantumlJar
                 try readProcessUTF8 "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
-            Ditaa -> do
-                ditaa <- resource "ditaa.jar" ditaaJar
-                try readProcessUTF8 "java" ["-jar", ditaa, "-e", "UTF-8", "-o", gv, img]
     return (env, "!["++title'++"]("++url++")"++attrs)
 diagram runtime diag header footer env [path, code] =
     diagram runtime diag header footer env [path, Val "", code]
@@ -663,20 +660,14 @@ parseImageAttributes env s = ( localPath ++ ".gv"
             let (xs, cs') = span (/=right) cs
             in (xs, dropWhile (==right) cs')
 
--- PlantUML and ditaa JAR files embedded in pp.
--- The .jar files are converted to C with xxd and seen as a C string in Haskell.
+-- PlantUML JAR file embedded in pp.
+-- The .jar files is converted to C with xxd and seen as a C string in Haskell.
 
 foreign import ccall "&plantuml_jar"     _plantuml_jar      :: Ptr CChar
 foreign import ccall "&plantuml_jar_len" _plantuml_jar_len  :: Ptr CInt
 
 plantumlJar :: (Ptr CChar, Ptr CInt)
 plantumlJar = (_plantuml_jar, _plantuml_jar_len)
-
-foreign import ccall "&ditaa0_9_jar"     _ditaa_jar         :: Ptr CChar
-foreign import ccall "&ditaa0_9_jar_len" _ditaa_jar_len     :: Ptr CInt
-
-ditaaJar :: (Ptr CChar, Ptr CInt)
-ditaaJar = (_ditaa_jar, _ditaa_jar_len)
 
 -- "ressource name content" writes content (a C string containing PlantUML or ditaa)
 -- to a temporary file. It returns the path of the temporary file so the caller
