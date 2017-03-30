@@ -800,7 +800,8 @@ See <http://plantuml.sourceforge.net/faq.html>.
 ditaa
 -----
 
-ditaa.jar is integrated in [PP].
+ditaa.jar is not integrated anymore in [PP].
+The [ditaa] version used is the one already integrated in [PlantUML].
 [ditaa] is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/).
 See <http://sourceforge.net/projects/ditaa/>.
 
