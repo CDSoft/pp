@@ -95,7 +95,7 @@ distclean: clean
 
 dep:
 	cabal update
-	cabal install strict temporary
+	cabal install strict temporary -ghc-options=$(GHCOPT_LINUX)
 ifneq "$(WINE)" ""
 	$(WINE) cabal update
 	$(WINE) cabal install strict temporary
