@@ -1,7 +1,7 @@
 PP - Generic preprocessor (with pandoc in mind)
 ===============================================
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a text preprocessor designed for Pandoc (and more generally Markdown).
+[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText).
 
 The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package used to contain three preprocessors for [Pandoc](http://pandoc.org/).
 
@@ -69,6 +69,9 @@ Command line
 -   the environment variables of the current process
 -   a `lang` variable containing the current langage (currently only French (`fr`) and English (`en`) are supported)
 -   a `format` variable containing the current output format (`html`, `pdf`, `odt`, `epub` or `mobi`)
+-   a `dialect` variable containing the current dialect (`md` or `rst`)
+
+The dialect is used to format links and images in the output documents. Currently only Markdown and reStructuredText are supported.
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
@@ -91,6 +94,9 @@ changes the current language.
 
 **-html|-pdf|-odt|-epub|-mobi**  
 changes the current output file format.
+
+**-md|-rst**  
+changes the current dialect (`-md` is the default dialect).
 
 **-img=PREFIX**  
 changes the prefix of the images output path.
@@ -174,11 +180,17 @@ emits the current language (*fr* or *en*)
 **`!format`**  
 emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
 
+**`!dialect`**  
+emits the current dialect (*md* or *rst*)
+
 **`!fr(...)`** or **`!en(...)`**  
 emits some text only if the current language is *fr* or *en*
 
 **`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**  
 emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
+
+**`!md`**, **`-rst`**  
+emits some text only if the current dialect is *md* or *rst*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
@@ -240,6 +252,9 @@ formats an existing source file in a colorized code block.
 
 **`!codeblock(LENGTH)[(CHAR)]`**  
 sets the default line separator for code blocks. The default value is a 70 tilda row (`!codeclock(70)(~)`).
+
+**`!indent[(N)](BLOCK)`**  
+Indents each line of a block with `n` spaces. The default value of `n` is 4 spaces.
 
 Diagram and script examples
 ===========================

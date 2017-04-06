@@ -1,4 +1,4 @@
-% PP test file
+% PP test file (markdown)
 % Christophe Delord
 
 Introduction
@@ -134,8 +134,16 @@ undefined + 3 = 3:                  \add(y)(3)\eq(\y)(3)
 3 + 4 = 7:                          \add(y)(4)\eq(\y)(7)
 ----------------------------------- -----------------------------------------------------------------
 
-Output language and output format
-=================================
+Dialect, Output language and output format
+==========================================
+
+## Dialect
+
+----------------------------------- -----------------------------------------------------------------
+The current dialect is md:          \eq(\dialect)(md)
+Section for a markdown document:    \eq(\md(Hello World!))(Hello World!)
+Section for a rst document:         \eq(\rst(Hello World!))()
+----------------------------------- -----------------------------------------------------------------
 
 ## Language
 

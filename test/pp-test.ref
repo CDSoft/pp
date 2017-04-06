@@ -1,4 +1,4 @@
-% PP test file
+% PP test file (markdown)
 % Christophe Delord
 
 Introduction
@@ -152,8 +152,16 @@ undefined + 3 = 3:                  OK
 3 + 4 = 7:                          OK
 ----------------------------------- -----------------------------------------------------------------
 
-Output language and output format
-=================================
+Dialect, Output language and output format
+==========================================
+
+## Dialect
+
+----------------------------------- -----------------------------------------------------------------
+The current dialect is md:          OK
+Section for a markdown document:    OK
+Section for a rst document:         OK
+----------------------------------- -----------------------------------------------------------------
 
 ## Language
 
@@ -420,7 +428,7 @@ Test results
 ============
 
 ------------------------------- ------------------------
-Number of successful tests:     62
+Number of successful tests:     65
 Number of failures:             0
 ------------------------------- ------------------------
 

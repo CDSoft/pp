@@ -38,7 +38,7 @@ main = do
     setUTF8Encoding stdin
     setUTF8Encoding stdout
     -- parse the arguments and produce the preprocessed output
-    env <- initialEnvironment
+    env <- initialEnvironment (head langs) (head dialects)
     (env', doc) <- getArgs >>= doArgs env
     -- just write the preprocessed output to stdout
     putStr doc
@@ -89,6 +89,10 @@ doArg env ('-':lang) | lang' `elem` langs =
 -- "doArg env "-html|-pdf|-odt|-epub|-mobi"" changes the current format
 doArg env ('-':fmt) | fmt' `elem` formats =
     return ((FileFormat, Val fmt') : clean FileFormat env, "") where fmt' = map toLower fmt
+
+-- "doArg env "-md|-rst"" changes the current dialect
+doArg env ('-':dial) | dial' `elem` dialects =
+    return ((Dialect, Val dial') : clean Dialect env, "") where dial' = map toLower dial
 
 -- "doArg env "-img"" changes the output image path prefix
 doArg env ('-':'i':'m':'g':'=':prefix) =

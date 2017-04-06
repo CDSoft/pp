@@ -19,7 +19,7 @@
 PP - Generic preprocessor (with pandoc in mind)
 ===============================================
 
-[PP] is a text preprocessor designed for Pandoc (and more generally Markdown).
+[PP] is a text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText).
 
 The [PP] package used to contain three preprocessors for [Pandoc].
 
@@ -105,6 +105,10 @@ It starts with an initial environment containing:
   (currently only French (`fr`) and English (`en`) are supported)
 - a `format` variable containing the current output format
   (`html`, `pdf`, `odt`, `epub` or `mobi`)
+- a `dialect` variable containing the current dialect (`md` or `rst`)
+
+The dialect is used to format links and images in the output documents.
+Currently only Markdown and reStructuredText are supported.
 
 If no input file is specified, `pp` also preprocesses the standard input.
 
@@ -130,6 +134,9 @@ The user can define and undefine variables and list input files.
 
 **-html|-pdf|-odt|-epub|-mobi**
 :   changes the current output file format.
+
+**-md|-rst**
+:   changes the current dialect (`-md` is the default dialect).
 
 **-img=PREFIX**
 :   changes the prefix of the images output path.
@@ -249,11 +256,17 @@ syntax colorization.
 **`!format`**
 :   emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
 
+**`!dialect`**
+:   emits the current dialect (*md* or *rst*)
+
 **`!fr(...)`** or **`!en(...)`**
 :   emits some text only if the current language is *fr* or *en*
 
 **`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**
 :   emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
+
+**`!md`**, **`-rst`**
+:   emits some text only if the current dialect is *md* or *rst*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**
 :   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].
@@ -332,6 +345,11 @@ syntax colorization.
 **`!codeblock(LENGTH)[(CHAR)]`**
 :   sets the default line separator for code blocks.
     The default value is a 70 tilda row (`!codeclock(70)(~)`).
+
+**`!indent[(N)](BLOCK)`**
+:   Indents each line of a block with `n` spaces.
+    The default value of `n` is 4 spaces.
+
 }
 
 Diagram and script examples

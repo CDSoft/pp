@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Thursday 30 March 2017</p>
+<p class="date">Thursday 6 April 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -50,7 +50,7 @@
 </ul>
 </nav>
 <h1 id="pp---generic-preprocessor-with-pandoc-in-mind">PP - Generic preprocessor (with pandoc in mind)</h1>
-<p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is a text preprocessor designed for Pandoc (and more generally Markdown).</p>
+<p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is a text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText).</p>
 <p>The <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> package used to contain three preprocessors for <a href="http://pandoc.org/">Pandoc</a>.</p>
 <p>I started using Markdown and <a href="http://pandoc.org/">Pandoc</a> with <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a>. Then I wrote <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> to embed diagrams in Markdown documents. And finally <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> which merges the functionalities of <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a>.</p>
 <p><a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> are not included anymore in <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> as <code>pp</code> can now be used standalone. <code>dpp</code> and <code>gpp</code> can be found in the legacy <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> repository.</p>
@@ -101,7 +101,9 @@
 <li>the environment variables of the current process</li>
 <li>a <code>lang</code> variable containing the current langage (currently only French (<code>fr</code>) and English (<code>en</code>) are supported)</li>
 <li>a <code>format</code> variable containing the current output format (<code>html</code>, <code>pdf</code>, <code>odt</code>, <code>epub</code> or <code>mobi</code>)</li>
+<li>a <code>dialect</code> variable containing the current dialect (<code>md</code> or <code>rst</code>)</li>
 </ul>
+<p>The dialect is used to format links and images in the output documents. Currently only Markdown and reStructuredText are supported.</p>
 <p>If no input file is specified, <code>pp</code> also preprocesses the standard input.</p>
 <p>The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.</p>
 <dl>
@@ -122,6 +124,9 @@
 </dd>
 <dt><strong>-html|-pdf|-odt|-epub|-mobi</strong></dt>
 <dd>changes the current output file format.
+</dd>
+<dt><strong>-md|-rst</strong></dt>
+<dd>changes the current dialect (<code>-md</code> is the default dialect).
 </dd>
 <dt><strong>-img=PREFIX</strong></dt>
 <dd>changes the prefix of the images output path.
@@ -196,11 +201,17 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dt><strong><code>!format</code></strong></dt>
 <dd>emits the current format (<em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>)
 </dd>
+<dt><strong><code>!dialect</code></strong></dt>
+<dd>emits the current dialect (<em>md</em> or <em>rst</em>)
+</dd>
 <dt><strong><code>!fr(...)</code></strong> or <strong><code>!en(...)</code></strong></dt>
 <dd>emits some text only if the current language is <em>fr</em> or <em>en</em>
 </dd>
 <dt><strong><code>!html(...)</code></strong>, <strong><code>!pdf(...)</code></strong>, <strong><code>!odt(...)</code></strong>, <strong><code>!epub(...)</code></strong> or <strong><code>!mobi(...)</code></strong></dt>
 <dd>emits some text only if the current format is <em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>
+</dd>
+<dt><strong><code>!md</code></strong>, <strong><code>-rst</code></strong></dt>
+<dd>emits some text only if the current dialect is <em>md</em> or <em>rst</em>
 </dd>
 <dt><strong><code>!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)</code></strong></dt>
 <dd>renders a diagram with <a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">Ditaa</a>. See examples later. The name of the macro is the kind of diagram. The possible diagrams are: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>, <code>osage</code>, <code>uml</code> and <code>ditaa</code>.
@@ -260,6 +271,9 @@ And also finally &quot;Goodbye&quot;:
 </dd>
 <dt><strong><code>!codeblock(LENGTH)[(CHAR)]</code></strong></dt>
 <dd>sets the default line separator for code blocks. The default value is a 70 tilda row (<code>!codeclock(70)(~)</code>).
+</dd>
+<dt><strong><code>!indent[(N)](BLOCK)</code></strong></dt>
+<dd>Indents each line of a block with <code>n</code> spaces. The default value of <code>n</code> is 4 spaces.
 </dd>
 </dl>
 <h1 id="diagram-and-script-examples">Diagram and script examples</h1>

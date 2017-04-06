@@ -183,17 +183,34 @@ doc/pp.css: $(CACHE)/pp.css
 # tests
 #####################################################################
 
-.PHONY: test
-test: $(BUILD)/pp-test.output test/pp-test.ref
+.PHONY: test test-md test-rst
+
+test: test-md test-rst
+
+test-md: $(BUILD)/pp-test.output test/pp-test.ref
 	diff -b -B $^
-	@echo "Test passed!"
+	@echo "Markdown test passed!"
 
 $(BUILD)/pp-test.output: $(PP) doc/pp.css
 $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 ./$(PP) -img="[$(BUILD)/]img" -en -html $< > $@
+	TESTENVVAR=42 ./$(PP) -md -img="[$(BUILD)/]img" -en -html $< > $@
 	pandoc -S --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
 ref: $(BUILD)/pp-test.output
 	meld $< test/pp-test.ref 2>/dev/null
+
+test-rst: $(BUILD)/pp-test-rst.output test/pp-test-rst.ref
+	diff -b -B $^
+	@echo "reStructuredText test passed!"
+
+$(BUILD)/pp-test-rst.output: test/pp-test.rst
+	@mkdir -p $(BUILD)/img
+	TESTENVVAR=42 ./$(PP) -rst -img="[$(BUILD)/]img" -en -html $< > $@
+	pandoc -S --toc -c doc/pp.css -f rst -t html5 $@ -o $(@:.output=.html)
+
+.PHONY: ref-rst
+ref-rst: $(BUILD)/pp-test-rst.output
+	meld $< test/pp-test-rst.ref 2>/dev/null
+

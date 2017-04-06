@@ -1,0 +1,321 @@
+=================================
+ PP test file (reStructuredText)
+=================================
+
+Introduction
+============
+
+This document is a test file for ``pp``.
+It is preprocessed and compared with ``pp-test-rst.ref``.
+
+The document also computes the test results.
+
+    
+   
+
+
+
+
+
+Dialect, Output language and output format
+==========================================
+
+Dialect
+-------
+
+=================================== =================================================================
+The current dialect is rst:         OK
+Section for a markdown document:    OK
+Section for a rst document:         OK
+=================================== =================================================================
+
+Language
+--------
+
+=================================== =================================================================
+The current language is "en":       OK
+Section in english:                 OK
+Section in french:                  OK
+=================================== =================================================================
+
+Format
+------
+
+=================================== =================================================================
+The current format is HTML:         OK
+Section for an HTML document:       OK
+Section for a PDF document:         OK
+=================================== =================================================================
+
+Diagrams
+========
+
+The diagram test does not check the generated images, just the links in the output document.
+
+.. figure:: img/dot-test.png
+
+
+    Test of dot
+
+.. figure:: img/neato-test.png
+
+
+    Test of neato
+
+.. figure:: img/twopi-test.png
+
+
+    Test of twopi
+
+.. figure:: img/circo-test.png
+
+
+    Test of circo
+
+.. figure:: img/fdp-test.png
+
+
+    Test of fdp
+
+.. figure:: img/patchwork-test.png
+
+
+    Test of patchwork
+
+.. figure:: img/osage-test.png
+
+
+    Test of osage
+
+
+.. figure:: img/uml-test.png
+
+
+    Test of uml
+
+
+.. figure:: img/ditaa-test.png
+
+
+    Test of ditaa
+
+
+.. figure:: img/size_small.png
+    :width: 50
+
+
+    
+
+
+.. figure:: img/size_smallt.png
+    :width: 50
+
+
+    Small with title
+
+
+.. figure:: img/size_normal.png
+    :width: 100
+
+
+    
+
+
+.. figure:: img/size_normalt.png
+    :width: 100
+
+
+    Normal with title
+
+
+.. figure:: img/size_big.png
+    :width: 150
+
+
+    
+
+
+.. figure:: img/size_bigt.png
+    :width: 150
+
+
+    Big with title
+
+
+Literate programming
+====================
+
+Lets write and test a useful library:
+
+.. code-block:: c
+
+    
+    // This is a C library
+    @functionDeclarations
+
+
+
+
+.. code-block:: c
+
+    
+    // This is a C library
+    @functionImplementations
+
+
+
+
+The ``fib`` function computes Fibonacci's numbers:
+
+.. code-block:: C
+
+    
+    int fib(int n);
+
+
+
+
+.. code-block:: C
+
+    
+    int fib(int n)
+    {
+        return (n < 2) ? 1 : fib(n-1) + fib(n-2);
+    }
+
+
+
+
+The ``fact`` function computes factorial numbers:
+
+.. code-block:: C
+
+    int fact(int n);
+
+
+
+.. code-block:: C
+
+    
+    int fact(int n)
+    {
+        return (n <= 1) ? 1 : n * fact(n-1);
+    }
+
+
+
+
+Some tests of ``mylib.c``:
+
+.. code-block:: C
+
+    
+    #include <stdio.h>
+    #include <stdlib.h>
+    
+    #include "mylib.h"
+    
+    int main(int argc, char * argv[])
+    {
+        int i;
+        for (i = 1; i < argc; i++)
+        {
+            int n = atoi(argv[i]);
+            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
+        }
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
+``mylibtest 0 1 2 3 4 5`` outputs::
+
+    fact(0) =   1; fib(0) =   1
+    fact(1) =   1; fib(1) =   1
+    fact(2) =   2; fib(2) =   2
+    fact(3) =   6; fib(3) =   3
+    fact(4) =  24; fib(4) =   5
+    fact(5) = 120; fib(5) =   8
+
+
+mylibtest 0 1 2 3 4 5:     OK
+
+The complete source files are:
+
+``mylib.h``:
+
+.. code-block:: c
+
+    
+    // This is a C library
+    @functionDeclarations
+
+
+
+
+``mylib.c``:
+
+.. code-block:: c
+
+    
+    // This is a C library
+    @functionImplementations
+
+
+
+
+``mylibtest.c``:
+
+.. code-block:: C
+
+    
+    #include <stdio.h>
+    #include <stdlib.h>
+    
+    #include "mylib.h"
+    
+    int main(int argc, char * argv[])
+    {
+        int i;
+        for (i = 1; i < argc; i++)
+        {
+            int n = atoi(argv[i]);
+            printf("fact(%d) = %3d; fib(%d) = %3d\n", n, fact(n), n, fib(n));
+        }
+        return 0;
+    }
+
+
+
+
+A source file, not necessarily generated with \lit can be
+formated with \source or \src:
+
+``mylib.h``:
+
+.. code-block:: c
+
+    
+    // This is a C library
+    
+    int fib(int n);
+    int fact(int n);
+
+
+
+
+Test results
+============
+
+=============================== ========================
+Number of successful tests:     10
+Number of failures:             0
+=============================== ========================
+
+All tests passed!

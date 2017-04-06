@@ -50,3 +50,7 @@ arityError name arities = error $ "Arity error: " ++ name ++ " expects " ++ nb +
 -- raise a wrong codeblock specification error
 codeblockError :: t
 codeblockError = error "codeblock expects a length higher than 3 and either a tilda or a backtick."
+
+-- raise a wrong indentation specification error
+indentError :: t
+indentError = error "indent expects a length higher than 3."

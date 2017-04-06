@@ -33,6 +33,7 @@ data Var = Def String           -- user macro definition
          | EnvVar String        -- environment variable
          | Lang                 -- current language
          | FileFormat           -- current file format
+         | Dialect              -- current dialect
          | MainFile             -- main file name (given on the command line)
          | CurrentFile          -- current file name (can be included in other files)
          | LitFile FilePath     -- literate file name
@@ -64,15 +65,17 @@ getSymbol :: Env -> Var -> Val
 getSymbol env var = fromMaybe (Val "") (lookup var env)
 
 -- Build the initial environment
-initialEnvironment :: IO Env
-initialEnvironment = do
+initialEnvironment :: String -> String -> IO Env
+initialEnvironment defaultLang defaultDialect = do
     -- get $LANG (en, fr, ...)
     envVars <- getEnvironment
     let lang = case lookup "LANG" envVars of
-                    Just ('C':_) -> "en"
+                    Just ('C':_) -> defaultLang
                     Just val -> map toLower $ take 2 val
-                    Nothing -> ""
+                    Nothing -> defaultLang
     -- get $FORMAT (html, pdf, ...)
     let fmt = map toLower $ fromMaybe "" (lookup "FORMAT" envVars)
+    -- get $DIALECT (md, rst, ...)
+    let dial = map toLower $ fromMaybe defaultDialect (lookup "DIALECT" envVars)
     -- the initial environment contains the language, the format and the environment variables
-    return $ (Lang, Val lang) : (FileFormat, Val fmt) : [(EnvVar (envVarStorage name), Val val) | (name, val) <- envVars]
+    return $ (Lang, Val lang) : (FileFormat, Val fmt) : (Dialect, Val dial) : [(EnvVar (envVarStorage name), Val val) | (name, val) <- envVars]

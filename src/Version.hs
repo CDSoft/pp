@@ -65,6 +65,8 @@ help = unlines [
         "                       <lang> can be " ++ intercalate ", " langs,
         "  -<format>            Define the current target format",
         "                       <format> can be " ++ intercalate ", " formats,
+        "  -<dialect>           Define the current dialect",
+        "                       <dialect> can be " ++ intercalate ", " dialects,
         "  -img=<prefix>        Define the prefix to add to output image path",
         "Files:",
         "  filename             Preprocess an existing file",

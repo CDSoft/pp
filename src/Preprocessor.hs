@@ -88,6 +88,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("file", currentFile)
           , ("lang", currentLang)
           , ("format", currentFormat)
+          , ("dialect", currentDialect)
 
           , ("add", add)
 
@@ -95,6 +96,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
           , ("flushlit", flushlit)  , ("flushliterate", flushlit)
           , ("src", source)         , ("source", source)
           , ("codeblock", codeblock)
+          , ("indent", indent)
 
           ]
           ++ [ (diag, diagram Graphviz diag ""            "")             | diag <- graphvizDiagrams]
@@ -111,6 +113,7 @@ builtin = [ ("def", define)         , ("undef", undefine)
           ]
           ++ [ (lang, language lang) | lang <- langs]
           ++ [ (fmt, format fmt) | fmt <- formats]
+          ++ [ (dial, dialect dial) | dial <- dialects]
 
 -- "ppFile env name" preprocess a file using the current environment
 -- env returns an updated environment and the preprocessed output.
@@ -308,7 +311,7 @@ macropp macro env args = do
 
 -- language list
 langs :: [String]
-langs = words "fr en"
+langs = words "en fr"
 
 -- \lang returns the current language ("fr" or "en")
 currentLang :: Macro
@@ -343,6 +346,27 @@ format fmt env [src] = case lookup FileFormat env of
     Just val | fromVal val == fmt -> ppAndStrip env src
     _ -> return (env, "")
 format fmt _ _ = arityError fmt [1]
+
+---------------------------------------------------------------------
+-- Dialect macros
+---------------------------------------------------------------------
+
+-- dialect list
+dialects :: [String]
+dialects = words "md rst"
+
+-- \dialect returns the current dialect ("md" or "rst")
+currentDialect :: Macro
+currentDialect env [] = return (env, fromVal (getSymbol env Dialect))
+currentDialect _ _ = arityError "dialect" [0]
+
+-- dialect implements the macros \md, and \rst.
+-- dialect preprocesses src only if the current dialect is dial.
+dialect :: String -> Macro
+dialect dial env [src] = case lookup Dialect env of
+    Just val | fromVal val == dial -> ppAndStrip env src
+    _ -> return (env, "")
+dialect dial _ _ = arityError dial [1]
 
 ---------------------------------------------------------------------
 -- Generic preprocessing macros
@@ -545,7 +569,7 @@ atoi s = case reads s of
 -- Script macros
 ---------------------------------------------------------------------
 
--- try runs an IO action  on an executable and its arguments.
+-- try runs an IO action on an executable and its arguments.
 -- It returns the output of the IO action or raises an error.
 try :: (String -> [String] -> IO String) -> String -> [String] -> IO String
 try io exe args = do
@@ -622,10 +646,18 @@ diagram runtime diag header footer env [path, title, code] = do
             PlantUML -> do
                 plantuml <- resource "plantuml.jar" plantumlJar
                 try readProcessUTF8 "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
-    return (env, "!["++title'++"]("++url++")"++attrs)
+    let link = case fromVal $ getSymbol env Dialect of
+                "rst" -> unlines [".. figure:: " ++ url, indent' 4 attrs, "", "    " ++ title']
+                _ -> "!["++title'++"]("++url++")"++attrs
+    return (env, link) -- TODO: à formater en fonction du dialecte
 diagram runtime diag header footer env [path, code] =
     diagram runtime diag header footer env [path, Val "", code]
 diagram _ diag _ _ _ _ = arityError diag [2, 3]
+
+-- indent' n block adds n space at the beginning of every lines in block
+indent' :: Int -> String -> String
+indent' n = unlines . map (replicate n ' ' ++) . lines
+
 
 -- parseImageAttributes extracts path to generate the scripts and images
 -- and path to put in the markdown link.
@@ -651,7 +683,10 @@ parseImageAttributes env s = ( localPath ++ ".gv"
             in parseLocalAndLink cs' (local++xs) link
         parseLocalAndLink ('{':cs) local link =
             let (xs, _) = extract '}' cs
-            in (strip local, strip link, "{" ++ strip xs ++ "}")
+                imgAttrs = case fromVal $ getSymbol env Dialect of
+                            "rst" -> unlines $ filter (not . null) $ map strip $ lines xs
+                            _ -> "{" ++ strip xs ++ "}"
+            in (strip local, strip link, imgAttrs)
         parseLocalAndLink cs local link =
             let (xs, cs') = span (`notElem` "([{") cs
                 xs' = map (\c -> if c == '\\' then '/' else c) xs
@@ -789,7 +824,7 @@ source _ _ = arityError "src" [1, 2]
 
 codeblock :: Macro
 
--- "codeblock env len ch" stores the new codeblock separator (ch repeated len times)
+-- "\codeblock(len)(ch)" stores the new codeblock separator (ch repeated len times)
 codeblock env [len, ch] = do
     len' <- (fromIntegral . atoi) <$> ppAndStrip' env len
     when (len' < 3) $ codeblockError
@@ -799,10 +834,24 @@ codeblock env [len, ch] = do
                 _ -> codeblockError
     return ((CodeBlock, Val line) : clean CodeBlock env, "")
 
--- "codeblock env len" stores the new codeblock separator ('~' repeated len times)
+-- "\codeblock(len" stores the new codeblock separator ('~' repeated len times)
 codeblock env [len] = codeblock env [len, Val "~"]
 
 codeblock _ _ = arityError "codeblock" [1, 2]
+
+indent :: Macro
+
+-- "\indent(n)(block)" indents block by n spaces (n is optional)
+indent env [n, block] = do
+    n' <- (fromIntegral . atoi) <$> ppAndStrip' env n
+    when (n' < 3) $ indentError
+    (env', block') <- pp env (fromVal block)
+    return (env', indent' n' block')
+
+-- "\indent(block)" indents block by n spaces (n is optional)
+indent env [block] = indent env [Val "4", block]
+
+indent _ _ = arityError "indent" [1, 2]
 
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
@@ -824,10 +873,20 @@ litAppend env name lang content = env''
 -- "litShow lang content" format content using the language lang.
 -- The real format will be made by Pandoc.
 litShow :: Env -> Maybe String -> String -> String
-litShow env lang content = case lang of
-            Just lang' -> unlines [codeBlock ++ " {." ++ lang' ++ "}", content, codeBlock]
-            Nothing    -> unlines [codeBlock, content, codeBlock]
+litShow env lang content = formatedBlock
     where
+        formatedBlock = case fromVal $ getSymbol env Dialect of
+            "rst"   -> reStructuredTextBlock
+            _       -> markdownBlock
+
+        markdownBlock = case lang of
+            Just lang'  -> unlines [codeBlock ++ " {." ++ lang' ++ "}", content, codeBlock]
+            Nothing     -> unlines [codeBlock, content, codeBlock]
+
+        reStructuredTextBlock = case lang of
+            Just lang'  -> unlines [ ".. code-block:: " ++ lang', "", indent' 4 content, ""]
+            Nothing     -> unlines [ ".. code-block:: none", "", indent' 4 content, ""]
+
         codeBlock = case lookup CodeBlock env of
                         Just (Val line) -> line
                         Just (Block line) -> line
