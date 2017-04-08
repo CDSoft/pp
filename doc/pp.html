@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Thursday 6 April 2017</p>
+<p class="date">Saturday 8 April 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -146,6 +146,7 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <p>The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming, diagrams or scripts (see examples later). Code block arguments are not stripped to preserve leading and ending spaces or blank lines.</p>
 <p>Arguments can be on separate lines but must not be separated by blank lines.</p>
 <p>You can choose the syntax that works better with your favorite editor and syntax colorization.</p>
+<p>For most of the macros, arguments are preprocessed before executing the macro. The result of the macros are not preprocessed (unless if they are parameters of an outer macro). The <code>include</code> macro is an exception. Its output is also preprocessed. The <code>rawinclude</code> macro can include a file without preprocessing it.</p>
 <dl>
 <dt><strong><code>!def[ine](SYMBOL)[(VALUE)]</code></strong></dt>
 <dd>Add the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> … <code>!n</code> in <code>VALUE</code>.
@@ -181,10 +182,10 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dd><code>pp</code> forces the evaluation of <code>TEXT</code>. This macro is useful to preprocess the output of script macros for instance (<code>sh</code>, <code>python</code>, …).
 </dd>
 <dt><strong><code>!exec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
-<dd>executes a shell command (with the current <code>sh</code> shell) and preprocesses the output of the command. This macro is deprecated. Consider using <code>sh</code> instead.
+<dd>executes a shell command (with the current <code>sh</code> shell). This macro is deprecated. Consider using <code>sh</code> instead.
 </dd>
 <dt><strong><code>!rawexec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
-<dd>as <code>!exec(COMMAND)</code> but the output is not preprocessed by <code>pp</code>. This macro is deprecated. Consider using <code>sh</code> instead.
+<dd>as <code>!exec(COMMAND)</code>. This macro is deprecated. Consider using <code>sh</code> instead.
 </dd>
 <dt><strong><code>!mdate(FILES)</code></strong></dt>
 <dd>returns the modification date of the most recent file.

@@ -66,18 +66,18 @@ charsBlock = ['~', '`']
 
 -- list of builtin macros
 builtin :: [(String, Macro)]
-builtin = [ ("def", define)         , ("undef", undefine)
-          , ("define", define)      , ("undefine", undefine)
-          , ("ifdef", ifdef)        , ("ifndef", ifndef)
-          , ("ifeq", ifeq)          , ("ifne", ifne)
+builtin = [ ("def", define "def")           , ("undef", undefine "undef")
+          , ("define", define "define")     , ("undefine", undefine "undefine")
+          , ("ifdef", ifdef)                , ("ifndef", ifndef)
+          , ("ifeq", ifeq)                  , ("ifne", ifne)
           , ("rawdef", rawdef)
 
-          , ("inc", include)        , ("include", include)
+          , ("inc", include "inc")          , ("include", include "include")
           , ("raw", raw)
-          , ("rawinc", rawinc)      , ("rawinclude", rawinc)
+          , ("rawinc", rawinc "rawinc")     , ("rawinclude", rawinc "rawinclude")
 
-          , ("exec",    macropp (script "exec"    "sh" "" ".sh"))               -- deprecated
-          , ("rawexec", script "rawexec" "sh" "" ".sh")                         -- deprecated
+          , ("exec",    script "exec"    "sh" "" ".sh")             -- deprecated
+          , ("rawexec", script "rawexec" "sh" "" ".sh")             -- deprecated
           , ("pp", forcepp)
 
           , ("mdate", mdate)
@@ -375,19 +375,19 @@ dialect dial _ _ = arityError dial [1]
 -- \define(name)(value) adds (Def name, value) to the environment.
 -- name is preprocessed but not value. The value of the macro is preprocessed
 -- when the macro is evaluated (to allow macros with parameters).
-define :: Macro
-define env [name, value] = do
+define :: String -> Macro
+define _ env [name, value] = do
     name' <- ppAndStrip' env name
     return ((Def name', value) : clean (Def name') env, "")
-define env [name] = define env [name, Val ""]
-define _ _ = arityError "define" [1,2]
+define macro env [name] = define macro env [name, Val ""]
+define macro _ _ = arityError macro [1,2]
 
 -- \undefine(name) removes (Def name) from the environment
-undefine :: Macro
-undefine env [name] = do
+undefine :: String -> Macro
+undefine _ env [name] = do
     name' <- ppAndStrip' env name
     return (clean (Def name') env, "")
-undefine _ _ = arityError "undefine" [1]
+undefine macro _ _ = arityError macro [1]
 
 -- \ifdef(name)(t)(e) preprocesses name. If the result is the name of an
 -- already defined symbol in the environment, it preprocessed t, otherwise e.
@@ -434,9 +434,9 @@ rawdef env [name] = do
 rawdef _ _ = arityError "rawdef" [1]
 
 -- \include(name) preprocesses name, locates the file and preprocesses its content
-include :: Macro
-include env [name] = ppAndStrip' env name >>= locateFile env >>= ppFile env
-include _ _ = arityError "include" [1]
+include :: String -> Macro
+include _ env [name] = ppAndStrip' env name >>= locateFile env >>= ppFile env
+include name _ _ = arityError name [1]
 
 -- "locateFile env name" searches for a file in the directory of the main file
 -- or in the directory of the current file or in the current directory
@@ -457,11 +457,11 @@ raw env [src] = return (env, fromVal src)
 raw _ _ = arityError "raw" [1]
 
 -- \rawinclude(name) preprocesses name, locates the file and emits it unpreprocessed
-rawinc :: Macro
-rawinc env [name] = do
+rawinc :: String -> Macro
+rawinc _ env [name] = do
     doc <- ppAndStrip' env name >>= locateFile env >>= readFileUTF8
     return (env, doc)
-rawinc _ _ = arityError "rawinclude" [1]
+rawinc name _ _ = arityError name [1]
 
 -- \pp(text) preprocesses text. text can be the output of a script macro containing generated macro calls
 forcepp :: Macro
@@ -534,12 +534,12 @@ currentFile _ _ = arityError "file" [0]
 ---------------------------------------------------------------------
 
 -- \env(name) preprocesses name, reads an environment variable (in env)
--- and preprocessed the value of the environment variable.
+-- and emits the value of the environment variable.
 readEnv :: Macro
 readEnv env [name] = do
     name' <- ppAndStrip' env name
     case lookup (EnvVar (envVarStorage name')) env of
-        Just val -> ppAndStrip env val
+        Just val -> return (env, fromVal val)
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
 

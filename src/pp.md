@@ -184,6 +184,12 @@ Arguments can be on separate lines but must not be separated by blank lines.
 You can choose the syntax that works better with your favorite editor and
 syntax colorization.
 
+For most of the macros, arguments are preprocessed before executing the macro.
+The result of the macros are not preprocessed (unless if they are parameters of
+an outer macro).
+The `include` macro is an exception. Its output is also preprocessed.
+The `rawinclude` macro can include a file without preprocessing it.
+
 **`!def[ine](SYMBOL)[(VALUE)]`**
 :   Add the symbol `SYMBOL` to the current environment
     and associate it with the optional value `VALUE`.
@@ -232,12 +238,11 @@ syntax colorization.
     for instance (`sh`, `python`, ...).
 
 **`!exec(COMMAND)`** (*deprecated*)
-:   executes a shell command (with the current `sh` shell) and
-    preprocesses the output of the command.
+:   executes a shell command (with the current `sh` shell).
     This macro is deprecated. Consider using `sh` instead.
 
 **`!rawexec(COMMAND)`** (*deprecated*)
-:   as `!exec(COMMAND)` but the output is not preprocessed by `pp`.
+:   as `!exec(COMMAND)`.
     This macro is deprecated. Consider using `sh` instead.
 
 **`!mdate(FILES)`**
