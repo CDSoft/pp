@@ -106,14 +106,14 @@ preprocessed `FILE` but discards its output. It only keeps macro definitions and
 
 Other arguments are filenames.
 
-Files are read and preprocessed using the current state of the environment. The special file name `"-"` can be used to preprocess the standard input.
+Files are read and preprocessed using the current state of the environment. The special file name "`-`" can be used to preprocess the standard input.
 
 Macros
 ------
 
 Built-in macros are hard coded in `pp`. User defined macros are simple text substitutions that may have any number of parameters (named `!1` to `!n`). User macros can be redefined on the command line or in the documents.
 
-To get the value of a variable you just have to write its name after a `'!'` or `'\'`. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:
+To get the value of a variable you just have to write its name after a "`!`" or "`\`". Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:
 
     \macro(x)(y)
 
@@ -144,10 +144,10 @@ if `SYMBOL` is defined in the current environnement `pp` preprocesses `TEXT_IF_D
 if `SYMBOL` is not defined in the current environnement `pp` preprocesses `TEXT_IF_NOT_DEFINED`. Otherwise it preprocesses `TEXT_IF_DEFINED`.
 
 **`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]`**  
-if `X` and 'Y' are equal `pp` preprocesses `TEXT_IF_EQUAL`. Otherwise it preprocesses `TEXT_IF_DIFFERENT`. Two pieces of text are equal if all characters are the same, spaces are ignored.
+if `X` and `Y` are equal `pp` preprocesses `TEXT_IF_EQUAL`. Otherwise it preprocesses `TEXT_IF_DIFFERENT`. Two pieces of text are equal if all characters are the same, spaces are ignored.
 
 **`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]`**  
-if `X` and 'Y' are different `pp` preprocesses `TEXT_IF_DIFFERENT`. Otherwise it preprocesses `TEXT_IF_EQUAL`.
+if `X` and `Y` are different `pp` preprocesses `TEXT_IF_DIFFERENT`. Otherwise it preprocesses `TEXT_IF_EQUAL`.
 
 **`!rawdef(X)`**  
 get the raw (unevaluated) definition of `X`
@@ -211,7 +211,7 @@ emits some text only if the current language is *fr* or *en*
 **`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**  
 emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
 
-**`!md`**, **`-rst`**  
+**`!md`**, **`!rst`**  
 emits some text only if the current dialect is *md* or *rst*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
@@ -221,7 +221,7 @@ renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plant
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
 **`!bat(SCRIPT)`** (*deprecated*)  
-same as `cmd`.
+same as `!cmd`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
 appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
@@ -267,7 +267,7 @@ Example:
 emits the current content of `FILENAME`.
 
 **`!flushlit[erate]`**  
-writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with !src.
+writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with `!src`.
 
 **`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**  
 formats an existing source file in a colorized code block.
