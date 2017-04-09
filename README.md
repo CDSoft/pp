@@ -83,10 +83,10 @@ displays some help and exits
 **-v**  
 displays the current version and exits
 
-**-DSYMBOL\[=VALUE\]**  
+**-DSYMBOL\[=VALUE\]** or **-D SYMBOL\[=VALUE\]**  
 adds the symbol `SYMBOL` to the current environment and associates it to the optional value `VALUE`. If value is not given the symbol is simply defined with an empty value
 
-**-USYMBOL**  
+**-USYMBOL** or **-U SYMBOL**  
 removes the symbol `SYMBOL` from the current environment.
 
 **-fr|-en**  
@@ -98,8 +98,11 @@ changes the current output file format.
 **-md|-rst**  
 changes the current dialect (`-md` is the default dialect).
 
-**-img=PREFIX**  
+**-img=PREFIX** or **-img PREFIX**  
 changes the prefix of the images output path.
+
+**-import=FILE** or **-import FILE**  
+preprocessed `FILE` but discards its output. It only keeps macro definitions and other side effects.
 
 Other arguments are filenames.
 
@@ -152,6 +155,9 @@ get the raw (unevaluated) definition of `X`
 **`!inc[lude](FILENAME)`**  
 `pp` preprocesses the content of the file named `FILENAME` and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 
+**\`!import(FILENAME)**  
+works as `!include(FILENAME)` but no text is emited. This is useful to import macro definitions.
+
 **`!raw(TEXT)`**  
 `pp` emits `TEXT` without any preprocessing.
 
@@ -160,6 +166,20 @@ get the raw (unevaluated) definition of `X`
 
 **`!pp(TEXT)`**  
 `pp` forces the evaluation of `TEXT`. This macro is useful to preprocess the output of script macros for instance (`sh`, `python`, ...).
+
+**`!comment(TEXT)`** or \*\*`!comment(TITLE)(TEXT)`  
+considers `TEXT` as comment. Nothing is preprocessed or emited. `TITLE` is also ignored.
+
+Example:
+
+    !comment(This is the title of the comment)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    And this is a useful description of some
+    macro definitions.
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**`!quiet(TEXT)`**  
+quietly preprocess `TEXT` and emits nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 
 **`!exec(COMMAND)`** (*deprecated*)  
 executes a shell command (with the current `sh` shell). This macro is deprecated. Consider using `sh` instead.

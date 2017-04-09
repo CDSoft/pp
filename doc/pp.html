@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Saturday 8 April 2017</p>
+<p class="date">Sunday 9 April 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -113,10 +113,10 @@
 <dt><strong>-v</strong></dt>
 <dd>displays the current version and exits
 </dd>
-<dt><strong>-DSYMBOL[=VALUE]</strong></dt>
+<dt><strong>-DSYMBOL[=VALUE]</strong> or <strong>-D SYMBOL[=VALUE]</strong></dt>
 <dd>adds the symbol <code>SYMBOL</code> to the current environment and associates it to the optional value <code>VALUE</code>. If value is not given the symbol is simply defined with an empty value
 </dd>
-<dt><strong>-USYMBOL</strong></dt>
+<dt><strong>-USYMBOL</strong> or <strong>-U SYMBOL</strong></dt>
 <dd>removes the symbol <code>SYMBOL</code> from the current environment.
 </dd>
 <dt><strong>-fr|-en</strong></dt>
@@ -128,8 +128,11 @@
 <dt><strong>-md|-rst</strong></dt>
 <dd>changes the current dialect (<code>-md</code> is the default dialect).
 </dd>
-<dt><strong>-img=PREFIX</strong></dt>
+<dt><strong>-img=PREFIX</strong> or <strong>-img PREFIX</strong></dt>
 <dd>changes the prefix of the images output path.
+</dd>
+<dt><strong>-import=FILE</strong> or <strong>-import FILE</strong></dt>
+<dd>preprocessed <code>FILE</code> but discards its output. It only keeps macro definitions and other side effects.
 </dd>
 </dl>
 <p>Other arguments are filenames.</p>
@@ -172,6 +175,9 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dt><strong><code>!inc[lude](FILENAME)</code></strong></dt>
 <dd><code>pp</code> preprocesses the content of the file named <code>FILENAME</code> and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 </dd>
+<dt><strong>`!import(FILENAME)</strong></dt>
+<dd>works as <code>!include(FILENAME)</code> but no text is emited. This is useful to import macro definitions.
+</dd>
 <dt><strong><code>!raw(TEXT)</code></strong></dt>
 <dd><code>pp</code> emits <code>TEXT</code> without any preprocessing.
 </dd>
@@ -180,6 +186,18 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 </dd>
 <dt><strong><code>!pp(TEXT)</code></strong></dt>
 <dd><code>pp</code> forces the evaluation of <code>TEXT</code>. This macro is useful to preprocess the output of script macros for instance (<code>sh</code>, <code>python</code>, …).
+</dd>
+<dt><strong><code>!comment(TEXT)</code></strong> or **<code>!comment(TITLE)(TEXT)</code></dt>
+<dd><p>considers <code>TEXT</code> as comment. Nothing is preprocessed or emited. <code>TITLE</code> is also ignored.</p>
+<p>Example:</p>
+<pre><code>!comment(This is the title of the comment)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+And this is a useful description of some
+macro definitions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
+</dd>
+<dt><strong><code>!quiet(TEXT)</code></strong></dt>
+<dd>quietly preprocess <code>TEXT</code> and emits nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 </dd>
 <dt><strong><code>!exec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
 <dd>executes a shell command (with the current <code>sh</code> shell). This macro is deprecated. Consider using <code>sh</code> instead.

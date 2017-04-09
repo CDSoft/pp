@@ -72,9 +72,13 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("ifeq", ifeq)                  , ("ifne", ifne)
           , ("rawdef", rawdef)
 
+          , ("import", importFile)
           , ("inc", include "inc")          , ("include", include "include")
           , ("raw", raw)
           , ("rawinc", rawinc "rawinc")     , ("rawinclude", rawinc "rawinclude")
+
+          , ("comment", comment)
+          , ("quiet", quiet)
 
           , ("exec",    script "exec"    "sh" "" ".sh")             -- deprecated
           , ("rawexec", script "rawexec" "sh" "" ".sh")             -- deprecated
@@ -438,6 +442,15 @@ include :: String -> Macro
 include _ env [name] = ppAndStrip' env name >>= locateFile env >>= ppFile env
 include name _ _ = arityError name [1]
 
+-- \import(name) preprocesses name, locates the file, preprocesses its content
+-- Only side effect (e.g. macro definitions) are kept in th environment.
+-- Nothing is emited.
+importFile :: Macro
+importFile env [name] = do
+    (env', _) <- ppAndStrip' env name >>= locateFile env >>= ppFile env
+    return (env', "")
+importFile _ _ = arityError "import" [1]
+
 -- "locateFile env name" searches for a file in the directory of the main file
 -- or in the directory of the current file or in the current directory
 locateFile :: Env -> FilePath -> IO FilePath
@@ -470,6 +483,21 @@ forcepp env [text] = do
     (env'', text'') <- pp env' text'
     return (env'', text'')
 forcepp _ _ = arityError "pp" [1]
+
+-- \comment[(title)](text) ignores title and text (just comments, no preprocessing)
+comment :: Macro
+comment env [_text] = return (env, "")
+comment env [_title, _text] = return (env, "")
+comment _ _ = arityError "comment" [1, 2]
+
+-- \comment[(title)](text) ignores title and preprocesses text
+-- The output of text is silently discarded, only side effects are kept in the environment.
+quiet :: Macro
+quiet env [text] = do
+    (env', _) <- ppAndStrip env text
+    return (env', "")
+quiet env [_title, text] = quiet env [text]
+quiet _ _ = arityError "quiet" [1, 2]
 
 ---------------------------------------------------------------------
 -- File macros
