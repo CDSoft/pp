@@ -224,7 +224,7 @@ executes a script and emits its output. The possible programming languages are `
 same as `!cmd`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
-appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
+appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
 
 **`!lit[erate](FILENAME)(CONTENT)`**  
 appends `CONTENT` to the file `FILENAME`. The output is highlighted using the previously given language for this file.
