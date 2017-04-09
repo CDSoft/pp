@@ -7,7 +7,7 @@ The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package u
 
 I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") to embed diagrams in Markdown documents. And finally [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which merges the functionalities of [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
 
-[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") are not included anymore in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") repository.
+[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") are no longer included in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") repository.
 
 `pp` now implements:
 
@@ -19,7 +19,7 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 Open source
 ===========
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Any body can contribute on [GitHub](https://github.com/CDSoft/pp) to:
+[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Anybody can contribute on [GitHub](https://github.com/CDSoft/pp) to:
 
 -   suggest or add new functionalities
 -   report or fix bugs
@@ -33,7 +33,7 @@ Installation
 
 **Compilation**:
 
-1.  Download and extract [pp.tgz](http://cdsoft.fr/pp/pp.tgz).
+1.  Download and extract "[pp.tgz](http://cdsoft.fr/pp/pp.tgz)".
 2.  Run `make dep` to install Haskell required packages.
 3.  Run `make`.
 
@@ -224,7 +224,7 @@ executes a script and emits its output. The possible programming languages are `
 same as `!cmd`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
-appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
+appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features.
 
 **`!lit[erate](FILENAME)(CONTENT)`**  
 appends `CONTENT` to the file `FILENAME`. The output is highlighted using the previously given language for this file.
