@@ -7,7 +7,7 @@ The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") package u
 
 I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") to embed diagrams in Markdown documents. And finally [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which merges the functionalities of [GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
 
-[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") are not included anymore in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") repository.
+[GPP](http://en.nothingisreal.com/wiki/GPP) and [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") are no longer included in [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as `pp` can now be used standalone. `dpp` and `gpp` can be found in the legacy [DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") repository.
 
 `pp` now implements:
 
@@ -19,7 +19,7 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 Open source
 ===========
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Any body can contribute on [GitHub](https://github.com/CDSoft/pp) to:
+[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Anybody can contribute on [GitHub](https://github.com/CDSoft/pp) to:
 
 -   suggest or add new functionalities
 -   report or fix bugs
@@ -77,43 +77,43 @@ If no input file is specified, `pp` also preprocesses the standard input.
 
 The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.
 
-**-h**  
+**`-h`**  
 displays some help and exits
 
-**-v**  
+**`-v`**  
 displays the current version and exits
 
-**-DSYMBOL\[=VALUE\]** or **-D SYMBOL\[=VALUE\]**  
+**`-DSYMBOL[=VALUE]`** or **`-D SYMBOL[=VALUE]`**  
 adds the symbol `SYMBOL` to the current environment and associates it to the optional value `VALUE`. If value is not given the symbol is simply defined with an empty value
 
-**-USYMBOL** or **-U SYMBOL**  
+**`-USYMBOL`** or **`-U SYMBOL`**  
 removes the symbol `SYMBOL` from the current environment.
 
-**-fr|-en**  
+**`-fr`|`-en`**  
 changes the current language.
 
-**-html|-pdf|-odt|-epub|-mobi**  
+**`-html`|`-pdf`|`-odt`|`-epub`|`-mobi`**  
 changes the current output file format.
 
-**-md|-rst**  
+**`-md`|`-rst`**  
 changes the current dialect (`-md` is the default dialect).
 
-**-img=PREFIX** or **-img PREFIX**  
+**`-img=PREFIX`** or **`-img PREFIX`**  
 changes the prefix of the images output path.
 
-**-import=FILE** or **-import FILE**  
+**`-import=FILE`** or **`-import FILE`**  
 preprocessed `FILE` but discards its output. It only keeps macro definitions and other side effects.
 
 Other arguments are filenames.
 
-Files are read and preprocessed using the current state of the environment. The special file name `"-"` can be used to preprocess the standard input.
+Files are read and preprocessed using the current state of the environment. The special file name "`-`" can be used to preprocess the standard input.
 
 Macros
 ------
 
 Built-in macros are hard coded in `pp`. User defined macros are simple text substitutions that may have any number of parameters (named `!1` to `!n`). User macros can be redefined on the command line or in the documents.
 
-To get the value of a variable you just have to write its name after a `'!'` or `'\'`. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:
+To get the value of a variable you just have to write its name after a '`!`' or '`\`'. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:
 
     \macro(x)(y)
 
@@ -144,10 +144,10 @@ if `SYMBOL` is defined in the current environnement `pp` preprocesses `TEXT_IF_D
 if `SYMBOL` is not defined in the current environnement `pp` preprocesses `TEXT_IF_NOT_DEFINED`. Otherwise it preprocesses `TEXT_IF_DEFINED`.
 
 **`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]`**  
-if `X` and 'Y' are equal `pp` preprocesses `TEXT_IF_EQUAL`. Otherwise it preprocesses `TEXT_IF_DIFFERENT`. Two pieces of text are equal if all characters are the same, spaces are ignored.
+if `X` and `Y` are equal `pp` preprocesses `TEXT_IF_EQUAL`. Otherwise it preprocesses `TEXT_IF_DIFFERENT`. Two pieces of text are equal if all characters are the same, spaces are ignored.
 
 **`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]`**  
-if `X` and 'Y' are different `pp` preprocesses `TEXT_IF_DIFFERENT`. Otherwise it preprocesses `TEXT_IF_EQUAL`.
+if `X` and `Y` are different `pp` preprocesses `TEXT_IF_DIFFERENT`. Otherwise it preprocesses `TEXT_IF_EQUAL`.
 
 **`!rawdef(X)`**  
 get the raw (unevaluated) definition of `X`
@@ -155,7 +155,7 @@ get the raw (unevaluated) definition of `X`
 **`!inc[lude](FILENAME)`**  
 `pp` preprocesses the content of the file named `FILENAME` and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 
-**\`!import(FILENAME)**  
+**`!import(FILENAME)`**  
 works as `!include(FILENAME)` but no text is emited. This is useful to import macro definitions.
 
 **`!raw(TEXT)`**  
@@ -167,7 +167,7 @@ works as `!include(FILENAME)` but no text is emited. This is useful to import ma
 **`!pp(TEXT)`**  
 `pp` forces the evaluation of `TEXT`. This macro is useful to preprocess the output of script macros for instance (`sh`, `python`, ...).
 
-**`!comment(TEXT)`** or \*\*`!comment(TITLE)(TEXT)`  
+**`!comment(TEXT)`** or **`!comment(TITLE)(TEXT)`**  
 considers `TEXT` as comment. Nothing is preprocessed or emited. `TITLE` is also ignored.
 
 Example:
@@ -211,7 +211,7 @@ emits some text only if the current language is *fr* or *en*
 **`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**  
 emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
 
-**`!md`**, **`-rst`**  
+**`!md`**, **`!rst`**  
 emits some text only if the current dialect is *md* or *rst*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
@@ -221,10 +221,10 @@ renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plant
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
 **`!bat(SCRIPT)`** (*deprecated*)  
-same as `cmd`.
+same as `!cmd`.
 
 **`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
-appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc -v`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
+appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features.
 
 **`!lit[erate](FILENAME)(CONTENT)`**  
 appends `CONTENT` to the file `FILENAME`. The output is highlighted using the previously given language for this file.
@@ -267,7 +267,7 @@ Example:
 emits the current content of `FILENAME`.
 
 **`!flushlit[erate]`**  
-writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with !src.
+writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with `!src`.
 
 **`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**  
 formats an existing source file in a colorized code block.

@@ -53,7 +53,7 @@
 <p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is a text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText).</p>
 <p>The <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> package used to contain three preprocessors for <a href="http://pandoc.org/">Pandoc</a>.</p>
 <p>I started using Markdown and <a href="http://pandoc.org/">Pandoc</a> with <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a>. Then I wrote <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> to embed diagrams in Markdown documents. And finally <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> which merges the functionalities of <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a>.</p>
-<p><a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> are not included anymore in <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> as <code>pp</code> can now be used standalone. <code>dpp</code> and <code>gpp</code> can be found in the legacy <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> repository.</p>
+<p><a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> are no longer included in <a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> as <code>pp</code> can now be used standalone. <code>dpp</code> and <code>gpp</code> can be found in the legacy <a href="http://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> repository.</p>
 <p><code>pp</code> now implements:</p>
 <ul>
 <li>macros</li>
@@ -62,7 +62,7 @@
 <li><a href="https://www.gnu.org/software/bash/">Bash</a>, <a href="https://en.wikipedia.org/wiki/Cmd.exe">Bat</a>, <a href="https://www.python.org/">Python</a> and <a href="https://www.haskell.org/">Haskell</a> scripts</li>
 </ul>
 <h1 id="open-source">Open source</h1>
-<p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is an Open source software. Any body can contribute on <a href="https://github.com/CDSoft/pp">GitHub</a> to:</p>
+<p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is an Open source software. Anybody can contribute on <a href="https://github.com/CDSoft/pp">GitHub</a> to:</p>
 <ul>
 <li>suggest or add new functionalities</li>
 <li>report or fix bugs</li>
@@ -107,39 +107,39 @@
 <p>If no input file is specified, <code>pp</code> also preprocesses the standard input.</p>
 <p>The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.</p>
 <dl>
-<dt><strong>-h</strong></dt>
+<dt><strong><code>-h</code></strong></dt>
 <dd>displays some help and exits
 </dd>
-<dt><strong>-v</strong></dt>
+<dt><strong><code>-v</code></strong></dt>
 <dd>displays the current version and exits
 </dd>
-<dt><strong>-DSYMBOL[=VALUE]</strong> or <strong>-D SYMBOL[=VALUE]</strong></dt>
+<dt><strong><code>-DSYMBOL[=VALUE]</code></strong> or <strong><code>-D SYMBOL[=VALUE]</code></strong></dt>
 <dd>adds the symbol <code>SYMBOL</code> to the current environment and associates it to the optional value <code>VALUE</code>. If value is not given the symbol is simply defined with an empty value
 </dd>
-<dt><strong>-USYMBOL</strong> or <strong>-U SYMBOL</strong></dt>
+<dt><strong><code>-USYMBOL</code></strong> or <strong><code>-U SYMBOL</code></strong></dt>
 <dd>removes the symbol <code>SYMBOL</code> from the current environment.
 </dd>
-<dt><strong>-fr|-en</strong></dt>
+<dt><strong><code>-fr</code>|<code>-en</code></strong></dt>
 <dd>changes the current language.
 </dd>
-<dt><strong>-html|-pdf|-odt|-epub|-mobi</strong></dt>
+<dt><strong><code>-html</code>|<code>-pdf</code>|<code>-odt</code>|<code>-epub</code>|<code>-mobi</code></strong></dt>
 <dd>changes the current output file format.
 </dd>
-<dt><strong>-md|-rst</strong></dt>
+<dt><strong><code>-md</code>|<code>-rst</code></strong></dt>
 <dd>changes the current dialect (<code>-md</code> is the default dialect).
 </dd>
-<dt><strong>-img=PREFIX</strong> or <strong>-img PREFIX</strong></dt>
+<dt><strong><code>-img=PREFIX</code></strong> or <strong><code>-img PREFIX</code></strong></dt>
 <dd>changes the prefix of the images output path.
 </dd>
-<dt><strong>-import=FILE</strong> or <strong>-import FILE</strong></dt>
+<dt><strong><code>-import=FILE</code></strong> or <strong><code>-import FILE</code></strong></dt>
 <dd>preprocessed <code>FILE</code> but discards its output. It only keeps macro definitions and other side effects.
 </dd>
 </dl>
 <p>Other arguments are filenames.</p>
-<p>Files are read and preprocessed using the current state of the environment. The special file name <code>&quot;-&quot;</code> can be used to preprocess the standard input.</p>
+<p>Files are read and preprocessed using the current state of the environment. The special file name “<code>-</code>” can be used to preprocess the standard input.</p>
 <h2 id="macros">Macros</h2>
 <p>Built-in macros are hard coded in <code>pp</code>. User defined macros are simple text substitutions that may have any number of parameters (named <code>!1</code> to <code>!n</code>). User macros can be redefined on the command line or in the documents.</p>
-<p>To get the value of a variable you just have to write its name after a <code>'!'</code> or <code>'\'</code>. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>\foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:</p>
+<p>To get the value of a variable you just have to write its name after a ‘<code>!</code>’ or ‘<code>\</code>’. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>\foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:</p>
 <pre><code>\macro(x)(y)
 
 [link]: foo bar
@@ -164,10 +164,10 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dd>if <code>SYMBOL</code> is not defined in the current environnement <code>pp</code> preprocesses <code>TEXT_IF_NOT_DEFINED</code>. Otherwise it preprocesses <code>TEXT_IF_DEFINED</code>.
 </dd>
 <dt><strong><code>!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]</code></strong></dt>
-<dd>if <code>X</code> and ‘Y’ are equal <code>pp</code> preprocesses <code>TEXT_IF_EQUAL</code>. Otherwise it preprocesses <code>TEXT_IF_DIFFERENT</code>. Two pieces of text are equal if all characters are the same, spaces are ignored.
+<dd>if <code>X</code> and <code>Y</code> are equal <code>pp</code> preprocesses <code>TEXT_IF_EQUAL</code>. Otherwise it preprocesses <code>TEXT_IF_DIFFERENT</code>. Two pieces of text are equal if all characters are the same, spaces are ignored.
 </dd>
 <dt><strong><code>!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]</code></strong></dt>
-<dd>if <code>X</code> and ‘Y’ are different <code>pp</code> preprocesses <code>TEXT_IF_DIFFERENT</code>. Otherwise it preprocesses <code>TEXT_IF_EQUAL</code>.
+<dd>if <code>X</code> and <code>Y</code> are different <code>pp</code> preprocesses <code>TEXT_IF_DIFFERENT</code>. Otherwise it preprocesses <code>TEXT_IF_EQUAL</code>.
 </dd>
 <dt><strong><code>!rawdef(X)</code></strong></dt>
 <dd>get the raw (unevaluated) definition of <code>X</code>
@@ -175,7 +175,7 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dt><strong><code>!inc[lude](FILENAME)</code></strong></dt>
 <dd><code>pp</code> preprocesses the content of the file named <code>FILENAME</code> and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 </dd>
-<dt><strong>`!import(FILENAME)</strong></dt>
+<dt><strong><code>!import(FILENAME)</code></strong></dt>
 <dd>works as <code>!include(FILENAME)</code> but no text is emited. This is useful to import macro definitions.
 </dd>
 <dt><strong><code>!raw(TEXT)</code></strong></dt>
@@ -187,7 +187,7 @@ Here, [link] is not parsed as a third parameter of \macro</code></pre>
 <dt><strong><code>!pp(TEXT)</code></strong></dt>
 <dd><code>pp</code> forces the evaluation of <code>TEXT</code>. This macro is useful to preprocess the output of script macros for instance (<code>sh</code>, <code>python</code>, …).
 </dd>
-<dt><strong><code>!comment(TEXT)</code></strong> or **<code>!comment(TITLE)(TEXT)</code></dt>
+<dt><strong><code>!comment(TEXT)</code></strong> or <strong><code>!comment(TITLE)(TEXT)</code></strong></dt>
 <dd><p>considers <code>TEXT</code> as comment. Nothing is preprocessed or emited. <code>TITLE</code> is also ignored.</p>
 <p>Example:</p>
 <pre><code>!comment(This is the title of the comment)
@@ -229,7 +229,7 @@ macro definitions.
 <dt><strong><code>!html(...)</code></strong>, <strong><code>!pdf(...)</code></strong>, <strong><code>!odt(...)</code></strong>, <strong><code>!epub(...)</code></strong> or <strong><code>!mobi(...)</code></strong></dt>
 <dd>emits some text only if the current format is <em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>
 </dd>
-<dt><strong><code>!md</code></strong>, <strong><code>-rst</code></strong></dt>
+<dt><strong><code>!md</code></strong>, <strong><code>!rst</code></strong></dt>
 <dd>emits some text only if the current dialect is <em>md</em> or <em>rst</em>
 </dd>
 <dt><strong><code>!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)</code></strong></dt>
@@ -239,10 +239,10 @@ macro definitions.
 <dd>executes a script and emits its output. The possible programming languages are <code>sh</code>, <code>bash</code>, <code>cmd</code>, <code>python</code> and <code>haskell</code>. Python can be executed with <code>python</code>, <code>python2</code> or <code>python3</code> to use the default interpretor, the version 2 or 3.
 </dd>
 <dt><strong><code>!bat(SCRIPT)</code></strong> (<em>deprecated</em>)</dt>
-<dd>same as <code>cmd</code>.
+<dd>same as <code>!cmd</code>.
 </dd>
 <dt><strong><code>!lit[erate](FILENAME)(LANG)(CONTENT)</code></strong></dt>
-<dd>appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it’s a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc -v</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the file are written. This macro provides basic literate programming features.
+<dd>appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it’s a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc --list-highlight-languages</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features.
 </dd>
 <dt><strong><code>!lit[erate](FILENAME)(CONTENT)</code></strong></dt>
 <dd><p>appends <code>CONTENT</code> to the file <code>FILENAME</code>. The output is highlighted using the previously given language for this file.</p>
@@ -283,7 +283,7 @@ And also finally &quot;Goodbye&quot;:
 <dd>emits the current content of <code>FILENAME</code>.
 </dd>
 <dt><strong><code>!flushlit[erate]</code></strong></dt>
-<dd>writes files built with <code>!lit</code> before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with !src.
+<dd>writes files built with <code>!lit</code> before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with <code>!src</code>.
 </dd>
 <dt><strong><code>!src(FILENAME)[(LANG)]</code></strong>, <strong><code>!source(FILENAME)[(LANG)]</code></strong></dt>
 <dd>formats an existing source file in a colorized code block.
