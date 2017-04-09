@@ -155,7 +155,7 @@ get the raw (unevaluated) definition of `X`
 **`!inc[lude](FILENAME)`**  
 `pp` preprocesses the content of the file named `FILENAME` and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 
-**\`!import(FILENAME)**  
+**`!import(FILENAME)`**  
 works as `!include(FILENAME)` but no text is emited. This is useful to import macro definitions.
 
 **`!raw(TEXT)`**  
@@ -167,7 +167,7 @@ works as `!include(FILENAME)` but no text is emited. This is useful to import ma
 **`!pp(TEXT)`**  
 `pp` forces the evaluation of `TEXT`. This macro is useful to preprocess the output of script macros for instance (`sh`, `python`, ...).
 
-**`!comment(TEXT)`** or \*\*`!comment(TITLE)(TEXT)`  
+**`!comment(TEXT)`** or **`!comment(TITLE)(TEXT)`**
 considers `TEXT` as comment. Nothing is preprocessed or emited. `TITLE` is also ignored.
 
 Example:
