@@ -77,31 +77,31 @@ If no input file is specified, `pp` also preprocesses the standard input.
 
 The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.
 
-**-h**  
+**`-h`**  
 displays some help and exits
 
-**-v**  
+**`-v`**  
 displays the current version and exits
 
-**-DSYMBOL\[=VALUE\]** or **-D SYMBOL\[=VALUE\]**  
+**`-DSYMBOL[=VALUE]`** or **`-D SYMBOL[=VALUE]`**  
 adds the symbol `SYMBOL` to the current environment and associates it to the optional value `VALUE`. If value is not given the symbol is simply defined with an empty value
 
-**-USYMBOL** or **-U SYMBOL**  
+**`-USYMBOL`** or **`-U SYMBOL`**  
 removes the symbol `SYMBOL` from the current environment.
 
-**-fr|-en**  
+**`-fr|-en`**  
 changes the current language.
 
-**-html|-pdf|-odt|-epub|-mobi**  
+**`-html|-pdf|-odt|-epub|-mobi`**  
 changes the current output file format.
 
-**-md|-rst**  
+**`-md|-rst`**  
 changes the current dialect (`-md` is the default dialect).
 
-**-img=PREFIX** or **-img PREFIX**  
+**`-img=PREFIX`** or **`-img PREFIX`**  
 changes the prefix of the images output path.
 
-**-import=FILE** or **-import FILE**  
+**`-import=FILE`** or **`-import FILE`**  
 preprocessed `FILE` but discards its output. It only keeps macro definitions and other side effects.
 
 Other arguments are filenames.
