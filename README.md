@@ -46,11 +46,20 @@ Installation
 
 **Precompiled binaries**:
 
-The recommended way to get PP binaries is to compile them from the sources. Anyway if you have no Haskell compiler, you can try these precompiled binaries:
+The recommended way to get PP binaries is to compile them from the sources. Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
--   Debian (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
--   Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
--   Mac OS (64 bit binaries): <https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz>
+-   Latests Linux and Windows binaries:
+
+    -   Fedora 25 (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    -   Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
+
+-   Older version archive:
+
+    -   Fedora & Windows: <http://cdsoft.fr/pp/download.html>
+
+-   User contributed Mac OS binaries (outdated):
+
+    -   Mac OS (64 bit binaries): <https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz>
 
 Usage
 =====
