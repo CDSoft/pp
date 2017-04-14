@@ -711,7 +711,7 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 ### Cmd
 
-[Cmd] is executed when the keyword `cmd` is used.
+Windows' [command-line interpreter][Cmd] is executed when the keyword `cmd` is used.
 
     \raw{\cmd
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
