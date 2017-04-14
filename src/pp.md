@@ -531,12 +531,12 @@ echo Hello World!
 ~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The script language can be:
+The script language macro can be:
 
-- bash (or sh)
-- bat (DOS/Windows batch language)
-- python
-- haskell
+- `bash` (or `sh`)
+- `cmd` (DOS/Windows batch language)
+- `python`
+- `haskell`
 
 `pp` will create a temporary script before calling the associated interpretor.
 
@@ -546,21 +546,21 @@ digraph {
 
     subgraph cluster_cmd {
         label = "script languages"
-        bash sh bat python haskell
+        bash sh cmd python haskell
     }
 
     PP [shape=diamond label="pp"]
-    bash sh bat python haskell
+    bash sh cmd python haskell
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]
-    Bat [shape=box label="wine cmd /c\nor cmd /c"]
+    Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     Python [shape=box label="python\nor python.exe"]
     Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
 
-    PP -> {bash sh bat python haskell}
+    PP -> {bash sh cmd python haskell}
     bash -> Bash
     sh -> Sh
-    bat -> Bat
+    cmd -> Cmd
     python -> Python
     haskell -> Haskell
 }
