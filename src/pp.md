@@ -11,7 +11,7 @@
 [GPP]: http://en.nothingisreal.com/wiki/GPP
 [Pandoc]: http://pandoc.org/
 [Bash]: https://www.gnu.org/software/bash/
-[Bat]: https://en.wikipedia.org/wiki/Cmd.exe
+[Cmd]: https://en.wikipedia.org/wiki/Cmd.exe
 [Python]: https://www.python.org/
 [Haskell]: https://www.haskell.org/
 [GitHub]: https://github.com/CDSoft/pp
@@ -35,7 +35,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - macros
 - literate programming
 - [GraphViz], [PlantUML] and [ditaa] diagrams
-- [Bash], [Bat], [Python] and [Haskell] scripts
+- [Bash], [Cmd], [Python] and [Haskell] scripts
 
 Open source
 ===========
@@ -709,11 +709,11 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
-### Bat
+### Cmd
 
-[Bat] is executed when the keyword `bat` is used.
+[Cmd] is executed when the keyword `cmd` is used.
 
-    \raw{\bat
+    \raw{\cmd
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hi, I'm %COMSPEC%
     ver
@@ -728,7 +728,7 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 This script outputs:
 
 ~~~~~~~~~~
-\bat
+\cmd
 ~~~~~
 echo Hi, I'm %COMSPEC%
 ver
