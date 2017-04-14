@@ -314,7 +314,7 @@ The `rawinclude` macro can include a file without preprocessing it.
     `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
     `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[23](SCRIPT)`**, **`!haskell(SCRIPT)`**
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`.
     Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
