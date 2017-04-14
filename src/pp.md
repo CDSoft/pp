@@ -205,6 +205,12 @@ User defined macros are simple text substitutions
 that may have any number of parameters (named `!1` to `!n`).
 User macros can be redefined on the command line or in the documents.
 
+When chosing a name for a macro, the basic rules to remember are:
+
+- Macros names are case sensitive (ie: `!my_macro` and `!My_Macro` are treated as two different macros)
+- Valid macro names are made of letters, digits and underscores (`a-zA-Z0-9_`)
+- You can't use the name of a built-in macro
+
 To get the value of a variable you just have to write its name after a '`!`' or '`\`'.
 Macros can be given arguments.
 Each argument is enclosed in parenthesis, curly braces or square brackets.
