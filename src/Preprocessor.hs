@@ -40,6 +40,7 @@ import Environment
 import OSAbstraction
 import UTF8
 import ErrorMessages
+import Localization
 
 -- A preprocessor takes an environment and a string to preprocess
 -- and returns a new environment and the preprocessed string.
@@ -315,14 +316,14 @@ macropp macro env args = do
 
 -- language list
 langs :: [String]
-langs = words "en fr"
+langs = words "en fr it"
 
--- \lang returns the current language ("fr" or "en")
+-- \lang returns the current language ("fr", "it" or "en")
 currentLang :: Macro
 currentLang env [] = return (env, fromVal (getSymbol env Lang))
 currentLang _ _ = arityError "lang" [0]
 
--- language implements the macros \en and \fr.
+-- language implements the macros \en, \fr, \it.
 -- language preprocesses src only if the current language is lang.
 language :: String -> Macro
 language lang env [src] = case lookup Lang env of
@@ -518,39 +519,6 @@ mdate env files = do
     times <- mapM getModificationTime files''
     let lastTime = maximum times
     return (env, formatTime (myLocale $ fromVal $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
-
--- "myLocale lang" returns the date format description for a given language.
-myLocale :: String -> TimeLocale
--- french locale date format
-myLocale "fr" = TimeLocale {
-                    wDays = [("Dimanche","Dim")
-                            ,("Lundi","Lun")
-                            ,("Mardi","Mar")
-                            ,("Mercredi","mer")
-                            ,("Jeudi","Jeu")
-                            ,("Vendredi","Ven")
-                            ,("Samedi","Sam")],
-                    months = [("Janvier","Jan")
-                             ,("Février","Fev")
-                             ,("Mars","Mar")
-                             ,("Avril","Avr")
-                             ,("Mai","Mai")
-                             ,("Juin","Jui")
-                             ,("Juillet","Jul")
-                             ,("Août","Aou")
-                             ,("Septembre","Sep")
-                             ,("Octobre","Oct")
-                             ,("Novembre","Nov")
-                             ,("Décembre","Déc")],
-                    amPm = ("AM","PM"),
-                    knownTimeZones = [],
-                    dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y",
-                    dateFmt = "%d/%m/%y",
-                    timeFmt = "%H:%M:%S",
-                    time12Fmt = "%I:%M:%S %p"
-                }
--- English is the default locale
-myLocale _ = defaultTimeLocale
 
 -- \main returns the name of the main file (given on the command line)
 mainFile :: Macro

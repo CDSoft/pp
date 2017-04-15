@@ -109,7 +109,7 @@
 <p><code>pp</code> executes arguments in the same order as the command line. It starts with an initial environment containing:</p>
 <ul>
 <li>the environment variables of the current process</li>
-<li>a <code>lang</code> variable containing the current langage (currently only French (<code>fr</code>) and English (<code>en</code>) are supported)</li>
+<li>a <code>lang</code> variable containing the current langage (currently only French (<code>fr</code>), Italian (<code>it</code>) and English (<code>en</code>) are supported)</li>
 <li>a <code>format</code> variable containing the current output format (<code>html</code>, <code>pdf</code>, <code>odt</code>, <code>epub</code> or <code>mobi</code>)</li>
 <li>a <code>dialect</code> variable containing the current dialect (<code>md</code> or <code>rst</code>)</li>
 </ul>
@@ -129,7 +129,7 @@
 <dt><strong><code>-USYMBOL</code></strong> or <strong><code>-U SYMBOL</code></strong></dt>
 <dd>removes the symbol <code>SYMBOL</code> from the current environment.
 </dd>
-<dt><strong><code>-fr</code>|<code>-en</code></strong></dt>
+<dt><strong><code>-fr</code>|<code>-it</code>|<code>-en</code></strong></dt>
 <dd>changes the current language.
 </dd>
 <dt><strong><code>-html</code>|<code>-pdf</code>|<code>-odt</code>|<code>-epub</code>|<code>-mobi</code></strong></dt>
@@ -230,7 +230,7 @@ macro definitions.
 <dd>computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
 </dd>
 <dt><strong><code>!lang</code></strong></dt>
-<dd>emits the current language (<em>fr</em> or <em>en</em>)
+<dd>emits the current language (<em>fr</em>, <em>it</em> or <em>en</em>)
 </dd>
 <dt><strong><code>!format</code></strong></dt>
 <dd>emits the current format (<em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>)
@@ -238,8 +238,8 @@ macro definitions.
 <dt><strong><code>!dialect</code></strong></dt>
 <dd>emits the current dialect (<em>md</em> or <em>rst</em>)
 </dd>
-<dt><strong><code>!fr(...)</code></strong> or <strong><code>!en(...)</code></strong></dt>
-<dd>emits some text only if the current language is <em>fr</em> or <em>en</em>
+<dt><strong><code>!fr(...)</code></strong>, <strong><code>!it(...)</code></strong> or <strong><code>!en(...)</code></strong></dt>
+<dd>emits some text only if the current language is <em>fr</em>, <em>it</em> or <em>en</em>
 </dd>
 <dt><strong><code>!html(...)</code></strong>, <strong><code>!pdf(...)</code></strong>, <strong><code>!odt(...)</code></strong>, <strong><code>!epub(...)</code></strong> or <strong><code>!mobi(...)</code></strong></dt>
 <dd>emits some text only if the current format is <em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>

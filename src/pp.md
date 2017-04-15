@@ -111,7 +111,7 @@ It starts with an initial environment containing:
 
 - the environment variables of the current process
 - a `lang` variable containing the current langage
-  (currently only French (`fr`) and English (`en`) are supported)
+  (currently only French (`fr`), Italian (`it`) and English (`en`) are supported)
 - a `format` variable containing the current output format
   (`html`, `pdf`, `odt`, `epub` or `mobi`)
 - a `dialect` variable containing the current dialect (`md` or `rst`)
@@ -138,7 +138,7 @@ The user can define and undefine variables and list input files.
 **`-USYMBOL`** or **`-U SYMBOL`**
 :   removes the symbol `SYMBOL` from the current environment.
 
-**`-fr`|`-en`**
+**`-fr`|`-it`|`-en`**
 :   changes the current language.
 
 **`-html`|`-pdf`|`-odt`|`-epub`|`-mobi`**
@@ -294,7 +294,7 @@ The `rawinclude` macro can include a file without preprocessing it.
     The default value of the increment is 1.
 
 **`!lang`**
-:   emits the current language (*fr* or *en*)
+:   emits the current language (*fr*, *it* or *en*)
 
 **`!format`**
 :   emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
@@ -302,8 +302,8 @@ The `rawinclude` macro can include a file without preprocessing it.
 **`!dialect`**
 :   emits the current dialect (*md* or *rst*)
 
-**`!fr(...)`** or **`!en(...)`**
-:   emits some text only if the current language is *fr* or *en*
+**`!fr(...)`**, **`!it(...)`** or **`!en(...)`**
+:   emits some text only if the current language is *fr*, *it* or *en*
 
 **`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**
 :   emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
