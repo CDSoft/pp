@@ -12,6 +12,7 @@
 [Pandoc]: http://pandoc.org/
 [Bash]: https://www.gnu.org/software/bash/
 [Cmd]: https://en.wikipedia.org/wiki/Cmd.exe
+[PowerShell]: https://en.wikipedia.org/wiki/PowerShell
 [Python]: https://www.python.org/
 [Haskell]: https://www.haskell.org/
 [GitHub]: https://github.com/CDSoft/pp
@@ -319,9 +320,9 @@ The `rawinclude` macro can include a file without preprocessing it.
     `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
     `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`** **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**,
 :   executes a script and emits its output.
-    The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`.
+    The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`.
     Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
 **`!bat(SCRIPT)`** (*deprecated*)
@@ -539,9 +540,10 @@ echo Hello World!
 The script language macro can be:
 
 - `bash` (or `sh`)
-- `cmd` (DOS/Windows batch language)
 - `python`
 - `haskell`
+- `cmd` (DOS/Windows batch language)
+- `powershell` (Windows only)
 
 `pp` will create a temporary script before calling the associated interpretor.
 
@@ -551,23 +553,25 @@ digraph {
 
     subgraph cluster_cmd {
         label = "script languages"
-        bash sh cmd python haskell
+        bash sh python haskell cmd powershell
     }
 
     PP [shape=diamond label="pp"]
     bash sh cmd python haskell
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]
-    Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     Python [shape=box label="python\nor python.exe"]
     Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
+    Cmd [shape=box label="wine cmd /c\nor cmd /c"]
+    PowerShell [shape=box label="(Windows only)\npowershell.exe"]
 
-    PP -> {bash sh cmd python haskell}
+    PP -> {bash sh python haskell cmd powershell}
     bash -> Bash
     sh -> Sh
-    cmd -> Cmd
     python -> Python
     haskell -> Haskell
+    cmd -> Cmd
+    powershell -> PowerShell
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

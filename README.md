@@ -231,8 +231,8 @@ emits some text only if the current dialect is *md* or *rst*
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**  
-executes a script and emits its output. The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`** **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**,  
+executes a script and emits its output. The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
 **`!bat(SCRIPT)`** (*deprecated*)  
 same as `!cmd`.
@@ -382,9 +382,10 @@ With no surprise, this script generates:
 The script language macro can be:
 
 -   `bash` (or `sh`)
--   `cmd` (DOS/Windows batch language)
 -   `python`
 -   `haskell`
+-   `cmd` (DOS/Windows batch language)
+-   `powershell` (Windows only)
 
 `pp` will create a temporary script before calling the associated interpretor.
 

@@ -24,8 +24,7 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 module OSAbstraction where
 
-#if linux_HOST_OS || darwin_HOST_OS
-#else
+#if mingw32_HOST_OS
 import Data.Char
 #endif
 
@@ -36,6 +35,13 @@ cmdexe =
     "wine cmd /c"
 #else
     "cmd /c"
+#endif
+
+#if mingw32_HOST_OS
+-- powershell command interpretor for Windows .ps1 scripts
+powershellexe :: String
+powershellexe =
+    "powershell -File"
 #endif
 
 -- environment variable storage (should be case-insensitive on Windows)

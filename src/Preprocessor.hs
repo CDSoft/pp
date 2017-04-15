@@ -20,6 +20,8 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
+{-# LANGUAGE CPP #-}
+
 module Preprocessor where
 
 import Control.Monad
@@ -107,14 +109,17 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           ++ [ (diag, diagram Graphviz diag ""            "")             | diag <- graphvizDiagrams]
           ++ [ (diag, diagram PlantUML diag "@startuml"   "@enduml")      | diag <- plantumlDiagrams]
           ++ [ (diag, diagram PlantUML diag "@startditaa" "@endditaa")    | diag <- ditaaDiagrams]
-          ++ [ ("sh",      script "sh"      "sh"         ""          ".sh")
-             , ("bash",    script "bash"    "bash"       ""          ".sh")
-             , ("cmd",     script "cmd"     cmdexe       "@echo off" ".bat")
-             , ("bat",     script "bat"     cmdexe       "@echo off" ".bat")    -- deprecated
-             , ("python",  script "python"  "python"     ""          ".py")
-             , ("python2", script "python2" "python2"    ""          ".py")
-             , ("python3", script "python3" "python3"    ""          ".py")
-             , ("haskell", script "haskell" "runhaskell" ""          ".hs")
+          ++ [ ("sh",         script "sh"         "sh"          ""          ".sh")
+             , ("bash",       script "bash"       "bash"        ""          ".sh")
+             , ("cmd",        script "cmd"        cmdexe        "@echo off" ".bat")
+             , ("bat",        script "bat"        cmdexe        "@echo off" ".bat")    -- deprecated
+             , ("python",     script "python"     "python"      ""          ".py")
+             , ("python2",    script "python2"    "python2"     ""          ".py")
+             , ("python3",    script "python3"    "python3"     ""          ".py")
+             , ("haskell",    script "haskell"    "runhaskell"  ""          ".hs")
+#if mingw32_HOST_OS
+             , ("powershell", script "powershell" powershellexe ""          ".ps1")
+#endif
           ]
           ++ [ (lang, language lang) | lang <- langs]
           ++ [ (fmt, format fmt) | fmt <- formats]
