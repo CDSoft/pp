@@ -164,23 +164,23 @@ Macros
 
 \raw{
 
-Built-in macros are hard coded in `pp`.
+Built-in macros are hard coded in `pp` and can not be redefined.
 User defined macros are simple text substitutions
 that may have any number of parameters (named `!1` to `!n`).
-User macros can be redefined on the command line or in the documents.
+User macros can be (re)defined on the command line or in the documents.
 
-When chosing a name for a macro, the basic rules to remember are:
+Macro names are:
 
-- Macros names are case sensitive (ie: `!my_macro` and `!My_Macro` are treated as two different macros)
-- Valid macro names are made of letters, digits and underscores (`a-zA-Z0-9_`)
-- You can't use the name of a built-in macro
+- case sensitive (i.e.: `!my_macro` and `!My_Macro` are different macros)
+- made of letters, digits and underscores (`a-zA-Z0-9_`)
 
 To get the value of a variable you just have to write its name after a '`!`' or '`\`'.
 Macros can be given arguments.
 Each argument is enclosed in parenthesis, curly braces or square brackets.
 For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`,
 `\foo{x}{y}` or even `!foo[x][y]`.
-Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters.
+Mixing brackets, braces and parenthesis within a single macro is not allowed:
+all parameters must be enclosed within the same type of delimiters.
 This helps ending a list of arguments in some edge cases:
 
     \macro(x)(y)
@@ -195,8 +195,7 @@ line structure in the document.
 The last argument can be enclosed between lines of tildas or backquotes
 (of the same length) instead of parenthesis, brackets or braces and.
 This is useful for literate programming, diagrams or scripts (see [examples](#examples)).
-Code block arguments are not stripped: leading- and trailing-spaces
-and blank lines are preserved.
+Code block arguments are not stripped: spaces and blank lines are preserved.
 
 Arguments can be on separate lines but must not be separated by blank lines.
 
@@ -204,7 +203,7 @@ You can choose the syntax that works better with your favorite editor and
 syntax colorization.
 
 For most of the macros, arguments are preprocessed before executing the macro.
-Macros results are not preprocessed (unless the result is a parameter of
+Macros results are not preprocessed (unless used as a parameter of
 an outer macro).
 The `include` macro is an exception: its output is also preprocessed.
 The `rawinclude` macro can include a file without preprocessing it.
