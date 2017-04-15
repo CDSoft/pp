@@ -54,3 +54,11 @@ codeblockError = error "codeblock expects a length higher than 3 and either a ti
 -- raise a wrong indentation specification error
 indentError :: t
 indentError = error "indent expects a length higher than 3."
+
+-- raise an invalid name error
+invalidNameError :: String -> t
+invalidNameError name = error $ "\"" ++ name ++"\" is not a valid macro name."
+
+-- raise an builtin redefinition error
+builtinRedefinition :: String -> t
+builtinRedefinition name = error $ "\"" ++ name ++"\" is a built-in macro and can not be redefined."

@@ -382,9 +382,14 @@ dialect dial _ _ = arityError dial [1]
 define :: String -> Macro
 define _ env [name, value] = do
     name' <- ppAndStrip' env name
+    when (not (validMacroName name')) $ invalidNameError name'
+    when (isJust (lookup name' builtin)) $ builtinRedefinition name'
     return ((Def name', value) : clean (Def name') env, "")
 define macro env [name] = define macro env [name, Val ""]
 define macro _ _ = arityError macro [1,2]
+
+validMacroName :: String -> Bool
+validMacroName = all (`elem` ('_':['a'..'z']++['A'..'Z']++['0'..'9']))
 
 -- \undefine(name) removes (Def name) from the environment
 undefine :: String -> Macro
