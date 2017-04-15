@@ -581,10 +581,11 @@ Anyway, if some documents require portability and specific tools, PP can use env
     \win(Sorry, you're running Windows)
     \linux(Hello, happy GNU/Linux user (or MacOS?))
 
-Third-party documentations and tutorials
-========================================
+Third-party documentations, tutorials and macros
+================================================
 
--   <https://github.com/tajmone/markdown-guide/tree/master/pp>: PP tutorial written by [tajmone](https://github.com/tajmone). It is a good starting point for beginners.
+-   [PP tutorial](https://github.com/tajmone/markdown-guide/tree/master/pp) by [tajmone](https://github.com/tajmone): a good starting point for beginners.
+-   [Pandoc-Goodies PP-Macros Library](https://github.com/tajmone/pandoc-goodies/tree/master/pp) by [tajmone](https://github.com/tajmone): an ongoing collaborative effort to build a library of PP macros.
 
 Licenses
 ========
