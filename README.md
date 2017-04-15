@@ -14,14 +14,14 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 -   macros
 -   literate programming
 -   [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) diagrams
--   [Bash](https://www.gnu.org/software/bash/), [Bat](https://en.wikipedia.org/wiki/Cmd.exe), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
+-   [Bash](https://www.gnu.org/software/bash/), [Cmd](https://en.wikipedia.org/wiki/Cmd.exe), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
 
 Open source
 ===========
 
 [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Anybody can contribute on [GitHub](https://github.com/CDSoft/pp) to:
 
--   suggest or add new functionalities
+-   suggest or add new functionality
 -   report or fix bugs
 -   improve the documentation
 -   add some nicer examples
@@ -40,7 +40,7 @@ Installation
 **Installation**:
 
 -   Run `make install` to copy `pp` in `/usr/local/bin` or `/usr/bin`.
--   or copy `pp` (`pp.exe` on Windows) where you want.
+-   or copy `pp` (`pp.exe` on Windows) wherever you want.
 
 `pp` requires [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
 
@@ -64,7 +64,7 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 Usage
 =====
 
-`pp` is a simple preprocessor written in Haskell. It's mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP for instance but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.
+`pp` is a simple preprocessor written in Haskell. It's mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP, for instance, but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.
 
 `pp` takes strings as input and incrementally builds an environment which is a lookup table containing variables and various other information. Built-in macros are Haskell functions that takes arguments (strings) and the current environment and build a new environment in the IO monad. User defined macros are simple definitions, arguments are numbered 1 to N.
 
@@ -73,27 +73,27 @@ Usage
 Command line
 ------------
 
-`pp` executes arguments in the same order than the command line. It starts with an initial environment containing:
+`pp` executes arguments in the same order as the command line. It starts with an initial environment containing:
 
 -   the environment variables of the current process
 -   a `lang` variable containing the current langage (currently only French (`fr`) and English (`en`) are supported)
 -   a `format` variable containing the current output format (`html`, `pdf`, `odt`, `epub` or `mobi`)
 -   a `dialect` variable containing the current dialect (`md` or `rst`)
 
-The dialect is used to format links and images in the output documents. Currently only Markdown and reStructuredText are supported.
+The *dialect* is used to format links and images in the output documents. Currently only Markdown and reStructuredText are supported.
 
-If no input file is specified, `pp` also preprocesses the standard input.
+If no input file is specified, `pp` preprocesses the standard input.
 
-The command line arguments are intensionally very basic. The user can define and undefine variables and list input files.
+The command line arguments are intentionally very basic. The user can define and undefine variables and list input files.
 
 **`-h`**  
-displays some help and exits
+displays some help and exits.
 
 **`-v`**  
-displays the current version and exits
+displays the current version and exits.
 
 **`-DSYMBOL[=VALUE]`** or **`-D SYMBOL[=VALUE]`**  
-adds the symbol `SYMBOL` to the current environment and associates it to the optional value `VALUE`. If value is not given the symbol is simply defined with an empty value
+adds the symbol `SYMBOL` to the current environment and associates it to the optional value `VALUE`. If no value is provided, the symbol is simply defined with an empty value.
 
 **`-USYMBOL`** or **`-U SYMBOL`**  
 removes the symbol `SYMBOL` from the current environment.
@@ -115,14 +115,19 @@ preprocessed `FILE` but discards its output. It only keeps macro definitions and
 
 Other arguments are filenames.
 
-Files are read and preprocessed using the current state of the environment. The special file name "`-`" can be used to preprocess the standard input.
+Files are read and preprocessed using the current state of the environment. The special filename "`-`" can be used to preprocess the standard input.
 
 Macros
 ------
 
-Built-in macros are hard coded in `pp`. User defined macros are simple text substitutions that may have any number of parameters (named `!1` to `!n`). User macros can be redefined on the command line or in the documents.
+Built-in macros are hard coded in `pp` and can not be redefined. User defined macros are simple text substitutions that may have any number of parameters (named `!1` to `!n`). User macros can be (re)defined on the command line or in the documents.
 
-To get the value of a variable you just have to write its name after a '`!`' or '`\`'. Macros can be given arguments. Each argument is enclosed in parenthesis, curly or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets and parenthesis is not possible. It helps ending an argument list in some cases:
+Macro names are:
+
+-   case sensitive (i.e.: `!my_macro` and `!My_Macro` are different macros)
+-   made of letters, digits and underscores (`a-zA-Z0-9_`)
+
+To get the value of a variable you just have to write its name after a '`!`' or '`\`'. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:
 
     \macro(x)(y)
 
@@ -130,15 +135,15 @@ To get the value of a variable you just have to write its name after a '`!`' or 
 
     Here, [link] is not parsed as a third parameter of \macro
 
-Arguments are stripped. Removing leading and ending spaces helps preserving line structure in the document.
+Arguments are stripped. Removing leading and trailing spaces helps preserving line structure in the document.
 
-The last argument can also be enclosed between lines of tildas or backquotes (of the same length). This is useful for literate programming, diagrams or scripts (see examples later). Code block arguments are not stripped to preserve leading and ending spaces or blank lines.
+The last argument can be enclosed between lines of tildas or backquotes (of the same length) instead of parenthesis, brackets or braces and. This is useful for literate programming, diagrams or scripts (see [examples](#examples)). Code block arguments are not stripped: spaces and blank lines are preserved.
 
 Arguments can be on separate lines but must not be separated by blank lines.
 
 You can choose the syntax that works better with your favorite editor and syntax colorization.
 
-For most of the macros, arguments are preprocessed before executing the macro. The result of the macros are not preprocessed (unless if they are parameters of an outer macro). The `include` macro is an exception. Its output is also preprocessed. The `rawinclude` macro can include a file without preprocessing it.
+For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The `include` macro is an exception: its output is also preprocessed. The `rawinclude` macro can include a file without preprocessing it.
 
 **`!def[ine](SYMBOL)[(VALUE)]`**  
 Add the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`.
@@ -226,7 +231,7 @@ emits some text only if the current dialect is *md* or *rst*
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[23](SCRIPT)`**, **`!haskell(SCRIPT)`**  
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**  
 executes a script and emits its output. The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
 **`!bat(SCRIPT)`** (*deprecated*)  
@@ -374,12 +379,12 @@ With no surprise, this script generates:
 
     Hello World!
 
-The script language can be:
+The script language macro can be:
 
--   bash (or sh)
--   bat (DOS/Windows batch language)
--   python
--   haskell
+-   `bash` (or `sh`)
+-   `cmd` (DOS/Windows batch language)
+-   `python`
+-   `haskell`
 
 `pp` will create a temporary script before calling the associated interpretor.
 
@@ -481,11 +486,11 @@ This script outputs:
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
-### Bat
+### Cmd
 
-[Bat](https://en.wikipedia.org/wiki/Cmd.exe) is executed when the keyword `bat` is used.
+Windows' [command-line interpreter](https://en.wikipedia.org/wiki/Cmd.exe) is executed when the keyword `cmd` is used.
 
-    \bat
+    \cmd
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hi, I'm %COMSPEC%
     ver

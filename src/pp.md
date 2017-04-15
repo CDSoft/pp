@@ -11,7 +11,7 @@
 [GPP]: http://en.nothingisreal.com/wiki/GPP
 [Pandoc]: http://pandoc.org/
 [Bash]: https://www.gnu.org/software/bash/
-[Bat]: https://en.wikipedia.org/wiki/Cmd.exe
+[Cmd]: https://en.wikipedia.org/wiki/Cmd.exe
 [Python]: https://www.python.org/
 [Haskell]: https://www.haskell.org/
 [GitHub]: https://github.com/CDSoft/pp
@@ -35,7 +35,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - macros
 - literate programming
 - [GraphViz], [PlantUML] and [ditaa] diagrams
-- [Bash], [Bat], [Python] and [Haskell] scripts
+- [Bash], [Cmd], [Python] and [Haskell] scripts
 
 Open source
 ===========
@@ -43,7 +43,7 @@ Open source
 [PP] is an Open source software.
 Anybody can contribute on [GitHub] to:
 
-- suggest or add new functionalities
+- suggest or add new functionality
 - report or fix bugs
 - improve the documentation
 - add some nicer examples
@@ -62,7 +62,7 @@ Installation
 **Installation**:
 
 - Run `make install` to copy `pp` in `/usr/local/bin` or `/usr/bin`.
-- or copy `pp` (`pp.exe` on Windows) where you want.
+- or copy `pp` (`pp.exe` on Windows) wherever you want.
 
 `pp` requires [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
 
@@ -89,7 +89,7 @@ Usage
 
 `pp` is a simple preprocessor written in Haskell.
 It's mainly designed for Pandoc but may be used as a generic preprocessor.
-It is not intended to be as powerful as GPP for instance but is a simple
+It is not intended to be as powerful as GPP, for instance, but is a simple
 implementation for my own needs, as well as an opportunity to play with
 Haskell.
 
@@ -106,7 +106,7 @@ input is specified.
 Command line
 ------------
 
-`pp` executes arguments in the same order than the command line.
+`pp` executes arguments in the same order as the command line.
 It starts with an initial environment containing:
 
 - the environment variables of the current process
@@ -116,24 +116,24 @@ It starts with an initial environment containing:
   (`html`, `pdf`, `odt`, `epub` or `mobi`)
 - a `dialect` variable containing the current dialect (`md` or `rst`)
 
-The dialect is used to format links and images in the output documents.
+The _dialect_ is used to format links and images in the output documents.
 Currently only Markdown and reStructuredText are supported.
 
-If no input file is specified, `pp` also preprocesses the standard input.
+If no input file is specified, `pp` preprocesses the standard input.
 
-The command line arguments are intensionally very basic.
+The command line arguments are intentionally very basic.
 The user can define and undefine variables and list input files.
 
 **`-h`**
-:   displays some help and exits
+:   displays some help and exits.
 
 **`-v`**
-:   displays the current version and exits
+:   displays the current version and exits.
 
 **`-DSYMBOL[=VALUE]`** or **`-D SYMBOL[=VALUE]`**
 :   adds the symbol `SYMBOL` to the current environment and associates it to
-    the optional value `VALUE`. If value is not given the symbol is simply
-    defined with an empty value
+    the optional value `VALUE`. If no value is provided, the symbol is simply
+    defined with an empty value.
 
 **`-USYMBOL`** or **`-U SYMBOL`**
 :   removes the symbol `SYMBOL` from the current environment.
@@ -157,25 +157,31 @@ The user can define and undefine variables and list input files.
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment.
-The special file name "`-`" can be used to preprocess the standard input.
+The special filename "`-`" can be used to preprocess the standard input.
 
 Macros
 ------
 
 \raw{
 
-Built-in macros are hard coded in `pp`.
+Built-in macros are hard coded in `pp` and can not be redefined.
 User defined macros are simple text substitutions
 that may have any number of parameters (named `!1` to `!n`).
-User macros can be redefined on the command line or in the documents.
+User macros can be (re)defined on the command line or in the documents.
+
+Macro names are:
+
+- case sensitive (i.e.: `!my_macro` and `!My_Macro` are different macros)
+- made of letters, digits and underscores (`a-zA-Z0-9_`)
 
 To get the value of a variable you just have to write its name after a '`!`' or '`\`'.
 Macros can be given arguments.
-Each argument is enclosed in parenthesis, curly or square brackets.
+Each argument is enclosed in parenthesis, curly braces or square brackets.
 For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`,
 `\foo{x}{y}` or even `!foo[x][y]`.
-Mixing brackets and parenthesis is not possible.
-It helps ending an argument list in some cases:
+Mixing brackets, braces and parenthesis within a single macro is not allowed:
+all parameters must be enclosed within the same type of delimiters.
+This helps ending a list of arguments in some edge cases:
 
     \macro(x)(y)
 
@@ -183,14 +189,13 @@ It helps ending an argument list in some cases:
 
     Here, [link] is not parsed as a third parameter of \macro
 
-Arguments are stripped. Removing leading and ending spaces helps preserving
+Arguments are stripped. Removing leading and trailing spaces helps preserving
 line structure in the document.
 
-The last argument can also be enclosed between lines of tildas or backquotes
-(of the same length).
-This is useful for literate programming, diagrams or scripts (see examples later).
-Code block arguments are not stripped to preserve leading and ending spaces
-or blank lines.
+The last argument can be enclosed between lines of tildas or backquotes
+(of the same length) instead of parenthesis, brackets or braces and.
+This is useful for literate programming, diagrams or scripts (see [examples](#examples)).
+Code block arguments are not stripped: spaces and blank lines are preserved.
 
 Arguments can be on separate lines but must not be separated by blank lines.
 
@@ -198,9 +203,9 @@ You can choose the syntax that works better with your favorite editor and
 syntax colorization.
 
 For most of the macros, arguments are preprocessed before executing the macro.
-The result of the macros are not preprocessed (unless if they are parameters of
+Macros results are not preprocessed (unless used as a parameter of
 an outer macro).
-The `include` macro is an exception. Its output is also preprocessed.
+The `include` macro is an exception: its output is also preprocessed.
 The `rawinclude` macro can include a file without preprocessing it.
 
 **`!def[ine](SYMBOL)[(VALUE)]`**
@@ -314,7 +319,7 @@ The `rawinclude` macro can include a file without preprocessing it.
     `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
     `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[23](SCRIPT)`**, **`!haskell(SCRIPT)`**
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `cmd`, `python` and `haskell`.
     Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
@@ -531,12 +536,12 @@ echo Hello World!
 ~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The script language can be:
+The script language macro can be:
 
-- bash (or sh)
-- bat (DOS/Windows batch language)
-- python
-- haskell
+- `bash` (or `sh`)
+- `cmd` (DOS/Windows batch language)
+- `python`
+- `haskell`
 
 `pp` will create a temporary script before calling the associated interpretor.
 
@@ -546,21 +551,21 @@ digraph {
 
     subgraph cluster_cmd {
         label = "script languages"
-        bash sh bat python haskell
+        bash sh cmd python haskell
     }
 
     PP [shape=diamond label="pp"]
-    bash sh bat python haskell
+    bash sh cmd python haskell
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]
-    Bat [shape=box label="wine cmd /c\nor cmd /c"]
+    Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     Python [shape=box label="python\nor python.exe"]
     Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
 
-    PP -> {bash sh bat python haskell}
+    PP -> {bash sh cmd python haskell}
     bash -> Bash
     sh -> Sh
-    bat -> Bat
+    cmd -> Cmd
     python -> Python
     haskell -> Haskell
 }
@@ -709,11 +714,11 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
-### Bat
+### Cmd
 
-[Bat] is executed when the keyword `bat` is used.
+Windows' [command-line interpreter][Cmd] is executed when the keyword `cmd` is used.
 
-    \raw{\bat
+    \raw{\cmd
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hi, I'm %COMSPEC%
     ver
@@ -728,7 +733,7 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 This script outputs:
 
 ~~~~~~~~~~
-\bat
+\cmd
 ~~~~~
 echo Hi, I'm %COMSPEC%
 ver
