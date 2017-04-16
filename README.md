@@ -21,7 +21,7 @@ Open source
 
 [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Anybody can contribute on [GitHub](https://github.com/CDSoft/pp) to:
 
--   suggest or add new functionality
+-   suggest or add new features
 -   report or fix bugs
 -   improve the documentation
 -   add some nicer examples
@@ -50,8 +50,8 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 
 -   Latests Linux and Windows binaries:
 
-    -   Fedora 25 (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
-    -   Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
+    -   Fedora 25 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    -   Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
 
 -   Older version archive:
 
@@ -195,17 +195,23 @@ Example:
 **`!quiet(TEXT)`**  
 quietly preprocess `TEXT` and emits nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 
-**`!exec(COMMAND)`** (*deprecated*)  
-executes a shell command (with the current `sh` shell). This macro is deprecated. Consider using `sh` instead.
+**`!exec(COMMAND)`**  
+executes a shell command with the default shell (`sh` or `cmd` according to the OS).
 
 **`!rawexec(COMMAND)`** (*deprecated*)  
-as `!exec(COMMAND)`. This macro is deprecated. Consider using `sh` instead.
+as `!exec(COMMAND)`. This macro is deprecated. Consider using `exec` instead.
 
 **`!mdate(FILES)`**  
 returns the modification date of the most recent file.
 
 **`!env(VARNAME)`**  
 `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
+
+**`!os`**  
+returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS, `windows` on Windows)
+
+**`!arch`**  
+returns the machine architecture (e.g. `x86_64`, `i386`, ...)
 
 **`!add(VARNAME)[(INCREMENT)]`**  
 computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.

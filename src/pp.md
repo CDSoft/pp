@@ -44,7 +44,7 @@ Open source
 [PP] is an Open source software.
 Anybody can contribute on [GitHub] to:
 
-- suggest or add new functionality
+- suggest or add new features
 - report or fix bugs
 - improve the documentation
 - add some nicer examples
@@ -74,8 +74,8 @@ Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
 - Latests Linux and Windows binaries:
 
-    - Fedora \sh[cat /etc/redhat-release | tr -d -c "[0-9]"] (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
-    - Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
+    - Fedora \sh[cat /etc/redhat-release | tr -d -c "[0-9]"] (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    - Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
 
 - Older version archive:
 
@@ -276,19 +276,24 @@ The `rawinclude` macro can include a file without preprocessing it.
 :   quietly preprocess `TEXT` and emits nothing.
     Only the side effects (e.g. macro definitions) are kept in the environment.
 
-**`!exec(COMMAND)`** (*deprecated*)
-:   executes a shell command (with the current `sh` shell).
-    This macro is deprecated. Consider using `sh` instead.
+**`!exec(COMMAND)`**
+:   executes a shell command with the default shell (`sh` or `cmd` according to the OS).
 
 **`!rawexec(COMMAND)`** (*deprecated*)
 :   as `!exec(COMMAND)`.
-    This macro is deprecated. Consider using `sh` instead.
+    This macro is deprecated. Consider using `exec` instead.
 
 **`!mdate(FILES)`**
 :   returns the modification date of the most recent file.
 
 **`!env(VARNAME)`**
 :   `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
+
+**`!os`**
+:   returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS, `windows` on Windows)
+
+**`!arch`**
+:   returns the machine architecture (e.g. `x86_64`, `i386`, ...)
 
 **`!add(VARNAME)[(INCREMENT)]`**
 :   computes `VARNAME+INCREMENT` and stores the result to `VARNAME`.

@@ -161,6 +161,14 @@ Environment undefined variable:     \eq(\env(EMPTYENVVAR))(\exec(echo $EMPTYENVV
 Environment variable:               \eq(\env(TESTENVVAR))(\exec(echo $TESTENVVAR))
 ----------------------------------- -----------------------------------------------------------------
 
+OS architecture
+===============
+
+----------------------------------- -----------------------------------------------------------------
+OS:                                 \eq(\os)(linux)
+Architecture:                       \eq(\arch)(x86_64)
+----------------------------------- -----------------------------------------------------------------
+
 Simple arithmetic
 =================
 

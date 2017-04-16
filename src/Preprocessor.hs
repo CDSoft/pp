@@ -36,7 +36,7 @@ import System.FilePath
 import Data.Time
 import Foreign.C.Types
 import Foreign.Ptr
-import Foreign hiding (void)
+import Foreign hiding (void, new)
 
 import Environment
 import OSAbstraction
@@ -83,13 +83,21 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("comment", comment)
           , ("quiet", quiet)
 
-          , ("exec",    script "exec"    "sh" "" ".sh")             -- deprecated
-          , ("rawexec", script "rawexec" "sh" "" ".sh")             -- deprecated
+#if linux_HOST_OS || darwin_HOST_OS
+          , ("exec",    script "exec"    "sh"   ""          ".sh")
+          , ("rawexec", deprecated "rawexec" "exec" $ script "rawexec" "sh"   ""          ".sh")             -- deprecated
+#endif
+#if mingw32_HOST_OS
+          , ("exec",    script "exec"    cmdexe "@echo off" ".bat")
+          , ("rawexec", deprecated "rawexec" "exec" $ script "rawexec" cmdexe "@echo off" ".bat")             -- deprecated
+#endif
           , ("pp", forcepp)
 
           , ("mdate", mdate)
 
           , ("env", readEnv)
+          , ("os", getos)
+          , ("arch", getarch)
 
           , ("main", mainFile)
           , ("file", currentFile)
@@ -112,7 +120,7 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           ++ [ ("sh",         script "sh"         "sh"          ""          ".sh")
              , ("bash",       script "bash"       "bash"        ""          ".sh")
              , ("cmd",        script "cmd"        cmdexe        "@echo off" ".bat")
-             , ("bat",        script "bat"        cmdexe        "@echo off" ".bat")    -- deprecated
+             , ("bat",        deprecated "bat" "cmd" $ script "bat"        cmdexe        "@echo off" ".bat")    -- deprecated
              , ("python",     script "python"     "python"      ""          ".py")
              , ("python2",    script "python2"    "python2"     ""          ".py")
              , ("python3",    script "python3"    "python3"     ""          ".py")
@@ -124,6 +132,13 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           ++ [ (lang, language lang) | lang <- langs]
           ++ [ (fmt, format fmt) | fmt <- formats]
           ++ [ (dial, dialect dial) | dial <- dialects]
+
+-- deprecated prints a warning on stderr when a deprecated macro is executed
+deprecated :: String -> String -> Macro -> Macro
+deprecated old new macro env args = do
+    let file = fromVal (fromMaybe (Val "-") (lookup CurrentFile env))
+    hPutStrLn stderr $ "WARNING: " ++ file ++ ": \"" ++ old ++ "\" is deprecated. Please consider using \"" ++ new ++ "\" instead."
+    macro env args
 
 -- "ppFile env name" preprocess a file using the current environment
 -- env returns an updated environment and the preprocessed output.
@@ -548,6 +563,18 @@ readEnv env [name] = do
         Just val -> return (env, fromVal val)
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
+
+-- \os emits the OS name
+getos :: Macro
+getos env [] = do
+      return (env, osname)
+getos _ _ = arityError "os" [0]
+
+-- \arch emits the architecture of the OS
+getarch :: Macro
+getarch env [] = do
+      return (env, osarch)
+getarch _ _ = arityError "arch" [0]
 
 ---------------------------------------------------------------------
 -- Arithmetic macros
