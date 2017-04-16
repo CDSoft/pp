@@ -24,16 +24,32 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 module OSAbstraction where
 
+import System.Info
+
 #if mingw32_HOST_OS
 import Data.Char
 #endif
+
+-- OS name
+osname :: String
+#if mingw32_HOST_OS
+osname = "windows"
+#endif
+#if linux_HOST_OS || darwin_HOST_OS
+osname = os
+#endif
+
+-- machine architecture
+osarch :: String
+osarch = arch
 
 -- shell command interpretor for Windows .bat scripts
 cmdexe :: String
 cmdexe =
 #if linux_HOST_OS || darwin_HOST_OS
     "wine cmd /c"
-#else
+#endif
+#if mingw32_HOST_OS
     "cmd /c"
 #endif
 
@@ -49,6 +65,7 @@ powershellexe =
 envVarStorage :: String -> String
 #if linux_HOST_OS || darwin_HOST_OS
 envVarStorage = id
-#else
+#endif
+#if mingw32_HOST_OS
 envVarStorage = map toUpper
 #endif

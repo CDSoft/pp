@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Saturday 15 April 2017</p>
+<p class="date">Sunday 16 April 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -60,12 +60,12 @@
 <li>macros</li>
 <li>literate programming</li>
 <li><a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a> diagrams</li>
-<li><a href="https://www.gnu.org/software/bash/">Bash</a>, <a href="https://en.wikipedia.org/wiki/Cmd.exe">Cmd</a>, <a href="https://www.python.org/">Python</a> and <a href="https://www.haskell.org/">Haskell</a> scripts</li>
+<li><a href="https://www.gnu.org/software/bash/">Bash</a>, <a href="https://en.wikipedia.org/wiki/Cmd.exe">Cmd</a>, <a href="https://en.wikipedia.org/wiki/PowerShell">PowerShell</a>, <a href="https://www.python.org/">Python</a> and <a href="https://www.haskell.org/">Haskell</a> scripts</li>
 </ul>
 <h1 id="open-source">Open source</h1>
 <p><a href="http://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is an Open source software. Anybody can contribute on <a href="https://github.com/CDSoft/pp">GitHub</a> to:</p>
 <ul>
-<li>suggest or add new functionality</li>
+<li>suggest or add new features</li>
 <li>report or fix bugs</li>
 <li>improve the documentation</li>
 <li>add some nicer examples</li>
@@ -90,8 +90,8 @@
 <ul>
 <li><p>Latests Linux and Windows binaries:</p>
 <ul>
-<li>Fedora 25 (64 bit binaries): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
-<li>Windows (32 bit binaries running on both 32 and 64 bit Windows): <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a></li>
+<li>Fedora 25 (64 bit): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
+<li>Windows (64 bit): <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a></li>
 </ul></li>
 <li><p>Older version archive:</p>
 <ul>
@@ -215,17 +215,23 @@ macro definitions.
 <dt><strong><code>!quiet(TEXT)</code></strong></dt>
 <dd>quietly preprocess <code>TEXT</code> and emits nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 </dd>
-<dt><strong><code>!exec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
-<dd>executes a shell command (with the current <code>sh</code> shell). This macro is deprecated. Consider using <code>sh</code> instead.
+<dt><strong><code>!exec(COMMAND)</code></strong></dt>
+<dd>executes a shell command with the default shell (<code>sh</code> or <code>cmd</code> according to the OS).
 </dd>
 <dt><strong><code>!rawexec(COMMAND)</code></strong> (<em>deprecated</em>)</dt>
-<dd>as <code>!exec(COMMAND)</code>. This macro is deprecated. Consider using <code>sh</code> instead.
+<dd>as <code>!exec(COMMAND)</code>. This macro is deprecated. Consider using <code>exec</code> instead.
 </dd>
 <dt><strong><code>!mdate(FILES)</code></strong></dt>
 <dd>returns the modification date of the most recent file.
 </dd>
 <dt><strong><code>!env(VARNAME)</code></strong></dt>
 <dd><code>pp</code> preprocesses and emits the value of the process environment variable <code>VARNAME</code>.
+</dd>
+<dt><strong><code>!os</code></strong></dt>
+<dd>returns the OS name (e.g. <code>linux</code> on Linux, <code>darwin</code> on MacOS, <code>windows</code> on Windows)
+</dd>
+<dt><strong><code>!arch</code></strong></dt>
+<dd>returns the machine architecture (e.g. <code>x86_64</code>, <code>i386</code>, …)
 </dd>
 <dt><strong><code>!add(VARNAME)[(INCREMENT)]</code></strong></dt>
 <dd>computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
@@ -530,23 +536,24 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 </code></pre>
 <h1 id="os-support">OS support</h1>
 <p>PP is meant to be portable and multi platform. To be OS agnostic, the use free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, …). Python is also a good choice.</p>
-<p>Anyway, if some documents require portability and specific tools, PP can use environment variables to detect the OS. E.g.:</p>
+<p>Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (<code>\os</code>, <code>\arch</code>). E.g.:</p>
 <pre><code>\quiet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\ifeq(\env(WINDIR))()
+\ifeq(\os)(linux)
 `````````````````````
-\def(win)()
 \def(linux)(\1)
+\def(win)()
 `````````````````````
-\ifne(\env(WINDIR))()
+\ifeq(\os)(windows)
 `````````````````````
-\def(win)(\1)
 \def(linux)()
+\def(win)(\1)
 `````````````````````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 \win(Sorry, you're running Windows)
-\linux(Hello, happy GNU/Linux user (or MacOS?))</code></pre>
+\linux(Hello, happy GNU/Linux user)</code></pre>
+<p>The <code>\exec</code> macro is also OS aware. It runs the <em>default</em> shell according to the OS (<code>sh</code> on Linux and MacOS, <code>cmd</code> on Windows).</p>
 <h1 id="third-party-documentations-tutorials-and-macros">Third-party documentations, tutorials and macros</h1>
 <ul>
 <li><a href="https://github.com/tajmone/markdown-guide/tree/master/pp">PP tutorial</a> by <a href="https://github.com/tajmone">tajmone</a>: a good starting point for beginners.</li>

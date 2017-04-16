@@ -14,14 +14,14 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 -   macros
 -   literate programming
 -   [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) diagrams
--   [Bash](https://www.gnu.org/software/bash/), [Cmd](https://en.wikipedia.org/wiki/Cmd.exe), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
+-   [Bash](https://www.gnu.org/software/bash/), [Cmd](https://en.wikipedia.org/wiki/Cmd.exe), [PowerShell](https://en.wikipedia.org/wiki/PowerShell), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
 
 Open source
 ===========
 
 [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an Open source software. Anybody can contribute on [GitHub](https://github.com/CDSoft/pp) to:
 
--   suggest or add new functionality
+-   suggest or add new features
 -   report or fix bugs
 -   improve the documentation
 -   add some nicer examples
@@ -50,8 +50,8 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 
 -   Latests Linux and Windows binaries:
 
-    -   Fedora 25 (64 bit binaries): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
-    -   Windows (32 bit binaries running on both 32 and 64 bit Windows): <http://cdsoft.fr/pp/pp-win.7z>
+    -   Fedora 25 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    -   Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
 
 -   Older version archive:
 
@@ -195,17 +195,23 @@ Example:
 **`!quiet(TEXT)`**  
 quietly preprocess `TEXT` and emits nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 
-**`!exec(COMMAND)`** (*deprecated*)  
-executes a shell command (with the current `sh` shell). This macro is deprecated. Consider using `sh` instead.
+**`!exec(COMMAND)`**  
+executes a shell command with the default shell (`sh` or `cmd` according to the OS).
 
 **`!rawexec(COMMAND)`** (*deprecated*)  
-as `!exec(COMMAND)`. This macro is deprecated. Consider using `sh` instead.
+as `!exec(COMMAND)`. This macro is deprecated. Consider using `exec` instead.
 
 **`!mdate(FILES)`**  
 returns the modification date of the most recent file.
 
 **`!env(VARNAME)`**  
 `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
+
+**`!os`**  
+returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS, `windows` on Windows)
+
+**`!arch`**  
+returns the machine architecture (e.g. `x86_64`, `i386`, ...)
 
 **`!add(VARNAME)[(INCREMENT)]`**  
 computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
@@ -563,24 +569,26 @@ OS support
 
 PP is meant to be portable and multi platform. To be OS agnostic, the use free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, ...). Python is also a good choice.
 
-Anyway, if some documents require portability and specific tools, PP can use environment variables to detect the OS. E.g.:
+Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (`\os`, `\arch`). E.g.:
 
     \quiet
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    \ifeq(\env(WINDIR))()
+    \ifeq(\os)(linux)
     `````````````````````
-    \def(win)()
     \def(linux)(\1)
+    \def(win)()
     `````````````````````
-    \ifne(\env(WINDIR))()
+    \ifeq(\os)(windows)
     `````````````````````
-    \def(win)(\1)
     \def(linux)()
+    \def(win)(\1)
     `````````````````````
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     \win(Sorry, you're running Windows)
-    \linux(Hello, happy GNU/Linux user (or MacOS?))
+    \linux(Hello, happy GNU/Linux user)
+
+The `\exec` macro is also OS aware. It runs the *default* shell according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
 
 Third-party documentations, tutorials and macros
 ================================================
