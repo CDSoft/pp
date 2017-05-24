@@ -72,7 +72,7 @@ Installation
 The recommended way to get PP binaries is to compile them from the sources.
 Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
-- Latests Linux and Windows binaries:
+- Latest Linux and Windows binaries:
 
     - Fedora \sh[cat /etc/redhat-release | tr -d -c "[0-9]"] (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
     - Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>

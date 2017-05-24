@@ -48,7 +48,7 @@ Installation
 
 The recommended way to get PP binaries is to compile them from the sources. Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
--   Latests Linux and Windows binaries:
+-   Latest Linux and Windows binaries:
 
     -   Fedora 25 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
     -   Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
@@ -512,7 +512,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.14393 (2.4)
+    Microsoft Windows 10.0.15063 (2.7)
     This script is run from wine under Linux
 
 ### Python
@@ -533,7 +533,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.13 (default, Jan 12 2017, 17:59:37) 
+    Hi, I'm Python 2.7.13 (default, May 10 2017, 20:04:28) 
     [GCC 6.3.1 20161221 (Red Hat 6.3.1-1)]
     Here are a few random numbers: 640, 25, 275
 
