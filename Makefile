@@ -26,38 +26,24 @@ SHELL = /bin/bash
 
 OS = $(shell uname)
 
-GHCOPT = -Wall -Werror -O2
+BIN_DIR := $(shell stack path --local-install-root)/bin
 
 # Linux
 ifeq "$(OS)" "Linux"
 
-PP 	= pp
+PP = $(BIN_DIR)/pp
 
-all: pp
+all: $(PP)
 all: README.md doc/pp.html
 all: pp.tgz
 all: pp-linux-$(shell uname -m).txz
 
-WINEGHC = $(shell wine ghc --version 2>/dev/null || false)
-GCCVERSION = $(shell gcc --version | head -1 | sed 's/.* \([0-9][0-9]*\)\..*/\1/')
-
-# On Ubuntu 16.10, ghc 8.0.1 fails compiling hCalc with gcc 6 without -no-pie
-ifeq "$(GCCVERSION)" "6"
-GHCOPT_LINUX = -optl-no-pie
-endif
-
-ifneq "$(WINEGHC)" ""
-all: pp.exe pp-win.7z
-
-WINE = wine
-endif
-
 # MacOS
 else ifeq "$(OS)" "Darwin"
 
-PP 	= pp
+PP 	= $(BIN_DIR)/pp
 
-all: pp
+all: $(PP)
 all: README.md doc/pp.html
 all: pp.tgz
 all: pp-darwin-$(shell uname -m).txz
@@ -65,9 +51,9 @@ all: pp-darwin-$(shell uname -m).txz
 # Windows
 else ifeq "$(shell echo $(OS) | grep 'MSYS\|MINGW\|CYGWIN' >/dev/null && echo Windows)" "Windows"
 
-PP 	= pp.exe
+PP 	= $(BIN_DIR)/pp.exe
 
-all: pp.exe
+all: $(PP)
 all: doc/pp.html
 
 # Unknown platform (please contribute ;-)
@@ -75,31 +61,21 @@ else
 $(error "Unknown platform: $(OS)")
 endif
 
-BUILD = .build
-CACHE = .cache
+BUILD = .stack-work
 
 TAG = src/Tag.hs
 $(shell ./tag.sh $(TAG))
-SOURCES = $(wildcard src/*.hs)
 
-install: $(PP)
-	install -v -C $^ $(shell (ls -d /usr/local/bin || echo /usr/bin) 2>/dev/null)
+install:
+	stack install
 
 clean:
-	rm -rf $(BUILD) doc
-	rm -f pp pp.exe
+	stack clean
+	rm -rf $(BUILD)
+	rm -f doc/pp.html
+	rm -rf doc/img
 	rm -f pp*.tgz pp-win.7z pp-linux-*.txz pp-darwin-*.txz
-
-distclean: clean
-	rm -rf $(CACHE)
-
-dep:
-	cabal update
-	cabal install strict temporary --ghc-options="$(GHCOPT_LINUX)"
-ifneq "$(WINE)" ""
-	$(WINE) cabal update
-	$(WINE) cabal install strict temporary
-endif
+	rm -f src/$(PLANTUML).c
 
 .DELETE_ON_ERROR:
 
@@ -108,25 +84,25 @@ endif
 #####################################################################
 
 README.md: $(PP)
-README.md: src/pp.md
+README.md: doc/pp.md
 	@mkdir -p doc/img
-	./$(PP) -en -img=doc/img -DREADME $< | pandoc -f markdown -t markdown_github > $@
+	$(PP) -en -img=doc/img -DREADME $< | pandoc -f markdown -t markdown_github > $@
 
 #####################################################################
 # archives
 #####################################################################
 
-pp.tgz: Makefile $(wildcard src/*) $(wildcard test/*) README.md LICENSE .gitignore
+pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard test/*) README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml
 	tar -czf $@ $^
 
-pp-win.7z: pp.exe doc/pp.html
+pp-win.7z: $(PP) doc/pp.html
 	7z -mx9 a $@ $^
 
-pp-linux-%.txz: pp doc/pp.html
-	tar cJf $@ $^
+pp-linux-%.txz: $(PP) doc/pp.html
+	tar cJf $@ --transform='s,.*/,,' $^
 
-pp-darwin-%.txz: pp doc/pp.html
-	tar cJf $@ $^
+pp-darwin-%.txz: $(PP) doc/pp.html
+	tar cJf $@ --transform='s,.*/,,' $^
 
 #####################################################################
 # Dependencies
@@ -135,49 +111,29 @@ pp-darwin-%.txz: pp doc/pp.html
 PLANTUML = plantuml
 PLANTUML_URL = http://sourceforge.net/projects/plantuml/files/$(PLANTUML).jar
 
-$(BUILD)/%.o: $(BUILD)/%.c
-	ghc $(GHCOPT) -c -o $@ $^
-
-$(BUILD)/%-win.o: $(BUILD)/%.c
-	$(WINE) ghc $(GHCOPT) -c -o $@ $^
-
-$(BUILD)/%.c: $(CACHE)/%.jar
+$(BUILD)/%.c: $(BUILD)/%.jar
 	@mkdir -p $(dir $@)
 	xxd -i $< $@
-	sed -i -e 's/_cache_//g' $@
+	sed -i -e 's/_stack_work_//g' $@
 
-$(CACHE)/$(PLANTUML).jar:
+$(BUILD)/$(PLANTUML).jar:
 	@mkdir -p $(dir $@)
 	wget $(PLANTUML_URL) -O $@
-
-$(CACHE)/pp.css:
-	@mkdir -p $(dir $@)
-	wget http://cdsoft.fr/cdsoft.css -O $@
 
 #####################################################################
 # PP
 #####################################################################
 
-pp: BUILDPP=$(BUILD)/$@
-pp: $(SOURCES) $(BUILD)/$(PLANTUML).o
-	@mkdir -p $(BUILDPP)
-	ghc $(GHCOPT) $(GHCOPT_LINUX) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
-	@strip $@
+LIB_SOURCES = $(wildcard src/*.hs) $(BUILD)/$(PLANTUML).c
+PP_SOURCES = app/pp.hs
 
-pp.exe: BUILDPP=$(BUILD)/$@
-pp.exe: $(SOURCES) $(BUILD)/$(PLANTUML)-win.o
-	@mkdir -p $(BUILDPP)
-	$(WINE) ghc $(GHCOPT) -odir $(BUILDPP) -hidir $(BUILDPP) -o $@ $^
-	@strip $@
+$(PP): $(PP_SOURCES) $(LIB_SOURCES)
+	stack build
 
 doc/pp.html: $(PP) doc/pp.css
-doc/pp.html: src/pp.md
+doc/pp.html: doc/pp.md
 	@mkdir -p $(dir $@) doc/img
-	./$(PP) -en -img=doc/img $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
-
-doc/pp.css: $(CACHE)/pp.css
-	@mkdir -p $(dir $@)
-	cp $< $@
+	$(PP) -en -img=doc/img $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 
 #####################################################################
 # tests
@@ -194,7 +150,7 @@ test-md: $(BUILD)/pp-test.output test/pp-test.ref
 $(BUILD)/pp-test.output: $(PP) doc/pp.css
 $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 ./$(PP) -md -img="[$(BUILD)/]img" -en -html $< > $@
+	TESTENVVAR=42 $(PP) -md -img="[$(BUILD)/]img" -en -html $< > $@
 	pandoc -S --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
@@ -207,7 +163,7 @@ test-rst: $(BUILD)/pp-test-rst.output test/pp-test-rst.ref
 
 $(BUILD)/pp-test-rst.output: test/pp-test.rst
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 ./$(PP) -rst -img="[$(BUILD)/]img" -en -html $< > $@
+	TESTENVVAR=42 $(PP) -rst -img="[$(BUILD)/]img" -en -html $< > $@
 	pandoc -S --toc -c doc/pp.css -f rst -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref-rst

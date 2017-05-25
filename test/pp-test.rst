@@ -94,13 +94,13 @@ Literate programming
 
 Lets write and test a useful library:
 
-\lit{.build/mylib.h}
+\lit{.stack-work/mylib.h}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // This is a C library
 @functionDeclarations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\lit{.build/mylib.c}
+\lit{.stack-work/mylib.c}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // This is a C library
 @functionImplementations
@@ -134,7 +134,7 @@ int fact(int n)
 
 Some tests of ``mylib.c``:
 
-\lit{.build/mylibtest.c}{C}
+\lit{.stack-work/mylibtest.c}{C}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include <stdio.h>
 #include <stdlib.h>
@@ -153,10 +153,10 @@ int main(int argc, char * argv[])
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\exec(gcc .build/mylib.c .build/mylibtest.c -o .build/mylibtest)
+\exec(gcc .stack-work/mylib.c .stack-work/mylibtest.c -o .stack-work/mylibtest)
 
 \def(test)(mylibtest 0 1 2 3 4 5)
-\def(result)(\exec(.build/\test))
+\def(result)(\exec(.stack-work/\test))
 
 ``\test`` outputs::
 
@@ -176,22 +176,22 @@ The complete source files are:
 
 ``mylib.h``:
 
-\lit{.build/mylib.h}
+\lit{.stack-work/mylib.h}
 
 ``mylib.c``:
 
-\lit{.build/mylib.c}
+\lit{.stack-work/mylib.c}
 
 ``mylibtest.c``:
 
-\lit{.build/mylibtest.c}
+\lit{.stack-work/mylibtest.c}
 
 A source file, not necessarily generated with \raw(\lit) can be
 formated with \raw(\source or \src):
 
 ``mylib.h``:
 
-\src{.build/mylib.h}
+\src{.stack-work/mylib.h}
 
 Test results
 ============

@@ -1,6 +1,6 @@
 % PP - Generic preprocessor (with pandoc in mind)
 % Christophe Delord - <http://cdsoft.fr/pp>
-% \mdate{src/pp.hs src/pp.md}
+% \mdate{app/pp.hs doc/pp.md}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
 [DPP]: http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"
@@ -15,6 +15,7 @@
 [PowerShell]: https://en.wikipedia.org/wiki/PowerShell
 [Python]: https://www.python.org/
 [Haskell]: https://www.haskell.org/
+[Stack]: https://docs.haskellstack.org/en/stable/README/
 [GitHub]: https://github.com/CDSoft/pp
 
 PP - Generic preprocessor (with pandoc in mind)
@@ -57,12 +58,13 @@ Installation
 **Compilation**:
 
 1. Download and extract [pp.tgz].
-2. Run `make dep` to install Haskell required packages.
-3. Run `make`.
+2. Run `make`.
+
+[PP] is written in [Haskell] and is built with [Stack].
 
 **Installation**:
 
-- Run `make install` to copy `pp` in `/usr/local/bin` or `/usr/bin`.
+- Run `make install` to copy `pp` in `~/.local/bin`.
 - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
 `pp` requires [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
@@ -491,7 +493,7 @@ The diagram generator can be:
 - uml
 - ditaa
 
-`pp` will not create any directory,i
+`pp` will not create any directory,
 the path where the image is written must already exist.
 
 \dot(pp-generators)

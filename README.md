@@ -34,12 +34,13 @@ Installation
 **Compilation**:
 
 1.  Download and extract [pp.tgz](http://cdsoft.fr/pp/pp.tgz).
-2.  Run `make dep` to install Haskell required packages.
-3.  Run `make`.
+2.  Run `make`.
+
+[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is written in [Haskell](https://www.haskell.org/) and is built with [Stack](https://docs.haskellstack.org/en/stable/README/).
 
 **Installation**:
 
--   Run `make install` to copy `pp` in `/usr/local/bin` or `/usr/bin`.
+-   Run `make install` to copy `pp` in `~/.local/bin`.
 -   or copy `pp` (`pp.exe` on Windows) wherever you want.
 
 `pp` requires [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
@@ -367,7 +368,7 @@ The diagram generator can be:
 -   uml
 -   ditaa
 
-`pp` will not create any directory,i the path where the image is written must already exist.
+`pp` will not create any directory, the path where the image is written must already exist.
 
 ![](doc/img/pp-generators.png)
 
