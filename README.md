@@ -297,7 +297,10 @@ formats an existing source file in a colorized code block.
 sets the default line separator for code blocks. The default value is a 70 tilda row (`!codeclock(70)(~)`).
 
 **`!indent[(N)](BLOCK)`**  
-Indents each line of a block with `n` spaces. The default value of `n` is 4 spaces.
+indents each line of a block with `n` spaces. The default value of `n` is 4 spaces.
+
+**`!csv(FILENAME)[(HEADER)]`**  
+converts a CSV file to a Markdown or reStructuredText table. `HEADER` defines the header of the table, fields are separated by pipes (`|`). If `HEADER` is not defined, the first line of the file is used as the header of the table.
 
 Diagram and script examples
 ===========================
@@ -564,6 +567,136 @@ This script outputs:
 
     Hi, I'm Haskell 7.10
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
+
+CSV tables
+==========
+
+CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.
+
+Files with a header line
+------------------------
+
+This file:
+
+    Year,Make,Model,Description,Price
+    1997,Ford,E350,"ac, abs, moon",3000.00
+    1999,Chevy,"Venture ""Extended Edition""","",4900.00
+    1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+    1996,Jeep,Grand Cherokee,"MUST SELL!
+    air, moon roof, loaded",4799.00
+
+is rendered by `\csv(file.csv)` as:
+
+<table style="width:100%;">
+<colgroup>
+<col width="6%" />
+<col width="7%" />
+<col width="40%" />
+<col width="35%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">Year</th>
+<th align="left">Make</th>
+<th align="left">Model</th>
+<th align="left">Description</th>
+<th align="right">Price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><p>1997</p></td>
+<td align="left"><p>Ford</p></td>
+<td align="left"><p>E350</p></td>
+<td align="left"><p>ac, abs, moon</p></td>
+<td align="right"><p>3000.00</p></td>
+</tr>
+<tr class="even">
+<td align="right"><p>1999</p></td>
+<td align="left"><p>Chevy</p></td>
+<td align="left"><p>Venture &quot;Extended Edition&quot;</p></td>
+<td align="left"></td>
+<td align="right"><p>4900.00</p></td>
+</tr>
+<tr class="odd">
+<td align="right"><p>1999</p></td>
+<td align="left"><p>Chevy</p></td>
+<td align="left"><p>Venture &quot;Extended Edition, Very Large&quot;</p></td>
+<td align="left"></td>
+<td align="right"><p>5000.00</p></td>
+</tr>
+<tr class="even">
+<td align="right"><p>1996</p></td>
+<td align="left"><p>Jeep</p></td>
+<td align="left"><p>Grand Cherokee</p></td>
+<td align="left"><p>MUST SELL! air, moon roof, loaded</p></td>
+<td align="right"><p>4799.00</p></td>
+</tr>
+</tbody>
+</table>
+
+Files without any header line
+-----------------------------
+
+This file:
+
+    1997,Ford,E350,"ac, abs, moon",3000.00
+    1999,Chevy,"Venture ""Extended Edition""","",4900.00
+    1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+    1996,Jeep,Grand Cherokee,"MUST SELL!
+    air, moon roof, loaded",4799.00
+
+is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
+
+<table style="width:100%;">
+<colgroup>
+<col width="6%" />
+<col width="7%" />
+<col width="40%" />
+<col width="35%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">Year</th>
+<th align="left">Make</th>
+<th align="left">Model</th>
+<th align="left">Description</th>
+<th align="right">Price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><p>1997</p></td>
+<td align="left"><p>Ford</p></td>
+<td align="left"><p>E350</p></td>
+<td align="left"><p>ac, abs, moon</p></td>
+<td align="right"><p>3000.00</p></td>
+</tr>
+<tr class="even">
+<td align="right"><p>1999</p></td>
+<td align="left"><p>Chevy</p></td>
+<td align="left"><p>Venture &quot;Extended Edition&quot;</p></td>
+<td align="left"></td>
+<td align="right"><p>4900.00</p></td>
+</tr>
+<tr class="odd">
+<td align="right"><p>1999</p></td>
+<td align="left"><p>Chevy</p></td>
+<td align="left"><p>Venture &quot;Extended Edition, Very Large&quot;</p></td>
+<td align="left"></td>
+<td align="right"><p>5000.00</p></td>
+</tr>
+<tr class="even">
+<td align="right"><p>1996</p></td>
+<td align="left"><p>Jeep</p></td>
+<td align="left"><p>Grand Cherokee</p></td>
+<td align="left"><p>MUST SELL! air, moon roof, loaded</p></td>
+<td align="right"><p>4799.00</p></td>
+</tr>
+</tbody>
+</table>
 
 OS support
 ==========

@@ -1,5 +1,5 @@
 name:                pp
-version:             1.8
+version:             1.9
 synopsis:            Generic Preprocessor (for Pandoc)
 description:         text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText)
 homepage:            https://github.com/CDSoft/pp#readme
@@ -21,6 +21,7 @@ library
                      , Localization
                      , OSAbstraction
                      , Preprocessor
+                     , CSV
                      , Tag
                      , UTF8
                      , Version
@@ -35,6 +36,9 @@ library
                      , temporary
                      , directory
                      , filepath
+                     , spreadsheet
+                     , explicit-exception
+                     , split
   default-language:    Haskell2010
 
 executable pp

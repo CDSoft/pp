@@ -398,8 +398,13 @@ The `rawinclude` macro can include a file without preprocessing it.
     The default value is a 70 tilda row (`!codeclock(70)(~)`).
 
 **`!indent[(N)](BLOCK)`**
-:   Indents each line of a block with `n` spaces.
+:   indents each line of a block with `n` spaces.
     The default value of `n` is 4 spaces.
+
+**`!csv(FILENAME)[(HEADER)]`**
+:   converts a CSV file to a Markdown or reStructuredText table.
+    `HEADER` defines the header of the table, fields are separated by pipes (`|`).
+    If `HEADER` is not defined, the first line of the file is used as the header of the table.
 
 }
 
@@ -832,6 +837,50 @@ main = do
                 intercalate " " (map show (take 10 primes))
 ~~~~~
 ~~~~~~~~~~
+
+CSV tables
+==========
+
+CSV files can be included in documents and rendered as Markdown or reStructuredText tables.
+The field separator is inferred from the content of the file.
+It can be a comma, a semicolon, tabulation or a pipe.
+
+## Files with a header line
+
+This file:
+
+\lit(/tmp/table1.csv)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Year,Make,Model,Description,Price
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL!
+air, moon roof, loaded",4799.00
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\flushlit
+
+is rendered by `\raw(\csv(file.csv))` as:
+
+\csv(/tmp/table1.csv)
+
+## Files without any header line
+
+This file:
+
+\lit(/tmp/table2.csv)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL!
+air, moon roof, loaded",4799.00
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\flushlit
+
+is rendered by `\raw(\csv(file.csv)(Year|Make|Model|Description|Price))` as:
+
+\csv(/tmp/table2.csv)(Year|Make|Model|Description|Price)
 
 OS support
 ==========

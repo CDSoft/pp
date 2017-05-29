@@ -1,5 +1,4 @@
 
-
 digraph {
     O -> A
     O -> B

@@ -269,7 +269,6 @@ Literate programming
 Lets write and test a useful library:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
 @functionDeclarations
 
@@ -277,7 +276,6 @@ Lets write and test a useful library:
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
 @functionImplementations
 
@@ -287,14 +285,12 @@ Lets write and test a useful library:
 The `fib` function computes Fibonacci's numbers:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
-
 int fib(int n);
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
-
 int fib(int n)
 {
     return (n < 2) ? 1 : fib(n-1) + fib(n-2);
@@ -310,7 +306,6 @@ int fact(int n);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
-
 int fact(int n)
 {
     return (n <= 1) ? 1 : n * fact(n-1);
@@ -322,7 +317,6 @@ int fact(int n)
 Some tests of `mylib.c`:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -365,7 +359,6 @@ The complete source files are:
 `mylib.h`:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
 @functionDeclarations
 
@@ -375,7 +368,6 @@ The complete source files are:
 `mylib.c`:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
 @functionImplementations
 
@@ -385,7 +377,6 @@ The complete source files are:
 `mylibtest.c`:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -411,9 +402,7 @@ formated with \source or \src:
 `mylib.h`:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
-
 int fib(int n);
 int fact(int n);
 
@@ -425,9 +414,7 @@ And with a different codeblock separator:
 15 '~':
 
 ~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
-
 int fib(int n);
 int fact(int n);
 
@@ -437,9 +424,7 @@ int fact(int n);
 20 '`':
 
 ```````````````````` {.c}
-
 // This is a C library
-
 int fib(int n);
 int fact(int n);
 
@@ -449,13 +434,71 @@ int fact(int n);
 25 '~' (default character):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
-
 // This is a C library
-
 int fib(int n);
 int fact(int n);
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+CSV tables
+==========
+
+This file with a header:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Year,Make,Model,Description,Price
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL!
+air, moon roof, loaded",4799.00
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+is rendered by `\csv(file.csv)` as:
+
++------+-------+----------------------------------------+-----------------------------------+---------+
+| Year | Make  | Model                                  | Description                       |   Price |
++=====:+:======+:=======================================+:==================================+========:+
+| 1997 | Ford  | E350                                   | ac, abs, moon                     | 3000.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+| 1999 | Chevy | Venture "Extended Edition"             |                                   | 4900.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+| 1999 | Chevy | Venture "Extended Edition, Very Large" |                                   | 5000.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+| 1996 | Jeep  | Grand Cherokee                         | MUST SELL! air, moon roof, loaded | 4799.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+
+
+This file without any header:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL!
+air, moon roof, loaded",4799.00
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
+
++------+-------+----------------------------------------+-----------------------------------+---------+
+| Year | Make  | Model                                  | Description                       |   Price |
++=====:+:======+:=======================================+:==================================+========:+
+| 1997 | Ford  | E350                                   | ac, abs, moon                     | 3000.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+| 1999 | Chevy | Venture "Extended Edition"             |                                   | 4900.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+| 1999 | Chevy | Venture "Extended Edition, Very Large" |                                   | 5000.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
+| 1996 | Jeep  | Grand Cherokee                         | MUST SELL! air, moon roof, loaded | 4799.00 |
++------+-------+----------------------------------------+-----------------------------------+---------+
 
 
 Test results

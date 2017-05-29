@@ -24,12 +24,15 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 module Preprocessor where
 
+import Debug.Trace
+
 import Control.Monad
 import System.IO
 import System.IO.Error
 import System.IO.Temp
 import System.Directory
 import Data.List
+import Data.List.Split
 import Data.Char
 import Data.Maybe
 import System.FilePath
@@ -43,6 +46,7 @@ import OSAbstraction
 import UTF8
 import ErrorMessages
 import Localization
+import CSV
 
 -- A preprocessor takes an environment and a string to preprocess
 -- and returns a new environment and the preprocessed string.
@@ -112,6 +116,8 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("src", source)         , ("source", source)
           , ("codeblock", codeblock)
           , ("indent", indent)
+
+          , ("csv", csv)
 
           ]
           ++ [ (diag, diagram Graphviz diag ""            "")             | diag <- graphvizDiagrams]
@@ -239,6 +245,9 @@ pp env (c0:cs)
         readArgs Nothing s = case dropSpaces s of
             -- code block => it's the last argument
             Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock c s1 of
+                Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
+                Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
+                Just (_, '\n':block, _, s2) -> ([Block block], s2)
                 Just (_, block, _, s2) -> ([Block block], s2)
                 Nothing -> ([], s)
             -- argument starting with an open delimiter
@@ -260,6 +269,9 @@ pp env (c0:cs)
         readArgs leftright@(Just (left, right)) s = case dropSpaces s of
             -- code block => it's the last argument
             Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock c s1 of
+                Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
+                Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
+                Just (_, '\n':block, _, s2) -> ([Block block], s2)
                 Just (_, block, _, s2) -> ([Block block], s2)
                 Nothing -> ([], s)
             -- argument starting with the same delimiter
@@ -1032,3 +1044,30 @@ expandLit macros (c0:s)
                     Nothing -> c0:name
                     Just content -> expandLit macros (fromVal content)
 expandLit _ [] = []
+
+---------------------------------------------------------------------
+-- CSV tables
+---------------------------------------------------------------------
+
+csv :: Macro
+
+-- \csv(filename) converts a CSV file to a markdown or reStructuredText table
+-- The delimiter is automagically infered (hope it works...).
+-- The first line of the CSV file is the header of the table.
+csv env [filename] = do
+    filename' <- ppAndStrip' env filename
+    csvData <- readFileUTF8 filename'
+    let table = makeTable (fromVal $ getSymbol env Dialect) Nothing csvData
+    return (env, table)
+--
+-- \csv(filename)(header) converts a CSV file to a markdown or reStructuredText table
+-- The delimiter is automagically infered (hope it works...).
+-- The first line of the CSV file is the header of the table.
+csv env [filename, header] = do
+    filename' <- ppAndStrip' env filename
+    header' <- ppAndStrip' env header
+    let fields = splitOn "|" header'
+    csvData <- readFileUTF8 filename'
+    let table = makeTable (fromVal $ getSymbol env Dialect) (Just fields) csvData
+    return (env, table)
+csv _ _ = arityError "csv" [1, 2]

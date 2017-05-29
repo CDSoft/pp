@@ -389,6 +389,42 @@ And with a different codeblock separator:
 
 \codeblock(25)\src{.stack-work/mylib.h}
 
+CSV tables
+==========
+
+This file with a header:
+
+\lit(/tmp/table1.csv)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Year,Make,Model,Description,Price
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL!
+air, moon roof, loaded",4799.00
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\flushlit
+
+is rendered by `\raw(\csv(file.csv))` as:
+
+\csv(/tmp/table1.csv)
+
+This file without any header:
+
+\lit(/tmp/table2.csv)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1997,Ford,E350,"ac, abs, moon",3000.00
+1999,Chevy,"Venture ""Extended Edition""","",4900.00
+1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+1996,Jeep,Grand Cherokee,"MUST SELL!
+air, moon roof, loaded",4799.00
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\flushlit
+
+is rendered by `\raw(\csv(file.csv)(Year|Make|Model|Description|Price))` as:
+
+\csv(/tmp/table2.csv)(Year|Make|Model|Description|Price)
+
 Test results
 ============
 
