@@ -66,7 +66,7 @@ BUILD = .stack-work
 TAG = src/Tag.hs
 $(shell ./tag.sh $(TAG))
 
-install:
+install: $(PP)
 	stack install
 
 clean:
