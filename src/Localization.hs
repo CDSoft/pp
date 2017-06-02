@@ -88,7 +88,7 @@ myLocale "it" = TimeLocale {
 
 -- spanish locale date format
 -- contributed by conradolandia (https://github.com/conradolandia)
-myLocale "it" = TimeLocale {
+myLocale "es" = TimeLocale {
                     wDays = [("domingo","dom")
                             ,("lunes","lun")
                             ,("martes","mar")

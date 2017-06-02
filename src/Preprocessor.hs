@@ -348,7 +348,7 @@ macropp macro env args = do
 
 -- language list
 langs :: [String]
-langs = words "en fr it"
+langs = words "en fr it es"
 
 -- \lang returns the current language ("fr", "it" or "en")
 currentLang :: Macro
