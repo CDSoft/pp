@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Monday 29 May 2017</p>
+<p class="date">Saturday 3 June 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -114,7 +114,7 @@
 <p><code>pp</code> executes arguments in the same order as the command line. It starts with an initial environment containing:</p>
 <ul>
 <li>the environment variables of the current process</li>
-<li>a <code>lang</code> variable containing the current langage (currently only French (<code>fr</code>), Italian (<code>it</code>) and English (<code>en</code>) are supported)</li>
+<li>a <code>lang</code> variable containing the current langage (currently only French (<code>fr</code>), Italian (<code>it</code>), Spanish (<code>es</code>) and English (<code>en</code>) are supported)</li>
 <li>a <code>format</code> variable containing the current output format (<code>html</code>, <code>pdf</code>, <code>odt</code>, <code>epub</code> or <code>mobi</code>)</li>
 <li>a <code>dialect</code> variable containing the current dialect (<code>md</code> or <code>rst</code>)</li>
 </ul>
@@ -134,7 +134,7 @@
 <dt><strong><code>-USYMBOL</code></strong> or <strong><code>-U SYMBOL</code></strong></dt>
 <dd>removes the symbol <code>SYMBOL</code> from the current environment.
 </dd>
-<dt><strong><code>-fr</code>|<code>-it</code>|<code>-en</code></strong></dt>
+<dt><strong><code>-fr</code>|<code>-it</code>|<code>-es</code>|<code>-en</code></strong></dt>
 <dd>changes the current language.
 </dd>
 <dt><strong><code>-html</code>|<code>-pdf</code>|<code>-odt</code>|<code>-epub</code>|<code>-mobi</code></strong></dt>
@@ -241,7 +241,7 @@ macro definitions.
 <dd>computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
 </dd>
 <dt><strong><code>!lang</code></strong></dt>
-<dd>emits the current language (<em>fr</em>, <em>it</em> or <em>en</em>)
+<dd>emits the current language (<em>fr</em>, <em>it</em>, <em>es</em> or <em>en</em>)
 </dd>
 <dt><strong><code>!format</code></strong></dt>
 <dd>emits the current format (<em>html</em>, <em>pdf</em>, <em>odt</em>, <em>epub</em> or <em>mobi</em>)
@@ -497,7 +497,7 @@ if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
 <p>This script outputs:</p>
 <pre><code>Hi, I'm C:\windows\system32\cmd.exe
 
-Microsoft Windows 10.0.15063 (2.7)
+Microsoft Windows 10.0.15063 (2.8)
 This script is run from wine under Linux
 </code></pre>
 <h3 id="python">Python</h3>

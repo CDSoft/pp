@@ -77,7 +77,7 @@ Command line
 `pp` executes arguments in the same order as the command line. It starts with an initial environment containing:
 
 -   the environment variables of the current process
--   a `lang` variable containing the current langage (currently only French (`fr`), Italian (`it`) and English (`en`) are supported)
+-   a `lang` variable containing the current langage (currently only French (`fr`), Italian (`it`), Spanish (`es`) and English (`en`) are supported)
 -   a `format` variable containing the current output format (`html`, `pdf`, `odt`, `epub` or `mobi`)
 -   a `dialect` variable containing the current dialect (`md` or `rst`)
 
@@ -99,7 +99,7 @@ adds the symbol `SYMBOL` to the current environment and associates it to the opt
 **`-USYMBOL`** or **`-U SYMBOL`**  
 removes the symbol `SYMBOL` from the current environment.
 
-**`-fr`|`-it`|`-en`**  
+**`-fr`|`-it`|`-es`|`-en`**  
 changes the current language.
 
 **`-html`|`-pdf`|`-odt`|`-epub`|`-mobi`**  
@@ -218,7 +218,7 @@ returns the machine architecture (e.g. `x86_64`, `i386`, ...)
 computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
 
 **`!lang`**  
-emits the current language (*fr*, *it* or *en*)
+emits the current language (*fr*, *it*, *es* or *en*)
 
 **`!format`**  
 emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
@@ -516,7 +516,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.7)
+    Microsoft Windows 10.0.15063 (2.8)
     This script is run from wine under Linux
 
 ### Python
