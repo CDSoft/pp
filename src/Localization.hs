@@ -86,6 +86,36 @@ myLocale "it" = TimeLocale {
                     time12Fmt = "%I:%M:%S %p"
                 }
 
+-- spanish locale date format
+-- contributed by conradolandia (https://github.com/conradolandia)
+myLocale "es" = TimeLocale {
+                    wDays = [("domingo","dom")
+                            ,("lunes","lun")
+                            ,("martes","mar")
+                            ,("miércoles","mie")
+                            ,("jueves","jue")
+                            ,("viernes","vie")
+                            ,("sábado","sab")],
+                    months = [("enero","ene")
+                             ,("febrero","feb")
+                             ,("marzo","mar")
+                             ,("abril","abr")
+                             ,("mayo","may")
+                             ,("junio","jun")
+                             ,("julio","jul")
+                             ,("agosto","ago")
+                             ,("septiembre","sep")
+                             ,("octubre","oct")
+                             ,("noviembre","nov")
+                             ,("diciembre","dic")],
+                    amPm = ("AM","PM"),
+                    knownTimeZones = [],
+                    dateTimeFmt = "%a %e %b %Y, %H:%M:%S %Z",
+                    dateFmt = "%d/%m/%y",
+                    timeFmt = "%H:%M:%S",
+                    time12Fmt = "%I:%M:%S %p"
+                }
+
 -- English is the default locale
 myLocale _ = defaultTimeLocale
 

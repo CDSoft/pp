@@ -348,14 +348,14 @@ macropp macro env args = do
 
 -- language list
 langs :: [String]
-langs = words "en fr it"
+langs = words "en fr it es"
 
--- \lang returns the current language ("fr", "it" or "en")
+-- \lang returns the current language ("fr", "it", "es", or "en")
 currentLang :: Macro
 currentLang env [] = return (env, fromVal (getSymbol env Lang))
 currentLang _ _ = arityError "lang" [0]
 
--- language implements the macros \en, \fr, \it.
+-- language implements the macros \en, \fr, \it, \es.
 -- language preprocesses src only if the current language is lang.
 language :: String -> Macro
 language lang env [src] = case lookup Lang env of
