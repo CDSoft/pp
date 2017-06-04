@@ -48,19 +48,14 @@ import ErrorMessages
 import Localization
 import CSV
 
--- A preprocessor takes an environment and a string to preprocess
--- and returns a new environment and the preprocessed string.
-type Prepro = Env -> String ->  IO (Env, String)
-
--- A macro takes an environment and arguments
--- and returns a new environment and the result of the macro as a string.
-type Macro = Env -> [Val] -> IO (Env, String)
-
 type Chars = String
 
 -- charsFunc is the list of characters used to execute a macro
 charsFunc :: Chars
 charsFunc = ['!', '\\']
+
+validMacroName :: String -> Bool
+validMacroName = all (`elem` ('_':['a'..'z']++['A'..'Z']++['0'..'9']))
 
 -- charsOpenClose is the list of characters that can delimit macro parameters.
 charsOpenClose :: [(Char, Char)]
@@ -70,6 +65,42 @@ charsOpenClose = [('(', ')'), ('{', '}'), ('[', ']')]
 -- the Markdown code block syntax.
 charsBlock :: Chars
 charsBlock = ['~', '`']
+
+-- format list
+formats :: [String]
+formats = words "html pdf odf epub mobi"
+
+-- dialect list
+dialects :: [String]
+dialects = words "md rst"
+
+-- Graphiviz diagrams
+graphvizDiagrams :: [String]
+graphvizDiagrams = words "dot neato twopi circo fdp sfdp patchwork osage"
+
+-- PlantUML diagrams
+plantumlDiagrams :: [String]
+plantumlDiagrams = words "uml"
+
+-- Ditaa diagrams
+ditaaDiagrams :: [String]
+ditaaDiagrams = words "ditaa"
+
+-- literate programming macros
+litMacroTagChar :: Char
+litMacroTagChar = '@'
+
+
+-- A preprocessor takes an environment and a string to preprocess
+-- and returns a new environment and the preprocessed string.
+type Prepro = Env -> String ->  IO (Env, String)
+
+-- A macro takes an environment and arguments
+-- and returns a new environment and the result of the macro as a string.
+type Macro = Env -> [Val] -> IO (Env, String)
+
+-- Diagram types managed by pp
+data DiagramRuntime = Graphviz | PlantUML deriving (Show)
 
 -- list of builtin macros
 builtin :: [(String, Macro)]
@@ -105,9 +136,9 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
 
           , ("main", mainFile)
           , ("file", currentFile)
-          , ("lang", currentLang)
-          , ("format", currentFormat)
-          , ("dialect", currentDialect)
+          , ("lang", currentLang)           , ("langs", identList "langs" langs)
+          , ("format", currentFormat)       , ("formats", identList "formats" formats)
+          , ("dialect", currentDialect)     , ("dialects", identList "dialects" dialects)
 
           , ("add", add)
 
@@ -343,19 +374,24 @@ macropp macro env args = do
     pp env' src
 
 ---------------------------------------------------------------------
+-- Identifier list macro (langs, formats, dialects, ...)
+---------------------------------------------------------------------
+
+identList :: String -> [String] -> Macro
+identList _ idents env [] = return (env, unwords $ sort idents)
+identList name _ _ _ = arityError name [0]
+
+---------------------------------------------------------------------
 -- Language macros
 ---------------------------------------------------------------------
 
--- language list
-langs :: [String]
-langs = words "en fr it es"
-
--- \lang returns the current language ("fr", "it", "es", or "en")
+-- \lang returns the current language (see Localization.langs)
 currentLang :: Macro
 currentLang env [] = return (env, fromVal (getSymbol env Lang))
 currentLang _ _ = arityError "lang" [0]
 
--- language implements the macros \en, \fr, \it, \es.
+-- language implements the macros \xx where xx is a language code
+-- defined in Localization.langs.
 -- language preprocesses src only if the current language is lang.
 language :: String -> Macro
 language lang env [src] = case lookup Lang env of
@@ -367,16 +403,13 @@ language lang _ _ = arityError lang [1]
 -- Format macros
 ---------------------------------------------------------------------
 
--- format list
-formats :: [String]
-formats = words "html pdf odf epub mobi"
-
--- \format returns the current output format ("html", "pdf", "odt", "epub" or "mobi")
+-- \format returns the current output format (see formats)
 currentFormat :: Macro
 currentFormat env [] = return (env, fromVal (getSymbol env FileFormat))
 currentFormat _ _ = arityError "format" [0]
 
--- format implements the macros \html, \pdf, \odt, \epub and \mobi.
+-- format implements the macros \xxx where xxx is a format
+-- defined in formats.
 -- format preprocesses src only if the current format is fmt.
 format :: String -> Macro
 format fmt env [src] = case lookup FileFormat env of
@@ -388,16 +421,13 @@ format fmt _ _ = arityError fmt [1]
 -- Dialect macros
 ---------------------------------------------------------------------
 
--- dialect list
-dialects :: [String]
-dialects = words "md rst"
-
--- \dialect returns the current dialect ("md" or "rst")
+-- \dialect returns the current dialect (see dialects)
 currentDialect :: Macro
 currentDialect env [] = return (env, fromVal (getSymbol env Dialect))
 currentDialect _ _ = arityError "dialect" [0]
 
--- dialect implements the macros \md, and \rst.
+-- dialect implements the macros \xxx where xxx is a dialect
+-- defined in dialects.
 -- dialect preprocesses src only if the current dialect is dial.
 dialect :: String -> Macro
 dialect dial env [src] = case lookup Dialect env of
@@ -420,9 +450,6 @@ define _ env [name, value] = do
     return ((Def name', value) : clean (Def name') env, "")
 define macro env [name] = define macro env [name, Val ""]
 define macro _ _ = arityError macro [1,2]
-
-validMacroName :: String -> Bool
-validMacroName = all (`elem` ('_':['a'..'z']++['A'..'Z']++['0'..'9']))
 
 -- \undefine(name) removes (Def name) from the environment
 undefine :: String -> Macro
@@ -645,21 +672,6 @@ script lang _ _ _ _ _ = arityError lang [1]
 -- Diagrams macros
 ---------------------------------------------------------------------
 
--- Diagram types managed by pp
-data DiagramRuntime = Graphviz | PlantUML deriving (Show)
-
--- Graphiviz diagrams
-graphvizDiagrams :: [String]
-graphvizDiagrams = words "dot neato twopi circo fdp sfdp patchwork osage"
-
--- PlantUML diagrams
-plantumlDiagrams :: [String]
-plantumlDiagrams = words "uml"
-
--- Ditaa diagrams
-ditaaDiagrams :: [String]
-ditaaDiagrams = words "ditaa"
-
 -- diagram generates a GraphViz, PlantUML or ditaa diagram.
 -- The metadata file associated to the diagram source file contains
 -- additional information that can not be in the source file but
@@ -694,7 +706,7 @@ diagram runtime diag header footer env [path, title, code] = do
     let link = case fromVal $ getSymbol env Dialect of
                 "rst" -> unlines [".. figure:: " ++ url, indent' 4 attrs, "", "    " ++ title']
                 _ -> "!["++title'++"]("++url++")"++attrs
-    return (env, link) -- TODO: à formater en fonction du dialecte
+    return (env, link)
 diagram runtime diag header footer env [path, code] =
     diagram runtime diag header footer env [path, Val "", code]
 diagram _ diag _ _ _ _ = arityError diag [2, 3]
@@ -767,10 +779,6 @@ resource name (array, len) = do
 ---------------------------------------------------------------------
 -- Literate programming macros
 ---------------------------------------------------------------------
-
--- literate programming macros
-litMacroTagChar :: Char
-litMacroTagChar = '@'
 
 -- "saveLiterateContent macros env" saves all the literate contents recorded in the environment.
 -- "macros" is the list of literate content that must not be saved

@@ -193,6 +193,7 @@ Dialect, Output language and output format
 
 ----------------------------------- -----------------------------------------------------------------
 The current dialect is md:          OK
+All dialects:                       OK
 Section for a markdown document:    OK
 Section for a rst document:         OK
 ----------------------------------- -----------------------------------------------------------------
@@ -201,6 +202,7 @@ Section for a rst document:         OK
 
 ----------------------------------- -----------------------------------------------------------------
 The current language is "en":       OK
+All languages:                      OK
 Section in english:                 OK
 Section in french:                  OK
 ----------------------------------- -----------------------------------------------------------------
@@ -209,6 +211,7 @@ Section in french:                  OK
 
 ----------------------------------- -----------------------------------------------------------------
 The current format is HTML:         OK
+All formats:                        OK
 Section for an HTML document:       OK
 Section for a PDF document:         OK
 ----------------------------------- -----------------------------------------------------------------
@@ -505,7 +508,7 @@ Test results
 ============
 
 ------------------------------- ------------------------
-Number of successful tests:     73
+Number of successful tests:     76
 Number of failures:             0
 ------------------------------- ------------------------
 

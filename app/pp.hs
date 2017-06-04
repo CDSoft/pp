@@ -24,10 +24,12 @@ import System.IO
 import System.Environment
 import System.Exit
 import Data.Char
+import Data.List
 
 import qualified Version
 import Environment
 import Preprocessor
+import Localization
 import UTF8
 
 -- The main function builds the initial environment, parses the input
@@ -121,6 +123,15 @@ doArg env "-import" (name:args) = do
 doArg env ('-':'i':'m':'p':'o':'r':'t':'=':name) args = do
     (env', _) <- ppFile ((CurrentFile, Val name) : env) name
     return (env', "", args)
+
+-- "doArg" env "-langs" shows the list of languages
+doArg _ "-langs" _ = putStrLn (unwords $ sort langs) >> exitSuccess
+
+-- "doArg" env "-dialects" shows the list of dialects
+doArg _ "-dialects" _ = putStrLn (unwords $ sort dialects) >> exitSuccess
+
+-- "doArg" env "-formats" shows the list of formats
+doArg _ "-formats" _ = putStrLn (unwords $ sort formats) >> exitSuccess
 
 -- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) _ | not (null arg) = error $ "Unexpected argument: " ++ arg

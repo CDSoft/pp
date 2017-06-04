@@ -27,6 +27,7 @@ import Data.Version
 import System.Info
 
 import Preprocessor
+import Localization
 import qualified Tag
 
 name :: String
@@ -63,11 +64,11 @@ help = unlines [
         "  -D<name>[=<value>]   Define a variable",
         "  -U<name>             Undefine a variable",
         "  -<lang>              Define the current language",
-        "                       <lang> can be " ++ intercalate ", " langs,
+        "  -langs               List the languages",
         "  -<format>            Define the current target format",
-        "                       <format> can be " ++ intercalate ", " formats,
+        "  -formats             List the formats",
         "  -<dialect>           Define the current dialect",
-        "                       <dialect> can be " ++ intercalate ", " dialects,
+        "  -dialects            List the dialects",
         "  -img=<prefix>        Define the prefix to add to output image path",
         "Files:",
         "  filename             Preprocess an existing file",

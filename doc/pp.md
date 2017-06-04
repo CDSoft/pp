@@ -141,13 +141,22 @@ The user can define and undefine variables and list input files.
 **`-USYMBOL`** or **`-U SYMBOL`**
 :   removes the symbol `SYMBOL` from the current environment.
 
-**`-fr`|`-it`|`-es`|`-en`**
+**`-languages`**
+:   lists the languages.
+
+\sh[echo \langs | sed 's/\(\w\{1,\}\)/**`-\1`**/g' | tr ' ' '|']
 :   changes the current language.
 
-**`-html`|`-pdf`|`-odt`|`-epub`|`-mobi`**
+**`-formats`**
+:   lists the formats.
+
+\sh[echo \formats | sed 's/\(\w\{1,\}\)/**`-\1`**/g' | tr ' ' '|']
 :   changes the current output file format.
 
-**`-md`|`-rst`**
+**`-dialects`**
+:   lists the dialects.
+
+\sh[echo \dialects | sed 's/\(\w\{1,\}\)/**`-\1`**/g' | tr ' ' '|']
 :   changes the current dialect (`-md` is the default dialect).
 
 **`-img=PREFIX`** or **`-img PREFIX`**
@@ -210,116 +219,117 @@ Macros results are not preprocessed (unless used as a parameter of
 an outer macro).
 The `include` macro is an exception: its output is also preprocessed.
 The `rawinclude` macro can include a file without preprocessing it.
+}
 
-**`!def[ine](SYMBOL)[(VALUE)]`**
+\raw{**`!def[ine](SYMBOL)[(VALUE)]`**}
 :   Add the symbol `SYMBOL` to the current environment
     and associate it with the optional value `VALUE`.
     Arguments are denoted by `!1` ... `!n` in `VALUE`.
 
-**`!undef[ine](SYMBOL)`**
+\raw{**`!undef[ine](SYMBOL)`**}
 :   Remove the symbol `SYMBOL` from the current environment.
 
-**`!ifdef(SYMBOL)(TEXT_IF_DEFINED)[(TEXT_IF_NOT_DEFINED)]`**
+\raw{**`!ifdef(SYMBOL)(TEXT_IF_DEFINED)[(TEXT_IF_NOT_DEFINED)]`**}
 :   if `SYMBOL` is defined in the current environnement `pp` preprocesses
     `TEXT_IF_DEFINED`. Otherwise it preprocesses `TEXT_IF_NOT_DEFINED`.
 
-**`!ifndef(SYMBOL)(TEXT_IF_NOT_DEFINED)[(TEXT_IF_DEFINED)]`**
+\raw{**`!ifndef(SYMBOL)(TEXT_IF_NOT_DEFINED)[(TEXT_IF_DEFINED)]`**}
 :   if `SYMBOL` is not defined in the current environnement `pp` preprocesses
     `TEXT_IF_NOT_DEFINED`. Otherwise it preprocesses `TEXT_IF_DEFINED`.
 
-**`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]`**
+\raw{**`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]`**}
 :   if `X` and `Y` are equal `pp` preprocesses `TEXT_IF_EQUAL`.
     Otherwise it preprocesses `TEXT_IF_DIFFERENT`.
     Two pieces of text are equal if all characters are the same,
     spaces are ignored.
 
-**`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]`**
+\raw{**`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]`**}
 :   if `X` and `Y` are different `pp` preprocesses `TEXT_IF_DIFFERENT`.
     Otherwise it preprocesses `TEXT_IF_EQUAL`.
 
-**`!rawdef(X)`**
+\raw{**`!rawdef(X)`**}
 :   get the raw (unevaluated) definition of `X`
 
-**`!inc[lude](FILENAME)`**
+\raw{**`!inc[lude](FILENAME)`**}
 :   `pp` preprocesses the content of the file named `FILENAME` and includes it
      in the current document, using the current environment.
      If the file path is relative it is searched
      first in the directory of the current file
      then in the directory of the main file.
 
-**`!import(FILENAME)`**
-:   works as `!include(FILENAME)` but no text is emited.
+\raw{**`!import(FILENAME)`**}
+:   works as `\raw{!include(FILENAME)}` but no text is emitted.
     This is useful to import macro definitions.
 
-**`!raw(TEXT)`**
+\raw{**`!raw(TEXT)`**}
 :   `pp` emits `TEXT` without any preprocessing.
 
-**`!rawinc[lude](FILE)`**
+\raw{**`!rawinc[lude](FILE)`**}
 :   `pp` emits the content of `FILE` without any preprocessing.
 
-**`!pp(TEXT)`**
+\raw{**`!pp(TEXT)`**}
 :   `pp` forces the evaluation of `TEXT`.
     This macro is useful to preprocess the output of script macros
     for instance (`sh`, `python`, ...).
 
-**`!comment(TEXT)`** or **`!comment(TITLE)(TEXT)`**
-:   considers `TEXT` as comment. Nothing is preprocessed or emited.
+\raw{**`!comment(TEXT)`** or **`!comment(TITLE)(TEXT)`**}
+:   considers `TEXT` as comment. Nothing is preprocessed or emitted.
     `TITLE` is also ignored.
 
     Example:
 
-        !comment(This is the title of the comment)
+        \raw{!comment(This is the title of the comment)
         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         And this is a useful description of some
         macro definitions.
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
 
-**`!quiet(TEXT)`**
+\raw{**`!quiet(TEXT)`**}
 :   quietly preprocess `TEXT` and emits nothing.
     Only the side effects (e.g. macro definitions) are kept in the environment.
 
-**`!exec(COMMAND)`**
+\raw{**`!exec(COMMAND)`**}
 :   executes a shell command with the default shell (`sh` or `cmd` according to the OS).
 
-**`!rawexec(COMMAND)`** (*deprecated*)
-:   as `!exec(COMMAND)`.
+\raw{**`!rawexec(COMMAND)`** (*deprecated*)}
+:   as `\raw{!exec(COMMAND)}`.
     This macro is deprecated. Consider using `exec` instead.
 
-**`!mdate(FILES)`**
+\raw{**`!mdate(FILES)`**}
 :   returns the modification date of the most recent file.
 
-**`!env(VARNAME)`**
+\raw{**`!env(VARNAME)`**}
 :   `pp` preprocesses and emits the value of the process environment variable `VARNAME`.
 
-**`!os`**
+\raw{**`!os`**}
 :   returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS, `windows` on Windows)
 
-**`!arch`**
+\raw{**`!arch`**}
 :   returns the machine architecture (e.g. `x86_64`, `i386`, ...)
 
-**`!add(VARNAME)[(INCREMENT)]`**
+\raw{**`!add(VARNAME)[(INCREMENT)]`**}
 :   computes `VARNAME+INCREMENT` and stores the result to `VARNAME`.
     The default value of the increment is 1.
 
-**`!lang`**
-:   emits the current language (*fr*, *it*, *es* or *en*)
+\raw{**`!lang`**}
+:   emits the current language (\sh[echo \langs | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g'])
 
-**`!format`**
-:   emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
+\raw{**`!format`**}
+:   emits the current format (\sh[echo \formats | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g'])
 
-**`!dialect`**
-:   emits the current dialect (*md* or *rst*)
+\raw{**`!dialect`**}
+:   emits the current dialect (\sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g'])
 
-**`!fr(...)`**, **`!it(...)`** or **`!en(...)`**
-:   emits some text only if the current language is *fr*, *it* or *en*
+\sh[echo \langs | sed -e 's/\(\w\{1,\}\)/**`!\1(...)`**/g' -e 's/ /, /g']
+:   emits some text only if the current language is \sh[echo \langs | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g']
 
-**`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**
-:   emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
+\sh[echo \formats | sed -e 's/\(\w\{1,\}\)/**`!\1(...)`**/g' -e 's/ /, /g']
+:   emits some text only if the current format is \sh[echo \formats | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g']
 
-**`!md`**, **`!rst`**
-:   emits some text only if the current dialect is *md* or *rst*
+\sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/**`!\1(...)`**/g' -e 's/ /, /g']
+:   emits some text only if the current dialect is \sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g']
 
-**`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**
+\raw{**`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**}
 :   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].
     See examples later.
     The name of the macro is the kind of diagram.
@@ -327,15 +337,15 @@ The `rawinclude` macro can include a file without preprocessing it.
     `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
     `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`** **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**,
+\raw{**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`** **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**,}
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`.
     Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
 
-**`!bat(SCRIPT)`** (*deprecated*)
-:   same as `!cmd`.
+\raw{**`!bat(SCRIPT)`** (*deprecated*)}
+:   same as `\raw{!cmd}`.
 
-**`!lit[erate](FILENAME)(LANG)(CONTENT)`**
+\raw{**`!lit[erate](FILENAME)(LANG)(CONTENT)`**}
 :   appends `CONTENT` to the file `FILENAME`.
     If `FILENAME` starts with `@` it's a macro, not a file.
     The output is highlighted using the programming language `LANGUAGE`.
@@ -344,7 +354,7 @@ The `rawinclude` macro can include a file without preprocessing it.
     Macros are expanded when the files are written.
     This macro provides basic literate programming features.
 
-**`!lit[erate](FILENAME)(CONTENT)`**
+\raw{**`!lit[erate](FILENAME)(CONTENT)`**}
 :   appends `CONTENT` to the file `FILENAME`.
     The output is highlighted using the previously given language for this file.
 
@@ -352,61 +362,59 @@ The `rawinclude` macro can include a file without preprocessing it.
 
         The main program just prints some messages:
 
-        !lit(main.c)(C)
+        \raw{!lit(main.c)(C)
         ~~~~~~~~~~~~~~~~~~~~
         @includes
         void main()
         {
         @messages
         }
-        ~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~}
 
         First we need to be able to print messages:
 
-        !lit(@includes)(C)
+        \raw{!lit(@includes)(C)
         ~~~~~~~~~~~~~~~~~~~~
         #include <stdio.h>
-        ~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~}
 
         The program must first say "Hello" :
 
-        !lit(@messages)(C)
+        \raw{!lit(@messages)(C)
         ~~~~~~~~~~~~~~~~~~~~
             puts("Hello...\n");
-        ~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~}
 
         And also finally "Goodbye":
 
-        !lit(@messages)
+        \raw{!lit(@messages)
         ~~~~~~~~~~~~~~~~~~~~
             puts("Goodbye.");
-        ~~~~~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~~~~~}
 
-**`!lit[erate]`**
+\raw{**`!lit[erate]`**}
 :   emits the current content of `FILENAME`.
 
-**`!flushlit[erate]`**
-:   writes files built with `!lit` before reaching the end of the document.
+\raw{**`!flushlit[erate]`**}
+:   writes files built with `\raw{!lit}` before reaching the end of the document.
     This macro is automatically executed before any script execution
-    or file inclusion with `!src`.
+    or file inclusion with `\raw{!src}`.
 
-**`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**
+\raw{**`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**}
 :   formats an existing source file in a colorized code block.
 
-**`!codeblock(LENGTH)[(CHAR)]`**
+\raw{**`!codeblock(LENGTH)[(CHAR)]`**}
 :   sets the default line separator for code blocks.
-    The default value is a 70 tilda row (`!codeclock(70)(~)`).
+    The default value is a 70 tilda row (`\raw{!codeclock(70)(~)}`).
 
-**`!indent[(N)](BLOCK)`**
+\raw{**`!indent[(N)](BLOCK)`**}
 :   indents each line of a block with `n` spaces.
     The default value of `n` is 4 spaces.
 
-**`!csv(FILENAME)[(HEADER)]`**
+\raw{**`!csv(FILENAME)[(HEADER)]`**}
 :   converts a CSV file to a Markdown or reStructuredText table.
     `HEADER` defines the header of the table, fields are separated by pipes (`|`).
     If `HEADER` is not defined, the first line of the file is used as the header of the table.
-
-}
 
 Diagram and script examples
 ===========================

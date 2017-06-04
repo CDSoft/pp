@@ -99,13 +99,22 @@ adds the symbol `SYMBOL` to the current environment and associates it to the opt
 **`-USYMBOL`** or **`-U SYMBOL`**  
 removes the symbol `SYMBOL` from the current environment.
 
-**`-fr`|`-it`|`-es`|`-en`**  
+**`-languages`**  
+lists the languages.
+
+**`-en`**|**`-es`**|**`-fr`**|**`-it`**  
 changes the current language.
 
-**`-html`|`-pdf`|`-odt`|`-epub`|`-mobi`**  
+**`-formats`**  
+lists the formats.
+
+**`-epub`**|**`-html`**|**`-mobi`**|**`-odf`**|**`-pdf`**  
 changes the current output file format.
 
-**`-md`|`-rst`**  
+**`-dialects`**  
+lists the dialects.
+
+**`-md`**|**`-rst`**  
 changes the current dialect (`-md` is the default dialect).
 
 **`-img=PREFIX`** or **`-img PREFIX`**  
@@ -171,7 +180,7 @@ get the raw (unevaluated) definition of `X`
 `pp` preprocesses the content of the file named `FILENAME` and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 
 **`!import(FILENAME)`**  
-works as `!include(FILENAME)` but no text is emited. This is useful to import macro definitions.
+works as `!include(FILENAME)` but no text is emitted. This is useful to import macro definitions.
 
 **`!raw(TEXT)`**  
 `pp` emits `TEXT` without any preprocessing.
@@ -183,7 +192,7 @@ works as `!include(FILENAME)` but no text is emited. This is useful to import ma
 `pp` forces the evaluation of `TEXT`. This macro is useful to preprocess the output of script macros for instance (`sh`, `python`, ...).
 
 **`!comment(TEXT)`** or **`!comment(TITLE)(TEXT)`**  
-considers `TEXT` as comment. Nothing is preprocessed or emited. `TITLE` is also ignored.
+considers `TEXT` as comment. Nothing is preprocessed or emitted. `TITLE` is also ignored.
 
 Example:
 
@@ -218,22 +227,22 @@ returns the machine architecture (e.g. `x86_64`, `i386`, ...)
 computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
 
 **`!lang`**  
-emits the current language (*fr*, *it*, *es* or *en*)
+emits the current language (*en*, *es*, *fr*, *it*)
 
 **`!format`**  
-emits the current format (*html*, *pdf*, *odt*, *epub* or *mobi*)
+emits the current format (*epub*, *html*, *mobi*, *odf*, *pdf*)
 
 **`!dialect`**  
-emits the current dialect (*md* or *rst*)
+emits the current dialect (*md*, *rst*)
 
-**`!fr(...)`**, **`!it(...)`** or **`!en(...)`**  
-emits some text only if the current language is *fr*, *it* or *en*
+**`!en(...)`**, **`!es(...)`**, **`!fr(...)`**, **`!it(...)`**  
+emits some text only if the current language is *en*, *es*, *fr*, *it*
 
-**`!html(...)`**, **`!pdf(...)`**, **`!odt(...)`**, **`!epub(...)`** or **`!mobi(...)`**  
-emits some text only if the current format is *html*, *pdf*, *odt*, *epub* or *mobi*
+**`!epub(...)`**, **`!html(...)`**, **`!mobi(...)`**, **`!odf(...)`**, **`!pdf(...)`**  
+emits some text only if the current format is *epub*, *html*, *mobi*, *odf*, *pdf*
 
-**`!md`**, **`!rst`**  
-emits some text only if the current dialect is *md* or *rst*
+**`!md(...)`**, **`!rst(...)`**  
+emits some text only if the current dialect is *md*, *rst*
 
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.

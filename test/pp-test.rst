@@ -25,6 +25,7 @@ Dialect
 
 =================================== =================================================================
 The current dialect is rst:         \eq(\dialect)(rst)
+All dialects:                       \eq(\dialects)(md rst)
 Section for a markdown document:    \eq(\md(Hello World!))()
 Section for a rst document:         \eq(\rst(Hello World!))(Hello World!)
 =================================== =================================================================
@@ -34,6 +35,7 @@ Language
 
 =================================== =================================================================
 The current language is "en":       \eq(\lang)(en)
+All languages:                      \eq(\langs)(en es fr it)
 Section in english:                 \eq(\en(Hello World!))(Hello World!)
 Section in french:                  \eq(\fr(Bonjour le monde !))()
 =================================== =================================================================
@@ -43,6 +45,7 @@ Format
 
 =================================== =================================================================
 The current format is HTML:         \eq(\format)(html)
+All formats:                        \eq(\formats)(epub html mobi odf pdf)
 Section for an HTML document:       \eq(\html(Hello World!))(Hello World!)
 Section for a PDF document:         \eq(\pdf(Hello World!))()
 =================================== =================================================================

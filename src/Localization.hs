@@ -24,6 +24,10 @@ module Localization where
 
 import Data.Time
 
+-- language list
+langs :: [String]
+langs = words "en fr it es"
+
 -- "myLocale lang" returns the date format description for a given language.
 myLocale :: String -> TimeLocale
 
