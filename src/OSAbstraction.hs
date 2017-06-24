@@ -25,6 +25,9 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 module OSAbstraction ( osname
                      , osarch
                      , cmdexe
+#if mingw32_HOST_OS
+                     , powershellexe
+#endif
                      , envVarStorage
                      )
 where
