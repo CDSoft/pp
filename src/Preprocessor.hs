@@ -243,7 +243,9 @@ pp env (c0:cs)
                     -- the value of the macro is preprocessed in an environment
                     -- containing the arguments
                     let args' = zip (map (Def . show) [(1::Int)..]) args
-                    (env', doc) <- ppAndStrip (args'++env) value
+                    -- args that contain \i should be replaced by their definition in env to avoid infinite recursion
+                    let args'' = replaceUserMacroArgs env args'
+                    (env', doc) <- ppAndStrip (args''++env) value
                     -- removes the arguments but keep the side effects of the macro
                     let env'' = env' \\ args'
                     (env''', doc') <- pp env'' cs''
@@ -371,6 +373,28 @@ pp env (c0:cs)
                 readBlock s' | start `isPrefixOf` s' = ([], span (==c) s')
                 readBlock (c':s') = (c':cs'', (end', s'')) where (cs'', (end', s'')) = readBlock s'
                 readBlock [] = unexpectedEndOfFile env name
+
+        -- replace user macro arguments by their definition without any side effect
+        -- see issue#29 on github
+        -- Thanks to bjp (https://github.com/bpj) for reporting this bug.
+        replaceUserMacroArgs :: Env -> [(Var, Val)] -> [(Var, Val)]
+        replaceUserMacroArgs env [] = []
+        replaceUserMacroArgs env ((var, val):args) = (var, val'') : replaceUserMacroArgs env args
+            where
+                val' = replaceUserArgs (fromVal val)
+                val'' = case val of
+                            Val _ -> Val val'
+                            Block _ -> Block val'
+
+                replaceUserArgs :: String -> String
+                replaceUserArgs "" = ""
+                replaceUserArgs (c:cs)
+                    | c `elem` charsFunc && not (null i) && isJust maybeVal = fromVal $ fromMaybe (Val "") maybeVal
+                    | otherwise = c : replaceUserArgs cs
+                    where
+                        (i, cs') = span isDigit cs
+                        maybeVal :: Maybe Val
+                        maybeVal = lookup (Def i) env
 
 -- macropp executes a macro and preprocesses its output.
 -- It is used by exec to preprocess the standard output of a shell command.
