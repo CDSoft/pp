@@ -22,7 +22,13 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 {-# LANGUAGE CPP #-}
 
-module Preprocessor where
+module Preprocessor ( ppFile
+                    , dialects
+                    , formats
+                    , saveLiterateContent
+                    , isLitMacro
+                    )
+where
 
 import Debug.Trace
 

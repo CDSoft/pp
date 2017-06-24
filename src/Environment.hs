@@ -20,7 +20,15 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module Environment where
+module Environment ( Env
+                   , Var(..)
+                   , Val(..)
+                   , fromVal
+                   , getSymbol
+                   , clean
+                   , initialEnvironment
+                   )
+where
 
 import Data.Char
 import Data.Maybe

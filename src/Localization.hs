@@ -20,7 +20,10 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module Localization where
+module Localization ( langs
+                    , myLocale
+                    )
+where
 
 import Data.Time
 

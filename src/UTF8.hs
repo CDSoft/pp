@@ -20,7 +20,13 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module UTF8 where
+module UTF8 ( setUTF8Encoding
+            , readFileUTF8
+            , writeFileUTF8
+            , hWriteFileUTF8
+            , readProcessUTF8
+            )
+where
 
 import System.IO
 import qualified System.IO.Strict as SIO
