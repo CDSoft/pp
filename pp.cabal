@@ -44,7 +44,7 @@ library
 executable pp
   hs-source-dirs:      app
   main-is:             pp.hs
-  ghc-options:         -Wall -Werror -O2
+  ghc-options:         -Wall -Werror -O3 -fwarn-unused-do-bind
   build-depends:       base
                      , pp
   default-language:    Haskell2010

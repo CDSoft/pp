@@ -20,7 +20,15 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module ErrorMessages where
+module ErrorMessages ( unexpectedEndOfFile
+                     , arityError
+                     , invalidNameError
+                     , builtinRedefinition
+                     , fileNotFound
+                     , codeblockError
+                     , indentError
+                     )
+where
 
 import Data.List
 

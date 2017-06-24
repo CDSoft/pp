@@ -22,7 +22,15 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 {-# LANGUAGE CPP #-}
 
-module OSAbstraction where
+module OSAbstraction ( osname
+                     , osarch
+                     , cmdexe
+#if mingw32_HOST_OS
+                     , powershellexe
+#endif
+                     , envVarStorage
+                     )
+where
 
 import System.Info
 
