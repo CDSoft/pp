@@ -117,8 +117,14 @@ No definitions:                     \isndef(answer)
 
 ## Files imported
 
+In the document:
+
 \undef(answer)\isndef(answer)
 \import(pp-test.i)
+
+And from the command line:
+
+imported_macro: \eq(\imported_macro)(The imported macro works!)
 
 ----------------------------------- -----------------------------------------------------------------
 Definitions:                        \eq(\answer)(42)

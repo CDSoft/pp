@@ -123,6 +123,9 @@ changes the prefix of the images output path.
 **`-import=FILE`** or **`-import FILE`**  
 preprocessed `FILE` but discards its output. It only keeps macro definitions and other side effects.
 
+**`-M TARGET`** or **`-M=TARGET`**  
+tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by `pp`. This option only lists files that are imported, included and used with `mdate` and `csv`macros.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment. The special filename "`-`" can be used to preprocess the standard input.
@@ -525,7 +528,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.8)
+    Microsoft Windows 10.0.15063 (2.10)
     This script is run from wine under Linux
 
 ### Python

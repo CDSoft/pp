@@ -166,6 +166,12 @@ The user can define and undefine variables and list input files.
 :   preprocessed `FILE` but discards its output.
     It only keeps macro definitions and other side effects.
 
+**`-M TARGET`** or **`-M=TARGET`**
+:   tracks dependencies and outputs a make rule listing the dependencies.
+    The target name is necessary since it can not be infered by `pp`.
+    This option only lists files that are imported, included and
+    used with `mdate` and `csv`macros.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment.

@@ -42,8 +42,15 @@ main = do
     -- parse the arguments and produce the preprocessed output
     env <- initialEnvironment (head langs) (head dialects)
     (env', doc) <- getArgs >>= doArgs env
-    -- just write the preprocessed output to stdout
-    putStr doc
+    case lookup MakeTarget env' of
+        Just (Val target) ->
+            -- -M option => print dependencies
+            case lookup Deps env' of
+                Just (Dep deps) -> putStrLn $ target ++ ": " ++ (unwords.nub.reverse) deps
+                _ -> putStrLn $ target ++ ": "
+        _ ->
+            -- just write the preprocessed output to stdout
+            putStr doc
     -- finally save the literate content (if any)
     saveLiterateContent (filter isLitMacro env') env'
 
@@ -132,6 +139,16 @@ doArg _ "-dialects" _ = putStrLn (unwords $ sort dialects) >> exitSuccess
 
 -- "doArg" env "-formats" shows the list of formats
 doArg _ "-formats" _ = putStrLn (unwords $ sort formats) >> exitSuccess
+
+-- "doarg" env "-M" target enables the tracking of dependencies (i.e. included and imported files)
+-- target is the name of the Makefile target
+doArg env "-M" (target:args) =
+    return ((MakeTarget, Val target) : clean MakeTarget env, "", args)
+
+-- "doarg" env "-M=target" enables the tracking of dependencies (i.e. included and imported files)
+-- target is the name of the Makefile target
+doArg env ('-':'M':'=':target) args =
+    return ((MakeTarget, Val target) : clean MakeTarget env, "", args)
 
 -- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) _ | not (null arg) = error $ "Unexpected argument: " ++ arg
