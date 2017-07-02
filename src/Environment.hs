@@ -27,6 +27,8 @@ module Environment ( Env
                    , getSymbol
                    , clean
                    , initialEnvironment
+                   , addDep
+                   , addDeps
                    )
 where
 
@@ -42,6 +44,8 @@ data Var = Def String           -- user macro definition
          | Lang                 -- current language
          | FileFormat           -- current file format
          | Dialect              -- current dialect
+         | MakeTarget           -- target name for the dependency file (-M)
+         | Deps                 -- list of dependencies
          | MainFile             -- main file name (given on the command line)
          | CurrentFile          -- current file name (can be included in other files)
          | LitFile FilePath     -- literate file name
@@ -55,7 +59,8 @@ data Var = Def String           -- user macro definition
 -- values stored in the environment
 data Val = Val String           -- regular (stripped) value
          | Block String         -- code block (unstripped) value
-         deriving (Eq)
+         | Dep [String]         -- list of dependencies
+         deriving (Eq, Show)
 
 -- Preprocessor environment (lookup table)
 type Env = [(Var, Val)]
@@ -87,3 +92,15 @@ initialEnvironment defaultLang defaultDialect = do
     let dial = map toLower $ fromMaybe defaultDialect (lookup "DIALECT" envVars)
     -- the initial environment contains the language, the format and the environment variables
     return $ (Lang, Val lang) : (FileFormat, Val fmt) : (Dialect, Val dial) : [(EnvVar (envVarStorage name), Val val) | (name, val) <- envVars]
+
+-- track dependencies
+-- see issue 30, thanks to trygvis for the idea
+addDep :: Env -> String -> Env
+addDep env name = (Deps, Dep deps') : clean Deps env
+    where
+        deps' = case lookup Deps env of
+            Just (Dep deps) -> name:deps
+            _ -> [name]
+
+addDeps :: Env -> [String] -> Env
+addDeps = foldl addDep

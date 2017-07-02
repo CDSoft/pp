@@ -70,6 +70,7 @@ help = unlines [
         "  -<dialect>           Define the current dialect",
         "  -dialects            List the dialects",
         "  -img=<prefix>        Define the prefix to add to output image path",
+        "  -M=<target>          Generate make-like dependency list",
         "Files:",
         "  filename             Preprocess an existing file",
         "  -                    Preprocess stdin",

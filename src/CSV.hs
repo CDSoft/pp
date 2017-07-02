@@ -129,5 +129,5 @@ makeTable dialect header csvData = unlines $
             "rst" -> "="
             _ -> ":"
 
-        makeLine row = concat ["|", intercalate "|" row, "|"]
+        makeLine row = concat [ "|", intercalate "|" row, "|" ]
         

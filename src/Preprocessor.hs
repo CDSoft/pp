@@ -30,8 +30,6 @@ module Preprocessor ( ppFile
                     )
 where
 
-import Debug.Trace
-
 import Control.Monad
 import System.IO
 import System.IO.Error
@@ -193,9 +191,12 @@ ppFile env name = do
     -- read the file to preprocess
     content <- readFileUTF8 name
     -- preprocess the file in an environment containing the filename
-    (env', doc) <- pp ((CurrentFile, Val name) : clean CurrentFile env) content
+    let env' = case name of
+                "-" -> env
+                _ -> addDep env name
+    (env'', doc) <- pp ((CurrentFile, Val name) : clean CurrentFile env') content
     -- return the environment (with the file name of the caller) and the preprocessed output
-    return ((CurrentFile, caller) : clean CurrentFile env', doc)
+    return ((CurrentFile, caller) : clean CurrentFile env'', doc)
 
 -- ppAndStrip preprocesses a value
 -- and also removes leading and ending spaces unless the value is a block.
@@ -567,8 +568,10 @@ raw _ _ = arityError "raw" [1]
 -- \rawinclude(name) preprocesses name, locates the file and emits it unpreprocessed
 rawinc :: String -> Macro
 rawinc _ env [name] = do
-    doc <- ppAndStrip' env name >>= locateFile env >>= readFileUTF8
-    return (env, doc)
+    name' <- ppAndStrip' env name >>= locateFile env
+    let env' = addDep env name'
+    doc <- readFileUTF8 name'
+    return (env', doc)
 rawinc name _ _ = arityError name [1]
 
 -- \pp(text) preprocesses text. text can be the output of a script macro containing generated macro calls
@@ -605,9 +608,10 @@ mdate :: Macro
 mdate env files = do
     files' <- mapM (ppAndStrip' env) files
     files'' <- mapM (locateFile env) $ concatMap words files' ++ [fromVal (getSymbol env MainFile) | null files]
+    let env' = addDeps env files''
     times <- mapM getModificationTime files''
     let lastTime = maximum times
-    return (env, formatTime (myLocale $ fromVal $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
+    return (env', formatTime (myLocale $ fromVal $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
 
 -- \main returns the name of the main file (given on the command line)
 mainFile :: Macro
@@ -744,7 +748,6 @@ diagram _ diag _ _ _ _ = arityError diag [2, 3]
 -- indent' n block adds n space at the beginning of every lines in block
 indent' :: Int -> String -> String
 indent' n = unlines . map (replicate n ' ' ++) . lines
-
 
 -- parseImageAttributes extracts path to generate the scripts and images
 -- and path to put in the markdown link.
@@ -1096,7 +1099,7 @@ csv env [filename] = do
     filename' <- ppAndStrip' env filename
     csvData <- readFileUTF8 filename'
     let table = makeTable (fromVal $ getSymbol env Dialect) Nothing csvData
-    return (env, table)
+    return (addDep env filename', table)
 --
 -- \csv(filename)(header) converts a CSV file to a markdown or reStructuredText table
 -- The delimiter is automagically infered (hope it works...).

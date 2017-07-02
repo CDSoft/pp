@@ -135,8 +135,14 @@ No definitions:                     OK
 
 ## Files imported
 
+In the document:
+
 OK
 
+
+And from the command line:
+
+imported_macro: OK
 
 ----------------------------------- -----------------------------------------------------------------
 Definitions:                        OK
@@ -515,7 +521,7 @@ Test results
 ============
 
 ------------------------------- ------------------------
-Number of successful tests:     78
+Number of successful tests:     79
 Number of failures:             0
 ------------------------------- ------------------------
 
