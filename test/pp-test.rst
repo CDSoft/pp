@@ -10,13 +10,6 @@ It is preprocessed and compared with ``pp-test-rst.ref``.
 
 The document also computes the test results.
 
-\define(nbok)(0)    \define(ok)(OK\add(nbok))
-\define(nberr)(0)   \define(err)(ERROR\add(nberr))
-\define(eq)(\ifeq(\1)(\2)(\ok)(\err))
-\define(ne)(\ifne(\1)(\2)(\ok)(\err))
-\define(isdef)(\ifdef(\1)(\ok)(\err))
-\define(isndef)(\ifndef(\1)(\ok)(\err))
-
 Dialect, Output language and output format
 ==========================================
 
@@ -24,30 +17,30 @@ Dialect
 -------
 
 =================================== =================================================================
-The current dialect is rst:         \eq(\dialect)(rst)
-All dialects:                       \eq(\dialects)(md rst)
-Section for a markdown document:    \eq(\md(Hello World!))()
-Section for a rst document:         \eq(\rst(Hello World!))(Hello World!)
+The current dialect is rst:         \dialect
+All dialects:                       \dialects
+Section for a markdown document:    \md(Hello World!)
+Section for a rst document:         \rst(Hello World!)
 =================================== =================================================================
 
 Language
 --------
 
 =================================== =================================================================
-The current language is "en":       \eq(\lang)(en)
-All languages:                      \eq(\langs)(en es fr it)
-Section in english:                 \eq(\en(Hello World!))(Hello World!)
-Section in french:                  \eq(\fr(Bonjour le monde !))()
+The current language is "en":       \lang
+All languages:                      \langs
+Section in english:                 \en(Hello World!)
+Section in french:                  \fr(Bonjour le monde !)
 =================================== =================================================================
 
 Format
 ------
 
 =================================== =================================================================
-The current format is HTML:         \eq(\format)(html)
-All formats:                        \eq(\formats)(epub html mobi odf pdf)
-Section for an HTML document:       \eq(\html(Hello World!))(Hello World!)
-Section for a PDF document:         \eq(\pdf(Hello World!))()
+The current format is HTML:         \format
+All formats:                        \formats
+Section for an HTML document:       \html(Hello World!)
+Section for a PDF document:         \pdf(Hello World!)
 =================================== =================================================================
 
 Diagrams
@@ -165,16 +158,6 @@ int main(int argc, char * argv[])
 
 \indent(4)(\result)
 
-\test:     \eq(\result)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fact(0) =   1; fib(0) =   1
-fact(1) =   1; fib(1) =   1
-fact(2) =   2; fib(2) =   2
-fact(3) =   6; fib(3) =   3
-fact(4) =  24; fib(4) =   5
-fact(5) = 120; fib(5) =   8
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 The complete source files are:
 
 ``mylib.h``:
@@ -232,12 +215,3 @@ is rendered by `\raw(\csv(file.csv)(Year|Make|Model|Description|Price))` as:
 
 \csv(/tmp/table2.csv)(Year|Make|Model|Description|Price)
 
-Test results
-============
-
-=============================== ========================
-Number of successful tests:     \nbok
-Number of failures:             \nberr
-=============================== ========================
-
-\ifeq(\nberr)(0)(All tests passed!)(\nberr tests failed!)

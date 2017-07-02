@@ -1,6 +1,6 @@
 % PP - Generic preprocessor (with pandoc in mind)
 % Christophe Delord - <http://cdsoft.fr/pp>
-% \mdate{app/pp.hs doc/pp.md}
+% \mdate{app/pp.hs \sh(ls src/******.hs) doc/pp.md}
 
 [PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
 [DPP]: http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"

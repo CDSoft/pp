@@ -10,13 +10,6 @@ It is preprocessed and compared with ``pp-test-rst.ref``.
 
 The document also computes the test results.
 
-    
-   
-
-
-
-
-
 Dialect, Output language and output format
 ==========================================
 
@@ -24,30 +17,30 @@ Dialect
 -------
 
 =================================== =================================================================
-The current dialect is rst:         OK
-All dialects:                       OK
-Section for a markdown document:    OK
-Section for a rst document:         OK
+The current dialect is rst:         rst
+All dialects:                       md rst
+Section for a markdown document:    
+Section for a rst document:         Hello World!
 =================================== =================================================================
 
 Language
 --------
 
 =================================== =================================================================
-The current language is "en":       OK
-All languages:                      OK
-Section in english:                 OK
-Section in french:                  OK
+The current language is "en":       en
+All languages:                      en es fr it
+Section in english:                 Hello World!
+Section in french:                  
 =================================== =================================================================
 
 Format
 ------
 
 =================================== =================================================================
-The current format is HTML:         OK
-All formats:                        OK
-Section for an HTML document:       OK
-Section for a PDF document:         OK
+The current format is HTML:         html
+All formats:                        epub html mobi odf pdf
+Section for an HTML document:       Hello World!
+Section for a PDF document:         
 =================================== =================================================================
 
 Diagrams
@@ -241,8 +234,6 @@ Some tests of ``mylib.c``:
     fact(5) = 120; fib(5) =   8
 
 
-mylibtest 0 1 2 3 4 5:     OK
-
 The complete source files are:
 
 ``mylib.h``:
@@ -364,12 +355,3 @@ is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
 +------+-------+----------------------------------------+-----------------------------------+---------+
 
 
-Test results
-============
-
-=============================== ========================
-Number of successful tests:     13
-Number of failures:             0
-=============================== ========================
-
-All tests passed!

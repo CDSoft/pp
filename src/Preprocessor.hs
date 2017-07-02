@@ -27,6 +27,14 @@ module Preprocessor ( ppFile
                     , formats
                     , saveLiterateContent
                     , isLitMacro
+                    -- exported for test purpose
+                    , charsFunc
+                    , charsBlock
+                    , litMacroTagChar
+                    , graphvizDiagrams
+                    , plantumlDiagrams
+                    , ditaaDiagrams
+                    , builtin
                     )
 where
 

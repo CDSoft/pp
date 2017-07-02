@@ -9,78 +9,73 @@ It is preprocessed and compared with `pp-test.ref`.
 
 The document also computes the test results.
 
-    
-   
-
-
-
-
-
 Macros definition
 =================
 
 ## Definition
 
 ----------------------------------- -----------------------------------------------------------------
-Definition:                         OK
-Its definition is correct:          OK
-Its evaluation is correct:          OK
+Definition of `mac1`                
+Show macro definition:              This is macro `mac1`
+Show macro value:                   This is macro `mac1`
 ----------------------------------- -----------------------------------------------------------------
 
 ## Undefinition
 
 ----------------------------------- -----------------------------------------------------------------
-Test of an undefined macro:         OK
-Evaluation of an undefined macro:   OK
+Undefined macro `mac2`              
+Show macro definition:              
+Show macro value:                   \mac2
 ----------------------------------- -----------------------------------------------------------------
 
 ## Definition with arguments
 
 ----------------------------------- -----------------------------------------------------------------
-Definition with arguments:          OK
-Its definition is correct:          OK
-Its evaluation is correct:          OK
+Definition with arguments:          
+Show macro definition:              !2 !1
+Show macro value:                   \mac2 This is macro `mac1`
 ----------------------------------- -----------------------------------------------------------------
 
 ## Passing arguments between user macros (see issue #29)
 
 ----------------------------------- -----------------------------------------------------------------
-A calls B calls C:                  OK
-same with 3 args:                   OK
+A calls B calls C:                  C got 42
+same with 3 args:                   C got 44 42 43
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Undefinition:                       OK
+Undefinition:                       
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Definition test:                    OK
-Definition test:                    OK
-Definition test:                    OK
-Definition test:                    OK
-Undefinition test:                  OK
-Undefinition test:                  OK
-Undefinition test:                  OK
-Undefinition test:                  OK
------------------------------------ -----------------------------------------------------------------
+Definition test:                    
+Definition test:                    swap is defined
+Definition test:                    mac1 is not defined
+Definition test:                    swap is defined
+Undefinition test:                  mac1 is not defined
+Undefinition test:                  
+Undefinition test:                  mac1 is not defined
+Undefinition test:                  swap is defined
+----------------------------------- -------------------------------------------------------------
 
 ## Equality / Inequality
 
   
 
 ----------------------------------- -----------------------------------------------------------------
-Equality test:                      OK
-Equality test:                      OK
-Equality test:                      OK
-Equality test:                      OK
-Inequality test:                    OK
-Inequality test:                    OK
-Inequality test:                    OK
-Inequality test:                    OK
+Equality test:                      one == un
+Equality test:                      
+Equality test:                      one == un
+Equality test:                      one /= two
+Inequality test:                    
+Inequality test:                    one /= two
+Inequality test:                    one == un
+Inequality test:                    one /= two
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Raw text:                           OK `\swap(a)(b)` is not evaluated
+Raw text:                           \swap(a)(b)
+Evaluated:                          b a
 ----------------------------------- -----------------------------------------------------------------
 
 File inclusion
@@ -89,8 +84,8 @@ File inclusion
 ## Before including `pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
-File name of the main file:         OK
-File name of the current file:      OK
+File name of the main file:         test/pp-test.md
+File name of the current file:      test/pp-test.md
 ----------------------------------- -----------------------------------------------------------------
 
 ## Inclusion of `pp-test.i`
@@ -98,9 +93,9 @@ File name of the current file:      OK
 First line of the included file.
 
 ----------------------------------- -----------------------------------------------------------------
-File name of the main file:         `OK`
-File name of the included file:     `OK`
-Definitions:                        `OK`
+File name of the main file:         test/pp-test.md
+File name of the included file:     test/pp-test.i
+Definitions:                        answer = 42
 ----------------------------------- -----------------------------------------------------------------
 
 Last line of the included file.
@@ -109,44 +104,43 @@ Last line of the included file.
 ## After including `pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
-Definitions:                        OK
+Definitions:                        42
 ----------------------------------- -----------------------------------------------------------------
 
 ## Files included without preprocessing
 
 ----------------------------------- -----------------------------------------------------------------
-Undefinition:                       OK
+Undefinition:                       
 ----------------------------------- -----------------------------------------------------------------
 
 First line of the included file.
 
 ----------------------------------- -----------------------------------------------------------------
-File name of the main file:         `\eq(\main)(test/pp-test.md)`
-File name of the included file:     `\eq(\file)(\ifeq(\exec(uname))(Linux)(test/pp-test.i)(test\pp-test.i))`
-Definitions:                        `\def(answer)(42)\eq(\answer)(42)`
+File name of the main file:         \main
+File name of the included file:     \file
+Definitions:                        \def(answer)(42)answer = \answer
 ----------------------------------- -----------------------------------------------------------------
 
 Last line of the included file.
 
 
 ----------------------------------- -----------------------------------------------------------------
-No definitions:                     OK
+No definitions:                     \answer
 ----------------------------------- -----------------------------------------------------------------
 
 ## Files imported
 
 In the document:
 
-OK
 
+
+Before importing: answer = \answer
+
+After import: answer = 42
 
 And from the command line:
 
-imported_macro: OK
-
------------------------------------ -----------------------------------------------------------------
-Definitions:                        OK
------------------------------------ -----------------------------------------------------------------
+imported_macro: The imported macro works!
 
 Comments and quiet definitions
 ==============================
@@ -162,41 +156,43 @@ Comments and quiet definitions
 
 
 ----------------------------------- -----------------------------------------------------------------
-Definitions:                        OK
+Definitions:                        3.14
 ----------------------------------- -----------------------------------------------------------------
 
 File modification date
 ======================
 
+
+
 ----------------------------------- -----------------------------------------------------------------
-Current file date:                  OK
-Specific file date:                 OK
+Current file date:                  mdate = date of test/pp-test.md
+Specific file date:                 Wednesday 23 June 2010
 ----------------------------------- -----------------------------------------------------------------
 
 Environment variables
 =====================
 
 ----------------------------------- -----------------------------------------------------------------
-Environment undefined variable:     OK
-Environment variable:               OK
+Undefined environment variable:     
+Environment variable:               42
 ----------------------------------- -----------------------------------------------------------------
 
 OS architecture
 ===============
 
 ----------------------------------- -----------------------------------------------------------------
-OS:                                 OK
-Architecture:                       OK
+OS:                                 linux
+Architecture:                       x86_64
 ----------------------------------- -----------------------------------------------------------------
 
 Simple arithmetic
 =================
 
 ----------------------------------- -----------------------------------------------------------------
-undefined + 1 = 1:                  OK
-1 + 1 = 2:                          OK
-undefined + 3 = 3:                  OK
-3 + 4 = 7:                          OK
+undefined + 1 =                     1
+1 + 1 =                             2
+undefined + 3 =                     3
+3 + 4 =                             7
 ----------------------------------- -----------------------------------------------------------------
 
 Dialect, Output language and output format
@@ -205,28 +201,28 @@ Dialect, Output language and output format
 ## Dialect
 
 ----------------------------------- -----------------------------------------------------------------
-The current dialect is md:          OK
-All dialects:                       OK
-Section for a markdown document:    OK
-Section for a rst document:         OK
+The current dialect is md:          md
+All dialects:                       md rst
+Section for a markdown document:    Hello World!
+Section for a rst document:         
 ----------------------------------- -----------------------------------------------------------------
 
 ## Language
 
 ----------------------------------- -----------------------------------------------------------------
-The current language is "en":       OK
-All languages:                      OK
-Section in english:                 OK
-Section in french:                  OK
+The current language is "en":       en
+All languages:                      en es fr it
+Section in english:                 Hello World!
+Section in french:                  
 ----------------------------------- -----------------------------------------------------------------
 
 ## Format
 
 ----------------------------------- -----------------------------------------------------------------
-The current format is HTML:         OK
-All formats:                        OK
-Section for an HTML document:       OK
-Section for a PDF document:         OK
+The current format is HTML:         html
+All formats:                        epub html mobi odf pdf
+Section for an HTML document:       Hello World!
+Section for a PDF document:         
 ----------------------------------- -----------------------------------------------------------------
 
 External commands and scripts execution
@@ -235,19 +231,19 @@ External commands and scripts execution
 
 
 ----------------------------------- ------------------------------------------------------------------------------
-Command line (uses sh):             OK
-`sh` script:                        OK
-`bash` script:                      OK
-`bat` script:                       OK
-`cmd` script:                       OK
-`python` script:                    OK
-`python2` script:                   OK
-`python3` script:                   OK
-`haskell` script:                   OK
-`exec` script:                      OK
-`rawexec` script:                   OK
-Raw script output:                  OK
-Preprocessed script output:         OK
+Command line (uses sh):             exec(echo "hi é")
+`sh` script:                        hi é
+`bash` script:                      hi à
+`bat` script:                       hi ç
+`cmd` script:                       hi ç
+`python` script:                    hi
+`python2` script:                   hi
+`python3` script:                   hi
+`haskell` script:                   hi
+`exec` script:                      \def(x)(42)\x
+`rawexec` script:                   \def(x)(42)\x
+Raw script output:                  \mymacro(42)
+Preprocessed script output:         mymacro(42) has been evaluated!
 ----------------------------------- ------------------------------------------------------------------------------
 
 Diagrams
@@ -367,8 +363,6 @@ fact(3) =   6; fib(3) =   3
 fact(4) =  24; fib(4) =   5
 fact(5) = 120; fib(5) =   8
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-mylibtest 0 1 2 3 4 5:     OK
 
 The complete source files are:
 
@@ -517,12 +511,3 @@ is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
 +------+-------+----------------------------------------+-----------------------------------+---------+
 
 
-Test results
-============
-
-------------------------------- ------------------------
-Number of successful tests:     79
-Number of failures:             0
-------------------------------- ------------------------
-
-All tests passed!

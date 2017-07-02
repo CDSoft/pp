@@ -9,78 +9,73 @@ It is preprocessed and compared with `pp-test.ref`.
 
 The document also computes the test results.
 
-\define(nbok)(0)    \define(ok)(OK\add(nbok))
-\define(nberr)(0)   \define(err)(ERROR\add(nberr))
-\define(eq)(\ifeq(\1)(\2)(\ok)(\err))
-\define(ne)(\ifne(\1)(\2)(\ok)(\err))
-\define(isdef)(\ifdef(\1)(\ok)(\err))
-\define(isndef)(\ifndef(\1)(\ok)(\err))
-
 Macros definition
 =================
 
 ## Definition
 
 ----------------------------------- -----------------------------------------------------------------
-Definition:                         \def(mac1)(This is macro `mac1`)\isdef(mac1)
-Its definition is correct:          \eq(\rawdef(mac1))(This is macro `mac1`)
-Its evaluation is correct:          \eq(\mac1)(This is macro `mac1`)
+Definition of `mac1`                \def(mac1)(This is macro `mac1`)
+Show macro definition:              \rawdef(mac1)
+Show macro value:                   \mac1
 ----------------------------------- -----------------------------------------------------------------
 
 ## Undefinition
 
 ----------------------------------- -----------------------------------------------------------------
-Test of an undefined macro:         \isndef(mac2)
-Evaluation of an undefined macro:   \eq(\mac2)(\raw(\mac2))
+Undefined macro `mac2`              \undef(mac2)
+Show macro definition:              \rawdef(mac2)
+Show macro value:                   \mac2
 ----------------------------------- -----------------------------------------------------------------
 
 ## Definition with arguments
 
 ----------------------------------- -----------------------------------------------------------------
-Definition with arguments:          \define(swap)(!2 !1)\isdef(swap)
-Its definition is correct:          \eq(\rawdef(swap))(\raw(!2 !1))
-Its evaluation is correct:          \eq(\swap(\mac1)(\mac2))(\mac2This is macro `mac1`)
+Definition with arguments:          \define(swap)(!2 !1)
+Show macro definition:              \rawdef(swap)
+Show macro value:                   \swap(\mac1)(\mac2)
 ----------------------------------- -----------------------------------------------------------------
 
 ## Passing arguments between user macros (see issue #29)
 
 ----------------------------------- -----------------------------------------------------------------
-A calls B calls C:                  \def(A)(\B(\1))\def(B)(\C(\1))\def(C)(C got \1)\eq(\A(42))(C got 42)
-same with 3 args:                   \def(A)(\B(\2)(\3)(\1))\def(B)(\C(\2)(\3)(\1))\def(C)(C got \1 \2 \3)\eq(\A(42)(43)(44))(C got 44 42 43)
+A calls B calls C:                  \def(A)(\B(\1))\def(B)(\C(\1))\def(C)(C got \1)\A(42)
+same with 3 args:                   \def(A)(\B(\2)(\3)(\1))\def(B)(\C(\2)(\3)(\1))\def(C)(C got \1 \2 \3)\A(42)(43)(44)
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Undefinition:                       \undefine(mac1)\isndef(mac1)
+Undefinition:                       \undefine(mac1)\rawdef(mac1)
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Definition test:                    \eq(\ifdef(mac1)(mac1 is defined)                       )()
-Definition test:                    \eq(\ifdef(swap)(swap is defined)                       )(swap is defined)
-Definition test:                    \eq(\ifdef(mac1)(mac1 is defined)(mac1 is not defined)  )(mac1 is not defined)
-Definition test:                    \eq(\ifdef(swap)(swap is defined)(swap is not defined)  )(swap is defined)
-Undefinition test:                  \eq(\ifndef(mac1)(mac1 is not defined)                  )(mac1 is not defined)
-Undefinition test:                  \eq(\ifndef(swap)(swap is not defined)                  )()
-Undefinition test:                  \eq(\ifndef(mac1)(mac1 is not defined)(mac1 is defined) )(mac1 is not defined)
-Undefinition test:                  \eq(\ifndef(swap)(swap is not defined)(swap is defined) )(swap is defined)
------------------------------------ -----------------------------------------------------------------
+Definition test:                    \ifdef(mac1)(mac1 is defined)
+Definition test:                    \ifdef(swap)(swap is defined)
+Definition test:                    \ifdef(mac1)(mac1 is defined)(mac1 is not defined)
+Definition test:                    \ifdef(swap)(swap is defined)(swap is not defined)
+Undefinition test:                  \ifndef(mac1)(mac1 is not defined)
+Undefinition test:                  \ifndef(swap)(swap is not defined)
+Undefinition test:                  \ifndef(mac1)(mac1 is not defined)(mac1 is defined)
+Undefinition test:                  \ifndef(swap)(swap is not defined)(swap is defined)
+----------------------------------- -------------------------------------------------------------
 
 ## Equality / Inequality
 
 \define(one)(1) \define(un)(1) \define(two)(2)
 
 ----------------------------------- -----------------------------------------------------------------
-Equality test:                      \eq(\ifeq(\one)(\un)(one == un)                 )(one == un)
-Equality test:                      \eq(\ifeq(\one)(\two)(one == two)               )()
-Equality test:                      \eq(\ifeq(\one)(\un)(one == un)(one /= un)      )(one == un)
-Equality test:                      \eq(\ifeq(\one)(\two)(one == two)(one /= two)   )(one /= two)
-Inequality test:                    \eq(\ifne(\one)(\un)(one /= un)                 )()
-Inequality test:                    \eq(\ifne(\one)(\two)(one /= two)               )(one /= two)
-Inequality test:                    \eq(\ifne(\one)(\un)(one /= un)(one == un)      )(one == un)
-Inequality test:                    \eq(\ifne(\one)(\two)(one /= two)(one == two)   )(one /= two)
+Equality test:                      \ifeq(\one)(\un)    (one == un)
+Equality test:                      \ifeq(\one)(\two)   (one == two)
+Equality test:                      \ifeq(\one)(\un)    (one == un) (one /= un)
+Equality test:                      \ifeq(\one)(\two)   (one == two)(one /= two)
+Inequality test:                    \ifne(\one)(\un)    (one /= un)
+Inequality test:                    \ifne(\one)(\two)   (one /= two)
+Inequality test:                    \ifne(\one)(\un)    (one /= un) (one == un)
+Inequality test:                    \ifne(\one)(\two)   (one /= two)(one == two)
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Raw text:                           \ne(\raw(\swap(a)(b)))(ba) `\raw(\swap(a)(b))` is not evaluated
+Raw text:                           \raw(\swap(a)(b))
+Evaluated:                          \swap(a)(b)
 ----------------------------------- -----------------------------------------------------------------
 
 File inclusion
@@ -89,8 +84,8 @@ File inclusion
 ## Before including `pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
-File name of the main file:         \eq(\main)(test/pp-test.md)
-File name of the current file:      \eq(\file)(\main)
+File name of the main file:         \main
+File name of the current file:      \file
 ----------------------------------- -----------------------------------------------------------------
 
 ## Inclusion of `pp-test.i`
@@ -100,35 +95,34 @@ File name of the current file:      \eq(\file)(\main)
 ## After including `pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
-Definitions:                        \eq(\answer)(42)
+Definitions:                        \answer
 ----------------------------------- -----------------------------------------------------------------
 
 ## Files included without preprocessing
 
 ----------------------------------- -----------------------------------------------------------------
-Undefinition:                       \undef(answer)\isndef(answer)
+Undefinition:                       \undef(answer)
 ----------------------------------- -----------------------------------------------------------------
 
 \rawinclude(pp-test.i)
 
 ----------------------------------- -----------------------------------------------------------------
-No definitions:                     \isndef(answer)
+No definitions:                     \answer
 ----------------------------------- -----------------------------------------------------------------
 
 ## Files imported
 
 In the document:
 
-\undef(answer)\isndef(answer)
+\undef(answer)
+
+Before importing: answer = \answer
 \import(pp-test.i)
+After import: answer = \answer
 
 And from the command line:
 
-imported_macro: \eq(\imported_macro)(The imported macro works!)
-
------------------------------------ -----------------------------------------------------------------
-Definitions:                        \eq(\answer)(42)
------------------------------------ -----------------------------------------------------------------
+imported_macro: \imported_macro
 
 Comments and quiet definitions
 ==============================
@@ -155,41 +149,48 @@ pi is: \def(pi)(3.14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ----------------------------------- -----------------------------------------------------------------
-Definitions:                        \eq(\pi)(3.14)
+Definitions:                        \pi
 ----------------------------------- -----------------------------------------------------------------
 
 File modification date
 ======================
 
+\sh
+```
+touch -d "2010-06-22 12:00:00" /tmp/pp-test-f1
+touch -d "2010-06-23 12:00:00" /tmp/pp-test-f2
+touch -d "2010-06-21 12:00:00" /tmp/pp-test-f3
+```
+
 ----------------------------------- -----------------------------------------------------------------
-Current file date:                  \eq(\mdate)(\exec(LANG=en date +"%A %e %B %Y" -r \file))
-Specific file date:                 \eq(\mdate(test/pp-test.md test/pp-test.i))(\exec(LANG=en date +"%A %e %B %Y" -r test/$(ls -t test | head -1)))
+Current file date:                  \ifeq(\mdate)(\exec(LANG=en date +"%A %e %B %Y" -r \file))(mdate = date of \main)(mdate = \mdate /= date of \main)
+Specific file date:                 \mdate(/tmp/pp-test-f1 /tmp/pp-test-f2)(/tmp/pp-test-f3)
 ----------------------------------- -----------------------------------------------------------------
 
 Environment variables
 =====================
 
 ----------------------------------- -----------------------------------------------------------------
-Environment undefined variable:     \eq(\env(EMPTYENVVAR))(\exec(echo $EMPTYENVVAR))
-Environment variable:               \eq(\env(TESTENVVAR))(\exec(echo $TESTENVVAR))
+Undefined environment variable:     \env(EMPTYENVVAR)
+Environment variable:               \env(TESTENVVAR)
 ----------------------------------- -----------------------------------------------------------------
 
 OS architecture
 ===============
 
 ----------------------------------- -----------------------------------------------------------------
-OS:                                 \eq(\os)(linux)
-Architecture:                       \eq(\arch)(x86_64)
+OS:                                 \os
+Architecture:                       \arch
 ----------------------------------- -----------------------------------------------------------------
 
 Simple arithmetic
 =================
 
 ----------------------------------- -----------------------------------------------------------------
-undefined + 1 = 1:                  \add(x)\eq(\x)(1)
-1 + 1 = 2:                          \add(x)\eq(\x)(2)
-undefined + 3 = 3:                  \add(y)(3)\eq(\y)(3)
-3 + 4 = 7:                          \add(y)(4)\eq(\y)(7)
+undefined + 1 =                     \add(x)\x
+1 + 1 =                             \add(x)\x
+undefined + 3 =                     \add(y)(3)\y
+3 + 4 =                             \add(y)(4)\y
 ----------------------------------- -----------------------------------------------------------------
 
 Dialect, Output language and output format
@@ -198,28 +199,28 @@ Dialect, Output language and output format
 ## Dialect
 
 ----------------------------------- -----------------------------------------------------------------
-The current dialect is md:          \eq(\dialect)(md)
-All dialects:                       \eq(\dialects)(md rst)
-Section for a markdown document:    \eq(\md(Hello World!))(Hello World!)
-Section for a rst document:         \eq(\rst(Hello World!))()
+The current dialect is md:          \dialect
+All dialects:                       \dialects
+Section for a markdown document:    \md(Hello World!)
+Section for a rst document:         \rst(Hello World!)
 ----------------------------------- -----------------------------------------------------------------
 
 ## Language
 
 ----------------------------------- -----------------------------------------------------------------
-The current language is "en":       \eq(\lang)(en)
-All languages:                      \eq(\langs)(en es fr it)
-Section in english:                 \eq(\en(Hello World!))(Hello World!)
-Section in french:                  \eq(\fr(Bonjour le monde !))()
+The current language is "en":       \lang
+All languages:                      \langs
+Section in english:                 \en(Hello World!)
+Section in french:                  \fr(Bonjour le monde !)
 ----------------------------------- -----------------------------------------------------------------
 
 ## Format
 
 ----------------------------------- -----------------------------------------------------------------
-The current format is HTML:         \eq(\format)(html)
-All formats:                        \eq(\formats)(epub html mobi odf pdf)
-Section for an HTML document:       \eq(\html(Hello World!))(Hello World!)
-Section for a PDF document:         \eq(\pdf(Hello World!))()
+The current format is HTML:         \format
+All formats:                        \formats
+Section for an HTML document:       \html(Hello World!)
+Section for a PDF document:         \pdf(Hello World!)
 ----------------------------------- -----------------------------------------------------------------
 
 External commands and scripts execution
@@ -228,19 +229,19 @@ External commands and scripts execution
 \def(mymacro)(mymacro(!1) has been evaluated!)
 
 ----------------------------------- ------------------------------------------------------------------------------
-Command line (uses sh):             \eq(\exec(echo "hi é"))(hi é)
-`sh` script:                        \eq(\sh(echo "hi é"))(hi é)
-`bash` script:                      \eq(\bash(echo hi à))(hi à)
-`bat` script:                       \eq(\bat(echo hi ç))(hi ç)
-`cmd` script:                       \eq(\cmd(echo hi ç))(hi ç)
-`python` script:                    \eq(\python(print("hi")))(hi)
-`python2` script:                   \eq(\python2(print "hi" ))(hi)
-`python3` script:                   \eq(\python3(print("hi")))(hi)
-`haskell` script:                   \eq(\haskell(main = putStrLn "hi"))(hi)
-`exec` script:                      \eq(\exec(\raw(echo "\\def(x)(42)\\x")))(\raw(\def(x)(42)\x))
-`rawexec` script:                   \eq(\rawexec(\raw(echo "\\def(x)(42)\\x")))(\raw(\def(x)(42)\x))
-Raw script output:                  \eq(\sh(printf "\\%s(%d)" mymacro 42))(\raw(\mymacro(42)))
-Preprocessed script output:         \eq(\pp[\sh(printf "\\%s(%d)" mymacro 42)])(mymacro(42) has been evaluated!)
+Command line (uses sh):             exec(echo "hi é")
+`sh` script:                        \sh(echo "hi é")
+`bash` script:                      \bash(echo hi à)
+`bat` script:                       \bat(echo hi ç)
+`cmd` script:                       \cmd(echo hi ç)
+`python` script:                    \python(print("hi"))
+`python2` script:                   \python2(print "hi")
+`python3` script:                   \python3(print("hi"))
+`haskell` script:                   \haskell(main = putStrLn "hi")
+`exec` script:                      \exec(\raw(echo "\\def(x)(42)\\x"))
+`rawexec` script:                   \rawexec(\raw(echo "\\def(x)(42)\\x"))
+Raw script output:                  \sh(printf "\\%s(%d)" mymacro 42)
+Preprocessed script output:         \pp[\sh(printf "\\%s(%d)" mymacro 42)]
 ----------------------------------- ------------------------------------------------------------------------------
 
 Diagrams
@@ -360,16 +361,6 @@ int main(int argc, char * argv[])
 \result
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\test:     \eq(\result)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fact(0) =   1; fib(0) =   1
-fact(1) =   1; fib(1) =   1
-fact(2) =   2; fib(2) =   2
-fact(3) =   6; fib(3) =   3
-fact(4) =  24; fib(4) =   5
-fact(5) = 120; fib(5) =   8
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 The complete source files are:
 
 `mylib.h`:
@@ -441,12 +432,3 @@ is rendered by `\raw(\csv(file.csv)(Year|Make|Model|Description|Price))` as:
 
 \csv(/tmp/table2.csv)(Year|Make|Model|Description|Price)
 
-Test results
-============
-
-------------------------------- ------------------------
-Number of successful tests:     \nbok
-Number of failures:             \nberr
-------------------------------- ------------------------
-
-\ifeq(\nberr)(0)(All tests passed!)(\nberr tests failed!)

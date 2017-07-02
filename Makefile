@@ -158,10 +158,15 @@ doc/pp.html: doc/pp.md
 # tests
 #####################################################################
 
-.PHONY: test test-md test-rst
+.PHONY: test hspec test-md test-rst
 
-test: test-md test-rst test-md-d
+test: hspec test-md test-rst test-md-d
 	@$(call ok,"all pp tests passed!")
+
+# Hspec tests
+
+hspec: test/Spec.hs $(LIB_SOURCES)
+	stack test
 
 # Markdown test
 
