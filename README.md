@@ -51,7 +51,7 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 
 -   Latest Linux and Windows binaries:
 
-    -   Fedora 25 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    -   Fedora 26 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
     -   Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
 
 -   Older version archive:
@@ -504,7 +504,7 @@ Once generated the graph looks like:
 
 This script outputs:
 
-    Hi, I'm /bin/bash 4.3.43(1)-release
+    Hi, I'm /bin/bash 4.4.12(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
@@ -528,7 +528,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.10)
+    Microsoft Windows 10.0.15063 (2.11)
     This script is run from wine under Linux
 
 ### Python
@@ -549,8 +549,8 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.13 (default, May 10 2017, 20:04:28) 
-    [GCC 6.3.1 20161221 (Red Hat 6.3.1-1)]
+    Hi, I'm Python 2.7.13 (default, Jun 26 2017, 10:20:05) 
+    [GCC 7.1.1 20170622 (Red Hat 7.1.1-3)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell
@@ -577,7 +577,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 7.10
+    Hi, I'm Haskell 8.0
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 CSV tables

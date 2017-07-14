@@ -53,12 +53,11 @@ osarch = arch
 
 -- shell command interpretor for Windows .bat scripts
 cmdexe :: String
-cmdexe =
 #if linux_HOST_OS || darwin_HOST_OS
-    "wine cmd /c"
+cmdexe = "wine cmd /c"
 #endif
 #if mingw32_HOST_OS
-    "cmd /c"
+cmdexe = "cmd /c"
 #endif
 
 #if mingw32_HOST_OS

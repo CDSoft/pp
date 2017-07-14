@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Sunday 2 July 2017</p>
+<p class="date">Friday 14 July 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -94,7 +94,7 @@
 <ul>
 <li><p>Latest Linux and Windows binaries:</p>
 <ul>
-<li>Fedora 25 (64 bit): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
+<li>Fedora 26 (64 bit): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
 <li>Windows (64 bit): <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a></li>
 </ul></li>
 <li><p>Older version archive:</p>
@@ -490,7 +490,7 @@ RANDOM=42 # seed
 echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm /bin/bash 4.3.43(1)-release
+<pre><code>Hi, I'm /bin/bash 4.4.12(1)-release
 Here are a few random numbers: 17766, 11151, 23481
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
@@ -509,7 +509,7 @@ if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
 <p>This script outputs:</p>
 <pre><code>Hi, I'm C:\windows\system32\cmd.exe
 
-Microsoft Windows 10.0.15063 (2.10)
+Microsoft Windows 10.0.15063 (2.11)
 This script is run from wine under Linux
 </code></pre>
 <h3 id="python">Python</h3>
@@ -526,8 +526,8 @@ if __name__ == &quot;__main__&quot;:
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Python 2.7.13 (default, May 10 2017, 20:04:28) 
-[GCC 6.3.1 20161221 (Red Hat 6.3.1-1)]
+<pre><code>Hi, I'm Python 2.7.13 (default, Jun 26 2017, 10:20:05) 
+[GCC 7.1.1 20170622 (Red Hat 7.1.1-3)]
 Here are a few random numbers: 640, 25, 275
 </code></pre>
 <h3 id="haskell">Haskell</h3>
@@ -550,7 +550,7 @@ main = do
                 intercalate &quot; &quot; (map show (take 10 primes))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Haskell 7.10
+<pre><code>Hi, I'm Haskell 8.0
 The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 </code></pre>
 <h1 id="csv-tables">CSV tables</h1>

@@ -484,7 +484,7 @@ dialect dial _ _ = arityError dial [1]
 define :: String -> Macro
 define _ env [name, value] = do
     name' <- ppAndStrip' env name
-    when (not (validMacroName name')) $ invalidNameError name'
+    unless (validMacroName name') $ invalidNameError name'
     when (isJust (lookup name' builtin)) $ builtinRedefinition name'
     return ((Def name', value) : clean (Def name') env, "")
 define macro env [name] = define macro env [name, Val ""]
@@ -647,14 +647,12 @@ readEnv _ _ = arityError "env" [1]
 
 -- \os emits the OS name
 getos :: Macro
-getos env [] = do
-      return (env, osname)
+getos env [] = return (env, osname)
 getos _ _ = arityError "os" [0]
 
 -- \arch emits the architecture of the OS
 getarch :: Macro
-getarch env [] = do
-      return (env, osarch)
+getarch env [] = return (env, osarch)
 getarch _ _ = arityError "arch" [0]
 
 ---------------------------------------------------------------------
@@ -690,7 +688,7 @@ try io exe args = do
     result <- tryIOError (io exe args)
     case result of
         Left e -> error $ "Error while executing `" ++
-                          intercalate " " (exe:args) ++
+                          unwords (exe:args) ++
                           "`: " ++ show e
         Right output -> return output
 
@@ -921,7 +919,7 @@ codeblock :: Macro
 -- "\codeblock(len)(ch)" stores the new codeblock separator (ch repeated len times)
 codeblock env [len, ch] = do
     len' <- (fromIntegral . atoi) <$> ppAndStrip' env len
-    when (len' < 3) $ codeblockError
+    when (len' < 3) codeblockError
     s' <- ppAndStrip' env ch
     let line = case s' of
                 [c] | c `elem` "~`" -> replicate len' c
@@ -938,7 +936,7 @@ indent :: Macro
 -- "\indent(n)(block)" indents block by n spaces (n is optional)
 indent env [n, block] = do
     n' <- (fromIntegral . atoi) <$> ppAndStrip' env n
-    when (n' < 3) $ indentError
+    when (n' < 3) indentError
     (env', block') <- pp env (fromVal block)
     return (env', indent' n' block')
 

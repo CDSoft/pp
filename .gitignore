@@ -6,3 +6,4 @@ pp-darwin-*.txz
 *.swp
 tmp
 src/Tag.hs
+tags

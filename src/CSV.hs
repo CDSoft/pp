@@ -35,7 +35,7 @@ data Kind = Number | Other deriving (Eq)
 data Alignment = LeftAligned Int | RightAligned Int deriving (Show, Eq)
 
 -- List of possible cell separators
-separators :: [Char]
+separators :: String
 separators = ",;\t|"
 
 -- parseCSV parses a CSV string.
@@ -90,7 +90,7 @@ columnFormat cells
 align :: [[String]] -> [Alignment] -> [[String]]
 align rows formats = map alignRow rows
     where
-        alignRow row = zipWith alignCell formats row
+        alignRow = zipWith alignCell formats
         alignCell (LeftAligned w) cell = ' ' : cell' ++ replicate (w - length cell') ' ' ++ " "
             where cell' = strip cell
         alignCell (RightAligned w) cell = ' ' : replicate (w - length cell') ' ' ++ cell' ++ " "
@@ -106,12 +106,10 @@ joinMultiLines = map (map (map join . filter (/= '\r')))
 -- generates a markdown or reStructuredText table
 makeTable :: String -> Maybe [String] -> String -> String
 makeTable dialect header csvData = unlines $
-    concat [ [ sepLine
-             , makeLine headerRow
-             , headerSepLine
-             ]
-             , concat [ [makeLine row, sepLine] | row <- rows ]
-           ]
+    [ sepLine
+    , makeLine headerRow
+    , headerSepLine
+    ] ++ concat [ [makeLine row, sepLine] | row <- rows ]
     where
         (formats, table) = parseCSV header csvData
         (headerRow : rows) = table
@@ -122,8 +120,8 @@ makeTable dialect header csvData = unlines $
         makeSep (LeftAligned w) = replicate (w+2) '-'
         makeSep (RightAligned w) = replicate (w+2) '-'
 
-        makeBigSep (LeftAligned w) = concat [alignmentChar, replicate (w+1) '=']
-        makeBigSep (RightAligned w) = concat [replicate (w+1) '=', alignmentChar]
+        makeBigSep (LeftAligned w) = alignmentChar ++ replicate (w+1) '='
+        makeBigSep (RightAligned w) = replicate (w+1) '=' ++ alignmentChar
 
         alignmentChar = case dialect of
             "rst" -> "="
