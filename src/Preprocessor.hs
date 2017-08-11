@@ -23,17 +23,15 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 {-# LANGUAGE CPP #-}
 
 module Preprocessor ( ppFile
-                    , dialects
-                    , formats
+                    , Dialect
+                    , Format
                     , saveLiterateContent
-                    , isLitMacro
                     -- exported for test purpose
                     , charsFunc
                     , charsBlock
                     , litMacroTagChar
                     , graphvizDiagrams
                     , plantumlDiagrams
-                    , ditaaDiagrams
                     , builtin
                     )
 where
@@ -54,6 +52,7 @@ import Foreign.Ptr
 import Foreign hiding (void, new)
 
 import Environment
+import Formats
 import OSAbstraction
 import UTF8
 import ErrorMessages
@@ -77,26 +76,6 @@ charsOpenClose = [('(', ')'), ('{', '}'), ('[', ']')]
 -- the Markdown code block syntax.
 charsBlock :: Chars
 charsBlock = ['~', '`']
-
--- format list
-formats :: [String]
-formats = words "html pdf odf epub mobi"
-
--- dialect list
-dialects :: [String]
-dialects = words "md rst"
-
--- Graphiviz diagrams
-graphvizDiagrams :: [String]
-graphvizDiagrams = words "dot neato twopi circo fdp sfdp patchwork osage"
-
--- PlantUML diagrams
-plantumlDiagrams :: [String]
-plantumlDiagrams = words "uml"
-
--- Ditaa diagrams
-ditaaDiagrams :: [String]
-ditaaDiagrams = words "ditaa"
 
 -- literate programming macros
 litMacroTagChar :: Char
@@ -146,11 +125,11 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("os", getos)
           , ("arch", getarch)
 
-          , ("main", mainFile)
-          , ("file", currentFile)
-          , ("lang", currentLang)           , ("langs", identList "langs" langs)
-          , ("format", currentFormat)       , ("formats", identList "formats" formats)
-          , ("dialect", currentDialect)     , ("dialects", identList "dialects" dialects)
+          , ("main", getMainFile)
+          , ("file", getCurrentFile)
+          , ("lang", getCurrentLang)        , ("langs", identList "langs" (map showCap langs))
+          , ("format", getCurrentFormat)    , ("formats", identList "formats" (map showCap formats))
+          , ("dialect", getCurrentDialect)  , ("dialects", identList "dialects" (map showCap dialects))
 
           , ("add", add)
 
@@ -163,9 +142,8 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("csv", csv)
 
           ]
-          ++ [ (diag, diagram Graphviz diag ""            "")             | diag <- graphvizDiagrams]
-          ++ [ (diag, diagram PlantUML diag "@startuml"   "@enduml")      | diag <- plantumlDiagrams]
-          ++ [ (diag, diagram PlantUML diag "@startditaa" "@endditaa")    | diag <- ditaaDiagrams]
+          ++ [ (diag, diagram Graphviz diag ""               "")             | d <- graphvizDiagrams, let diag = showCap d]
+          ++ [ (diag, diagram PlantUML diag ("@start"++diag) ("@end"++diag)) | d <- plantumlDiagrams, let diag = showCap d]
           ++ [ ("sh",         script "sh"         "sh"          ""          ".sh")
              , ("bash",       script "bash"       "bash"        ""          ".sh")
              , ("cmd",        script "cmd"        cmdexe        "@echo off" ".bat")
@@ -178,14 +156,14 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
              , ("powershell", script "powershell" powershellexe ""          ".ps1")
 #endif
           ]
-          ++ [ (lang, language lang) | lang <- langs]
-          ++ [ (fmt, format fmt) | fmt <- formats]
-          ++ [ (dial, dialect dial) | dial <- dialects]
+          ++ [ (showCap lang, language lang) | lang <- langs]
+          ++ [ (showCap fmt, format fmt) | fmt <- formats]
+          ++ [ (showCap dial, dialect dial) | dial <- dialects]
 
 -- deprecated prints a warning on stderr when a deprecated macro is executed
 deprecated :: String -> String -> Macro -> Macro
 deprecated old new macro env args = do
-    let file = fromVal (fromMaybe (Val "-") (lookup CurrentFile env))
+    let file = fromMaybe "-" $ currentFile env
     hPutStrLn stderr $ "WARNING: " ++ file ++ ": \"" ++ old ++ "\" is deprecated. Please consider using \"" ++ new ++ "\" instead."
     macro env args
 
@@ -194,17 +172,15 @@ deprecated old new macro env args = do
 -- The environment contains the name of the file in currentFileTag.
 ppFile :: Env -> FilePath -> IO (Env, String)
 ppFile env name = do
-    -- file name of the caller
-    let caller = getSymbol env CurrentFile
     -- read the file to preprocess
     content <- readFileUTF8 name
     -- preprocess the file in an environment containing the filename
     let env' = case name of
                 "-" -> env
                 _ -> addDep env name
-    (env'', doc) <- pp ((CurrentFile, Val name) : clean CurrentFile env') content
+    (env'', doc) <- pp env'{currentFile=Just name} content
     -- return the environment (with the file name of the caller) and the preprocessed output
-    return ((CurrentFile, caller) : clean CurrentFile env'', doc)
+    return (env''{currentFile=currentFile env}, doc)
 
 -- ppAndStrip preprocesses a value
 -- and also removes leading and ending spaces unless the value is a block.
@@ -237,36 +213,42 @@ pp env [] = return (env, "")
 -- non empty string
 pp env (c0:cs)
 
-    -- if c0 is ! or \, it may be a macro call
-    | c0 `elem` charsFunc && not (null name) = case (lookup name builtin, lookup (Def name) env) of
-                -- the name is a builtin macro name
-                (Just func, _) -> do
-                    let (args, cs'') = readArgs Nothing cs'
-                    (env', doc) <- func env args
-                    (env'', doc') <- pp env' cs''
-                    return (env'', doc++doc')
-                -- the name is a user macro name
-                (Nothing, Just value) -> do
-                    let (args, cs'') = readArgs Nothing cs'
-                    -- user macro arguments are named 1, 2, ...
-                    -- the value of the macro is preprocessed in an environment
-                    -- containing the arguments
-                    let args' = zip (map (Def . show) [(1::Int)..]) args
-                    -- args that contain \i should be replaced by their definition in env to avoid infinite recursion
-                    let args'' = replaceUserMacroArgs env args'
-                    (env', doc) <- ppAndStrip (args''++env) value
-                    -- removes the arguments but keep the side effects of the macro
-                    let env'' = env' \\ args'
-                    (env''', doc') <- pp env'' cs''
-                    return (env''', doc++doc')
-                -- unknown macro => keep it unpreprocessed
-                (Nothing, Nothing) -> do
-                    (env', doc) <- pp env cs'
-                    return (env', (c0:name)++doc)
+    -- if c0 is ! or \ and cs starts with a digit, it is a macro parameter
+    | c0 `elem` charsFunc && not (null number) = case lookup number (arguments env) of
+        -- the parameter is defined
+        Just value -> do
+            (env', doc) <- ppAndStrip env value
+            (env'', doc') <- pp env' csAfterNumber
+            return (env'', doc++doc')
+        -- the parameter is not defined (empty string)
+        Nothing -> do
+            (env', doc) <- pp env csAfterNumber
+            return (env', doc)
+
+    -- if c0 is ! or \ and cs starts with a letter, it may be a macro call
+    | c0 `elem` charsFunc && not (null name) = case (lookup name builtin, lookup (Def name) (vars env)) of
+        -- the name is a builtin macro name
+        (Just func, _) -> do
+            let (fargs, cs') = readArgs env name Nothing csAfterName
+            (env', doc) <- func env fargs
+            (env'', doc') <- pp env' cs'
+            return (env'', doc++doc')
+        -- the name is a user macro name
+        (Nothing, Just value) -> do
+            let (margs, cs') = readArgs env name Nothing csAfterName
+            -- args that contain \i should be replaced by their definition in env to avoid infinite recursion
+            let margs' = replaceUserMacroArgs env margs
+            (env', doc) <- ppAndStrip env{arguments=zip (map show [1::Int ..]) margs'} value
+            (env'', doc') <- pp env'{arguments=arguments env} cs'
+            return (env'', doc++doc')
+        -- unknown macro => keep it unpreprocessed
+        (Nothing, Nothing) -> do
+            (env', doc) <- pp env csAfterName
+            return (env', c0:name++doc)
 
     -- if c0 is ~ or `, it may be the beginning of a regular code block
     -- the end delimiter must not be seen as an argument of a macro that would be at the end of the block
-    | c0 `elem` charsBlock = case readArgBlock c0 (c0:cs) of
+    | c0 `elem` charsBlock = case readArgBlock env name c0 (c0:cs) of
         Just (start, block, end, s2) -> do
             (env', docBlock) <- pp env block
             (env'', doc) <- pp env' s2
@@ -280,137 +262,131 @@ pp env (c0:cs)
         (env', doc) <- pp env cs
         return (env', c0:doc)
     where
-        (name, cs') = span (\c -> isAlphaNum c || c == '_') cs
+        (number, csAfterNumber) = span isDigit cs
+        (name, csAfterName) = span (\c -> isAlphaNum c || c == '_') cs
 
-        -- read a list of arguments
-        -- All the arguments have the same delimiters, except the last one that
-        -- can be a code block.
-        -- The first argument is the argument delimiter (Nothing for the first call)
-        -- There can be spaces before the arguments.
-        readArgs :: Maybe (Char, Char) -> String -> ([Val], String)
+-- read a list of arguments
+-- All the arguments have the same delimiters, except the last one that
+-- can be a code block.
+-- The first argument is the argument delimiter (Nothing for the first call)
+-- There can be spaces before the arguments.
+readArgs :: Env -> String -> Maybe (Char, Char) -> String -> ([Val], String)
 
-        -- read the first argument
-        readArgs Nothing s = case dropSpaces s of
-            -- code block => it's the last argument
-            Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock c s1 of
-                Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
-                Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
-                Just (_, '\n':block, _, s2) -> ([Block block], s2)
-                Just (_, block, _, s2) -> ([Block block], s2)
-                Nothing -> ([], s)
-            -- argument starting with an open delimiter
-            Just (left:s1) ->
-                case lookup left charsOpenClose of
-                    Just right ->
-                        -- read one argument
-                        -- and the following arguments with the same delimiters
-                        let (arg, s2) = readArg left right 1 s1
-                            (args, s3) = readArgs (Just (left, right)) s2
-                        in (Val (init arg) : args, s3)
-                    Nothing ->
-                        -- not a delimiter => no more arguments
-                        ([], s)
-            -- not a delimiter => no more arguments
-            _ -> ([], s)
-
-        -- read another argument
-        readArgs leftright@(Just (left, right)) s = case dropSpaces s of
-            -- code block => it's the last argument
-            Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock c s1 of
-                Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
-                Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
-                Just (_, '\n':block, _, s2) -> ([Block block], s2)
-                Just (_, block, _, s2) -> ([Block block], s2)
-                Nothing -> ([], s)
-            -- argument starting with the same delimiter
-            Just (left':s1) | left' == left ->
+-- read the first argument
+readArgs env name Nothing s = case dropSpaces s of
+    -- code block => it's the last argument
+    Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock env name c s1 of
+        Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
+        Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
+        Just (_, '\n':block, _, s2) -> ([Block block], s2)
+        Just (_, block, _, s2) -> ([Block block], s2)
+        Nothing -> ([], s)
+    -- argument starting with an open delimiter
+    Just (left:s1) ->
+        case lookup left charsOpenClose of
+            Just right ->
                 -- read one argument
                 -- and the following arguments with the same delimiters
-                let (arg, s2) = readArg left right 1 s1
-                    (args, s3) = readArgs leftright s2
+                let (arg, s2) = readArg env name left right 1 s1
+                    (args, s3) = readArgs env name (Just (left, right)) s2
                 in (Val (init arg) : args, s3)
-            -- not a delimiter => no more arguments
-            _ -> ([], s)
+            Nothing ->
+                -- not a delimiter => no more arguments
+                ([], s)
+    -- not a delimiter => no more arguments
+    _ -> ([], s)
 
-        -- skip spaces before arguments
-        dropSpaces :: String -> Maybe String
-        dropSpaces s
-            -- the number of '\n' is 0 or 1 (no blank line before an argument)
-            | nbNl <= 1 = Just s1
-            | otherwise = Nothing
-            where
-                (spaces, s1) = span isSpace s
-                nbNl = length (filter (=='\n') spaces)
+-- read another argument
+readArgs env name leftright@(Just (left, right)) s = case dropSpaces s of
+    -- code block => it's the last argument
+    Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock env name c s1 of
+        Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
+        Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
+        Just (_, '\n':block, _, s2) -> ([Block block], s2)
+        Just (_, block, _, s2) -> ([Block block], s2)
+        Nothing -> ([], s)
+    -- argument starting with the same delimiter
+    Just (left':s1) | left' == left ->
+        -- read one argument
+        -- and the following arguments with the same delimiters
+        let (arg, s2) = readArg env name left right 1 s1
+            (args, s3) = readArgs env name leftright s2
+        in (Val (init arg) : args, s3)
+    -- not a delimiter => no more arguments
+    _ -> ([], s)
 
-        -- read one argument, taking care of balancing delimiters
-        -- "readArg left right level s" reads one argument delimited by
-        -- left and right (ie left and right must be well balanced).
-        -- level is incremented when left is found and decremented when
-        -- right is found. When level = 0, the end of the argument is found.
-        -- The function returns the argument and the rest of the string.
-        readArg :: Char -> Char -> Int -> String -> (String, String)
+-- skip spaces before arguments
+dropSpaces :: String -> Maybe String
+dropSpaces s
+    -- the number of '\n' is 0 or 1 (no blank line before an argument)
+    | nbNl <= 1 = Just s1
+    | otherwise = Nothing
+    where
+        (spaces, s1) = span isSpace s
+        nbNl = length (filter (=='\n') spaces)
 
-        -- end of the argument
-        readArg _ _ 0 s = ("", s)
+-- read one argument, taking care of balancing delimiters
+-- "readArg left right level s" reads one argument delimited by
+-- left and right (ie left and right must be well balanced).
+-- level is incremented when left is found and decremented when
+-- right is found. When level = 0, the end of the argument is found.
+-- The function returns the argument and the rest of the string.
+readArg :: Env -> String -> Char -> Char -> Int -> String -> (String, String)
 
-        -- end of file => delimiters are not well balanced
-        readArg _ _ _ [] = unexpectedEndOfFile env name
+-- end of the argument
+readArg _ _ _ _ 0 s = ("", s)
 
-        -- read one char in the argument
-        readArg left right level (c:s) = (c:cs'', s')
-            where
-                -- increase or decrease level when a delimiter is found
-                level'  | c == left     = level + 1
-                        | c == right    = level - 1
-                        | otherwise     = level
-                -- read the rest of the argument
-                (cs'', s') = readArg left right level' s
+-- end of file => delimiters are not well balanced
+readArg env name _ _ _ [] = unexpectedEndOfFile env name
 
-        -- read an argument as a code block
-        -- readArgBlock c s reads an argument with lines of c as separators.
-        -- If a block with valid start and end separator is found, it returns
-        -- a tuple with start, the block, end, the rest of the string.
-        readArgBlock :: Char -> String -> Maybe (String, String, String, String)
-        readArgBlock c s
-            -- block with delimiters longer than 3 c
-            | length start >= 3 = Just (start, block, end, s2)
-            -- no block
-            | otherwise = Nothing
-            where
-                (start, s1) = span (==c) s
-                (block, (end, s2)) = readBlock s1
-                readBlock s' | start `isPrefixOf` s' = ([], span (==c) s')
-                readBlock (c':s') = (c':cs'', (end', s'')) where (cs'', (end', s'')) = readBlock s'
-                readBlock [] = unexpectedEndOfFile env name
+-- read one char in the argument
+readArg env name left right level (c:s) = (c:cs'', s')
+    where
+        -- increase or decrease level when a delimiter is found
+        level'  | c == left     = level + 1
+                | c == right    = level - 1
+                | otherwise     = level
+        -- read the rest of the argument
+        (cs'', s') = readArg env name left right level' s
 
-        -- replace user macro arguments by their definition without any side effect
-        -- see issue#29 on github
-        -- Thanks to bjp (https://github.com/bpj) for reporting this bug.
-        replaceUserMacroArgs :: Env -> [(Var, Val)] -> [(Var, Val)]
-        replaceUserMacroArgs env [] = []
-        replaceUserMacroArgs env ((var, val):args) = (var, val'') : replaceUserMacroArgs env args
-            where
-                val' = replaceUserArgs (fromVal val)
-                val'' = case val of
-                            Val _ -> Val val'
-                            Block _ -> Block val'
+-- read an argument as a code block
+-- readArgBlock c s reads an argument with lines of c as separators.
+-- If a block with valid start and end separator is found, it returns
+-- a tuple with start, the block, end, the rest of the string.
+readArgBlock :: Env -> String -> Char -> String -> Maybe (String, String, String, String)
+readArgBlock env name c s
+    -- block with delimiters longer than 3 c
+    | length start >= 3 = Just (start, block, end, s2)
+    -- no block
+    | otherwise = Nothing
+    where
+        (start, s1) = span (==c) s
+        (block, (end, s2)) = readBlock s1
+        readBlock s' | start `isPrefixOf` s' = ([], span (==c) s')
+        readBlock (c':s') = (c':cs'', (end', s'')) where (cs'', (end', s'')) = readBlock s'
+        readBlock [] = unexpectedEndOfFile env name
 
-                replaceUserArgs :: String -> String
-                replaceUserArgs "" = ""
-                replaceUserArgs (c:cs)
-                    | c `elem` charsFunc && not (null i) && isJust maybeVal = fromVal $ fromMaybe (Val "") maybeVal
-                    | otherwise = c : replaceUserArgs cs
-                    where
-                        (i, cs') = span isDigit cs
-                        maybeVal :: Maybe Val
-                        maybeVal = lookup (Def i) env
+-- replace user macro arguments by their definition without any side effect
+-- see issue#29 on github
+-- Thanks to bjp (https://github.com/bpj) for reporting this bug.
+replaceUserMacroArgs :: Env -> [Val] -> [Val]
+replaceUserMacroArgs _ [] = []
+replaceUserMacroArgs env (val:args) = val'' : replaceUserMacroArgs env args
+    where
+        val' = replaceUserArgs env (fromVal val)
+        val'' = case val of
+                    Val _ -> Val val'
+                    Block _ -> Block val'
 
--- macropp executes a macro and preprocesses its output.
--- It is used by exec to preprocess the standard output of a shell command.
-macropp :: Macro -> Macro
-macropp macro env args = do
-    (env', src) <- macro env args
-    pp env' src
+replaceUserArgs :: Env -> String -> String
+replaceUserArgs _ "" = ""
+replaceUserArgs env (c:cs)
+    | c `elem` charsFunc && not (null i) = case lookup i (arguments env) of
+        Just val -> fromVal val ++ replaceUserArgs env cs'
+        Nothing -> replaceUserArgs env cs'
+    | otherwise = c : replaceUserArgs env cs
+    where
+        (i, cs') = span isDigit cs
 
 ---------------------------------------------------------------------
 -- Identifier list macro (langs, formats, dialects, ...)
@@ -425,54 +401,54 @@ identList name _ _ _ = arityError name [0]
 ---------------------------------------------------------------------
 
 -- \lang returns the current language (see Localization.langs)
-currentLang :: Macro
-currentLang env [] = return (env, fromVal (getSymbol env Lang))
-currentLang _ _ = arityError "lang" [0]
+getCurrentLang :: Macro
+getCurrentLang env [] = return (env, showCap (currentLang env))
+getCurrentLang _ _ = arityError "lang" [0]
 
 -- language implements the macros \xx where xx is a language code
 -- defined in Localization.langs.
 -- language preprocesses src only if the current language is lang.
-language :: String -> Macro
-language lang env [src] = case lookup Lang env of
-    Just val | fromVal val == lang -> ppAndStrip env src
-    _ -> return (env, "")
-language lang _ _ = arityError lang [1]
+language :: Lang -> Macro
+language lang env [src]
+    | currentLang env == lang = ppAndStrip env src
+    | otherwise = return (env, "")
+language lang _ _ = arityError (showCap lang) [1]
 
 ---------------------------------------------------------------------
 -- Format macros
 ---------------------------------------------------------------------
 
 -- \format returns the current output format (see formats)
-currentFormat :: Macro
-currentFormat env [] = return (env, fromVal (getSymbol env FileFormat))
-currentFormat _ _ = arityError "format" [0]
+getCurrentFormat :: Macro
+getCurrentFormat env [] = return (env, showCapMaybe "" (fileFormat env))
+getCurrentFormat _ _ = arityError "format" [0]
 
 -- format implements the macros \xxx where xxx is a format
 -- defined in formats.
 -- format preprocesses src only if the current format is fmt.
-format :: String -> Macro
-format fmt env [src] = case lookup FileFormat env of
-    Just val | fromVal val == fmt -> ppAndStrip env src
+format :: Format -> Macro
+format fmt env [src] = case fileFormat env of
+    Just val | val == fmt -> ppAndStrip env src
     _ -> return (env, "")
-format fmt _ _ = arityError fmt [1]
+format fmt _ _ = arityError (showCap fmt) [1]
 
 ---------------------------------------------------------------------
 -- Dialect macros
 ---------------------------------------------------------------------
 
 -- \dialect returns the current dialect (see dialects)
-currentDialect :: Macro
-currentDialect env [] = return (env, fromVal (getSymbol env Dialect))
-currentDialect _ _ = arityError "dialect" [0]
+getCurrentDialect :: Macro
+getCurrentDialect env [] = return (env, showCap (currentDialect env))
+getCurrentDialect _ _ = arityError "dialect" [0]
 
 -- dialect implements the macros \xxx where xxx is a dialect
 -- defined in dialects.
 -- dialect preprocesses src only if the current dialect is dial.
-dialect :: String -> Macro
-dialect dial env [src] = case lookup Dialect env of
-    Just val | fromVal val == dial -> ppAndStrip env src
-    _ -> return (env, "")
-dialect dial _ _ = arityError dial [1]
+dialect :: Dialect -> Macro
+dialect dial env [src]
+    | currentDialect env == dial = ppAndStrip env src
+    | otherwise = return (env, "")
+dialect dial _ _ = arityError (showCap dial) [1]
 
 ---------------------------------------------------------------------
 -- Generic preprocessing macros
@@ -486,7 +462,7 @@ define _ env [name, value] = do
     name' <- ppAndStrip' env name
     unless (validMacroName name') $ invalidNameError name'
     when (isJust (lookup name' builtin)) $ builtinRedefinition name'
-    return ((Def name', value) : clean (Def name') env, "")
+    return (env{vars=(Def name', value) : clean (Def name') (vars env)}, "")
 define macro env [name] = define macro env [name, Val ""]
 define macro _ _ = arityError macro [1,2]
 
@@ -494,7 +470,7 @@ define macro _ _ = arityError macro [1,2]
 undefine :: String -> Macro
 undefine _ env [name] = do
     name' <- ppAndStrip' env name
-    return (clean (Def name') env, "")
+    return (env{vars = clean (Def name') (vars env), arguments = clean name' (arguments env)}, "")
 undefine macro _ _ = arityError macro [1]
 
 -- \ifdef(name)(t)(e) preprocesses name. If the result is the name of an
@@ -503,9 +479,9 @@ undefine macro _ _ = arityError macro [1]
 ifdef :: Macro
 ifdef env [name, t, e] = do
     name' <- ppAndStrip' env name
-    ppAndStrip env $ case lookup (Def name') env of
-                Just _ -> t
-                Nothing -> e
+    ppAndStrip env $ case (lookup name' (arguments env), lookup (Def name') (vars env)) of
+                (Nothing, Nothing) -> e
+                _ -> t
 ifdef env [name, t] = ifdef env [name, t, Val ""]
 ifdef _ _ = arityError "ifdef" [1, 2]
 
@@ -562,7 +538,7 @@ locateFile env name = do
     let name' = case name of
             ('~' : '/' : relname) -> fromVal (getSymbol env (EnvVar (envVarStorage "HOME"))) </> relname
             _ -> name
-    let path = map (takeDirectory . fromVal . getSymbol env) [CurrentFile, MainFile] ++ ["."]
+    let path = [ takeDirectory (fromMaybe "-" (f env)) | f <- [currentFile, mainFile] ] ++ [ "." ]
     found <- findFile path name'
     case found of
         Just foundFile -> return foundFile
@@ -615,21 +591,23 @@ quiet _ _ = arityError "quiet" [1, 2]
 mdate :: Macro
 mdate env files = do
     files' <- mapM (ppAndStrip' env) files
-    files'' <- mapM (locateFile env) $ concatMap words files' ++ [fromVal (getSymbol env MainFile) | null files]
+    files'' <- mapM (locateFile env) $ concatMap words files' ++ [fromMaybe "-" (mainFile env) | null files]
     let env' = addDeps env files''
     times <- mapM getModificationTime files''
     let lastTime = maximum times
-    return (env', formatTime (myLocale $ fromVal $ getSymbol env Lang) "%A %-d %B %Y" lastTime)
+    tz <- getCurrentTimeZone
+    let localTime = utcToLocalTime tz lastTime
+    return (env', formatTime (myLocale $ currentLang env) "%A %-d %B %Y" localTime)
 
 -- \main returns the name of the main file (given on the command line)
-mainFile :: Macro
-mainFile env [] = return (env, fromVal (fromMaybe (Val "-") (lookup MainFile env)))
-mainFile _ _ = arityError "main" [0]
+getMainFile :: Macro
+getMainFile env [] = return (env, fromMaybe "-" (mainFile env))
+getMainFile _ _ = arityError "main" [0]
 
 -- \file returns the name of the current file (\main or any file included from \main)
-currentFile :: Macro
-currentFile env [] = return (env, fromVal (fromMaybe (Val "-") (lookup CurrentFile env)))
-currentFile _ _ = arityError "file" [0]
+getCurrentFile :: Macro
+getCurrentFile env [] = return (env, fromMaybe "-" (currentFile env))
+getCurrentFile _ _ = arityError "file" [0]
 
 ---------------------------------------------------------------------
 -- OS macros
@@ -640,7 +618,7 @@ currentFile _ _ = arityError "file" [0]
 readEnv :: Macro
 readEnv env [name] = do
     name' <- ppAndStrip' env name
-    case lookup (EnvVar (envVarStorage name')) env of
+    case lookup (EnvVar (envVarStorage name')) (vars env) of
         Just val -> return (env, fromVal val)
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
@@ -666,7 +644,7 @@ add env [name, val] = do
     name' <- ppAndStrip' env name
     let val0 = fromVal $ getSymbol env (Def name')
     val1 <- ppAndStrip' env val
-    let env' = (Def name', Val (show (atoi val0 + atoi val1))) : clean (Def name') env
+    let env' = env{vars = (Def name', Val (show (atoi val0 + atoi val1))) : clean (Def name') (vars env)}
     return (env', "")
 add env [name] = add env [name, Val "1"]
 add _ _ = arityError "add" [1, 2]
@@ -743,9 +721,9 @@ diagram runtime diag header footer env [path, title, code] = do
             PlantUML -> do
                 plantuml <- resource "plantuml.jar" plantumlJar
                 try readProcessUTF8 "java" ["-jar", plantuml, "-charset", "UTF-8", gv]
-    let link = case fromVal $ getSymbol env Dialect of
-                "rst" -> unlines [".. figure:: " ++ url, indent' 4 attrs, "", "    " ++ title']
-                _ -> "!["++title'++"]("++url++")"++attrs
+    let link = case currentDialect env of
+                Md -> "!["++title'++"]("++url++")"++attrs
+                Rst -> unlines [".. figure:: " ++ url, indent' 4 attrs, "", "    " ++ title']
     return (env, link)
 diagram runtime diag header footer env [path, code] =
     diagram runtime diag header footer env [path, Val "", code]
@@ -768,7 +746,7 @@ parseImageAttributes env s = ( localPath ++ ".gv"
                              , linkPath  ++ ".png"
                              , attrs )
     where
-        prefix = fromVal (getSymbol env ImagePath)
+        prefix = imagePath env
         (localPath, linkPath, attrs) = parseLocalAndLink (prefix</>s) "" ""
         parseLocalAndLink [] local link = (strip local, strip link, "")
         parseLocalAndLink ('(':cs) local link =
@@ -779,9 +757,9 @@ parseImageAttributes env s = ( localPath ++ ".gv"
             in parseLocalAndLink cs' (local++xs) link
         parseLocalAndLink ('{':cs) local link =
             let (xs, _) = extract '}' cs
-                imgAttrs = case fromVal $ getSymbol env Dialect of
-                            "rst" -> unlines $ filter (not . null) $ map strip $ lines xs
-                            _ -> "{" ++ strip xs ++ "}"
+                imgAttrs = case currentDialect env of
+                            Md -> "{" ++ strip xs ++ "}"
+                            Rst -> unlines $ filter (not . null) $ map strip $ lines xs
             in (strip local, strip link, imgAttrs)
         parseLocalAndLink cs local link =
             let (xs, cs') = span (`notElem` "([{") cs
@@ -822,38 +800,16 @@ resource name (array, len) = do
 -- "saveLiterateContent macros env" saves all the literate contents recorded in the environment.
 -- "macros" is the list of literate content that must not be saved
 -- (they are used as macros to build other literate contents).
-saveLiterateContent :: Env -> Env -> IO ()
-
--- ignore files that have not been modified since the last call to flushLit
-saveLiterateContent _ ((LitFlush, _) : _) =
-    return ()
-
--- macros shall not be saved
-saveLiterateContent macros ((mac@(LitMacro _), _) : env) =
-    saveLiterateContent macros (clean mac env)
+saveLiterateContent :: [(String, String)] -> [(FilePath, String)] -> IO ()
 
 -- file content shall be expanded with macro contents
 -- previous definitions of the same file are removed from the list to avoid writing old intermediate definitions
-saveLiterateContent macros ((file@(LitFile name), content) : env) = do
-    writeFileUTF8 name (expandLit macros (fromVal content))
-    saveLiterateContent macros (clean file env)
-
--- other definitions are not literate things
-saveLiterateContent macros (_ : env) =
-    saveLiterateContent macros env
+saveLiterateContent macros ((filename, content) : files) = do
+    writeFileUTF8 filename (expandLit macros content)
+    saveLiterateContent macros files
 
 saveLiterateContent _ [] =
     return ()
-
--- "isLitMacro (name, value)" tells if an environment entry is a literate content macro.
--- An entry is a literate content if its name is the name of a literate content macro.
-isLitMacro :: (Var, Val) -> Bool
-isLitMacro = isLitMacroName . fst
-
--- "isLitMacroName name" tells if a name is a literate content macro name.
-isLitMacroName :: Var -> Bool
-isLitMacroName (LitMacro _) = True
-isLitMacroName _ = False
 
 -- literate programming macro
 lit :: Macro
@@ -924,7 +880,7 @@ codeblock env [len, ch] = do
     let line = case s' of
                 [c] | c `elem` "~`" -> replicate len' c
                 _ -> codeblockError
-    return ((CodeBlock, Val line) : clean CodeBlock env, "")
+    return (env{codeBlock = Just line}, "")
 
 -- "\codeblock(len" stores the new codeblock separator ('~' repeated len times)
 codeblock env [len] = codeblock env [len, Val "~"]
@@ -948,18 +904,21 @@ indent _ _ = arityError "indent" [1, 2]
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
 litGet :: Env -> String -> String
-litGet env name = fromVal $ getSymbol env (litContentTag name)
+litGet env (c:name) | c == litMacroTagChar = fromMaybe "" $ lookup name (litMacros env)
+litGet env name = fromMaybe "" $ lookup name (litFiles env)
 
 -- "litAppend env name lang content" appends content to a literate file or macro
 -- and record the language lang in the environment
 litAppend :: Env -> String -> Maybe String -> String -> Env
 litAppend env name lang content = env''
     where
-        contentTag = litContentTag name
         oldContent = litGet env name
-        env' = (contentTag, Val (oldContent++content)) : (clean contentTag . clean (LitLang name)) env
+        newContent = oldContent++content
+        env' = case name of
+                (c:name') | c == litMacroTagChar -> env{litMacros = (name', newContent) : clean name' (litMacros env)}
+                name'                            -> env{litFiles = (name', newContent) : clean name' (litFiles env)}
         env'' = case lang of
-            Just lang' -> (LitLang name, Val lang') : env'
+            Just lang' -> env'{litLangs = (name, lang') : litLangs env'}
             _ -> env'
 
 -- "litShow lang content" format content using the language lang.
@@ -967,38 +926,27 @@ litAppend env name lang content = env''
 litShow :: Env -> Maybe String -> String -> String
 litShow env lang content = formatedBlock
     where
-        formatedBlock = case fromVal $ getSymbol env Dialect of
-            "rst"   -> reStructuredTextBlock
-            _       -> markdownBlock
+        formatedBlock = case currentDialect env of
+            Md  -> markdownBlock
+            Rst -> reStructuredTextBlock
 
         markdownBlock = case lang of
-            Just lang'  -> unlines [codeBlock ++ " {." ++ lang' ++ "}", content, codeBlock]
-            Nothing     -> unlines [codeBlock, content, codeBlock]
+            Just lang'  -> unlines [sep ++ " {." ++ lang' ++ "}", content, sep]
+            Nothing     -> unlines [sep, content, sep]
 
         reStructuredTextBlock = case lang of
             Just lang'  -> unlines [ ".. code-block:: " ++ lang', "", indent' 4 content, ""]
             Nothing     -> unlines [ ".. code-block:: none", "", indent' 4 content, ""]
 
-        codeBlock = case lookup CodeBlock env of
-                        Just (Val line) -> line
-                        Just (Block line) -> line
-                        Nothing -> replicate 70 '~'
-
--- litContentTag generates an entry for a literate file or macro
--- in the environment.
--- If name starts with a '@', its a literate macro, not an actual file.
-litContentTag :: String -> Var
-litContentTag (c:name) | c == litMacroTagChar = LitMacro name
-litContentTag name = LitFile name
+        sep = fromMaybe (replicate 70 '~') (codeBlock env)
 
 -- "litLang env name" looks for the language of the literate file or macro
 -- in the environment if it has already been defined or tries to guess it
 -- from its name.
 litLang :: Env -> String -> Maybe String
-litLang env name = case (lookup (LitLang name) env, defaultLitLang name) of
-    (Just lang, _) -> Just (fromVal lang)
-    (_, Just lang) -> Just lang
-    _ -> Nothing
+litLang env name = case lookup name (litLangs env) of
+    Just lang -> Just lang
+    Nothing   -> defaultLitLang name
 
 -- default language deduced from the name of the file
 -- (see "pandoc --version")
@@ -1075,21 +1023,21 @@ defaultLitLang name = case (map toLower (takeBaseName name), map toLower (takeEx
 -- been written yet.
 flushlit :: Macro
 flushlit env [] = do
-    saveLiterateContent (filter isLitMacro env) env
-    return ((LitFlush, Val "") : clean LitFlush env, "")
+    saveLiterateContent (litMacros env) (litFiles env)
+    return (env, "")
 flushlit _ _ = arityError "flushlit" [0]
 
 -- "expandLit macros text" expand literal macros in a string.
 -- macros is a lookup table containing all the literal macros
-expandLit :: Env -> String -> String
+expandLit :: [(String, String)] -> String -> String
 expandLit macros (c0:s)
     | c0 == litMacroTagChar = content' ++ expandLit macros s'
     | otherwise = c0 : expandLit macros s
     where
         (name, s') = span (\c -> isAlphaNum c || c == '_') s
-        content' = case lookup (LitMacro name) macros of
+        content' = case lookup name macros of
                     Nothing -> c0:name
-                    Just content -> expandLit macros (fromVal content)
+                    Just content -> expandLit macros content
 expandLit _ [] = []
 
 ---------------------------------------------------------------------
@@ -1104,7 +1052,7 @@ csv :: Macro
 csv env [filename] = do
     filename' <- ppAndStrip' env filename
     csvData <- readFileUTF8 filename'
-    let table = makeTable (fromVal $ getSymbol env Dialect) Nothing csvData
+    let table = makeTable (currentDialect env) Nothing csvData
     return (addDep env filename', table)
 --
 -- \csv(filename)(header) converts a CSV file to a markdown or reStructuredText table
@@ -1115,6 +1063,6 @@ csv env [filename, header] = do
     header' <- ppAndStrip' env header
     let fields = splitOn "|" header'
     csvData <- readFileUTF8 filename'
-    let table = makeTable (fromVal $ getSymbol env Dialect) (Just fields) csvData
+    let table = makeTable (currentDialect env) (Just fields) csvData
     return (env, table)
 csv _ _ = arityError "csv" [1, 2]

@@ -528,7 +528,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.11)
+    Microsoft Windows 10.0.15063 (2.13)
     This script is run from wine under Linux
 
 ### Python

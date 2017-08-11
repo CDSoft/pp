@@ -58,6 +58,42 @@ Undefinition test:                  \ifndef(mac1)(mac1 is not defined)(mac1 is d
 Undefinition test:                  \ifndef(swap)(swap is not defined)(swap is defined)
 ----------------------------------- -------------------------------------------------------------
 
+## Testing argument scopes (see issue #33)
+
+\def(f)(f take 2 args: \1 and \2 but not \raw(\3))
+
+----------------------------------- -------------------------------------------------------------
+Before calling f:                   \1 \2
+call with 2 args:                   \f(one)(two)
+between two calls:                  \1 \2
+call with 1 arg:                    \f(one')
+between two calls:                  \1 \2
+call with 2 args:                   \f(one'')(two'')
+after calling f:                    \1 \2
+----------------------------------- -------------------------------------------------------------
+
+\def(g)(\f(\1)(\2))
+----------------------------------- -------------------------------------------------------------
+Before calling g:                   \1 \2
+call with 2 args:                   \g(one)(two)
+between two calls:                  \1 \2
+call with 1 arg:                    \g(one')
+between two calls:                  \1 \2
+call with 2 args:                   \g(one'')(two'')
+after calling g:                    \1 \2
+----------------------------------- -------------------------------------------------------------
+
+\def(g)(\f(\1)(-\2-))
+----------------------------------- -------------------------------------------------------------
+Before calling g:                   \1 \2
+call with 2 args:                   \g(one)(two)
+between two calls:                  \1 \2
+call with 1 arg:                    \g(one')
+between two calls:                  \1 \2
+call with 2 args:                   \g(one'')(two'')
+after calling g:                    \1 \2
+----------------------------------- -------------------------------------------------------------
+
 ## Equality / Inequality
 
 \define(one)(1) \define(un)(1) \define(two)(2)

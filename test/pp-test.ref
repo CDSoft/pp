@@ -58,6 +58,42 @@ Undefinition test:                  mac1 is not defined
 Undefinition test:                  swap is defined
 ----------------------------------- -------------------------------------------------------------
 
+## Testing argument scopes (see issue #33)
+
+
+
+----------------------------------- -------------------------------------------------------------
+Before calling f:                    
+call with 2 args:                   f take 2 args: one and two but not \3
+between two calls:                   
+call with 1 arg:                    f take 2 args: one' and  but not \3
+between two calls:                   
+call with 2 args:                   f take 2 args: one'' and two'' but not \3
+after calling f:                     
+----------------------------------- -------------------------------------------------------------
+
+
+----------------------------------- -------------------------------------------------------------
+Before calling g:                    
+call with 2 args:                   f take 2 args: one and two but not \3
+between two calls:                   
+call with 1 arg:                    f take 2 args: one' and  but not \3
+between two calls:                   
+call with 2 args:                   f take 2 args: one'' and two'' but not \3
+after calling g:                     
+----------------------------------- -------------------------------------------------------------
+
+
+----------------------------------- -------------------------------------------------------------
+Before calling g:                    
+call with 2 args:                   f take 2 args: one and -two- but not \3
+between two calls:                   
+call with 1 arg:                    f take 2 args: one' and -- but not \3
+between two calls:                   
+call with 2 args:                   f take 2 args: one'' and -two''- but not \3
+after calling g:                     
+----------------------------------- -------------------------------------------------------------
+
 ## Equality / Inequality
 
   

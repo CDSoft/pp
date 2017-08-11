@@ -23,10 +23,11 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 import System.IO
 import System.Environment
 import System.Exit
-import Data.Char
 import Data.List
+import Data.Maybe
 
 import qualified Version
+import Formats
 import Environment
 import Preprocessor
 import Localization
@@ -42,17 +43,15 @@ main = do
     -- parse the arguments and produce the preprocessed output
     env <- initialEnvironment (head langs) (head dialects)
     (env', doc) <- getArgs >>= doArgs env
-    case lookup MakeTarget env' of
-        Just (Val target) ->
+    case makeTarget env' of
+        Just target ->
             -- -M option => print dependencies
-            case lookup Deps env' of
-                Just (Dep deps) -> putStrLn $ target ++ ": " ++ (unwords.nub.reverse) deps
-                _ -> putStrLn $ target ++ ": "
+            putStrLn $ target ++ ": " ++ (unwords.nub.reverse) (dependencies env')
         _ ->
             -- just write the preprocessed output to stdout
             putStr doc
     -- finally save the literate content (if any)
-    saveLiterateContent (filter isLitMacro env') env'
+    saveLiterateContent (litMacros env') (litFiles env')
 
 -- "doArgs env args" parses the command line arguments
 -- and returns an updated environment and the preprocessed output
@@ -68,7 +67,7 @@ doArgs env (arg:args) = do
 -- mainFileTag is put in the environment only when a file has been preprocessed.
 -- This variable is not set when no file is given on the command line.
 -- In this case, pp preprocesses stdin.
-doArgs env [] = case lookup MainFile env of
+doArgs env [] = case mainFile env of
     -- nothing has been preprocessed, let's try stdin
     Nothing -> do (env', doc, _) <- doArg env "-" []
                   return (env', doc)
@@ -86,69 +85,69 @@ doArg _ "-v" _ = putStrLn Version.copyright >> exitSuccess
 doArg _ "-h" _ = putStrLn Version.help >> exitSuccess
 
 -- "doArg env "-D name=value"" adds a new definition to the environment.
-doArg env "-D" (def:args) = return ((Def name, Val (drop 1 value)) : clean (Def name) env, "", args)
+doArg env "-D" (def:args) = return (env{vars=(Def name, Val (drop 1 value)) : clean (Def name) (vars env)}, "", args)
     where (name, value) = span (/= '=') def
 
 -- "doArg env "-Dname=value"" adds a new definition to the environment.
-doArg env ('-':'D':def) args = return ((Def name, Val (drop 1 value)) : clean (Def name) env, "", args)
+doArg env ('-':'D':def) args = return (env{vars=(Def name, Val (drop 1 value)) : clean (Def name) (vars env)}, "", args)
     where (name, value) = span (/= '=') def
 
 -- "doArg env "-U name"" removes a definition from the environment.
-doArg env "-U" (name:args) = return (clean (Def name) env, "", args)
+doArg env "-U" (name:args) = return (env{vars=clean (Def name) (vars env)}, "", args)
 
 -- "doArg env "-Uname"" removes a definition from the environment.
-doArg env ('-':'U':name) args = return (clean (Def name) env, "", args)
+doArg env ('-':'U':name) args = return (env{vars=clean (Def name) (vars env)}, "", args)
 
 -- "doArg env "-fr|-en"" changes the current language
-doArg env ('-':lang) args | lang' `elem` langs =
-    return ((Lang, Val lang') : clean Lang env, "", args) where lang' = map toLower lang
+doArg env ('-':lang) args | isJust maybeLang =
+    return (env{currentLang=fromJust maybeLang}, "", args) where maybeLang = readCap lang
 
 -- "doArg env "-html|-pdf|-odt|-epub|-mobi"" changes the current format
-doArg env ('-':fmt) args | fmt' `elem` formats =
-    return ((FileFormat, Val fmt') : clean FileFormat env, "", args) where fmt' = map toLower fmt
+doArg env ('-':fmt) args | isJust maybeFmt =
+    return (env{fileFormat=maybeFmt}, "", args) where maybeFmt = readCap fmt
 
 -- "doArg env "-md|-rst"" changes the current dialect
-doArg env ('-':dial) args | dial' `elem` dialects =
-    return ((Dialect, Val dial') : clean Dialect env, "", args) where dial' = map toLower dial
+doArg env ('-':dial) args | isJust maybeDial =
+    return (env{currentDialect=fromJust maybeDial}, "", args) where maybeDial = readCap dial
 
 -- "doArg env "-img prefix"" changes the output image path prefix
 doArg env "-img" (prefix:args) =
-    return ((ImagePath, Val prefix) : clean ImagePath env, "", args)
+    return (env{imagePath=prefix}, "", args)
 
 -- "doArg env "-img=prefix"" changes the output image path prefix
 doArg env ('-':'i':'m':'g':'=':prefix) args =
-    return ((ImagePath, Val prefix) : clean ImagePath env, "", args)
+    return (env{imagePath=prefix}, "", args)
 
 -- "doArg env "-import name" preprocesses a file and discards its output
 -- It can be used to load macro definitinos for instance
 doArg env "-import" (name:args) = do
-    (env', _) <- ppFile ((CurrentFile, Val name) : env) name
+    (env', _) <- ppFile env{currentFile=Just name} name
     return (env', "", args)
 
 -- "doArg env "-import=name" preprocesses a file and discards its output
 -- It can be used to load macro definitinos for instance
 doArg env ('-':'i':'m':'p':'o':'r':'t':'=':name) args = do
-    (env', _) <- ppFile ((CurrentFile, Val name) : env) name
+    (env', _) <- ppFile env{currentFile=Just name} name
     return (env', "", args)
 
 -- "doArg" env "-langs" shows the list of languages
-doArg _ "-langs" _ = putStrLn (unwords $ sort langs) >> exitSuccess
+doArg _ "-langs" _ = putStrLn (unwords $ sort $ map showCap langs) >> exitSuccess
 
 -- "doArg" env "-dialects" shows the list of dialects
-doArg _ "-dialects" _ = putStrLn (unwords $ sort dialects) >> exitSuccess
+doArg _ "-dialects" _ = putStrLn (unwords $ sort $ map showCap dialects) >> exitSuccess
 
 -- "doArg" env "-formats" shows the list of formats
-doArg _ "-formats" _ = putStrLn (unwords $ sort formats) >> exitSuccess
+doArg _ "-formats" _ = putStrLn (unwords $ sort $ map showCap formats) >> exitSuccess
 
 -- "doarg" env "-M" target enables the tracking of dependencies (i.e. included and imported files)
 -- target is the name of the Makefile target
 doArg env "-M" (target:args) =
-    return ((MakeTarget, Val target) : clean MakeTarget env, "", args)
+    return (env{makeTarget=Just target}, "", args)
 
 -- "doarg" env "-M=target" enables the tracking of dependencies (i.e. included and imported files)
 -- target is the name of the Makefile target
 doArg env ('-':'M':'=':target) args =
-    return ((MakeTarget, Val target) : clean MakeTarget env, "", args)
+    return (env{makeTarget=Just target}, "", args)
 
 -- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) _ | not (null arg) = error $ "Unexpected argument: " ++ arg
@@ -157,5 +156,5 @@ doArg _ ('-':arg) _ | not (null arg) = error $ "Unexpected argument: " ++ arg
 -- The mainFileTag variable is added to the environment.
 -- It contains the name of the file being preprocessed.
 doArg env name args = do
-    (env', doc) <- ppFile ((MainFile, Val name) : env) name
+    (env', doc) <- ppFile env{mainFile=Just name} name
     return (env', doc, args)

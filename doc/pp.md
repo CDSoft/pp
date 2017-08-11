@@ -144,19 +144,19 @@ The user can define and undefine variables and list input files.
 **`-languages`**
 :   lists the languages.
 
-\sh[echo \langs | sed 's/\(\w\{1,\}\)/**`-\1`**/g' | tr ' ' '|']
+\sh[echo \langs | sed 's/\(\w\{1,\}\)/**`-\raw(\1)`**/g' | tr ' ' '|']
 :   changes the current language.
 
 **`-formats`**
 :   lists the formats.
 
-\sh[echo \formats | sed 's/\(\w\{1,\}\)/**`-\1`**/g' | tr ' ' '|']
+\sh[echo \formats | sed 's/\(\w\{1,\}\)/**`-\raw(\1)`**/g' | tr ' ' '|']
 :   changes the current output file format.
 
 **`-dialects`**
 :   lists the dialects.
 
-\sh[echo \dialects | sed 's/\(\w\{1,\}\)/**`-\1`**/g' | tr ' ' '|']
+\sh[echo \dialects | sed 's/\(\w\{1,\}\)/**`-\raw(\1)`**/g' | tr ' ' '|']
 :   changes the current dialect (`-md` is the default dialect).
 
 **`-img=PREFIX`** or **`-img PREFIX`**
@@ -230,7 +230,7 @@ The `rawinclude` macro can include a file without preprocessing it.
 \raw{**`!def[ine](SYMBOL)[(VALUE)]`**}
 :   Add the symbol `SYMBOL` to the current environment
     and associate it with the optional value `VALUE`.
-    Arguments are denoted by `!1` ... `!n` in `VALUE`.
+    Arguments are denoted by `\raw(!1)` ... `!n` in `VALUE`.
 
 \raw{**`!undef[ine](SYMBOL)`**}
 :   Remove the symbol `SYMBOL` from the current environment.
@@ -318,22 +318,22 @@ The `rawinclude` macro can include a file without preprocessing it.
     The default value of the increment is 1.
 
 \raw{**`!lang`**}
-:   emits the current language (\sh[echo \langs | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g'])
+:   emits the current language (\sh[echo \langs | sed -e 's/\(\w\{1,\}\)/*\raw(\1)*/g' -e 's/ /, /g'])
 
 \raw{**`!format`**}
-:   emits the current format (\sh[echo \formats | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g'])
+:   emits the current format (\sh[echo \formats | sed -e 's/\(\w\{1,\}\)/*\raw(\1)*/g' -e 's/ /, /g'])
 
 \raw{**`!dialect`**}
-:   emits the current dialect (\sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g'])
+:   emits the current dialect (\sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/*\raw(\1)*/g' -e 's/ /, /g'])
 
-\sh[echo \langs | sed -e 's/\(\w\{1,\}\)/**`!\1(...)`**/g' -e 's/ /, /g']
-:   emits some text only if the current language is \sh[echo \langs | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g']
+\sh[echo \langs | sed -e 's/\(\w\{1,\}\)/**`!\raw{\1}(...)`**/g' -e 's/ /, /g']
+:   emits some text only if the current language is \sh[echo \langs | sed -e 's/\(\w\{1,\}\)/*\raw(\1)*/g' -e 's/ /, /g']
 
-\sh[echo \formats | sed -e 's/\(\w\{1,\}\)/**`!\1(...)`**/g' -e 's/ /, /g']
-:   emits some text only if the current format is \sh[echo \formats | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g']
+\sh[echo \formats | sed -e 's/\(\w\{1,\}\)/**`!\raw{\1}(...)`**/g' -e 's/ /, /g']
+:   emits some text only if the current format is \sh[echo \formats | sed -e 's/\(\w\{1,\}\)/*\raw(\1)*/g' -e 's/ /, /g']
 
-\sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/**`!\1(...)`**/g' -e 's/ /, /g']
-:   emits some text only if the current dialect is \sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/*\1*/g' -e 's/ /, /g']
+\sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/**`!\raw{\1}(...)`**/g' -e 's/ /, /g']
+:   emits some text only if the current dialect is \sh[echo \dialects | sed -e 's/\(\w\{1,\}\)/*\raw(\1)*/g' -e 's/ /, /g']
 
 \raw{**`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**}
 :   renders a diagram with [GraphViz], [PlantUML] and [Ditaa].

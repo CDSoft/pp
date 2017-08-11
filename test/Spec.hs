@@ -22,36 +22,14 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 import Test.Hspec
 
-import Localization
 import Preprocessor
 
 import Data.List
-import Data.Time
 
 main :: IO ()
-main = hspec $ do
+main = hspec $
 
-    describe "Localization.myLocale" $ do
-        it "defines date format for every language in langs" $ do
-            head (wDays $ myLocale "fr") `shouldBe` ("Dimanche", "Dim")
-            head (wDays $ myLocale "it") `shouldBe` ("domenica","dom")
-            head (wDays $ myLocale "es") `shouldBe` ("domingo","dom")
-            head (wDays $ myLocale "en") `shouldBe` ("Sunday","Sun")
-            let locales = map myLocale langs
-            nub locales `shouldBe` locales -- defined for all languages
-
-    describe "Preprocessor" $ do
+    describe "Preprocessor" $
         it "defines disjoint character sets" $ do
             let sets = concat [ charsFunc, charsBlock, [litMacroTagChar] ]
             nub sets `shouldBe` sets
-        it "defines disjoint macro name sets" $ do
-            let sets = concat [ langs
-                              , formats
-                              , dialects
-                              , graphvizDiagrams
-                              , plantumlDiagrams
-                              , ditaaDiagrams
-                              ]
-            nub sets `shouldBe` sets
-            let builtinNames = map fst builtin
-            nub builtinNames `shouldBe` builtinNames

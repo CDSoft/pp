@@ -28,6 +28,8 @@ import Data.List
 import Data.Spreadsheet
 import Control.Monad.Exception.Asynchronous.Lazy (Exceptional(..))
 
+import Formats
+
 -- Type of cells
 data Kind = Number | Other deriving (Eq)
 
@@ -44,7 +46,7 @@ separators = ",;\t|"
 -- It returns the alignments of the columns and the table itself.
 -- The cells are left or right justified.
 parseCSV :: Maybe [String] -> String -> ([Alignment], [[String]])
-parseCSV header csvData = (formats, table)
+parseCSV header csvData = (columnFormats, table)
     where
         -- CSV parser
         qm = '"'
@@ -60,8 +62,8 @@ parseCSV header csvData = (formats, table)
         maxRowLen = maximum $ map length rows'
         paddedRows = [ row ++ replicate (maxRowLen - length row) "" | row <- rows' ]
         -- Left/right alignment according to the kind of data
-        formats = map columnFormat $ transpose paddedRows
-        table = align paddedRows formats
+        columnFormats = map columnFormat $ transpose paddedRows
+        table = align paddedRows columnFormats
 
 -- Infers the most probable separator according to the frequencies of characters
 inferSeparator :: String -> Char
@@ -88,9 +90,9 @@ columnFormat cells
 
 -- add left or right padding to each cell according to the column alignment
 align :: [[String]] -> [Alignment] -> [[String]]
-align rows formats = map alignRow rows
+align rows columnFormats = map alignRow rows
     where
-        alignRow = zipWith alignCell formats
+        alignRow = zipWith alignCell columnFormats
         alignCell (LeftAligned w) cell = ' ' : cell' ++ replicate (w - length cell') ' ' ++ " "
             where cell' = strip cell
         alignCell (RightAligned w) cell = ' ' : replicate (w - length cell') ' ' ++ cell' ++ " "
@@ -104,18 +106,18 @@ joinMultiLines = map (map (map join . filter (/= '\r')))
           join c = c
 
 -- generates a markdown or reStructuredText table
-makeTable :: String -> Maybe [String] -> String -> String
+makeTable :: Dialect -> Maybe [String] -> String -> String
 makeTable dialect header csvData = unlines $
     [ sepLine
     , makeLine headerRow
     , headerSepLine
     ] ++ concat [ [makeLine row, sepLine] | row <- rows ]
     where
-        (formats, table) = parseCSV header csvData
+        (columnFormats, table) = parseCSV header csvData
         (headerRow : rows) = table
 
-        sepLine = concat ["+", intercalate "+" (map makeSep formats), "+"]
-        headerSepLine = concat ["+", intercalate "+" (map makeBigSep formats), "+"]
+        sepLine = concat ["+", intercalate "+" (map makeSep columnFormats), "+"]
+        headerSepLine = concat ["+", intercalate "+" (map makeBigSep columnFormats), "+"]
 
         makeSep (LeftAligned w) = replicate (w+2) '-'
         makeSep (RightAligned w) = replicate (w+2) '-'
@@ -124,8 +126,8 @@ makeTable dialect header csvData = unlines $
         makeBigSep (RightAligned w) = replicate (w+1) '=' ++ alignmentChar
 
         alignmentChar = case dialect of
-            "rst" -> "="
-            _ -> ":"
+            Md -> ":"
+            Rst -> "="
 
         makeLine row = concat [ "|", intercalate "|" row, "|" ]
         

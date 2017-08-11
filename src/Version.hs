@@ -26,8 +26,6 @@ import Data.List
 import Data.Version
 import System.Info
 
-import Preprocessor
-import Localization
 import qualified Tag
 
 name :: String

@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module Localization ( langs
+module Localization ( Lang, langs
                     , myLocale
                     )
 where
@@ -28,14 +28,17 @@ where
 import Data.Time
 
 -- language list
-langs :: [String]
-langs = words "en fr it es"
+data Lang = En | Fr | It | Es
+          deriving (Show, Read, Eq, Enum, Bounded)
+
+langs :: [Lang]
+langs = [(minBound :: Lang) ..]
 
 -- "myLocale lang" returns the date format description for a given language.
-myLocale :: String -> TimeLocale
+myLocale :: Lang -> TimeLocale
 
 -- french locale date format
-myLocale "fr" = TimeLocale {
+myLocale Fr = TimeLocale {
                     wDays = [("Dimanche","Dim")
                             ,("Lundi","Lun")
                             ,("Mardi","Mar")
@@ -61,11 +64,11 @@ myLocale "fr" = TimeLocale {
                     dateFmt = "%d/%m/%y",
                     timeFmt = "%H:%M:%S",
                     time12Fmt = "%I:%M:%S %p"
-                }
+              }
 
 -- italian locale date format
 -- contributed by tajmone (https://github.com/tajmone)
-myLocale "it" = TimeLocale {
+myLocale It = TimeLocale {
                     wDays = [("domenica","dom")
                             ,("lunedì","lun")
                             ,("martedì","mar")
@@ -91,11 +94,11 @@ myLocale "it" = TimeLocale {
                     dateFmt = "%d/%m/%y",
                     timeFmt = "%H:%M:%S",
                     time12Fmt = "%I:%M:%S %p"
-                }
+              }
 
 -- spanish locale date format
 -- contributed by conradolandia (https://github.com/conradolandia)
-myLocale "es" = TimeLocale {
+myLocale Es = TimeLocale {
                     wDays = [("domingo","dom")
                             ,("lunes","lun")
                             ,("martes","mar")
@@ -121,8 +124,8 @@ myLocale "es" = TimeLocale {
                     dateFmt = "%d/%m/%y",
                     timeFmt = "%H:%M:%S",
                     time12Fmt = "%I:%M:%S %p"
-                }
+              }
 
 -- English is the default locale
-myLocale _ = defaultTimeLocale
+myLocale En = defaultTimeLocale
 

@@ -31,12 +31,13 @@ module ErrorMessages ( unexpectedEndOfFile
 where
 
 import Data.List
+import Data.Maybe
 
 import Environment
 
 -- raise an end of file error
 unexpectedEndOfFile :: Env -> String -> t
-unexpectedEndOfFile env name = error $ "Unexpected end of file in " ++ fromVal (getSymbol env CurrentFile) ++
+unexpectedEndOfFile env name = error $ "Unexpected end of file in " ++ fromMaybe "-" (currentFile env) ++
                                        "\nAn argument of the macro \"" ++ name ++ "\" may not be correctly delimited."
 
 -- raise a file not found error
@@ -70,3 +71,4 @@ invalidNameError name = error $ "\"" ++ name ++"\" is not a valid macro name."
 -- raise an builtin redefinition error
 builtinRedefinition :: String -> t
 builtinRedefinition name = error $ "\"" ++ name ++"\" is a built-in macro and can not be redefined."
+
