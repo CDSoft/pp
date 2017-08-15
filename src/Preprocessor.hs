@@ -58,6 +58,7 @@ import UTF8
 import ErrorMessages
 import Localization
 import CSV
+import PlantumlJar
 
 type Chars = String
 
@@ -768,15 +769,6 @@ parseImageAttributes env s = ( localPath ++ ".gv"
         extract right cs =
             let (xs, cs') = span (/=right) cs
             in (xs, dropWhile (==right) cs')
-
--- PlantUML JAR file embedded in pp.
--- The .jar files is converted to C with xxd and seen as a C string in Haskell.
-
-foreign import ccall "&plantuml_jar"     _plantuml_jar      :: Ptr CChar
-foreign import ccall "&plantuml_jar_len" _plantuml_jar_len  :: Ptr CInt
-
-plantumlJar :: (Ptr CChar, Ptr CInt)
-plantumlJar = (_plantuml_jar, _plantuml_jar_len)
 
 -- "ressource name content" writes content (a C string containing PlantUML or ditaa)
 -- to a temporary file. It returns the path of the temporary file so the caller

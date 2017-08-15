@@ -80,7 +80,6 @@ clean:
 	rm -f doc/pp.html
 	rm -rf doc/img
 	rm -f pp*.tgz pp-win.7z pp-linux-*.txz pp-darwin-*.txz
-	rm -f src/$(PLANTUML).c
 
 .DELETE_ON_ERROR:
 
@@ -92,7 +91,7 @@ README.md: $(PP)
 README.md: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p doc/img
-	$(PP) -en -img=doc/img -DREADME $< | pandoc -f markdown -t markdown_github > $@
+	stack exec -- pp -en -img=doc/img -DREADME $< | pandoc -f markdown -t markdown_github > $@
 	@$(call ok,"$@")
 
 #####################################################################
@@ -119,14 +118,15 @@ pp-darwin-%.txz: $(PP) doc/pp.html
 # Dependencies
 #####################################################################
 
-PLANTUML = plantuml
-PLANTUML_URL = http://sourceforge.net/projects/plantuml/files/$(PLANTUML).jar
+PLANTUML = Plantuml
+PLANTUML_URL = http://sourceforge.net/projects/plantuml/files/plantuml.jar
 
-$(BUILD)/%.c: $(BUILD)/%.jar
+BLOB = tools/blob.hs
+
+$(BUILD)/%Jar_c.c $(BUILD)/%Jar.hs: $(BUILD)/%.jar $(BLOB)
 	@$(call title,"converting $< to C")
 	@mkdir -p $(dir $@)
-	xxd -i $< $@
-	sed -i -e 's/_stack_work_//g' $@
+	stack $(BLOB) $<
 	@$(call ok,"$@")
 
 $(BUILD)/$(PLANTUML).jar:
@@ -139,7 +139,7 @@ $(BUILD)/$(PLANTUML).jar:
 # PP
 #####################################################################
 
-LIB_SOURCES = $(wildcard src/*.hs) $(BUILD)/$(PLANTUML).c
+LIB_SOURCES = $(wildcard src/*.hs) $(BUILD)/$(PLANTUML)Jar_c.c $(BUILD)/$(PLANTUML)Jar.hs
 PP_SOURCES = app/pp.hs
 
 $(PP): $(PP_SOURCES) $(LIB_SOURCES)
@@ -151,7 +151,7 @@ doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(dir $@) doc/img
-	$(PP) -en -img=doc/img $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	stack exec -- pp -en -img=doc/img $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 	@$(call ok,"$@")
 
 #####################################################################
@@ -179,7 +179,7 @@ $(BUILD)/pp-test.output: $(PP) doc/pp.css
 $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i test/pp-test-lib.i
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 $(PP) -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
+	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
 	pandoc -S --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
@@ -197,7 +197,7 @@ $(BUILD)/pp-test-rst.output: $(PP) doc/pp.css
 $(BUILD)/pp-test-rst.output: test/pp-test.rst
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 $(PP) -rst -img="[$(BUILD)/]img" -en -html $< > $@
+	TESTENVVAR=42 stack exec -- pp -rst -img="[$(BUILD)/]img" -en -html $< > $@
 	pandoc -S --toc -c doc/pp.css -f rst -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref-rst
@@ -215,7 +215,7 @@ $(BUILD)/pp-test.d: $(PP)
 $(BUILD)/pp-test.d: test/pp-test.md test/pp-test.i test/pp-test-lib.i
 	@$(call title,"tracking dependencies of $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 $(PP) -M outputfile -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
+	TESTENVVAR=42 stack exec -- pp -M outputfile -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
 
 .PHONY: ref-d
 ref-d: $(BUILD)/pp-test.d
