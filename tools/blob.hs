@@ -1,10 +1,12 @@
 #!/usr/bin/env stack
 {- stack
   script
-  --resolver lts-9.0
+  --resolver lts-9.1
   --package bytestring
   --package filepath
+  --package split
 -}
+
 {- PP
 
 Copyright (C) 2015, 2016, 2017 Christophe Delord
@@ -32,6 +34,7 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
  -}
 
 import Data.Char
+import Data.List.Split
 import System.Environment
 import System.Exit
 import System.FilePath
@@ -55,22 +58,28 @@ main = do
 
             putStrLn $ "output   : " ++ cmod
             writeFile cmod $ unlines
-                [   "/* " ++ takeFileName blobName ++ " */"
+                [   "/* generated from " ++ takeFileName blobName ++ ". Do not modify. */"
+                ,   ""
                 ,   "unsigned char " ++ cvar ++ "[] = {"
-                ,   concatMap ((++",") . show) (B.unpack blob)
+                ,   mkBlob blob
                 ,   "};"
+                ,   ""
                 ,   "unsigned int " ++ cvar ++ "_len = " ++ show blobLen ++ ";"
                 ]
 
             putStrLn $ "output   : " ++ hsmod
             writeFile hsmod $ unlines
-                [   "-- " ++ takeFileName blobName
+                [   "{- generated from " ++ takeFileName blobName ++ ". Do not modify. -}"
+                ,   ""
                 ,   "module " ++ dropExtension (takeFileName hsmod)
                 ,   "where"
+                ,   ""
                 ,   "import Foreign.C.Types"
                 ,   "import Foreign.Ptr"
+                ,   ""
                 ,   "foreign import ccall \"&" ++ cvar ++ "\"     _" ++ cvar ++ "     :: Ptr CChar"
                 ,   "foreign import ccall \"&" ++ cvar ++ "_len\" _" ++ cvar ++ "_len :: Ptr CInt"
+                ,   ""
                 ,   hsvar ++ " :: (Ptr CChar, Ptr CInt)"
                 ,   hsvar ++ " = (_" ++ cvar ++ ", _" ++ cvar ++ "_len)"
                 ]
@@ -86,11 +95,16 @@ cVarname = map tr . takeFileName
 hsVarname :: FilePath -> String
 hsVarname = lowerCamelCase . takeFileName
 
+filename :: FilePath -> FilePath
+filename name = dirname </> upperCamelCase basename
+    where
+        (dirname, basename) = splitFileName name
+
 cFilename :: FilePath -> FilePath
-cFilename = (++ "_c.c") . dropExtension . hsFilename
+cFilename = (<.> "c") . (++ "_c") . filename
 
 hsFilename :: FilePath -> FilePath
-hsFilename name = takeDirectory name </> upperCamelCase (takeFileName name) ++ ".hs"
+hsFilename = (<.> "hs") . filename
 
 lowerCamelCase :: String -> String
 lowerCamelCase = lower . dropNonLetters
@@ -109,3 +123,9 @@ lower :: String -> String
 lower (c:cs) | isAlphaNum c = toLower c : lower cs
              | otherwise    = capitalize $ dropNonLetters cs
 lower [] = []
+
+mkBlob :: B.ByteString -> String
+mkBlob blob = unlines $ map concat bytes
+    where
+        bytes = map (join ",") $ chunksOf 32 $ B.unpack blob
+        join sep = map $ (++ sep) . show

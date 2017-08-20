@@ -23,10 +23,10 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 module CSV (makeTable)
 where
 
+import Control.Monad.Exception.Asynchronous.Lazy (Exceptional(..))
 import Data.Char
 import Data.List
 import Data.Spreadsheet
-import Control.Monad.Exception.Asynchronous.Lazy (Exceptional(..))
 
 import Formats
 

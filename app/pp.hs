@@ -20,18 +20,18 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-import System.IO
-import System.Environment
-import System.Exit
 import Data.List
 import Data.Maybe
+import System.Environment
+import System.Exit
+import System.IO
 
-import qualified Version
-import Formats
 import Environment
-import Preprocessor
+import Formats
 import Localization
+import Preprocessor
 import UTF8
+import qualified Version
 
 -- The main function builds the initial environment, parses the input
 -- and print the output on stdout.

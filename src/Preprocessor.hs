@@ -37,28 +37,27 @@ module Preprocessor ( ppFile
 where
 
 import Control.Monad
+import Data.Char
+import Data.List
+import Data.List.Split
+import Data.Maybe
+import Data.Time
+import Foreign hiding (void, new)
+import Foreign.C.Types
+import System.Directory
+import System.FilePath
 import System.IO
 import System.IO.Error
 import System.IO.Temp
-import System.Directory
-import Data.List
-import Data.List.Split
-import Data.Char
-import Data.Maybe
-import System.FilePath
-import Data.Time
-import Foreign.C.Types
-import Foreign.Ptr
-import Foreign hiding (void, new)
 
-import Environment
-import Formats
-import OSAbstraction
-import UTF8
-import ErrorMessages
-import Localization
 import CSV
+import Environment
+import ErrorMessages
+import Formats
+import Localization
+import OSAbstraction
 import PlantumlJar
+import UTF8
 
 type Chars = String
 
@@ -81,7 +80,6 @@ charsBlock = ['~', '`']
 -- literate programming macros
 litMacroTagChar :: Char
 litMacroTagChar = '@'
-
 
 -- A preprocessor takes an environment and a string to preprocess
 -- and returns a new environment and the preprocessed string.
