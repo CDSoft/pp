@@ -151,6 +151,7 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
              , ("python2",    script "python2"    "python2"     ""          ".py")
              , ("python3",    script "python3"    "python3"     ""          ".py")
              , ("haskell",    script "haskell"    "runhaskell"  ""          ".hs")
+             , ("stack",      script "stack"      "stack"       ""          ".hs")
 #if mingw32_HOST_OS
              , ("powershell", script "powershell" powershellexe ""          ".ps1")
 #endif
@@ -676,8 +677,10 @@ script _lang cmd header ext env [src] = do
     (env', _) <- flushlit env []
     src' <- pp' env' (fromVal src)
     let (exe:args) = words cmd
-    output <- withSystemTempFile ("pp."++ext) $ \path handle -> do
-        hWriteFileUTF8 handle $ unlines [header, src']
+    output <- withSystemTempFile ("pp" <.> ext) $ \path handle -> do
+        hWriteFileUTF8 handle $ case header of
+                                    [] -> src'
+                                    _ -> unlines [header, src']
         hClose handle
         try readProcessUTF8 exe (args ++ [path])
     case src of

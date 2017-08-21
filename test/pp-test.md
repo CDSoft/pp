@@ -280,6 +280,14 @@ Raw script output:                  \sh(printf "\\%s(%d)" mymacro 42)
 Preprocessed script output:         \pp[\sh(printf "\\%s(%d)" mymacro 42)]
 ----------------------------------- ------------------------------------------------------------------------------
 
+And a Haskell Stack script:
+
+\stack
+~~~~~
+{- stack script --resolver lts-9.1 --package base -}
+main = putStrLn "hi"
+~~~~~
+
 Diagrams
 ========
 

@@ -343,10 +343,11 @@ The `rawinclude` macro can include a file without preprocessing it.
     `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`,
     `uml` and `ditaa`.
 
-\raw{**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`** **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**,}
+\raw{**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**, **`!stack(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**}
 :   executes a script and emits its output.
     The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`.
     Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
+    `stack` runs the Haskell interpretor with [Stack].
 
 \raw{**`!bat(SCRIPT)`** (*deprecated*)}
 :   same as `\raw{!cmd}`.
@@ -567,7 +568,7 @@ The script language macro can be:
 
 - `bash` (or `sh`)
 - `python`
-- `haskell`
+- `haskell` (or `stack`)
 - `cmd` (DOS/Windows batch language)
 - `powershell` (Windows only)
 
@@ -579,23 +580,25 @@ digraph {
 
     subgraph cluster_cmd {
         label = "script languages"
-        bash sh python haskell cmd powershell
+        bash sh python haskell stack cmd powershell
     }
 
     PP [shape=diamond label="pp"]
-    bash sh cmd python haskell
+    bash sh cmd python haskell stack
     Bash [shape=box label="bash\nor bash.exe"]
     Sh [shape=box label="sh\nor sh.exe"]
     Python [shape=box label="python\nor python.exe"]
     Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
+    Stack [shape=box label="stack\nor stack.exe"]
     Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     PowerShell [shape=box label="(Windows only)\npowershell.exe"]
 
-    PP -> {bash sh python haskell cmd powershell}
+    PP -> {bash sh python haskell stack cmd powershell}
     bash -> Bash
     sh -> Sh
     python -> Python
     haskell -> Haskell
+    stack -> Stack
     cmd -> Cmd
     powershell -> PowerShell
 }
@@ -836,6 +839,55 @@ This script outputs:
 ~~~~~~~~~~
 \haskell
 ~~~~~
+import System.Info
+import Data.Version
+import Data.List
+
+primes = filterPrime [2..]
+    where filterPrime (p:xs) =
+            p : filterPrime [x | x <- xs, x `mod` p /= 0]
+
+version = showVersion compilerVersion
+main = do
+    putStrLn $ "Hi, I'm Haskell " ++ version
+    putStrLn $ "The first 10 prime numbers are: " ++
+                intercalate " " (map show (take 10 primes))
+~~~~~
+~~~~~~~~~~
+
+### Stack
+
+[Haskell] is also executed when the keyword `stack` is used.
+In this case stack meta data must be added at the beginning of the script.
+
+    \raw{\stack
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    {- stack script --resolver lts-9.1 --package base -}
+
+    import System.Info
+    import Data.Version
+    import Data.List
+
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+
+    version = showVersion compilerVersion
+
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    }
+
+This script outputs:
+
+~~~~~~~~~~
+\stack
+~~~~~
+{- stack script --resolver lts-9.1 --package base -}
+
 import System.Info
 import Data.Version
 import Data.List

@@ -282,6 +282,11 @@ Raw script output:                  \mymacro(42)
 Preprocessed script output:         mymacro(42) has been evaluated!
 ----------------------------------- ------------------------------------------------------------------------------
 
+And a Haskell Stack script:
+
+hi
+
+
 Diagrams
 ========
 

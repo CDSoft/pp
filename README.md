@@ -250,8 +250,8 @@ emits some text only if the current dialect is *md*, *rst*
 **`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
 renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`** **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**,  
-executes a script and emits its output. The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3.
+**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**, **`!stack(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**  
+executes a script and emits its output. The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3. `stack` runs the Haskell interpretor with [Stack](https://docs.haskellstack.org/en/stable/README/).
 
 **`!bat(SCRIPT)`** (*deprecated*)  
 same as `!cmd`.
@@ -405,7 +405,7 @@ The script language macro can be:
 
 -   `bash` (or `sh`)
 -   `python`
--   `haskell`
+-   `haskell` (or `stack`)
 -   `cmd` (DOS/Windows batch language)
 -   `powershell` (Windows only)
 
@@ -559,6 +559,35 @@ This script outputs:
 
     \haskell
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import System.Info
+    import Data.Version
+    import Data.List
+
+    primes = filterPrime [2..]
+        where filterPrime (p:xs) =
+                p : filterPrime [x | x <- xs, x `mod` p /= 0]
+
+    version = showVersion compilerVersion
+
+    main = do
+        putStrLn $ "Hi, I'm Haskell " ++ version
+        putStrLn $ "The first 10 prime numbers are: " ++
+                    intercalate " " (map show (take 10 primes))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This script outputs:
+
+    Hi, I'm Haskell 8.0
+    The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
+
+### Stack
+
+[Haskell](https://www.haskell.org/) is also executed when the keyword `stack` is used. In this case stack meta data must be added at the beginning of the script.
+
+    \stack
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    {- stack script --resolver lts-9.1 --package base -}
+
     import System.Info
     import Data.Version
     import Data.List
