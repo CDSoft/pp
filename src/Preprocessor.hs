@@ -661,7 +661,7 @@ atoi s = case reads s of
 
 -- try runs an IO action on an executable and its arguments.
 -- It returns the output of the IO action or raises an error.
-try :: (String -> [String] -> IO String) -> String -> [String] -> IO String
+try :: (FilePath -> [String] -> IO String) -> FilePath -> [String] -> IO String
 try io exe args = do
     result <- tryIOError (io exe args)
     case result of
@@ -774,7 +774,7 @@ parseImageAttributes env s = ( localPath ++ ".gv"
 -- "ressource name content" writes content (a C string containing PlantUML or ditaa)
 -- to a temporary file. It returns the path of the temporary file so the caller
 -- can execute it.
-resource :: String -> (Ptr CChar, Ptr CInt) -> IO FilePath
+resource :: FilePath -> (Ptr CChar, Ptr CInt) -> IO FilePath
 resource name (array, len) = do
     tmp <- getTemporaryDirectory
     let path = tmp </> name
@@ -943,7 +943,7 @@ litLang env name = case lookup name (litLangs env) of
 
 -- default language deduced from the name of the file
 -- (see "pandoc --version")
-defaultLitLang :: String -> Maybe String
+defaultLitLang :: FilePath -> Maybe String
 defaultLitLang name = case (map toLower (takeBaseName name), map toLower (takeExtension name)) of
     (_, ".adb")         -> Just "ada"
     (_, ".ads")         -> Just "ada"

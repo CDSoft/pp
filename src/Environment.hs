@@ -57,8 +57,8 @@ data Env = Env { vars :: [(Var, Val)]               -- lookup table of global va
                , currentDialect :: Dialect          -- current dialect
                , mainFile :: Maybe FilePath         -- main file name (given on the command line)
                , currentFile :: Maybe FilePath      -- current file name (can be included in other files)
-               , makeTarget :: Maybe String         -- target name for the dependency file (-M)
-               , dependencies :: [String]           -- list of dependencies
+               , makeTarget :: Maybe FilePath       -- target name for the dependency file (-M)
+               , dependencies :: [FilePath]         -- list of dependencies
                , litFiles :: [(FilePath, String)]   -- literate file name
                , litMacros :: [(String, String)]    -- literate macro name
                , litLangs :: [(String, String)]     -- language of a literate file or macro
@@ -107,8 +107,8 @@ initialEnvironment defaultLang defaultDialect = do
 
 -- track dependencies
 -- see issue 30, thanks to trygvis for the idea
-addDep :: Env -> String -> Env
+addDep :: Env -> FilePath -> Env
 addDep env@Env{dependencies=deps} name = env{dependencies=name:deps}
 
-addDeps :: Env -> [String] -> Env
+addDeps :: Env -> [FilePath] -> Env
 addDeps = foldl addDep

@@ -36,12 +36,12 @@ import Data.Maybe
 import Environment
 
 -- raise an end of file error
-unexpectedEndOfFile :: Env -> String -> t
+unexpectedEndOfFile :: Env -> FilePath -> t
 unexpectedEndOfFile env name = error $ "Unexpected end of file in " ++ fromMaybe "-" (currentFile env) ++
                                        "\nAn argument of the macro \"" ++ name ++ "\" may not be correctly delimited."
 
 -- raise a file not found error
-fileNotFound :: String -> t
+fileNotFound :: FilePath -> t
 fileNotFound name = error $ "File not found: " ++ name
 
 -- raise an arity error
