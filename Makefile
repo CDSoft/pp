@@ -67,7 +67,7 @@ endif
 BUILD = .stack-work
 
 TAG = src/Tag.hs
-$(shell ./tag.sh $(TAG))
+$(shell test -d .git && ./tag.sh $(TAG))
 
 install: $(PP)
 	@$(call title,"installing $<")
@@ -98,7 +98,7 @@ README.md: doc/pp.md
 # archives
 #####################################################################
 
-pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard test/*) README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml
+pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard tools/*) $(wildcard test/*) README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml
 	@$(call title,"source archive: $@")
 	tar -czf $@ $^
 
