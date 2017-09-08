@@ -60,7 +60,7 @@ Installation
 1. Download and extract [pp.tgz].
 2. Run `make`.
 
-[PP] is written in [Haskell] and is built with [Stack].
+[PP] is written in [Haskell] and is built with [Stack]. On MacOS, running `make` requires the GNU version of `tar` which can be installed with `brew install gnu-tar`.
 
 **Installation**:
 

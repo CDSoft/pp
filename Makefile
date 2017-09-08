@@ -112,7 +112,7 @@ pp-linux-%.txz: $(PP) doc/pp.html
 
 pp-darwin-%.txz: $(PP) doc/pp.html
 	@$(call title,"MacOS binary archive: $@")
-	tar cJf $@ --transform='s,.*/,,' $^
+	gtar cJf $@ --transform='s,.*/,,' $^
 
 #####################################################################
 # Dependencies

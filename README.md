@@ -36,7 +36,7 @@ Installation
 1.  Download and extract [pp.tgz](http://cdsoft.fr/pp/pp.tgz).
 2.  Run `make`.
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is written in [Haskell](https://www.haskell.org/) and is built with [Stack](https://docs.haskellstack.org/en/stable/README/).
+[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is written in [Haskell](https://www.haskell.org/) and is built with [Stack](https://docs.haskellstack.org/en/stable/README/). On MacOS, running `make` requires the GNU version of `tar` which can be installed with `brew install gnu-tar`.
 
 **Installation**:
 
