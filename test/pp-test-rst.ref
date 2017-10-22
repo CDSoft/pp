@@ -279,8 +279,8 @@ The complete source files are:
 
 
 
-A source file, not necessarily generated with \lit can be
-formated with \source or \src:
+A source file, not necessarily generated with !lit can be
+formated with !source or !src:
 
 ``mylib.h``:
 
@@ -311,7 +311,7 @@ This file with a header:
 
 
 
-is rendered by `\csv(file.csv)` as:
+is rendered by `!csv(file.csv)` as:
 
 +------+-------+----------------------------------------+-----------------------------------+---------+
 | Year | Make  | Model                                  | Description                       |   Price |
@@ -340,7 +340,7 @@ This file without any header:
 
 
 
-is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
+is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:
 
 +------+-------+----------------------------------------+-----------------------------------+---------+
 | Year | Make  | Model                                  | Description                       |   Price |

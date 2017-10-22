@@ -25,7 +25,7 @@ Show macro value:                   This is macro `mac1`
 ----------------------------------- -----------------------------------------------------------------
 Undefined macro `mac2`              
 Show macro definition:              
-Show macro value:                   \mac2
+Show macro value:                   !mac2
 ----------------------------------- -----------------------------------------------------------------
 
 ## Definition with arguments
@@ -33,7 +33,7 @@ Show macro value:                   \mac2
 ----------------------------------- -----------------------------------------------------------------
 Definition with arguments:          
 Show macro definition:              !2 !1
-Show macro value:                   \mac2 This is macro `mac1`
+Show macro value:                   !mac2 This is macro `mac1`
 ----------------------------------- -----------------------------------------------------------------
 
 ## Passing arguments between user macros (see issue #29)
@@ -64,33 +64,33 @@ Undefinition test:                  swap is defined
 
 ----------------------------------- -------------------------------------------------------------
 Before calling f:                    
-call with 2 args:                   f take 2 args: one and two but not \3
+call with 2 args:                   f take 2 args: one and two but not !3
 between two calls:                   
-call with 1 arg:                    f take 2 args: one' and  but not \3
+call with 1 arg:                    f take 2 args: one' and  but not !3
 between two calls:                   
-call with 2 args:                   f take 2 args: one'' and two'' but not \3
+call with 2 args:                   f take 2 args: one'' and two'' but not !3
 after calling f:                     
 ----------------------------------- -------------------------------------------------------------
 
 
 ----------------------------------- -------------------------------------------------------------
 Before calling g:                    
-call with 2 args:                   f take 2 args: one and two but not \3
+call with 2 args:                   f take 2 args: one and two but not !3
 between two calls:                   
-call with 1 arg:                    f take 2 args: one' and  but not \3
+call with 1 arg:                    f take 2 args: one' and  but not !3
 between two calls:                   
-call with 2 args:                   f take 2 args: one'' and two'' but not \3
+call with 2 args:                   f take 2 args: one'' and two'' but not !3
 after calling g:                     
 ----------------------------------- -------------------------------------------------------------
 
 
 ----------------------------------- -------------------------------------------------------------
 Before calling g:                    
-call with 2 args:                   f take 2 args: one and -two- but not \3
+call with 2 args:                   f take 2 args: one and -two- but not !3
 between two calls:                   
-call with 1 arg:                    f take 2 args: one' and -- but not \3
+call with 1 arg:                    f take 2 args: one' and -- but not !3
 between two calls:                   
-call with 2 args:                   f take 2 args: one'' and -two''- but not \3
+call with 2 args:                   f take 2 args: one'' and -two''- but not !3
 after calling g:                     
 ----------------------------------- -------------------------------------------------------------
 
@@ -110,7 +110,7 @@ Inequality test:                    one /= two
 ----------------------------------- -----------------------------------------------------------------
 
 ----------------------------------- -----------------------------------------------------------------
-Raw text:                           \swap(a)(b)
+Raw text:                           !swap(a)(b)
 Evaluated:                          b a
 ----------------------------------- -----------------------------------------------------------------
 
@@ -152,16 +152,16 @@ Undefinition:
 First line of the included file.
 
 ----------------------------------- -----------------------------------------------------------------
-File name of the main file:         \main
-File name of the included file:     \file
-Definitions:                        \def(answer)(42)answer = \answer
+File name of the main file:         !main
+File name of the included file:     !file
+Definitions:                        !def(answer)(42)answer = !answer
 ----------------------------------- -----------------------------------------------------------------
 
 Last line of the included file.
 
 
 ----------------------------------- -----------------------------------------------------------------
-No definitions:                     \answer
+No definitions:                     !answer
 ----------------------------------- -----------------------------------------------------------------
 
 ## Files imported
@@ -170,7 +170,7 @@ In the document:
 
 
 
-Before importing: answer = \answer
+Before importing: answer = !answer
 
 After import: answer = 42
 
@@ -276,9 +276,9 @@ Command line (uses sh):             exec(echo "hi é")
 `python2` script:                   hi
 `python3` script:                   hi
 `haskell` script:                   hi
-`exec` script:                      \def(x)(42)\x
-`rawexec` script:                   \def(x)(42)\x
-Raw script output:                  \mymacro(42)
+`exec` script:                      !def(x)(42)!x
+`rawexec` script:                   !def(x)(42)!x
+Raw script output:                  !mymacro(42)
 Preprocessed script output:         mymacro(42) has been evaluated!
 ----------------------------------- ------------------------------------------------------------------------------
 
@@ -447,8 +447,8 @@ int main(int argc, char * argv[])
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-A source file, not necessarily generated with \lit can be
-formated with \source or \src:
+A source file, not necessarily generated with !lit can be
+formated with !source or !src:
 
 `mylib.h`:
 
@@ -509,7 +509,7 @@ air, moon roof, loaded",4799.00
 
 
 
-is rendered by `\csv(file.csv)` as:
+is rendered by `!csv(file.csv)` as:
 
 +------+-------+----------------------------------------+-----------------------------------+---------+
 | Year | Make  | Model                                  | Description                       |   Price |
@@ -537,7 +537,7 @@ air, moon roof, loaded",4799.00
 
 
 
-is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
+is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:
 
 +------+-------+----------------------------------------+-----------------------------------+---------+
 | Year | Make  | Model                                  | Description                       |   Price |
@@ -552,3 +552,40 @@ is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
 +------+-------+----------------------------------------+-----------------------------------+---------+
 
 
+Parser customization
+====================
+
+
+
+Set new macro chars: `+=` 
+
+Active  : `+` => foo has been called
+Active  : `=` => foo has been called
+Inactive: `\` => \foo
+Inactive: `!` => !foo
+
+Restore the default behaviour: `!\` 
+
+Inactive: `+` => +foo
+Inactive: `=` => =foo
+Active  : `\` => foo has been called
+Active  : `!` => foo has been called
+
+Set new literate macro chars: `$` 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+$foo - $foo
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+I'm foo
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Result: 
+
+```
+I'm foo - I'm foo
+```
+
+Restore the default behaviour: `@` 

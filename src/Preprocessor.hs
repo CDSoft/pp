@@ -26,13 +26,8 @@ module Preprocessor ( ppFile
                     , Dialect
                     , Format
                     , saveLiterateContent
-                    -- exported for test purpose
-                    , charsFunc
-                    , charsBlock
-                    , litMacroTagChar
-                    , graphvizDiagrams
-                    , plantumlDiagrams
-                    , builtin
+                    , macrochars
+                    , literatemacrochars
                     )
 where
 
@@ -59,27 +54,13 @@ import OSAbstraction
 import PlantumlJar
 import UTF8
 
-type Chars = String
+-- Validate a char in a macro name (letter, digit or underscore)
+isValidMacroNameChar :: Char -> Bool
+isValidMacroNameChar c = isAlphaNum c || c == '_'
 
--- charsFunc is the list of characters used to execute a macro
-charsFunc :: Chars
-charsFunc = ['!', '\\']
-
-validMacroName :: String -> Bool
-validMacroName = all (`elem` ('_':['a'..'z']++['A'..'Z']++['0'..'9']))
-
--- charsOpenClose is the list of characters that can delimit macro parameters.
-charsOpenClose :: [(Char, Char)]
-charsOpenClose = [('(', ')'), ('{', '}'), ('[', ']')]
-
--- charsBlock is the list of characters that can delimit macro parameters with
--- the Markdown code block syntax.
-charsBlock :: Chars
-charsBlock = ['~', '`']
-
--- literate programming macros
-litMacroTagChar :: Char
-litMacroTagChar = '@'
+-- Validate a macro name
+isValidMacroName :: String -> Bool
+isValidMacroName = all isValidMacroNameChar
 
 -- A preprocessor takes an environment and a string to preprocess
 -- and returns a new environment and the preprocessed string.
@@ -139,6 +120,9 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("indent", indent)
 
           , ("csv", csv)
+
+          , ("macrochars", macrochars)
+          , ("literatemacrochars", literatemacrochars)
 
           ]
           ++ [ (diag, diagram Graphviz diag ""               "")             | d <- graphvizDiagrams, let diag = showCap d]
@@ -213,7 +197,7 @@ pp env [] = return (env, "")
 -- non empty string
 pp env (c0:cs)
 
-    -- if c0 is ! or \ and cs starts with a digit, it is a macro parameter
+    -- if c0 is ! and cs starts with a digit, it is a macro parameter
     | c0 `elem` charsFunc && not (null number) = case lookup number (arguments env) of
         -- the parameter is defined
         Just value -> do
@@ -225,7 +209,7 @@ pp env (c0:cs)
             (env', doc) <- pp env csAfterNumber
             return (env', doc)
 
-    -- if c0 is ! or \ and cs starts with a letter, it may be a macro call
+    -- if c0 is ! and cs starts with a letter, it may be a macro call
     | c0 `elem` charsFunc && not (null name) = case (lookup name builtin, lookup (Def name) (vars env)) of
         -- the name is a builtin macro name
         (Just func, _) -> do
@@ -236,7 +220,7 @@ pp env (c0:cs)
         -- the name is a user macro name
         (Nothing, Just value) -> do
             let (margs, cs') = readArgs env name Nothing csAfterName
-            -- args that contain \i should be replaced by their definition in env to avoid infinite recursion
+            -- args that contain !i should be replaced by their definition in env to avoid infinite recursion
             let margs' = replaceUserMacroArgs env margs
             (env', doc) <- ppAndStrip env{arguments=zip (map show [1::Int ..]) margs'} value
             (env'', doc') <- pp env'{arguments=arguments env} cs'
@@ -261,9 +245,12 @@ pp env (c0:cs)
     | otherwise = do
         (env', doc) <- pp env cs
         return (env', c0:doc)
+
     where
         (number, csAfterNumber) = span isDigit cs
-        (name, csAfterName) = span (\c -> isAlphaNum c || c == '_') cs
+        (name, csAfterName) = span isValidMacroNameChar cs
+        charsFunc = macroChars env
+        charsBlock = blockChars env
 
 -- read a list of arguments
 -- All the arguments have the same delimiters, except the last one that
@@ -296,6 +283,10 @@ readArgs env name Nothing s = case dropSpaces s of
     -- not a delimiter => no more arguments
     _ -> ([], s)
 
+    where
+        charsBlock = blockChars env
+        charsOpenClose = openCloseChars env
+
 -- read another argument
 readArgs env name leftright@(Just (left, right)) s = case dropSpaces s of
     -- code block => it's the last argument
@@ -314,6 +305,9 @@ readArgs env name leftright@(Just (left, right)) s = case dropSpaces s of
         in (Val (init arg) : args, s3)
     -- not a delimiter => no more arguments
     _ -> ([], s)
+
+    where
+        charsBlock = blockChars env
 
 -- skip spaces before arguments
 dropSpaces :: String -> Maybe String
@@ -387,6 +381,7 @@ replaceUserArgs env (c:cs)
     | otherwise = c : replaceUserArgs env cs
     where
         (i, cs') = span isDigit cs
+        charsFunc = macroChars env
 
 ---------------------------------------------------------------------
 -- Identifier list macro (langs, formats, dialects, ...)
@@ -400,12 +395,12 @@ identList name _ _ _ = arityError name [0]
 -- Language macros
 ---------------------------------------------------------------------
 
--- \lang returns the current language (see Localization.langs)
+-- !lang returns the current language (see Localization.langs)
 getCurrentLang :: Macro
 getCurrentLang env [] = return (env, showCap (currentLang env))
 getCurrentLang _ _ = arityError "lang" [0]
 
--- language implements the macros \xx where xx is a language code
+-- language implements the macros !xx where xx is a language code
 -- defined in Localization.langs.
 -- language preprocesses src only if the current language is lang.
 language :: Lang -> Macro
@@ -418,12 +413,12 @@ language lang _ _ = arityError (showCap lang) [1]
 -- Format macros
 ---------------------------------------------------------------------
 
--- \format returns the current output format (see formats)
+-- !format returns the current output format (see formats)
 getCurrentFormat :: Macro
 getCurrentFormat env [] = return (env, showCapMaybe "" (fileFormat env))
 getCurrentFormat _ _ = arityError "format" [0]
 
--- format implements the macros \xxx where xxx is a format
+-- format implements the macros !xxx where xxx is a format
 -- defined in formats.
 -- format preprocesses src only if the current format is fmt.
 format :: Format -> Macro
@@ -436,12 +431,12 @@ format fmt _ _ = arityError (showCap fmt) [1]
 -- Dialect macros
 ---------------------------------------------------------------------
 
--- \dialect returns the current dialect (see dialects)
+-- !dialect returns the current dialect (see dialects)
 getCurrentDialect :: Macro
 getCurrentDialect env [] = return (env, showCap (currentDialect env))
 getCurrentDialect _ _ = arityError "dialect" [0]
 
--- dialect implements the macros \xxx where xxx is a dialect
+-- dialect implements the macros !xxx where xxx is a dialect
 -- defined in dialects.
 -- dialect preprocesses src only if the current dialect is dial.
 dialect :: Dialect -> Macro
@@ -454,26 +449,26 @@ dialect dial _ _ = arityError (showCap dial) [1]
 -- Generic preprocessing macros
 ---------------------------------------------------------------------
 
--- \define(name)(value) adds (Def name, value) to the environment.
+-- !define(name)(value) adds (Def name, value) to the environment.
 -- name is preprocessed but not value. The value of the macro is preprocessed
 -- when the macro is evaluated (to allow macros with parameters).
 define :: String -> Macro
 define _ env [name, value] = do
     name' <- ppAndStrip' env name
-    unless (validMacroName name') $ invalidNameError name'
+    unless (isValidMacroName name') $ invalidNameError name'
     when (isJust (lookup name' builtin)) $ builtinRedefinition name'
     return (env{vars=(Def name', value) : clean (Def name') (vars env)}, "")
 define macro env [name] = define macro env [name, Val ""]
 define macro _ _ = arityError macro [1,2]
 
--- \undefine(name) removes (Def name) from the environment
+-- !undefine(name) removes (Def name) from the environment
 undefine :: String -> Macro
 undefine _ env [name] = do
     name' <- ppAndStrip' env name
     return (env{vars = clean (Def name') (vars env), arguments = clean name' (arguments env)}, "")
 undefine macro _ _ = arityError macro [1]
 
--- \ifdef(name)(t)(e) preprocesses name. If the result is the name of an
+-- !ifdef(name)(t)(e) preprocesses name. If the result is the name of an
 -- already defined symbol in the environment, it preprocessed t, otherwise e.
 -- e is optional.
 ifdef :: Macro
@@ -485,13 +480,13 @@ ifdef env [name, t, e] = do
 ifdef env [name, t] = ifdef env [name, t, Val ""]
 ifdef _ _ = arityError "ifdef" [1, 2]
 
--- \ifndef(name)(t)(e) is equivalent to \ifdef(name)(e)(t)
+-- !ifndef(name)(t)(e) is equivalent to !ifdef(name)(e)(t)
 ifndef :: Macro
 ifndef env [name, t, e] = ifdef env [name, e, t]
 ifndef env [name, t] = ifdef env [name, Val "", t]
 ifndef _ _ = arityError "ifndef" [1, 2]
 
--- \ifeq(x)(y)(t)(e) preprocesses x and y. If they are equal
+-- !ifeq(x)(y)(t)(e) preprocesses x and y. If they are equal
 -- (spaces are ignored), it preprocessed t, otherwise e.
 -- e is optional.
 ifeq :: Macro
@@ -503,13 +498,13 @@ ifeq env [x, y, t, e] = do
 ifeq env [x, y, t] = ifeq env [x, y, t, Val ""]
 ifeq _ _ = arityError "ifeq" [3, 4]
 
--- \ifne(x)(y)(t)(e) is equivalent to \ifeq(x)(y)(e)(t)
+-- !ifne(x)(y)(t)(e) is equivalent to !ifeq(x)(y)(e)(t)
 ifne :: Macro
 ifne env [x, y, t, e] = ifeq env [x, y, e, t]
 ifne env [x, y, t] = ifeq env [x, y, Val "", t]
 ifne _ _ = arityError "ifne" [3, 4]
 
--- \rawdef(name) preprocesses name and emits the raw definition
+-- !rawdef(name) preprocesses name and emits the raw definition
 -- (no preprocessing)
 rawdef :: Macro
 rawdef env [name] = do
@@ -517,12 +512,12 @@ rawdef env [name] = do
     return (env, fromVal (getSymbol env (Def name')))
 rawdef _ _ = arityError "rawdef" [1]
 
--- \include(name) preprocesses name, locates the file and preprocesses its content
+-- !include(name) preprocesses name, locates the file and preprocesses its content
 include :: String -> Macro
 include _ env [name] = ppAndStrip' env name >>= locateFile env >>= ppFile env
 include name _ _ = arityError name [1]
 
--- \import(name) preprocesses name, locates the file, preprocesses its content
+-- !import(name) preprocesses name, locates the file, preprocesses its content
 -- Only side effect (e.g. macro definitions) are kept in th environment.
 -- Nothing is emited.
 importFile :: Macro
@@ -544,12 +539,12 @@ locateFile env name = do
         Just foundFile -> return foundFile
         Nothing -> fileNotFound name
 
--- \raw(text) emits text unpreprocessed
+-- !raw(text) emits text unpreprocessed
 raw :: Macro
 raw env [src] = return (env, fromVal src)
 raw _ _ = arityError "raw" [1]
 
--- \rawinclude(name) preprocesses name, locates the file and emits it unpreprocessed
+-- !rawinclude(name) preprocesses name, locates the file and emits it unpreprocessed
 rawinc :: String -> Macro
 rawinc _ env [name] = do
     name' <- ppAndStrip' env name >>= locateFile env
@@ -558,7 +553,7 @@ rawinc _ env [name] = do
     return (env', doc)
 rawinc name _ _ = arityError name [1]
 
--- \pp(text) preprocesses text. text can be the output of a script macro containing generated macro calls
+-- !pp(text) preprocesses text. text can be the output of a script macro containing generated macro calls
 forcepp :: Macro
 forcepp env [text] = do
     (env', text') <- pp env (fromVal text)
@@ -566,13 +561,13 @@ forcepp env [text] = do
     return (env'', text'')
 forcepp _ _ = arityError "pp" [1]
 
--- \comment[(title)](text) ignores title and text (just comments, no preprocessing)
+-- !comment[(title)](text) ignores title and text (just comments, no preprocessing)
 comment :: Macro
 comment env [_text] = return (env, "")
 comment env [_title, _text] = return (env, "")
 comment _ _ = arityError "comment" [1, 2]
 
--- \comment[(title)](text) ignores title and preprocesses text
+-- !comment[(title)](text) ignores title and preprocesses text
 -- The output of text is silently discarded, only side effects are kept in the environment.
 quiet :: Macro
 quiet env [text] = do
@@ -585,7 +580,7 @@ quiet _ _ = arityError "quiet" [1, 2]
 -- File macros
 ---------------------------------------------------------------------
 
--- \mdate(file1 ... filen)(file'1 ... file'n)... preprocesses the list of
+-- !mdate(file1 ... filen)(file'1 ... file'n)... preprocesses the list of
 -- filenames (space separated) and returns the most recent modification date.
 -- If no file is given, the date of the main file is returned.
 mdate :: Macro
@@ -599,12 +594,12 @@ mdate env files = do
     let localTime = utcToLocalTime tz lastTime
     return (env', formatTime (myLocale $ currentLang env) "%A %-d %B %Y" localTime)
 
--- \main returns the name of the main file (given on the command line)
+-- !main returns the name of the main file (given on the command line)
 getMainFile :: Macro
 getMainFile env [] = return (env, fromMaybe "-" (mainFile env))
 getMainFile _ _ = arityError "main" [0]
 
--- \file returns the name of the current file (\main or any file included from \main)
+-- !file returns the name of the current file (!main or any file included from !main)
 getCurrentFile :: Macro
 getCurrentFile env [] = return (env, fromMaybe "-" (currentFile env))
 getCurrentFile _ _ = arityError "file" [0]
@@ -613,7 +608,7 @@ getCurrentFile _ _ = arityError "file" [0]
 -- OS macros
 ---------------------------------------------------------------------
 
--- \env(name) preprocesses name, reads an environment variable (in env)
+-- !env(name) preprocesses name, reads an environment variable (in env)
 -- and emits the value of the environment variable.
 readEnv :: Macro
 readEnv env [name] = do
@@ -623,12 +618,12 @@ readEnv env [name] = do
         Nothing -> return (env, "")
 readEnv _ _ = arityError "env" [1]
 
--- \os emits the OS name
+-- !os emits the OS name
 getos :: Macro
 getos env [] = return (env, osname)
 getos _ _ = arityError "os" [0]
 
--- \arch emits the architecture of the OS
+-- !arch emits the architecture of the OS
 getarch :: Macro
 getarch env [] = return (env, osarch)
 getarch _ _ = arityError "arch" [0]
@@ -637,7 +632,7 @@ getarch _ _ = arityError "arch" [0]
 -- Arithmetic macros
 ---------------------------------------------------------------------
 
--- \add(name)(val) preprocesses name and val and adds val to the integer value
+-- !add(name)(val) preprocesses name and val and adds val to the integer value
 -- stored in name. If name is not defined its value is 0.
 add :: Macro
 add env [name, val] = do
@@ -793,21 +788,21 @@ resource name (array, len) = do
 -- "saveLiterateContent macros env" saves all the literate contents recorded in the environment.
 -- "macros" is the list of literate content that must not be saved
 -- (they are used as macros to build other literate contents).
-saveLiterateContent :: [(String, String)] -> [(FilePath, String)] -> IO ()
+saveLiterateContent :: Env -> [(String, String)] -> [(FilePath, String)] -> IO ()
 
 -- file content shall be expanded with macro contents
 -- previous definitions of the same file are removed from the list to avoid writing old intermediate definitions
-saveLiterateContent macros ((filename, content) : files) = do
-    writeFileUTF8 filename (expandLit macros content)
-    saveLiterateContent macros files
+saveLiterateContent env macros ((filename, content) : files) = do
+    writeFileUTF8 filename (expandLit env macros content)
+    saveLiterateContent env macros files
 
-saveLiterateContent _ [] =
+saveLiterateContent _ _ [] =
     return ()
 
 -- literate programming macro
 lit :: Macro
 
--- \lit(name)(lang)(content) appends content to the file or macro name.
+-- !lit(name)(lang)(content) appends content to the file or macro name.
 -- In the markdown output, the content will be colored according to the language lang.
 lit env [name, lang, content] = do
     name' <- ppAndStrip' env name
@@ -817,7 +812,7 @@ lit env [name, lang, content] = do
     let formatedCode = litShow env (Just lang') content'
     return (env', formatedCode)
 
--- \lit(name)(lang)(content) appends content to the file or macro name.
+-- !lit(name)(lang)(content) appends content to the file or macro name.
 -- The current language is the previously defined language or the default
 -- one according to name.
 lit env [name, content] = do
@@ -828,7 +823,7 @@ lit env [name, content] = do
     let formatedCode = litShow env lang content'
     return (env', formatedCode)
 
--- \lit(name) emits the current content of a literate file or macro.
+-- !lit(name) emits the current content of a literate file or macro.
 lit env [name] = do
     name' <- ppAndStrip' env name
     let lang = litLang env name'
@@ -841,7 +836,7 @@ lit _ _ = arityError "lit" [1, 2, 3]
 -- source file inclusion
 source :: Macro
 
--- \src(name)(lang) reads a source file.
+-- !src(name)(lang) reads a source file.
 -- In the markdown output, the content will be colored according to the language lang.
 source env [name, lang] = do
     (env', _) <- flushlit env []
@@ -851,7 +846,7 @@ source env [name, lang] = do
     let formatedCode = litShow env (Just lang') content
     return (env', formatedCode)
 
--- \src(name) reads a source file.
+-- !src(name) reads a source file.
 -- The language is the default one according to name.
 source env [name] = do
     (env', _) <- flushlit env []
@@ -865,7 +860,7 @@ source _ _ = arityError "src" [1, 2]
 
 codeblock :: Macro
 
--- "\codeblock(len)(ch)" stores the new codeblock separator (ch repeated len times)
+-- "!codeblock(len)(ch)" stores the new codeblock separator (ch repeated len times)
 codeblock env [len, ch] = do
     len' <- (fromIntegral . atoi) <$> ppAndStrip' env len
     when (len' < 3) codeblockError
@@ -875,21 +870,21 @@ codeblock env [len, ch] = do
                 _ -> codeblockError
     return (env{codeBlock = Just line}, "")
 
--- "\codeblock(len" stores the new codeblock separator ('~' repeated len times)
+-- "!codeblock(len" stores the new codeblock separator ('~' repeated len times)
 codeblock env [len] = codeblock env [len, Val "~"]
 
 codeblock _ _ = arityError "codeblock" [1, 2]
 
 indent :: Macro
 
--- "\indent(n)(block)" indents block by n spaces (n is optional)
+-- "!indent(n)(block)" indents block by n spaces (n is optional)
 indent env [n, block] = do
     n' <- (fromIntegral . atoi) <$> ppAndStrip' env n
     when (n' < 3) indentError
     (env', block') <- pp env (fromVal block)
     return (env', indent' n' block')
 
--- "\indent(block)" indents block by n spaces (n is optional)
+-- "!indent(block)" indents block by n spaces (n is optional)
 indent env [block] = indent env [Val "4", block]
 
 indent _ _ = arityError "indent" [1, 2]
@@ -897,7 +892,7 @@ indent _ _ = arityError "indent" [1, 2]
 -- "litGet env name" gets the current content of a literate file or macro
 -- in the environment.
 litGet :: Env -> String -> String
-litGet env (c:name) | c == litMacroTagChar = fromMaybe "" $ lookup name (litMacros env)
+litGet env (c:name) | c `elem` literateMacroChars env = fromMaybe "" $ lookup name (litMacros env)
 litGet env name = fromMaybe "" $ lookup name (litFiles env)
 
 -- "litAppend env name lang content" appends content to a literate file or macro
@@ -908,8 +903,10 @@ litAppend env name lang content = env''
         oldContent = litGet env name
         newContent = oldContent++content
         env' = case name of
-                (c:name') | c == litMacroTagChar -> env{litMacros = (name', newContent) : clean name' (litMacros env)}
-                name'                            -> env{litFiles = (name', newContent) : clean name' (litFiles env)}
+                (c:name') | c `elem` literateMacroChars env ->
+                    env{litMacros = (name', newContent) : clean name' (litMacros env)}
+                name' ->
+                    env{litFiles = (name', newContent) : clean name' (litFiles env)}
         env'' = case lang of
             Just lang' -> env'{litLangs = (name, lang') : litLangs env'}
             _ -> env'
@@ -1016,22 +1013,22 @@ defaultLitLang name = case (map toLower (takeBaseName name), map toLower (takeEx
 -- been written yet.
 flushlit :: Macro
 flushlit env [] = do
-    saveLiterateContent (litMacros env) (litFiles env)
+    saveLiterateContent env (litMacros env) (litFiles env)
     return (env, "")
 flushlit _ _ = arityError "flushlit" [0]
 
 -- "expandLit macros text" expand literal macros in a string.
 -- macros is a lookup table containing all the literal macros
-expandLit :: [(String, String)] -> String -> String
-expandLit macros (c0:s)
-    | c0 == litMacroTagChar = content' ++ expandLit macros s'
-    | otherwise = c0 : expandLit macros s
+expandLit :: Env -> [(String, String)] -> String -> String
+expandLit env macros (c0:s)
+    | c0 `elem` literateMacroChars env = content' ++ expandLit env macros s'
+    | otherwise = c0 : expandLit env macros s
     where
-        (name, s') = span (\c -> isAlphaNum c || c == '_') s
+        (name, s') = span isValidMacroNameChar s
         content' = case lookup name macros of
                     Nothing -> c0:name
-                    Just content -> expandLit macros content
-expandLit _ [] = []
+                    Just content -> expandLit env macros content
+expandLit _ _ [] = []
 
 ---------------------------------------------------------------------
 -- CSV tables
@@ -1039,7 +1036,7 @@ expandLit _ [] = []
 
 csv :: Macro
 
--- \csv(filename) converts a CSV file to a markdown or reStructuredText table
+-- !csv(filename) converts a CSV file to a markdown or reStructuredText table
 -- The delimiter is automagically infered (hope it works...).
 -- The first line of the CSV file is the header of the table.
 csv env [filename] = do
@@ -1048,7 +1045,7 @@ csv env [filename] = do
     let table = makeTable (currentDialect env) Nothing csvData
     return (addDep env filename', table)
 --
--- \csv(filename)(header) converts a CSV file to a markdown or reStructuredText table
+-- !csv(filename)(header) converts a CSV file to a markdown or reStructuredText table
 -- The delimiter is automagically infered (hope it works...).
 -- The first line of the CSV file is the header of the table.
 csv env [filename, header] = do
@@ -1059,3 +1056,35 @@ csv env [filename, header] = do
     let table = makeTable (currentDialect env) (Just fields) csvData
     return (env, table)
 csv _ _ = arityError "csv" [1, 2]
+
+---------------------------------------------------------------------
+-- Parser customization macros
+---------------------------------------------------------------------
+
+macrochars :: Macro
+
+macrochars env [chars] = do
+    chars' <- ppAndStrip' env chars
+    let env' = env{macroChars = filter (not . isSpace) chars'}
+    unless (checkParserConsistency env') $ macrocharsError chars'
+    return (env', "")
+
+macrochars _ _ = arityError "macrochars" [1]
+
+literatemacrochars :: Macro
+
+literatemacrochars env [chars] = do
+    chars' <- ppAndStrip' env chars
+    let env' = env{literateMacroChars = filter (not . isSpace) chars'}
+    unless (checkParserConsistency env') $ literatemacrocharsError chars'
+    return (env', "")
+
+literatemacrochars _ _ = arityError "literatemacrochars" [1]
+
+checkParserConsistency :: Env -> Bool
+checkParserConsistency env = sets == nub sets
+    where
+        sets = concat [ macroChars env
+                      , blockChars env
+                      , literateMacroChars env
+                      ]

@@ -51,7 +51,7 @@ main = do
             -- just write the preprocessed output to stdout
             putStr doc
     -- finally save the literate content (if any)
-    saveLiterateContent (litMacros env') (litFiles env')
+    saveLiterateContent env' (litMacros env') (litFiles env')
 
 -- "doArgs env args" parses the command line arguments
 -- and returns an updated environment and the preprocessed output
@@ -139,15 +139,39 @@ doArg _ "-dialects" _ = putStrLn (unwords $ sort $ map showCap dialects) >> exit
 -- "doArg" env "-formats" shows the list of formats
 doArg _ "-formats" _ = putStrLn (unwords $ sort $ map showCap formats) >> exitSuccess
 
--- "doarg" env "-M" target enables the tracking of dependencies (i.e. included and imported files)
+-- "doArg" env "-M" target enables the tracking of dependencies (i.e. included and imported files)
 -- target is the name of the Makefile target
 doArg env "-M" (target:args) =
     return (env{makeTarget=Just target}, "", args)
 
--- "doarg" env "-M=target" enables the tracking of dependencies (i.e. included and imported files)
+-- "doArg" env "-M=target" enables the tracking of dependencies (i.e. included and imported files)
 -- target is the name of the Makefile target
 doArg env ('-':'M':'=':target) args =
     return (env{makeTarget=Just target}, "", args)
+
+-- "doArg" env "-macrochars" chars defines the chars used to call macros
+-- chars is a set of chars
+doArg env "-macrochars" (chars:args) = do
+    (env', _) <- macrochars env [Val chars]
+    return (env', "", args)
+
+-- "doArg" env "-macrochars=chars" defines the chars used to call macros
+-- chars is a set of chars
+doArg env ('-':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
+    (env', _) <- macrochars env [Val chars]
+    return (env', "", args)
+
+-- "doArg" env "-literatemacrochars" chars defines the chars used to identify literate macros
+-- chars is a set of chars
+doArg env "-literatemacrochars" (chars:args) = do
+    (env', _) <- literatemacrochars env [Val chars]
+    return (env', "", args)
+
+-- "doArg" env "-literatemacrochars=chars" defines the chars used to idenfity literate macros
+-- chars is a set of chars
+doArg env ('-':'l':'i':'t':'e':'r':'a':'t':'e':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
+    (env', _) <- literatemacrochars env [Val chars]
+    return (env', "", args)
 
 -- Other arguments starting with "-" are invalid.
 doArg _ ('-':arg) _ | not (null arg) = error $ "Unexpected argument: " ++ arg

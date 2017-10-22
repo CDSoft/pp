@@ -22,7 +22,7 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 import Test.Hspec
 
-import Preprocessor
+import Environment
 
 import Data.List
 
@@ -31,5 +31,5 @@ main = hspec $
 
     describe "Preprocessor" $
         it "defines disjoint character sets" $ do
-            let sets = concat [ charsFunc, charsBlock, [litMacroTagChar] ]
+            let sets = concat [ defaultMacroChars, defaultBlockChars, defaultLiterateMacroChars ]
             nub sets `shouldBe` sets

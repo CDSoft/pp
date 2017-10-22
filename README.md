@@ -126,6 +126,12 @@ preprocessed `FILE` but discards its output. It only keeps macro definitions and
 **`-M TARGET`** or **`-M=TARGET`**  
 tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by `pp`. This option only lists files that are imported, included and used with `mdate` and `csv`macros.
 
+**`-macrochars "chars"`** or **`-macrochars "chars"`**  
+defines the possible characters used to call macros.
+
+**`-literatemacrochars "chars"`** or **`-literatemacrochars "chars"`**  
+defines the possible characters used to identify literate programming macros.
+
 Other arguments are filenames.
 
 Files are read and preprocessed using the current state of the environment. The special filename "`-`" can be used to preprocess the standard input.
@@ -140,13 +146,13 @@ Macro names are:
 -   case sensitive (i.e.: `!my_macro` and `!My_Macro` are different macros)
 -   made of letters, digits and underscores (`a-zA-Z0-9_`)
 
-To get the value of a variable you just have to write its name after a '`!`' or '`\`'. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `\foo{x}{y}` or even `!foo[x][y]`. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:
+To get the value of a variable you just have to write its name after a '`!`'. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro `foo` with two arguments can be called as `!foo(x)(y)`, `!foo{x}{y}` or even `!foo[x][y]`. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:
 
-    \macro(x)(y)
+    !macro(x)(y)
 
     [link]: foo bar
 
-    Here, [link] is not parsed as a third parameter of \macro
+    Here, [link] is not parsed as a third parameter of !macro
 
 Arguments are stripped. Removing leading and trailing spaces helps preserving line structure in the document.
 
@@ -314,6 +320,12 @@ indents each line of a block with `n` spaces. The default value of `n` is 4 spac
 **`!csv(FILENAME)[(HEADER)]`**  
 converts a CSV file to a Markdown or reStructuredText table. `HEADER` defines the header of the table, fields are separated by pipes (`|`). If `HEADER` is not defined, the first line of the file is used as the header of the table.
 
+**`!macrochars(CHARS)`**  
+defines the chars used to call a macro. The default value is `"!"`. Any non space character can start a macro call (e.g. after `!macrochars(!\)` both `!foo` and `\foo` are valid macro calls.
+
+**`!literatemacrochars(CHARS)`**  
+defines the chars used to identify literate programming macros. The default value is `"@"`. Any non space character can start a literate programming macro (e.g. after `!literatemacrochars(@&)` both `@foo` and `&foo` are valid macro calls.
+
 Diagram and script examples
 ===========================
 
@@ -328,7 +340,7 @@ Diagrams are written in code blocks as argument of a diagram macro. The first li
 
 Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). The end delimiter must at least as long as the beginning delimiter.
 
-    \dot(path/imagename)(optional legend)
+    !dot(path/imagename)(optional legend)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         graph {
             "source code of the diagram"
@@ -341,7 +353,7 @@ This extremely meaningful diagram is rendered as `path/imagename.png` and looks 
 
 The image link in the output markdown document may have to be different than the actual path in the file system. This happens when then `.md` or `.html` files are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:
 
-    \dot([mybuildpath/]img/diag42)...
+    !dot([mybuildpath/]img/diag42)...
 
 will be actually generated in:
 
@@ -364,7 +376,7 @@ For instance, if you use Pandoc to generate HTML documents with diagrams in a di
 
 Pandoc also accepts additional attributes on images (`link_attributes` extension). These attributes can be added between curly brackets to the first argument. e.g.:
 
-    \dot(image.png { width=50 % })(caption)(...)
+    !dot(image.png { width=50 % })(caption)(...)
 
 will generate the following link in the markdown output:
 
@@ -392,7 +404,7 @@ Scripts
 
 Scripts are also written in code blocks as arguments of a macro.
 
-    \bash
+    !bash
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hello World!
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -424,7 +436,7 @@ Here are some simple examples. For further details about diagrams' syntax, pleas
 
 [GraphViz](http://graphviz.org/) is executed when one of these keywords is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`
 
-    \twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+    !twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     digraph {
         O -> A
@@ -454,7 +466,7 @@ Once generated the graph looks like:
 
 [PlantUML](http://plantuml.sourceforge.net/) is executed when the keyword `uml` is used. The lines `@startuml` and `@enduml` required by [PlantUML](http://plantuml.sourceforge.net/) are added by `pp`.
 
-    \uml(pp-plantuml-example)(This is just a PlantUML diagram example)
+    !uml(pp-plantuml-example)(This is just a PlantUML diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Alice -> Bob: Authentication Request
     Bob --> Alice: Authentication Response
@@ -472,7 +484,7 @@ Once generated the graph looks like:
 
 [ditaa](http://ditaa.sourceforge.net/) is executed when the keyword `ditaa` is used.
 
-    \ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
+    !ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         +--------+   +-------+    +-------+
         |        | --+ ditaa +--> |       |
@@ -495,7 +507,7 @@ Once generated the graph looks like:
 
 [Bash](https://www.gnu.org/software/bash/) is executed when the keyword `bash` is used.
 
-    \bash
+    !bash
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo "Hi, I'm $SHELL $BASH_VERSION"
     RANDOM=42 # seed
@@ -513,7 +525,7 @@ This script outputs:
 
 Windows' [command-line interpreter](https://en.wikipedia.org/wiki/Cmd.exe) is executed when the keyword `cmd` is used.
 
-    \cmd
+    !cmd
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo Hi, I'm %COMSPEC%
     ver
@@ -528,14 +540,14 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.15)
+    Microsoft Windows 10.0.15063 (2.17)
     This script is run from wine under Linux
 
 ### Python
 
 [Python](https://www.python.org/) is executed when the keyword `python` is used.
 
-    \python
+    !python
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     import sys
     import random
@@ -549,7 +561,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.13 (default, Jun 26 2017, 10:20:05) 
+    Hi, I'm Python 2.7.13 (default, Sep  5 2017, 08:53:59) 
     [GCC 7.1.1 20170622 (Red Hat 7.1.1-3)]
     Here are a few random numbers: 640, 25, 275
 
@@ -557,7 +569,7 @@ This script outputs:
 
 [Haskell](https://www.haskell.org/) is executed when the keyword `haskell` is used.
 
-    \haskell
+    !haskell
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     import System.Info
     import Data.Version
@@ -584,7 +596,7 @@ This script outputs:
 
 [Haskell](https://www.haskell.org/) is also executed when the keyword `stack` is used. In this case stack meta data must be added at the beginning of the script.
 
-    \stack
+    !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     {- stack script --resolver lts-9.1 --package base -}
 
@@ -626,7 +638,7 @@ This file:
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
 
-is rendered by `\csv(file.csv)` as:
+is rendered by `!csv(file.csv)` as:
 
 <table style="width:100%;">
 <colgroup>
@@ -688,7 +700,7 @@ This file:
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
 
-is rendered by `\csv(file.csv)(Year|Make|Model|Description|Price)` as:
+is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:
 
 <table style="width:100%;">
 <colgroup>
@@ -744,26 +756,26 @@ OS support
 
 PP is meant to be portable and multi platform. To be OS agnostic, the use free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, ...). Python is also a good choice.
 
-Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (`\os`, `\arch`). E.g.:
+Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (`!os`, `!arch`). E.g.:
 
-    \quiet
+    !quiet
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    \ifeq(\os)(linux)
+    !ifeq(!os)(linux)
     `````````````````````
-    \def(linux)(\1)
-    \def(win)()
+    !def(linux)(!1)
+    !def(win)()
     `````````````````````
-    \ifeq(\os)(windows)
+    !ifeq(!os)(windows)
     `````````````````````
-    \def(linux)()
-    \def(win)(\1)
+    !def(linux)()
+    !def(win)(!1)
     `````````````````````
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    \win(Sorry, you're running Windows)
-    \linux(Hello, happy GNU/Linux user)
+    !win(Sorry, you're running Windows)
+    !linux(Hello, happy GNU/Linux user)
 
-The `\exec` macro is also OS aware. It runs the *default* shell according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
+The `!exec` macro is also OS aware. It runs the *default* shell according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
 
 Third-party documentations, tutorials and macros
 ================================================

@@ -27,6 +27,8 @@ module ErrorMessages ( unexpectedEndOfFile
                      , fileNotFound
                      , codeblockError
                      , indentError
+                     , macrocharsError
+                     , literatemacrocharsError
                      )
 where
 
@@ -72,3 +74,10 @@ invalidNameError name = error $ "\"" ++ name ++"\" is not a valid macro name."
 builtinRedefinition :: String -> t
 builtinRedefinition name = error $ "\"" ++ name ++"\" is a built-in macro and can not be redefined."
 
+-- raise a parser consistency error
+macrocharsError :: String -> t
+macrocharsError chars = error $ "macrochars invalid parameter: \"" ++ chars ++ "\""
+
+-- raise a parser consistency error
+literatemacrocharsError :: String -> t
+literatemacrocharsError chars = error $ "literatemacrochars invalid parameter: \"" ++ chars ++ "\""

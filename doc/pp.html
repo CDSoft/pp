@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Friday 8 September 2017</p>
+<p class="date">Sunday 22 October 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -162,6 +162,12 @@
 <dt><strong><code>-M TARGET</code></strong> or <strong><code>-M=TARGET</code></strong></dt>
 <dd>tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by <code>pp</code>. This option only lists files that are imported, included and used with <code>mdate</code> and <code>csv</code>macros.
 </dd>
+<dt><strong><code>-macrochars &quot;chars&quot;</code></strong> or <strong><code>-macrochars &quot;chars&quot;</code></strong></dt>
+<dd>defines the possible characters used to call macros.
+</dd>
+<dt><strong><code>-literatemacrochars &quot;chars&quot;</code></strong> or <strong><code>-literatemacrochars &quot;chars&quot;</code></strong></dt>
+<dd>defines the possible characters used to identify literate programming macros.
+</dd>
 </dl>
 <p>Other arguments are filenames.</p>
 <p>Files are read and preprocessed using the current state of the environment. The special filename “<code>-</code>” can be used to preprocess the standard input.</p>
@@ -172,12 +178,12 @@
 <li>case sensitive (i.e.: <code>!my_macro</code> and <code>!My_Macro</code> are different macros)</li>
 <li>made of letters, digits and underscores (<code>a-zA-Z0-9_</code>)</li>
 </ul>
-<p>To get the value of a variable you just have to write its name after a ‘<code>!</code>’ or ‘<code>\</code>’. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>\foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:</p>
-<pre><code>\macro(x)(y)
+<p>To get the value of a variable you just have to write its name after a ‘<code>!</code>’. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>!foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:</p>
+<pre><code>!macro(x)(y)
 
 [link]: foo bar
 
-Here, [link] is not parsed as a third parameter of \macro</code></pre>
+Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <p>Arguments are stripped. Removing leading and trailing spaces helps preserving line structure in the document.</p>
 <p>The last argument can be enclosed between lines of tildas or backquotes (of the same length) instead of parenthesis, brackets or braces and. This is useful for literate programming, diagrams or scripts (see <a href="#examples">examples</a>). Code block arguments are not stripped: spaces and blank lines are preserved.</p>
 <p>Arguments can be on separate lines but must not be separated by blank lines.</p>
@@ -336,6 +342,12 @@ And also finally &quot;Goodbye&quot;:
 <dt><strong><code>!csv(FILENAME)[(HEADER)]</code></strong></dt>
 <dd>converts a CSV file to a Markdown or reStructuredText table. <code>HEADER</code> defines the header of the table, fields are separated by pipes (<code>|</code>). If <code>HEADER</code> is not defined, the first line of the file is used as the header of the table.
 </dd>
+<dt><strong><code>!macrochars(CHARS)</code></strong></dt>
+<dd>defines the chars used to call a macro. The default value is <code>&quot;!&quot;</code>. Any non space character can start a macro call (e.g. after <code>!macrochars(!\)</code> both <code>!foo</code> and <code>\foo</code> are valid macro calls.
+</dd>
+<dt><strong><code>!literatemacrochars(CHARS)</code></strong></dt>
+<dd>defines the chars used to identify literate programming macros. The default value is <code>&quot;@&quot;</code>. Any non space character can start a literate programming macro (e.g. after <code>!literatemacrochars(@&amp;)</code> both <code>@foo</code> and <code>&amp;foo</code> are valid macro calls.
+</dd>
 </dl>
 <h1 id="diagram-and-script-examples">Diagram and script examples</h1>
 <h2 id="diagrams">Diagrams</h2>
@@ -346,7 +358,7 @@ And also finally &quot;Goodbye&quot;:
 <li>the legend (second optional argument)</li>
 </ul>
 <p>Block delimiters are made of three or more tilda or back quotes, at the beginning of the line (no space and no tab). The end delimiter must at least as long as the beginning delimiter.</p>
-<pre><code>\dot(path/imagename)(optional legend)
+<pre><code>!dot(path/imagename)(optional legend)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     graph {
         &quot;source code of the diagram&quot;
@@ -357,7 +369,7 @@ And also finally &quot;Goodbye&quot;:
 <img src="data:image/png;base64,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" alt="optional legend" /><figcaption>optional legend</figcaption>
 </figure>
 <p>The image link in the output markdown document may have to be different than the actual path in the file system. This happens when then <code>.md</code> or <code>.html</code> files are not generated in the same path than the source document. Brackets can be used to specify the part of the path that belongs to the generated image but not to the link in the output document. For instance a diagram declared as:</p>
-<pre><code>\dot([mybuildpath/]img/diag42)...</code></pre>
+<pre><code>!dot([mybuildpath/]img/diag42)...</code></pre>
 <p>will be actually generated in:</p>
 <pre><code>mybuildpath/img/diag42.png</code></pre>
 <p>and the link in the output document will be:</p>
@@ -378,7 +390,7 @@ And also finally &quot;Goodbye&quot;:
 </ul></li>
 </ol>
 <p>Pandoc also accepts additional attributes on images (<code>link_attributes</code> extension). These attributes can be added between curly brackets to the first argument. e.g.:</p>
-<pre><code>\dot(image.png { width=50 % })(caption)(...)</code></pre>
+<pre><code>!dot(image.png { width=50 % })(caption)(...)</code></pre>
 <p>will generate the following link in the markdown output:</p>
 <pre><code>![caption](image.png){ width=50 % }</code></pre>
 <p>The diagram generator can be:</p>
@@ -400,7 +412,7 @@ And also finally &quot;Goodbye&quot;:
 </figure>
 <h2 id="scripts">Scripts</h2>
 <p>Scripts are also written in code blocks as arguments of a macro.</p>
-<pre><code>\bash
+<pre><code>!bash
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo Hello World!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
@@ -424,7 +436,7 @@ echo Hello World!
 <p>Here are some simple examples. For further details about diagrams’ syntax, please read the documentation of <a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a>.</p>
 <h3 id="graphviz">Graphviz</h3>
 <p><a href="http://graphviz.org/">GraphViz</a> is executed when one of these keywords is used: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>, <code>osage</code></p>
-<pre><code>\twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
+<pre><code>!twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 digraph {
     O -&gt; A
@@ -451,7 +463,7 @@ digraph {
 <p><a href="http://graphviz.org/">GraphViz</a> must be installed.</p>
 <h3 id="plantuml">PlantUML</h3>
 <p><a href="http://plantuml.sourceforge.net/">PlantUML</a> is executed when the keyword <code>uml</code> is used. The lines <code>@startuml</code> and <code>@enduml</code> required by <a href="http://plantuml.sourceforge.net/">PlantUML</a> are added by <code>pp</code>.</p>
-<pre><code>\uml(pp-plantuml-example)(This is just a PlantUML diagram example)
+<pre><code>!uml(pp-plantuml-example)(This is just a PlantUML diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Alice -&gt; Bob: Authentication Request
 Bob --&gt; Alice: Authentication Response
@@ -465,7 +477,7 @@ Alice &lt;-- Bob: another authentication Response
 <p><a href="http://plantuml.sourceforge.net">PlantUML</a> is written in Java and is embedded in <code>pp</code>. Java must be installed.</p>
 <h3 id="ditaa">Ditaa</h3>
 <p><a href="http://ditaa.sourceforge.net/">ditaa</a> is executed when the keyword <code>ditaa</code> is used.</p>
-<pre><code>\ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
+<pre><code>!ditaa(pp-ditaa-example)(This is just a Ditaa diagram example)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     +--------+   +-------+    +-------+
     |        | --+ ditaa +--&gt; |       |
@@ -484,7 +496,7 @@ Alice &lt;-- Bob: another authentication Response
 <p><a href="http://plantuml.sourceforge.net">ditaa</a> is written in Java and is embedded in <code>pp</code>. Java must be installed.</p>
 <h3 id="bash">Bash</h3>
 <p><a href="https://www.gnu.org/software/bash/">Bash</a> is executed when the keyword <code>bash</code> is used.</p>
-<pre><code>\bash
+<pre><code>!bash
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo &quot;Hi, I'm $SHELL $BASH_VERSION&quot;
 RANDOM=42 # seed
@@ -497,7 +509,7 @@ Here are a few random numbers: 17766, 11151, 23481
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="cmd">Cmd</h3>
 <p>Windows’ <a href="https://en.wikipedia.org/wiki/Cmd.exe">command-line interpreter</a> is executed when the keyword <code>cmd</code> is used.</p>
-<pre><code>\cmd
+<pre><code>!cmd
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo Hi, I'm %COMSPEC%
 ver
@@ -510,12 +522,12 @@ if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
 <p>This script outputs:</p>
 <pre><code>Hi, I'm C:\windows\system32\cmd.exe
 
-Microsoft Windows 10.0.15063 (2.15)
+Microsoft Windows 10.0.15063 (2.17)
 This script is run from wine under Linux
 </code></pre>
 <h3 id="python">Python</h3>
 <p><a href="https://www.python.org/">Python</a> is executed when the keyword <code>python</code> is used.</p>
-<pre><code>\python
+<pre><code>!python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import sys
 import random
@@ -527,13 +539,13 @@ if __name__ == &quot;__main__&quot;:
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Python 2.7.13 (default, Jun 26 2017, 10:20:05) 
+<pre><code>Hi, I'm Python 2.7.13 (default, Sep  5 2017, 08:53:59) 
 [GCC 7.1.1 20170622 (Red Hat 7.1.1-3)]
 Here are a few random numbers: 640, 25, 275
 </code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
-<pre><code>\haskell
+<pre><code>!haskell
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import System.Info
 import Data.Version
@@ -556,7 +568,7 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 </code></pre>
 <h3 id="stack">Stack</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is also executed when the keyword <code>stack</code> is used. In this case stack meta data must be added at the beginning of the script.</p>
-<pre><code>\stack
+<pre><code>!stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 {- stack script --resolver lts-9.1 --package base -}
 
@@ -590,7 +602,7 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 1996,Jeep,Grand Cherokee,&quot;MUST SELL!
 air, moon roof, loaded&quot;,4799.00
 </code></pre>
-<p>is rendered by <code>\csv(file.csv)</code> as:</p>
+<p>is rendered by <code>!csv(file.csv)</code> as:</p>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 6%"></col>
@@ -647,7 +659,7 @@ air, moon roof, loaded&quot;,4799.00
 1996,Jeep,Grand Cherokee,&quot;MUST SELL!
 air, moon roof, loaded&quot;,4799.00
 </code></pre>
-<p>is rendered by <code>\csv(file.csv)(Year|Make|Model|Description|Price)</code> as:</p>
+<p>is rendered by <code>!csv(file.csv)(Year|Make|Model|Description|Price)</code> as:</p>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 6%"></col>
@@ -698,24 +710,24 @@ air, moon roof, loaded&quot;,4799.00
 </table>
 <h1 id="os-support">OS support</h1>
 <p>PP is meant to be portable and multi platform. To be OS agnostic, the use free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, …). Python is also a good choice.</p>
-<p>Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (<code>\os</code>, <code>\arch</code>). E.g.:</p>
-<pre><code>\quiet
+<p>Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (<code>!os</code>, <code>!arch</code>). E.g.:</p>
+<pre><code>!quiet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\ifeq(\os)(linux)
+!ifeq(!os)(linux)
 `````````````````````
-\def(linux)(\1)
-\def(win)()
+!def(linux)(!1)
+!def(win)()
 `````````````````````
-\ifeq(\os)(windows)
+!ifeq(!os)(windows)
 `````````````````````
-\def(linux)()
-\def(win)(\1)
+!def(linux)()
+!def(win)(!1)
 `````````````````````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-\win(Sorry, you're running Windows)
-\linux(Hello, happy GNU/Linux user)</code></pre>
-<p>The <code>\exec</code> macro is also OS aware. It runs the <em>default</em> shell according to the OS (<code>sh</code> on Linux and MacOS, <code>cmd</code> on Windows).</p>
+!win(Sorry, you're running Windows)
+!linux(Hello, happy GNU/Linux user)</code></pre>
+<p>The <code>!exec</code> macro is also OS aware. It runs the <em>default</em> shell according to the OS (<code>sh</code> on Linux and MacOS, <code>cmd</code> on Windows).</p>
 <h1 id="third-party-documentations-tutorials-and-macros">Third-party documentations, tutorials and macros</h1>
 <ul>
 <li><a href="https://github.com/tajmone/markdown-guide/tree/master/pp">PP tutorial</a> by <a href="https://github.com/tajmone">tajmone</a>: a good starting point for beginners.</li>
