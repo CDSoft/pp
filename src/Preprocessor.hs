@@ -27,7 +27,9 @@ module Preprocessor ( ppFile
                     , Format
                     , saveLiterateContent
                     , macrochars
+                    , macroargs
                     , literatemacrochars
+                    , checkParserConsistency
                     )
 where
 
@@ -122,6 +124,7 @@ builtin = [ ("def", define "def")           , ("undef", undefine "undef")
           , ("csv", csv)
 
           , ("macrochars", macrochars)
+          , ("macroargs", macroargs)
           , ("literatemacrochars", literatemacrochars)
 
           ]
@@ -478,13 +481,13 @@ ifdef env [name, t, e] = do
                 (Nothing, Nothing) -> e
                 _ -> t
 ifdef env [name, t] = ifdef env [name, t, Val ""]
-ifdef _ _ = arityError "ifdef" [1, 2]
+ifdef _ _ = arityError "ifdef" [2, 3]
 
 -- !ifndef(name)(t)(e) is equivalent to !ifdef(name)(e)(t)
 ifndef :: Macro
 ifndef env [name, t, e] = ifdef env [name, e, t]
 ifndef env [name, t] = ifdef env [name, Val "", t]
-ifndef _ _ = arityError "ifndef" [1, 2]
+ifndef _ _ = arityError "ifndef" [2, 3]
 
 -- !ifeq(x)(y)(t)(e) preprocesses x and y. If they are equal
 -- (spaces are ignored), it preprocessed t, otherwise e.
@@ -1071,6 +1074,19 @@ macrochars env [chars] = do
 
 macrochars _ _ = arityError "macrochars" [1]
 
+macroargs :: Macro
+
+macroargs env [chars] = do
+    chars' <- ppAndStrip' env chars
+    let pairs = chunksOf 2 $ filter (not . isSpace) chars'
+    unless (all ((==2) . length) pairs) $ macroargsError chars'
+    let assoc = map (\[o,c] -> (o,c)) pairs
+    let env' = env{openCloseChars = assoc}
+    unless (checkParserConsistency env') $ macroargsError chars'
+    return (env', "")
+
+macroargs _ _ = arityError "macroargs" [1]
+
 literatemacrochars :: Macro
 
 literatemacrochars env [chars] = do
@@ -1084,7 +1100,7 @@ literatemacrochars _ _ = arityError "literatemacrochars" [1]
 checkParserConsistency :: Env -> Bool
 checkParserConsistency env = sets == nub sets
     where
-        sets = concat [ macroChars env
-                      , blockChars env
-                      , literateMacroChars env
-                      ]
+        sets = macroChars env
+               ++ concat [ [o,c] | (o,c) <- openCloseChars env ]
+               ++ blockChars env
+               ++ literateMacroChars env

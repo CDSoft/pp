@@ -31,6 +31,7 @@ module Environment ( Env(..)
                    , addDeps
                    -- exported for test purpose
                    , defaultMacroChars
+                   , defaultOpenCloseChars
                    , defaultBlockChars
                    , defaultLiterateMacroChars
                    )

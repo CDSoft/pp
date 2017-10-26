@@ -557,6 +557,16 @@ Parser customization
 
 
 
+
+## Macro calls
+
+Test the default behaviour:
+
+Inactive: `+` => +foo
+Inactive: `=` => =foo
+Inactive: `\` => \foo
+Active  : `!` => foo has been called
+
 Set new macro chars: `+=` 
 
 Active  : `+` => foo has been called
@@ -564,12 +574,40 @@ Active  : `=` => foo has been called
 Inactive: `\` => \foo
 Inactive: `!` => !foo
 
-Restore the default behaviour: `!\` 
+Restore the default behaviour: `!` 
 
 Inactive: `+` => +foo
 Inactive: `=` => =foo
-Active  : `\` => foo has been called
+Inactive: `\` => \foo
 Active  : `!` => foo has been called
+
+## Macro args
+
+Test the default behaviour:
+
+Active  : `()` => bar:arg1="42" - text after macro call:
+Active  : `{}` => bar:arg1="42" - text after macro call:
+Active  : `[]` => bar:arg1="42" - text after macro call:
+Inactive: `<>` => bar:arg1="" - text after macro call:<42>
+Inactive: `«»` => bar:arg1="" - text after macro call:«42»
+
+Set new parameter separators: `<>«»` 
+
+Inactive: `()` => bar:arg1="" - text after macro call:(42)
+Inactive: `{}` => bar:arg1="" - text after macro call:{42}
+Inactive: `[]` => bar:arg1="" - text after macro call:[42]
+Active  : `<>` => bar:arg1="42" - text after macro call:
+Active  : `«»` => bar:arg1="42" - text after macro call:
+
+Restore the default behaviour: `(){}[]` 
+
+Active  : `()` => bar:arg1="42" - text after macro call:
+Active  : `{}` => bar:arg1="42" - text after macro call:
+Active  : `[]` => bar:arg1="42" - text after macro call:
+Inactive: `<>` => bar:arg1="" - text after macro call:<42>
+Inactive: `«»` => bar:arg1="" - text after macro call:«42»
+
+## Literate macros
 
 Set new literate macro chars: `$` 
 

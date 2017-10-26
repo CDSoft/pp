@@ -126,11 +126,14 @@ preprocessed `FILE` but discards its output. It only keeps macro definitions and
 **`-M TARGET`** or **`-M=TARGET`**  
 tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by `pp`. This option only lists files that are imported, included and used with `mdate` and `csv`macros.
 
-**`-macrochars "chars"`** or **`-macrochars "chars"`**  
+**`-macrochars "chars"`** or **`-macrochars="chars"`**  
 defines the possible characters used to call macros.
 
-**`-literatemacrochars "chars"`** or **`-literatemacrochars "chars"`**  
+**`-literatemacrochars "chars"`** or **`-literatemacrochars="chars"`**  
 defines the possible characters used to identify literate programming macros.
+
+**`-macroargs "chars"`** or **`-macroargs="chars"`**  
+defines the possible character pairs used to separate macro args.
 
 Other arguments are filenames.
 
@@ -322,6 +325,9 @@ converts a CSV file to a Markdown or reStructuredText table. `HEADER` defines th
 
 **`!macrochars(CHARS)`**  
 defines the chars used to call a macro. The default value is `"!"`. Any non space character can start a macro call (e.g. after `!macrochars(!\)` both `!foo` and `\foo` are valid macro calls.
+
+**`!macroargs(CHARS)`**  
+defines the chars used to separate macro arguments. The default value is `"(){}[]"`. (e.g. after `!macroargs(()«»)` both `!foo(...)` and `!foo«...»` are valid macro calls.
 
 **`!literatemacrochars(CHARS)`**  
 defines the chars used to identify literate programming macros. The default value is `"@"`. Any non space character can start a literate programming macro (e.g. after `!literatemacrochars(@&)` both `@foo` and `&foo` are valid macro calls.

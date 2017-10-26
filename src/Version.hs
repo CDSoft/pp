@@ -70,6 +70,7 @@ help = unlines [
         "  -img=<prefix>        Define the prefix to add to output image path",
         "  -M=<target>          Generate make-like dependency list",
         "  -macrochars=<chars>  Define chars used to call macros",
+        "  -macroargs=<chars>   Define chars used to separate macro args",
         "  -literatemacrochars=<chars>  Define chars used to identify",
         "                               literate programming macros",
         "Files:",

@@ -28,7 +28,9 @@ module ErrorMessages ( unexpectedEndOfFile
                      , codeblockError
                      , indentError
                      , macrocharsError
+                     , macroargsError
                      , literatemacrocharsError
+                     , defaultParserConfigurationError
                      )
 where
 
@@ -39,16 +41,16 @@ import Environment
 
 -- raise an end of file error
 unexpectedEndOfFile :: Env -> FilePath -> t
-unexpectedEndOfFile env name = error $ "Unexpected end of file in " ++ fromMaybe "-" (currentFile env) ++
-                                       "\nAn argument of the macro \"" ++ name ++ "\" may not be correctly delimited."
+unexpectedEndOfFile env name = errorWithoutStackTrace $ "Unexpected end of file in " ++ fromMaybe "-" (currentFile env) ++
+                                                        "\nAn argument of the macro \"" ++ name ++ "\" may not be correctly delimited."
 
 -- raise a file not found error
 fileNotFound :: FilePath -> t
-fileNotFound name = error $ "File not found: " ++ name
+fileNotFound name = errorWithoutStackTrace $ "File not found: " ++ name
 
 -- raise an arity error
 arityError :: String -> [Int] -> t
-arityError name arities = error $ "Arity error: " ++ name ++ " expects " ++ nb ++ " argument" ++ s
+arityError name arities = errorWithoutStackTrace $ "Arity error: " ++ name ++ " expects " ++ nb ++ " argument" ++ s
     where
         (nb, s) = case sort arities of
                     [] -> ("no", "")
@@ -60,24 +62,32 @@ arityError name arities = error $ "Arity error: " ++ name ++ " expects " ++ nb +
 
 -- raise a wrong codeblock specification error
 codeblockError :: t
-codeblockError = error "codeblock expects a length higher than 3 and either a tilda or a backtick."
+codeblockError = errorWithoutStackTrace "codeblock expects a length higher than 3 and either a tilda or a backtick."
 
 -- raise a wrong indentation specification error
 indentError :: t
-indentError = error "indent expects a length higher than 3."
+indentError = errorWithoutStackTrace "indent expects a length higher than 3."
 
 -- raise an invalid name error
 invalidNameError :: String -> t
-invalidNameError name = error $ "\"" ++ name ++"\" is not a valid macro name."
+invalidNameError name = errorWithoutStackTrace $ "\"" ++ name ++"\" is not a valid macro name."
 
 -- raise an builtin redefinition error
 builtinRedefinition :: String -> t
-builtinRedefinition name = error $ "\"" ++ name ++"\" is a built-in macro and can not be redefined."
+builtinRedefinition name = errorWithoutStackTrace $ "\"" ++ name ++"\" is a built-in macro and can not be redefined."
 
 -- raise a parser consistency error
 macrocharsError :: String -> t
-macrocharsError chars = error $ "macrochars invalid parameter: \"" ++ chars ++ "\""
+macrocharsError chars = errorWithoutStackTrace $ "macrochars invalid parameter: \"" ++ chars ++ "\""
+
+-- raise a parser consistency error
+macroargsError :: String -> t
+macroargsError chars = errorWithoutStackTrace $ "macroargs invalid parameter: \"" ++ chars ++ "\""
 
 -- raise a parser consistency error
 literatemacrocharsError :: String -> t
-literatemacrocharsError chars = error $ "literatemacrochars invalid parameter: \"" ++ chars ++ "\""
+literatemacrocharsError chars = errorWithoutStackTrace $ "literatemacrochars invalid parameter: \"" ++ chars ++ "\""
+
+-- raise a parser consistency error
+defaultParserConfigurationError :: t
+defaultParserConfigurationError = errorWithoutStackTrace "Unexpected error: Invalid parser configuration"

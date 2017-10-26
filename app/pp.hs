@@ -20,12 +20,14 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
+import Control.Monad
 import Data.List
 import Data.Maybe
 import System.Environment
 import System.Exit
 import System.IO
 
+import ErrorMessages
 import Environment
 import Formats
 import Localization
@@ -42,6 +44,7 @@ main = do
     setUTF8Encoding stdout
     -- parse the arguments and produce the preprocessed output
     env <- initialEnvironment (head langs) (head dialects)
+    unless (checkParserConsistency env) defaultParserConfigurationError
     (env', doc) <- getArgs >>= doArgs env
     case makeTarget env' of
         Just target ->
@@ -171,6 +174,18 @@ doArg env "-literatemacrochars" (chars:args) = do
 -- chars is a set of chars
 doArg env ('-':'l':'i':'t':'e':'r':'a':'t':'e':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
     (env', _) <- literatemacrochars env [Val chars]
+    return (env', "", args)
+
+-- "doArg" env "-macroargs" chars defines the chars used to separate macro arguments
+-- chars is a set of chars
+doArg env "-macroargs" (chars:args) = do
+    (env', _) <- macroargs env [Val chars]
+    return (env', "", args)
+
+-- "doArg" env "-macroargs=chars" defines the chars used to separate macro arguments
+-- chars is a set of chars
+doArg env ('-':'m':'a':'c':'r':'o':'a':'r':'g':'s':'=':chars) args = do
+    (env', _) <- macroargs env [Val chars]
     return (env', "", args)
 
 -- Other arguments starting with "-" are invalid.

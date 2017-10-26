@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Sunday 22 October 2017</p>
+<p class="date">Thursday 26 October 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -162,11 +162,14 @@
 <dt><strong><code>-M TARGET</code></strong> or <strong><code>-M=TARGET</code></strong></dt>
 <dd>tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by <code>pp</code>. This option only lists files that are imported, included and used with <code>mdate</code> and <code>csv</code>macros.
 </dd>
-<dt><strong><code>-macrochars &quot;chars&quot;</code></strong> or <strong><code>-macrochars &quot;chars&quot;</code></strong></dt>
+<dt><strong><code>-macrochars &quot;chars&quot;</code></strong> or <strong><code>-macrochars=&quot;chars&quot;</code></strong></dt>
 <dd>defines the possible characters used to call macros.
 </dd>
-<dt><strong><code>-literatemacrochars &quot;chars&quot;</code></strong> or <strong><code>-literatemacrochars &quot;chars&quot;</code></strong></dt>
+<dt><strong><code>-literatemacrochars &quot;chars&quot;</code></strong> or <strong><code>-literatemacrochars=&quot;chars&quot;</code></strong></dt>
 <dd>defines the possible characters used to identify literate programming macros.
+</dd>
+<dt><strong><code>-macroargs &quot;chars&quot;</code></strong> or <strong><code>-macroargs=&quot;chars&quot;</code></strong></dt>
+<dd>defines the possible character pairs used to separate macro args.
 </dd>
 </dl>
 <p>Other arguments are filenames.</p>
@@ -344,6 +347,9 @@ And also finally &quot;Goodbye&quot;:
 </dd>
 <dt><strong><code>!macrochars(CHARS)</code></strong></dt>
 <dd>defines the chars used to call a macro. The default value is <code>&quot;!&quot;</code>. Any non space character can start a macro call (e.g. after <code>!macrochars(!\)</code> both <code>!foo</code> and <code>\foo</code> are valid macro calls.
+</dd>
+<dt><strong><code>!macroargs(CHARS)</code></strong></dt>
+<dd>defines the chars used to separate macro arguments. The default value is <code>&quot;(){}[]&quot;</code>. (e.g. after <code>!macroargs(()«»)</code> both <code>!foo(...)</code> and <code>!foo«...»</code> are valid macro calls.
 </dd>
 <dt><strong><code>!literatemacrochars(CHARS)</code></strong></dt>
 <dd>defines the chars used to identify literate programming macros. The default value is <code>&quot;@&quot;</code>. Any non space character can start a literate programming macro (e.g. after <code>!literatemacrochars(@&amp;)</code> both <code>@foo</code> and <code>&amp;foo</code> are valid macro calls.

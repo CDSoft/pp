@@ -480,6 +480,16 @@ Parser customization
 ====================
 
 !def(foo)(foo has been called)
+!def(bar)(bar:arg1="!1" - text after macro call:)
+
+## Macro calls
+
+Test the default behaviour:
+
+Inactive: `+` => +foo
+Inactive: `=` => =foo
+Inactive: `\` => \foo
+Active  : `!` => !foo
 
 Set new macro chars: `+=` !macrochars(+=)
 
@@ -488,12 +498,40 @@ Active  : `=` => =foo
 Inactive: `\` => \foo
 Inactive: `!` => !foo
 
-Restore the default behaviour: `!\` +macrochars(!\)
+Restore the default behaviour: `!` +macrochars(!)
 
 Inactive: `+` => +foo
 Inactive: `=` => =foo
-Active  : `\` => \foo
+Inactive: `\` => \foo
 Active  : `!` => !foo
+
+## Macro args
+
+Test the default behaviour:
+
+Active  : `()` => !bar(42)
+Active  : `{}` => !bar{42}
+Active  : `[]` => !bar[42]
+Inactive: `<>` => !bar<42>
+Inactive: `«»` => !bar«42»
+
+Set new parameter separators: `<>«»` !macroargs( <> «» αζ)
+
+Inactive: `()` => !bar(42)
+Inactive: `{}` => !bar{42}
+Inactive: `[]` => !bar[42]
+Active  : `<>` => !bar<42>
+Active  : `«»` => !bar«42»
+
+Restore the default behaviour: `(){}[]` !macroargs«(){}[]»
+
+Active  : `()` => !bar(42)
+Active  : `{}` => !bar{42}
+Active  : `[]` => !bar[42]
+Inactive: `<>` => !bar<42>
+Inactive: `«»` => !bar«42»
+
+## Literate macros
 
 Set new literate macro chars: `$` !literatemacrochars($)
 

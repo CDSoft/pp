@@ -31,5 +31,8 @@ main = hspec $
 
     describe "Preprocessor" $
         it "defines disjoint character sets" $ do
-            let sets = concat [ defaultMacroChars, defaultBlockChars, defaultLiterateMacroChars ]
+            let sets = defaultMacroChars
+                       ++ concat [ [o,c] | (o,c) <- defaultOpenCloseChars ]
+                       ++ defaultBlockChars
+                       ++ defaultLiterateMacroChars
             nub sets `shouldBe` sets
