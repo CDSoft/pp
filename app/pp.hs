@@ -87,6 +87,9 @@ doArg _ "-v" _ = putStrLn Version.copyright >> exitSuccess
 -- "doArg" env "-h" shows a short help message
 doArg _ "-h" _ = putStrLn Version.help >> exitSuccess
 
+-- "doArg" env "-help" show a longer help message
+doArg env "-help" _ = putStrLn (longHelp env) >> exitSuccess
+
 -- "doArg env "-D name=value"" adds a new definition to the environment.
 doArg env "-D" (def:args) = return (env{vars=(Def name, Val (drop 1 value)) : clean (Def name) (vars env)}, "", args)
     where (name, value) = span (/= '=') def
@@ -155,37 +158,37 @@ doArg env ('-':'M':'=':target) args =
 -- "doArg" env "-macrochars" chars defines the chars used to call macros
 -- chars is a set of chars
 doArg env "-macrochars" (chars:args) = do
-    (env', _) <- macrochars env [Val chars]
+    (env', _) <- call macrochars env [Val chars]
     return (env', "", args)
 
 -- "doArg" env "-macrochars=chars" defines the chars used to call macros
 -- chars is a set of chars
 doArg env ('-':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
-    (env', _) <- macrochars env [Val chars]
+    (env', _) <- call macrochars env [Val chars]
     return (env', "", args)
 
 -- "doArg" env "-literatemacrochars" chars defines the chars used to identify literate macros
 -- chars is a set of chars
 doArg env "-literatemacrochars" (chars:args) = do
-    (env', _) <- literatemacrochars env [Val chars]
+    (env', _) <- call literatemacrochars env [Val chars]
     return (env', "", args)
 
 -- "doArg" env "-literatemacrochars=chars" defines the chars used to idenfity literate macros
 -- chars is a set of chars
 doArg env ('-':'l':'i':'t':'e':'r':'a':'t':'e':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
-    (env', _) <- literatemacrochars env [Val chars]
+    (env', _) <- call literatemacrochars env [Val chars]
     return (env', "", args)
 
 -- "doArg" env "-macroargs" chars defines the chars used to separate macro arguments
 -- chars is a set of chars
 doArg env "-macroargs" (chars:args) = do
-    (env', _) <- macroargs env [Val chars]
+    (env', _) <- call macroargs env [Val chars]
     return (env', "", args)
 
 -- "doArg" env "-macroargs=chars" defines the chars used to separate macro arguments
 -- chars is a set of chars
 doArg env ('-':'m':'a':'c':'r':'o':'a':'r':'g':'s':'=':chars) args = do
-    (env', _) <- macroargs env [Val chars]
+    (env', _) <- call macroargs env [Val chars]
     return (env', "", args)
 
 -- Other arguments starting with "-" are invalid.

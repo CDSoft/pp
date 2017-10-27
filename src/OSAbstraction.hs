@@ -25,9 +25,7 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 module OSAbstraction ( osname
                      , osarch
                      , cmdexe
-#if mingw32_HOST_OS
                      , powershellexe
-#endif
                      , envVarStorage
                      )
 where
@@ -60,12 +58,9 @@ cmdexe = "wine cmd /c"
 cmdexe = "cmd /c"
 #endif
 
-#if mingw32_HOST_OS
 -- powershell command interpretor for Windows .ps1 scripts
 powershellexe :: String
-powershellexe =
-    "powershell -File"
-#endif
+powershellexe = "powershell -File"
 
 -- environment variable storage (should be case-insensitive on Windows)
 -- Thanks to tajmone (https://github.com/tajmone) for pointing out this difference.

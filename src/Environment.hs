@@ -23,9 +23,13 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 module Environment ( Env(..)
                    , Var(..)
                    , Val(..)
+                   , Macro(..)
+                   , varname
                    , fromVal
                    , getSymbol
                    , clean
+                   , lookupMacro
+                   , call
                    , initialEnvironment
                    , addDep
                    , addDeps
@@ -75,6 +79,7 @@ type Chars = String
 
 -- pp environment (macros, parameters, ...)
 data Env = Env { vars :: [(Var, Val)]               -- lookup table of global variables and user macros
+               , docstrings :: [(Var, String)]      -- docstrings of user macros
                , arguments :: [(String, Val)]       -- local arguments of a user defined macro
                , currentLang :: Lang                -- current language
                , fileFormat :: Maybe Format         -- current file format
@@ -94,6 +99,10 @@ data Env = Env { vars :: [(Var, Val)]               -- lookup table of global va
                , literateMacroChars :: Chars        -- literate programming macro delimiters
                }
 
+varname :: Var -> String
+varname (Def name) = name
+varname (EnvVar name) = name
+
 fromVal :: Val -> String
 fromVal (Val s) = s
 fromVal (Block s) = s
@@ -105,6 +114,25 @@ clean var = filter ((/=var) . fst)
 -- Get a variable in the environment
 getSymbol :: Env -> Var -> Val
 getSymbol Env{vars=vs} var = fromMaybe (Val "") (lookup var vs)
+
+-- A macro takes an environment and arguments
+-- and returns a new environment and the result of the macro as a string.
+-- It also as some additional metadata (docstring)
+type MacroFunc = Env -> [Val] -> IO (Env, String)
+data Macro = Macro String [String]  -- name and aliases
+                   String           -- docstring
+                   MacroFunc        -- implementation
+
+-- Lookup a macro in a macro list
+lookupMacro :: String -> [Macro] -> Maybe Macro
+lookupMacro name (macro@(Macro name' aliases' _ _) : macros)
+    | name `elem` (name':aliases') = Just macro
+    | otherwise = lookupMacro name macros
+lookupMacro _ [] = Nothing
+
+-- Call a macro
+call :: Macro -> Env -> [Val] -> IO (Env, String)
+call macro = let Macro _ _ _ macroImpl = macro in macroImpl
 
 -- Build the initial environment
 initialEnvironment :: Lang -> Dialect -> IO Env
@@ -118,6 +146,7 @@ initialEnvironment defaultLang defaultDialect = do
     let dial = fromMaybe defaultDialect $ readCapMaybe $ lookup "DIALECT" envVars
     -- the initial environment contains the language, the format and the environment variables
     return Env { vars = [(EnvVar (envVarStorage name), Val val) | (name, val) <- envVars]
+               , docstrings = []
                , arguments = []
                , currentLang = lang
                , fileFormat = fmt

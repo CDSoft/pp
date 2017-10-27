@@ -58,6 +58,7 @@ help = unlines [
         "Options:",
         "  -v                   Display the current version",
         "  -h                   Display this help message",
+        "  -help                Display a longer help",
         "  -import=<file>       Import definitions from a file",
         "  -D<name>[=<value>]   Define a variable",
         "  -U<name>             Undefine a variable",

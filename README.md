@@ -167,113 +167,229 @@ You can choose the syntax that works better with your favorite editor and syntax
 
 For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The `include` macro is an exception: its output is also preprocessed. The `rawinclude` macro can include a file without preprocessing it.
 
-**`!def[ine](SYMBOL)[(VALUE)]`**  
-Add the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`.
+**`define`**, **`def`**  
+`!def[ine](SYMBOL)[(VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`.
 
-**`!undef[ine](SYMBOL)`**  
-Remove the symbol `SYMBOL` from the current environment.
+**`undefine`**, **`undef`**  
+`!undef[ine](SYMBOL)` removes the symbol `SYMBOL` from the current environment.
 
-**`!ifdef(SYMBOL)(TEXT_IF_DEFINED)[(TEXT_IF_NOT_DEFINED)]`**  
-if `SYMBOL` is defined in the current environnement `pp` preprocesses `TEXT_IF_DEFINED`. Otherwise it preprocesses `TEXT_IF_NOT_DEFINED`.
+**`rawdef`**  
+`!rawdef(X)` returns the raw (unevaluated) definition of `X`.
 
-**`!ifndef(SYMBOL)(TEXT_IF_NOT_DEFINED)[(TEXT_IF_DEFINED)]`**  
-if `SYMBOL` is not defined in the current environnement `pp` preprocesses `TEXT_IF_NOT_DEFINED`. Otherwise it preprocesses `TEXT_IF_DEFINED`.
+**`ifdef`**  
+`!ifdef(SYMBOL)(TEXT_IF_DEFINED)[(TEXT_IF_NOT_DEFINED)]` returns `TEXT_IF_DEFINED` if `SYMBOL` is defined or `TEXT_IF_NOT_DEFINED` if it is not defined.
 
-**`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]`**  
-if `X` and `Y` are equal `pp` preprocesses `TEXT_IF_EQUAL`. Otherwise it preprocesses `TEXT_IF_DIFFERENT`. Two pieces of text are equal if all characters are the same, spaces are ignored.
+**`ifndef`**  
+`!ifndef(SYMBOL)(TEXT_IF_NOT_DEFINED)[(TEXT_IF_DEFINED)]` returns `TEXT_IF_NOT_DEFINED` if `SYMBOL` is not defined or `TEXT_IF_DEFINED` if it is defined.
 
-**`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]`**  
-if `X` and `Y` are different `pp` preprocesses `TEXT_IF_DIFFERENT`. Otherwise it preprocesses `TEXT_IF_EQUAL`.
+**`ifeq`**  
+`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]` returns `TEXT_IF_EQUAL` if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y`are different. Two pieces of text are equal if all non-space characters are the same.
 
-**`!rawdef(X)`**  
-get the raw (unevaluated) definition of `X`
+**`ifne`**  
+`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT` if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y`are equal.
 
-**`!inc[lude](FILENAME)`**  
-`pp` preprocesses the content of the file named `FILENAME` and includes it in the current document, using the current environment. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
+**`import`**  
+`!import(FILENAME)` works as `!include(FILENAME)` but returns nothing. This is useful to import macro definitions.
 
-**`!import(FILENAME)`**  
-works as `!include(FILENAME)` but no text is emitted. This is useful to import macro definitions.
+**`include`**, **`inc`**  
+`!inc[lude](FILENAME)` preprocesses and returns the content of the file named `FILENAME` and includes it in the current document. If the file path is relative it is searched first in the directory of the current file then in the directory of the main file.
 
-**`!raw(TEXT)`**  
-`pp` emits `TEXT` without any preprocessing.
+**`raw`**  
+`!raw(TEXT)` returns `TEXT` without any preprocessing.
 
-**`!rawinc[lude](FILE)`**  
-`pp` emits the content of `FILE` without any preprocessing.
+**`rawinclude`**, **`rawinc`**  
+`!rawinc[lude](FILE)` returns the content of `FILE` without any preprocessing.
 
-**`!pp(TEXT)`**  
-`pp` forces the evaluation of `TEXT`. This macro is useful to preprocess the output of script macros for instance (`sh`, `python`, ...).
+**`comment`**  
+`!comment(TEXT)` considers `TEXT` as well as any additional parameters as comment. Nothing is preprocessed or returned.
 
-**`!comment(TEXT)`** or **`!comment(TITLE)(TEXT)`**  
-considers `TEXT` as comment. Nothing is preprocessed or emitted. `TITLE` is also ignored.
+**`quiet`**  
+`!quiet(TEXT)` quietly preprocesses `TEXT` and returns nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 
-Example:
+**`pp`**  
+`!pp(TEXT)` preprocesses and return `TEXT`. This macro is useful to preprocess the output of script macros for instance (`!sh`, `!python`, ...).
 
-    !comment(This is the title of the comment)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    And this is a useful description of some
-    macro definitions.
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**`mdate`**  
+`!mdate(FILES)` returns the modification date of the most recent file.
 
-**`!quiet(TEXT)`**  
-quietly preprocess `TEXT` and emits nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
+**`main`**  
+`!main` returns the name of the main file (given on the command line).
 
-**`!exec(COMMAND)`**  
-executes a shell command with the default shell (`sh` or `cmd` according to the OS).
+**`file`**  
+`!file` returns the name of the current file.
 
-**`!rawexec(COMMAND)`** (*deprecated*)  
-as `!exec(COMMAND)`. This macro is deprecated. Consider using `exec` instead.
+**`lang`**  
+`!lang` returns the current language.
 
-**`!mdate(FILES)`**  
-returns the modification date of the most recent file.
+**`langs`**  
+`!langs` lists the known languages (en, fr, it, es).
 
-**`!env(VARNAME)`**  
-`pp` preprocesses and emits the value of the process environment variable `VARNAME`.
+**`en`**  
+!`en(TEXT)` returns `TEXT` if the current language is `en`.
 
-**`!os`**  
-returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS, `windows` on Windows)
+**`fr`**  
+!`fr(TEXT)` returns `TEXT` if the current language is `fr`.
 
-**`!arch`**  
-returns the machine architecture (e.g. `x86_64`, `i386`, ...)
+**`it`**  
+!`it(TEXT)` returns `TEXT` if the current language is `it`.
 
-**`!add(VARNAME)[(INCREMENT)]`**  
-computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
+**`es`**  
+!`es(TEXT)` returns `TEXT` if the current language is `es`.
 
-**`!lang`**  
-emits the current language (*en*, *es*, *fr*, *it*)
+**`format`**  
+`!format` returns the current output format.
 
-**`!format`**  
-emits the current format (*epub*, *html*, *mobi*, *odf*, *pdf*)
+**`formats`**  
+`!formats` lists the known formats (html, pdf, odf, epub, mobi).
 
-**`!dialect`**  
-emits the current dialect (*md*, *rst*)
+**`html`**  
+!`html(TEXT)` returns `TEXT` if the current format is `html`.
 
-**`!en(...)`**, **`!es(...)`**, **`!fr(...)`**, **`!it(...)`**  
-emits some text only if the current language is *en*, *es*, *fr*, *it*
+**`pdf`**  
+!`pdf(TEXT)` returns `TEXT` if the current format is `pdf`.
 
-**`!epub(...)`**, **`!html(...)`**, **`!mobi(...)`**, **`!odf(...)`**, **`!pdf(...)`**  
-emits some text only if the current format is *epub*, *html*, *mobi*, *odf*, *pdf*
+**`odf`**  
+!`odf(TEXT)` returns `TEXT` if the current format is `odf`.
 
-**`!md(...)`**, **`!rst(...)`**  
-emits some text only if the current dialect is *md*, *rst*
+**`epub`**  
+!`epub(TEXT)` returns `TEXT` if the current format is `epub`.
 
-**`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)`**  
-renders a diagram with [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [Ditaa](http://ditaa.sourceforge.net/). See examples later. The name of the macro is the kind of diagram. The possible diagrams are: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`, `osage`, `uml` and `ditaa`.
+**`mobi`**  
+!`mobi(TEXT)` returns `TEXT` if the current format is `mobi`.
 
-**`!sh(SCRIPT)`**, **`!bash(SCRIPT)`**, **`!python[2|3](SCRIPT)`**, **`!haskell(SCRIPT)`**, **`!stack(SCRIPT)`**, **`!cmd(SCRIPT)`**, **`!powershell(SCRIPT)`**  
-executes a script and emits its output. The possible programming languages are `sh`, `bash`, `python`, `haskell`, `cmd` and `powershell`. Python can be executed with `python`, `python2` or `python3` to use the default interpretor, the version 2 or 3. `stack` runs the Haskell interpretor with [Stack](https://docs.haskellstack.org/en/stable/README/).
+**`dialect`**  
+`!dialect` returns the current output dialect.
 
-**`!bat(SCRIPT)`** (*deprecated*)  
-same as `!cmd`.
+**`dialects`**  
+`!dialects` lists the kown output dialects (md, rst).
 
-**`!lit[erate](FILENAME)(LANG)(CONTENT)`**  
-appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features.
+**`md`**  
+!`md(TEXT)` returns `TEXT` if the current dialect is `md`.
 
-**`!lit[erate](FILENAME)(CONTENT)`**  
-appends `CONTENT` to the file `FILENAME`. The output is highlighted using the previously given language for this file.
+**`rst`**  
+!`rst(TEXT)` returns `TEXT` if the current dialect is `rst`.
 
-Example:
+**`env`**  
+`!env(VARNAME)` preprocesses and returns the value of the process environment variable `VARNAME`.
 
-    The main program just prints some messages:
+**`os`**  
+`!os` returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS, `windows` on Windows).
+
+**`arch`**  
+`!arch` returns the machine architecture (e.g. `x86_64`, `i386`, ...).
+
+**`add`**  
+`!add(VARNAME)[(INCREMENT)]` computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
+
+**`exec`**  
+`!exec(COMMAND)` executes a shell command with the default shell (`sh` or `cmd` according to the OS).
+
+**`rawexec`**  
+(*deprecated*) See exec
+
+**`sh`**  
+`!sh(CMD)` executes `CMD` in a `sh` shell
+
+**`bash`**  
+`!bash(CMD)` executes `CMD` in a `bash` shell
+
+**`cmd`**  
+`!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe)
+
+**`bat`**  
+(*deprecated*) See cmd
+
+**`python`**  
+`!python(CMD)` executes `CMD` with the default Python interpretor
+
+**`python2`**  
+`!python2(CMD)` executes `CMD` with Python 2
+
+**`python3`**  
+`!python3(CMD)` executes `CMD` with Python 3
+
+**`haskell`**  
+`!python3(CMD)` executes `CMD` as a Haskell script with `runhaskell`
+
+**`stack`**  
+`!python3(CMD)` executes `CMD` as a Haskell script with `stack`
+
+**`powershell`**  
+`!cmd(CMD)` executes `CMD` in a Windows shell (Powershell)
+
+**`dot`**  
+`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot diagram with Graphviz.
+
+**`neato`**  
+`!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato diagram with Graphviz.
+
+**`twopi`**  
+`!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi diagram with Graphviz.
+
+**`circo`**  
+`!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo diagram with Graphviz.
+
+**`fdp`**  
+`!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp diagram with Graphviz.
+
+**`sfdp`**  
+`!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp diagram with Graphviz.
+
+**`patchwork`**  
+`!patchwork(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a patchwork diagram with Graphviz.
+
+**`osage`**  
+`!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage diagram with Graphviz.
+
+**`uml`**  
+`!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml diagram with PlantUML.
+
+**`ditaa`**  
+`!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa diagram with PlantUML.
+
+**`literate`**, **`lit`**  
+`!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features. If `LANG` is not given, pp uses the previously defined language for the same file or macro or a default language according to its name. If `CONTENT`is not given, pp returns the current content of `FILENAME`.
+
+**`flushliterate`**, **`flushlit`**  
+`!flushlit[erate]` writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with `!src`.
+
+**`source`**, **`src`**  
+`!source(FILENAME)[(LANG)]` or `!src(FILENAME)[(LANG)]` formats an existing source file in a colorized code block.
+
+**`codeblock`**  
+`!codeblock(LENGTH)[(CHAR)]` sets the default line separator for code blocks. The default value is a 70 tilda row (`!codeclock(70)(~)`).
+
+**`indent`**  
+`!indent[(N)](BLOCK)` indents each line of a block with `N` spaces. The default value of `N` is 4 spaces.
+
+**`csv`**  
+`!csv(FILENAME)[(HEADER)]` converts a CSV file to a Markdown or reStructuredText table. `HEADER` defines the header of the table, fields are separated by pipes (`|`). If `HEADER` is not defined, the first line of the file is used as the header of the table.
+
+**`macrochars`**  
+`!macrochars(CHARS)` defines the chars used to call a macro. The default value is `"!"`. Any non space character can start a macro call (e.g. after `!macrochars(!\)` both `!foo` and `\foo` are valid macro calls.
+
+**`macroargs`**  
+`!macroargs(CHARS)` defines the chars used to separate macro arguments. The default value is `"(){}[]"` (e.g. after `!macroargs(()«»)` both `!foo(...)` and `!foo«...»` are valid macro calls).
+
+**`literatemacrochars`**  
+`!literatemacrochars(CHARS)` defines the chars used to identify literate programming macros. The default value is `"@"`. Any non space character can start a literate programming macro (e.g. after `!literatemacrochars(@&)` both `@foo` and `&foo` are valid macro calls.
+
+**`macros`**  
+`!macros` lists the builtin macros.
+
+**`usermacros`**  
+`!usermacros` lists the user macros.
+
+**`help`**  
+`!help` prints built-in macro help.
+
+**`userhelp`**  
+`!userhelp` prints user macro help.
+
+Literate programming example
+============================
+
+The main program just prints some messages:
 
     !lit(main.c)(C)
     ~~~~~~~~~~~~~~~~~~~~
@@ -284,53 +400,26 @@ Example:
     }
     ~~~~~~~~~~~~~~~~~~~~
 
-    First we need to be able to print messages:
+First we need to be able to print messages:
 
     !lit(@includes)(C)
     ~~~~~~~~~~~~~~~~~~~~
     #include <stdio.h>
     ~~~~~~~~~~~~~~~~~~~~
 
-    The program must first say "Hello" :
+The program must first say "Hello" :
 
     !lit(@messages)(C)
     ~~~~~~~~~~~~~~~~~~~~
         puts("Hello...\n");
     ~~~~~~~~~~~~~~~~~~~~
 
-    And also finally "Goodbye":
+And also finally "Goodbye":
 
     !lit(@messages)
     ~~~~~~~~~~~~~~~~~~~~
         puts("Goodbye.");
     ~~~~~~~~~~~~~~~~~~~~
-
-**`!lit[erate]`**  
-emits the current content of `FILENAME`.
-
-**`!flushlit[erate]`**  
-writes files built with `!lit` before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with `!src`.
-
-**`!src(FILENAME)[(LANG)]`**, **`!source(FILENAME)[(LANG)]`**  
-formats an existing source file in a colorized code block.
-
-**`!codeblock(LENGTH)[(CHAR)]`**  
-sets the default line separator for code blocks. The default value is a 70 tilda row (`!codeclock(70)(~)`).
-
-**`!indent[(N)](BLOCK)`**  
-indents each line of a block with `n` spaces. The default value of `n` is 4 spaces.
-
-**`!csv(FILENAME)[(HEADER)]`**  
-converts a CSV file to a Markdown or reStructuredText table. `HEADER` defines the header of the table, fields are separated by pipes (`|`). If `HEADER` is not defined, the first line of the file is used as the header of the table.
-
-**`!macrochars(CHARS)`**  
-defines the chars used to call a macro. The default value is `"!"`. Any non space character can start a macro call (e.g. after `!macrochars(!\)` both `!foo` and `\foo` are valid macro calls.
-
-**`!macroargs(CHARS)`**  
-defines the chars used to separate macro arguments. The default value is `"(){}[]"`. (e.g. after `!macroargs(()«»)` both `!foo(...)` and `!foo«...»` are valid macro calls.
-
-**`!literatemacrochars(CHARS)`**  
-defines the chars used to identify literate programming macros. The default value is `"@"`. Any non space character can start a literate programming macro (e.g. after `!literatemacrochars(@&)` both `@foo` and `&foo` are valid macro calls.
 
 Diagram and script examples
 ===========================
@@ -546,7 +635,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.17)
+    Microsoft Windows 10.0.15063 (2.18)
     This script is run from wine under Linux
 
 ### Python

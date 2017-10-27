@@ -20,6 +20,8 @@ You should have received a copy of the GNU General Public License
 along with PP.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
+{-# LANGUAGE CPP #-}
+
 module ErrorMessages ( unexpectedEndOfFile
                      , arityError
                      , invalidNameError
@@ -31,10 +33,12 @@ module ErrorMessages ( unexpectedEndOfFile
                      , macroargsError
                      , literatemacrocharsError
                      , defaultParserConfigurationError
+#if linux_HOST_OS || darwin_HOST_OS
+                     , windowsOnlyError
+#endif
                      )
 where
 
-import Data.List
 import Data.Maybe
 
 import Environment
@@ -49,16 +53,8 @@ fileNotFound :: FilePath -> t
 fileNotFound name = errorWithoutStackTrace $ "File not found: " ++ name
 
 -- raise an arity error
-arityError :: String -> [Int] -> t
-arityError name arities = errorWithoutStackTrace $ "Arity error: " ++ name ++ " expects " ++ nb ++ " argument" ++ s
-    where
-        (nb, s) = case sort arities of
-                    [] -> ("no", "")
-                    [0] -> ("no", "")
-                    [1] -> ("1", "")
-                    [0, 1] -> ("0 or 1", "")
-                    [x] -> (show x, "s")
-                    xs -> (intercalate ", " (map show (init xs)) ++ " or " ++ show (last xs), "s")
+arityError :: String -> t
+arityError name = errorWithoutStackTrace $ name ++ " wrong number of arguments"
 
 -- raise a wrong codeblock specification error
 codeblockError :: t
@@ -91,3 +87,8 @@ literatemacrocharsError chars = errorWithoutStackTrace $ "literatemacrochars inv
 -- raise a parser consistency error
 defaultParserConfigurationError :: t
 defaultParserConfigurationError = errorWithoutStackTrace "Unexpected error: Invalid parser configuration"
+
+#if linux_HOST_OS || darwin_HOST_OS
+windowsOnlyError :: String -> t
+windowsOnlyError name = errorWithoutStackTrace $ name ++ " is available on Windows only"
+#endif
