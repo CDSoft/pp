@@ -24,7 +24,6 @@ module Environment ( Env(..)
                    , Var(..)
                    , Val(..)
                    , Macro(..)
-                   , varname
                    , fromVal
                    , getSymbol
                    , clean
@@ -98,10 +97,6 @@ data Env = Env { vars :: [(Var, Val)]               -- lookup table of global va
                , blockChars :: Chars                -- block delimiter chars
                , literateMacroChars :: Chars        -- literate programming macro delimiters
                }
-
-varname :: Var -> String
-varname (Def name) = name
-varname (EnvVar name) = name
 
 fromVal :: Val -> String
 fromVal (Val s) = s

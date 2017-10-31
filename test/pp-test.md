@@ -545,3 +545,25 @@ Result: !flushlit
 ```
 
 Restore the default behaviour: `@` !literatemacrochars(@)
+
+Builtin macro documentation
+===========================
+
+## macros
+
+!macros
+
+## help
+
+!help
+
+User macro documentation
+========================
+
+!def(foo)(foo's docstring)(great macro)
+!def(useless)(this macro is not documented)
+!def(bar)(bar's docstring)(another great macro)
+
+!usermacros
+
+!userhelp

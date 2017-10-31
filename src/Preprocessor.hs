@@ -1298,7 +1298,7 @@ usermacros = Macro "usermacros" []
     "`!usermacros` lists the user macros."
     (\env args -> case args of
         [] -> do
-            let macroList = reverse $ nub [ varname name | (name, _) <- vars env ]
+            let macroList = reverse $ nub [ name | (Def name, _) <- vars env ]
             return (env, unlines macroList)
         _ -> arityError "usermacros"
     )
@@ -1318,7 +1318,7 @@ userhelp = Macro "userhelp" []
     "`!userhelp` prints user macro help."
     (\env args -> case args of
         [] -> do
-            let docs = renderMarkdownHelp [([varname name], doc) | (name, doc) <- docstrings env]
+            let docs = renderMarkdownHelp [([name], doc) | (Def name, doc) <- docstrings env]
             return (env, docs)
         _ -> arityError "help"
     )
@@ -1344,7 +1344,7 @@ longHelp env = unlines $ copyright ++ commandline ++ builtinMacros ++ userMacros
             | otherwise =
                 [ "USER MACROS"
                 , ""
-                , indent' 4 $ renderPlainHelp [([varname name], doc) | (name, doc) <- docstrings env]
+                , indent' 4 $ renderPlainHelp [([name], doc) | (Def name, doc) <- docstrings env]
                 ]
 
 renderMarkdownHelp :: [([String], String)] -> String
@@ -1363,7 +1363,7 @@ renderPlainHelp docs =
         renderNames :: [String] -> String
         renderNames = intercalate ", "
         renderDoc :: String -> String
-        renderDoc = indent' 4 . unlines . wrap 60 . filter (/='`')
+        renderDoc = indent' 4 . filter (/='`') . unlines . wrap 60
 
 wrap :: Int -> String -> [String]
 wrap width s = reverse $ map (reverse . strip) $ go s [] []
