@@ -29,10 +29,14 @@ import Data.List
 main :: IO ()
 main = hspec $
 
-    describe "Preprocessor" $
+    describe "Preprocessor" $ do
         it "defines disjoint character sets" $ do
             let sets = defaultMacroChars
                        ++ concat [ [o,c] | (o,c) <- defaultOpenCloseChars ]
                        ++ defaultBlockChars
                        ++ defaultLiterateMacroChars
             nub sets `shouldBe` sets
+        it "defines at least one macro call char" $ defaultMacroChars `shouldNotBe` []
+        it "defines at least one kind of parentheses" $ defaultOpenCloseChars `shouldNotBe` []
+        it "defines at least one kind of block delimiter" $ defaultBlockChars `shouldNotBe` []
+        it "defines at least one literate macro char" $ defaultLiterateMacroChars `shouldNotBe` []

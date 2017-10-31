@@ -135,11 +135,14 @@ If no input file is specified, `pp` preprocesses the standard input.
 The command line arguments are intentionally very basic.
 The user can define and undefine variables and list input files.
 
+**`-v`**
+:   displays the current version and exits.
+
 **`-h`**
 :   displays some help and exits.
 
-**`-v`**
-:   displays the current version and exits.
+**`-help`**
+:   displays a longer help and exits.
 
 **`-DSYMBOL[=VALUE]`** or **`-D SYMBOL[=VALUE]`**
 :   adds the symbol `SYMBOL` to the current environment and associates it to
@@ -148,24 +151,6 @@ The user can define and undefine variables and list input files.
 
 **`-USYMBOL`** or **`-U SYMBOL`**
 :   removes the symbol `SYMBOL` from the current environment.
-
-**`-languages`**
-:   lists the languages.
-
-§sh[echo §langs | sed 's/\(\w\{1,\}\)/**`-§raw(\1)`**/g' | tr ' ' '|']
-:   changes the current language.
-
-**`-formats`**
-:   lists the formats.
-
-§sh[echo §formats | sed 's/\(\w\{1,\}\)/**`-§raw(\1)`**/g' | tr ' ' '|']
-:   changes the current output file format.
-
-**`-dialects`**
-:   lists the dialects.
-
-§sh[echo §dialects | sed 's/\(\w\{1,\}\)/**`-§raw(\1)`**/g' | tr ' ' '|']
-:   changes the current dialect (`-md` is the default dialect).
 
 **`-img=PREFIX`** or **`-img PREFIX`**
 :   changes the prefix of the images output path.
@@ -180,14 +165,9 @@ The user can define and undefine variables and list input files.
     This option only lists files that are imported, included and
     used with `mdate` and `csv`macros.
 
-**`-macrochars "chars"`** or **`-macrochars="chars"`**
-:   defines the possible characters used to call macros.
-
-**`-literatemacrochars "chars"`** or **`-literatemacrochars="chars"`**
-:   defines the possible characters used to identify literate programming macros.
-
-**`-macroargs "chars"`** or **`-macroargs="chars"`**
-:   defines the possible character pairs used to separate macro args.
+**`-<macro>[=<arg>]`**
+:   calls a builtin macro with an optional argument
+    (see `pp -help` for the full macro list).
 
 Other arguments are filenames.
 

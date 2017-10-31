@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Monday 30 October 2017</p>
+<p class="date">Tuesday 31 October 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -124,35 +124,20 @@
 <p>If no input file is specified, <code>pp</code> preprocesses the standard input.</p>
 <p>The command line arguments are intentionally very basic. The user can define and undefine variables and list input files.</p>
 <dl>
+<dt><strong><code>-v</code></strong></dt>
+<dd>displays the current version and exits.
+</dd>
 <dt><strong><code>-h</code></strong></dt>
 <dd>displays some help and exits.
 </dd>
-<dt><strong><code>-v</code></strong></dt>
-<dd>displays the current version and exits.
+<dt><strong><code>-help</code></strong></dt>
+<dd>displays a longer help and exits.
 </dd>
 <dt><strong><code>-DSYMBOL[=VALUE]</code></strong> or <strong><code>-D SYMBOL[=VALUE]</code></strong></dt>
 <dd>adds the symbol <code>SYMBOL</code> to the current environment and associates it to the optional value <code>VALUE</code>. If no value is provided, the symbol is simply defined with an empty value.
 </dd>
 <dt><strong><code>-USYMBOL</code></strong> or <strong><code>-U SYMBOL</code></strong></dt>
 <dd>removes the symbol <code>SYMBOL</code> from the current environment.
-</dd>
-<dt><strong><code>-languages</code></strong></dt>
-<dd>lists the languages.
-</dd>
-<dt><strong><code>-en</code></strong>|<strong><code>-es</code></strong>|<strong><code>-fr</code></strong>|<strong><code>-it</code></strong></dt>
-<dd>changes the current language.
-</dd>
-<dt><strong><code>-formats</code></strong></dt>
-<dd>lists the formats.
-</dd>
-<dt><strong><code>-epub</code></strong>|<strong><code>-html</code></strong>|<strong><code>-mobi</code></strong>|<strong><code>-odf</code></strong>|<strong><code>-pdf</code></strong></dt>
-<dd>changes the current output file format.
-</dd>
-<dt><strong><code>-dialects</code></strong></dt>
-<dd>lists the dialects.
-</dd>
-<dt><strong><code>-md</code></strong>|<strong><code>-rst</code></strong></dt>
-<dd>changes the current dialect (<code>-md</code> is the default dialect).
 </dd>
 <dt><strong><code>-img=PREFIX</code></strong> or <strong><code>-img PREFIX</code></strong></dt>
 <dd>changes the prefix of the images output path.
@@ -163,14 +148,8 @@
 <dt><strong><code>-M TARGET</code></strong> or <strong><code>-M=TARGET</code></strong></dt>
 <dd>tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by <code>pp</code>. This option only lists files that are imported, included and used with <code>mdate</code> and <code>csv</code>macros.
 </dd>
-<dt><strong><code>-macrochars &quot;chars&quot;</code></strong> or <strong><code>-macrochars=&quot;chars&quot;</code></strong></dt>
-<dd>defines the possible characters used to call macros.
-</dd>
-<dt><strong><code>-literatemacrochars &quot;chars&quot;</code></strong> or <strong><code>-literatemacrochars=&quot;chars&quot;</code></strong></dt>
-<dd>defines the possible characters used to identify literate programming macros.
-</dd>
-<dt><strong><code>-macroargs &quot;chars&quot;</code></strong> or <strong><code>-macroargs=&quot;chars&quot;</code></strong></dt>
-<dd>defines the possible character pairs used to separate macro args.
+<dt><strong><code>-&lt;macro&gt;[=&lt;arg&gt;]</code></strong></dt>
+<dd>calls a builtin macro with an optional argument (see <code>pp -help</code> for the full macro list).
 </dd>
 </dl>
 <p>Other arguments are filenames.</p>

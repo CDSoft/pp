@@ -53,7 +53,7 @@ parseCSV header csvData = (columnFormats, table)
         sep = inferSeparator csvData
         rows = case fromString qm sep csvData of
                     Exceptional{exception=Nothing, result=rs} -> joinMultiLines rs
-                    Exceptional{exception=Just exc} -> error exc
+                    Exceptional{exception=Just exc} -> errorWithoutStackTrace exc
         -- Header
         rows' = case header of
             Nothing -> rows

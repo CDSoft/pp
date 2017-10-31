@@ -23,6 +23,7 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 {-# LANGUAGE CPP #-}
 
 module Preprocessor ( ppFile
+                    , pp
                     , Dialect
                     , Format
                     , saveLiterateContent
@@ -30,7 +31,10 @@ module Preprocessor ( ppFile
                     , macroargs
                     , literatemacrochars
                     , checkParserConsistency
+                    , isValidMacroName
+                    , isValidMacroNameChar
                     , longHelp
+                    , builtin
                     )
 where
 
@@ -758,9 +762,9 @@ try :: (FilePath -> [String] -> IO String) -> FilePath -> [String] -> IO String
 try io exe args = do
     result <- tryIOError (io exe args)
     case result of
-        Left e -> error $ "Error while executing `" ++
-                          unwords (exe:args) ++
-                          "`: " ++ show e
+        Left e -> errorWithoutStackTrace $ "Error while executing `" ++
+                                           unwords (exe:args) ++
+                                           "`: " ++ show e
         Right output -> return output
 
 -- script executes a script and emits the output of the script.
@@ -1258,12 +1262,14 @@ literatemacrochars = Macro "literatemacrochars" []
     )
 
 checkParserConsistency :: Env -> Bool
-checkParserConsistency env = sets == nub sets
+checkParserConsistency env = concat sets == nub (concat sets)
+                             && all (not . null) sets
     where
-        sets = macroChars env
-               ++ concat [ [o,c] | (o,c) <- openCloseChars env ]
-               ++ blockChars env
-               ++ literateMacroChars env
+        sets = [ macroChars env
+               , concat [ [o,c] | (o,c) <- openCloseChars env ]
+               , blockChars env
+               , literateMacroChars env
+               ]
 
 ---------------------------------------------------------------------
 -- Help generation

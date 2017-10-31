@@ -136,15 +136,6 @@ doArg env ('-':'i':'m':'p':'o':'r':'t':'=':name) args = do
     (env', _) <- ppFile env{currentFile=Just name} name
     return (env', "", args)
 
--- "doArg" env "-langs" shows the list of languages
-doArg _ "-langs" _ = putStrLn (unwords $ sort $ map showCap langs) >> exitSuccess
-
--- "doArg" env "-dialects" shows the list of dialects
-doArg _ "-dialects" _ = putStrLn (unwords $ sort $ map showCap dialects) >> exitSuccess
-
--- "doArg" env "-formats" shows the list of formats
-doArg _ "-formats" _ = putStrLn (unwords $ sort $ map showCap formats) >> exitSuccess
-
 -- "doArg" env "-M" target enables the tracking of dependencies (i.e. included and imported files)
 -- target is the name of the Makefile target
 doArg env "-M" (target:args) =
@@ -155,44 +146,23 @@ doArg env "-M" (target:args) =
 doArg env ('-':'M':'=':target) args =
     return (env{makeTarget=Just target}, "", args)
 
--- "doArg" env "-macrochars" chars defines the chars used to call macros
--- chars is a set of chars
-doArg env "-macrochars" (chars:args) = do
-    (env', _) <- call macrochars env [Val chars]
-    return (env', "", args)
-
--- "doArg" env "-macrochars=chars" defines the chars used to call macros
--- chars is a set of chars
-doArg env ('-':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
-    (env', _) <- call macrochars env [Val chars]
-    return (env', "", args)
-
--- "doArg" env "-literatemacrochars" chars defines the chars used to identify literate macros
--- chars is a set of chars
-doArg env "-literatemacrochars" (chars:args) = do
-    (env', _) <- call literatemacrochars env [Val chars]
-    return (env', "", args)
-
--- "doArg" env "-literatemacrochars=chars" defines the chars used to idenfity literate macros
--- chars is a set of chars
-doArg env ('-':'l':'i':'t':'e':'r':'a':'t':'e':'m':'a':'c':'r':'o':'c':'h':'a':'r':'s':'=':chars) args = do
-    (env', _) <- call literatemacrochars env [Val chars]
-    return (env', "", args)
-
--- "doArg" env "-macroargs" chars defines the chars used to separate macro arguments
--- chars is a set of chars
-doArg env "-macroargs" (chars:args) = do
-    (env', _) <- call macroargs env [Val chars]
-    return (env', "", args)
-
--- "doArg" env "-macroargs=chars" defines the chars used to separate macro arguments
--- chars is a set of chars
-doArg env ('-':'m':'a':'c':'r':'o':'a':'r':'g':'s':'=':chars) args = do
-    (env', _) <- call macroargs env [Val chars]
-    return (env', "", args)
-
--- Other arguments starting with "-" are invalid.
-doArg _ ('-':arg) _ | not (null arg) = error $ "Unexpected argument: " ++ arg
+doArg env ('-':arg) args
+    | not (null arg) = case maybeMacro of
+        -- Macros can be called from the command line
+        Just _ -> do
+            (env', s) <- pp env code
+            return (env', if null s then s else s++"\n", args)
+        -- Other arguments starting with "-" are invalid.
+        Nothing -> errorWithoutStackTrace $ "Unexpected argument: " ++ arg
+    where
+        (functor, params') = span (/='=') arg
+        (name, params) = span isValidMacroNameChar functor
+        code = head (macroChars env) : name
+               ++ params
+               ++ if not (null params')
+                then replicate 70 '~' ++ params' ++ replicate 70 '~'
+                else ""
+        maybeMacro = lookupMacro name builtin
 
 -- "doArg env filename" preprocessed the content of a file using the current environment.
 -- The mainFileTag variable is added to the environment.
