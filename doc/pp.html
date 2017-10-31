@@ -174,7 +174,7 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <p>For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The <code>include</code> macro is an exception: its output is also preprocessed. The <code>rawinclude</code> macro can include a file without preprocessing it.</p>
 <dl>
 <dt><strong><code>define</code></strong>, <strong><code>def</code></strong></dt>
-<dd><code>!def[ine](SYMBOL)[(VALUE)]</code> adds the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> … <code>!n</code> in <code>VALUE</code>.
+<dd><code>!def[ine](SYMBOL)[[(DOC)](VALUE)]</code> adds the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> … <code>!n</code> in <code>VALUE</code>. If <code>DOC</code> is given it is used to document the macro (see the <code>-help</code> option)
 </dd>
 <dt><strong><code>undefine</code></strong>, <strong><code>undef</code></strong></dt>
 <dd><code>!undef[ine](SYMBOL)</code> removes the symbol <code>SYMBOL</code> from the current environment.

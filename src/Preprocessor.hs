@@ -476,9 +476,17 @@ dialect dial = Macro dial' []
 -- when the macro is evaluated (to allow macros with parameters).
 define :: Macro
 define = Macro "define" ["def"]
-    "`!def[ine](SYMBOL)[(VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`."
+    "`!def[ine](SYMBOL)[[(DOC)](VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`. If `DOC` is given it is used to document the macro (see the `-help` option)"
     impl
     where
+        impl env [name, doc, value] = do
+            name' <- ppAndStrip' env name
+            unless (isValidMacroName name') $ invalidNameError name'
+            doc' <- ppAndStrip' env doc
+            when (isJust (lookupMacro name' builtin)) $ builtinRedefinition name'
+            return (env{ vars = (Def name', value) : clean (Def name') (vars env)
+                       , docstrings = (Def name', doc') : docstrings env
+                       }, "")
         impl env [name, value] = do
             name' <- ppAndStrip' env name
             unless (isValidMacroName name') $ invalidNameError name'
@@ -1290,7 +1298,7 @@ usermacros = Macro "usermacros" []
     "`!usermacros` lists the user macros."
     (\env args -> case args of
         [] -> do
-            let macroList = [ varname name | (name, _) <- docstrings env ]
+            let macroList = reverse $ nub [ varname name | (name, _) <- vars env ]
             return (env, unlines macroList)
         _ -> arityError "usermacros"
     )

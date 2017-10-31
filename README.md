@@ -147,7 +147,7 @@ You can choose the syntax that works better with your favorite editor and syntax
 For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The `include` macro is an exception: its output is also preprocessed. The `rawinclude` macro can include a file without preprocessing it.
 
 **`define`**, **`def`**  
-`!def[ine](SYMBOL)[(VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`.
+`!def[ine](SYMBOL)[[(DOC)](VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`. If `DOC` is given it is used to document the macro (see the `-help` option)
 
 **`undefine`**, **`undef`**  
 `!undef[ine](SYMBOL)` removes the symbol `SYMBOL` from the current environment.
