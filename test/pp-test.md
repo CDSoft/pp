@@ -515,7 +515,7 @@ Active  : `[]` => !bar[42]
 Inactive: `<>` => !bar<42>
 Inactive: `«»` => !bar«42»
 
-Set new parameter separators: `<>«»` !macroargs( <> «» αζ)
+Set new parameter separators: `<>«»` !macroargs( <> «» )
 
 Inactive: `()` => !bar(42)
 Inactive: `{}` => !bar{42}

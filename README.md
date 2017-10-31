@@ -147,7 +147,7 @@ You can choose the syntax that works better with your favorite editor and syntax
 For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The `include` macro is an exception: its output is also preprocessed. The `rawinclude` macro can include a file without preprocessing it.
 
 **`define`**, **`def`**  
-`!def[ine](SYMBOL)[[(DOC)](VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`. If `DOC` is given it is used to document the macro (see the `-help` option)
+`!def[ine](SYMBOL)[[(DOC)](VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`. If `DOC` is given it is used to document the macro (see the `-help` option).
 
 **`undefine`**, **`undef`**  
 `!undef[ine](SYMBOL)` removes the symbol `SYMBOL` from the current environment.
@@ -204,16 +204,16 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 `!langs` lists the known languages (en, fr, it, es).
 
 **`en`**  
-!`en(TEXT)` returns `TEXT` if the current language is `en`.
+`!en(TEXT)` returns `TEXT` if the current language is `en`.
 
 **`fr`**  
-!`fr(TEXT)` returns `TEXT` if the current language is `fr`.
+`!fr(TEXT)` returns `TEXT` if the current language is `fr`.
 
 **`it`**  
-!`it(TEXT)` returns `TEXT` if the current language is `it`.
+`!it(TEXT)` returns `TEXT` if the current language is `it`.
 
 **`es`**  
-!`es(TEXT)` returns `TEXT` if the current language is `es`.
+`!es(TEXT)` returns `TEXT` if the current language is `es`.
 
 **`format`**  
 `!format` returns the current output format.
@@ -222,19 +222,19 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 `!formats` lists the known formats (html, pdf, odf, epub, mobi).
 
 **`html`**  
-!`html(TEXT)` returns `TEXT` if the current format is `html`.
+`!html(TEXT)` returns `TEXT` if the current format is `html`.
 
 **`pdf`**  
-!`pdf(TEXT)` returns `TEXT` if the current format is `pdf`.
+`!pdf(TEXT)` returns `TEXT` if the current format is `pdf`.
 
 **`odf`**  
-!`odf(TEXT)` returns `TEXT` if the current format is `odf`.
+`!odf(TEXT)` returns `TEXT` if the current format is `odf`.
 
 **`epub`**  
-!`epub(TEXT)` returns `TEXT` if the current format is `epub`.
+`!epub(TEXT)` returns `TEXT` if the current format is `epub`.
 
 **`mobi`**  
-!`mobi(TEXT)` returns `TEXT` if the current format is `mobi`.
+`!mobi(TEXT)` returns `TEXT` if the current format is `mobi`.
 
 **`dialect`**  
 `!dialect` returns the current output dialect.
@@ -243,10 +243,10 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 `!dialects` lists the kown output dialects (md, rst).
 
 **`md`**  
-!`md(TEXT)` returns `TEXT` if the current dialect is `md`.
+`!md(TEXT)` returns `TEXT` if the current dialect is `md`.
 
 **`rst`**  
-!`rst(TEXT)` returns `TEXT` if the current dialect is `rst`.
+`!rst(TEXT)` returns `TEXT` if the current dialect is `rst`.
 
 **`env`**  
 `!env(VARNAME)` preprocesses and returns the value of the process environment variable `VARNAME`.
@@ -264,37 +264,37 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 `!exec(COMMAND)` executes a shell command with the default shell (`sh` or `cmd` according to the OS).
 
 **`rawexec`**  
-(*deprecated*) See exec
+`!rawexec` is *deprecated*. See exec.
 
 **`sh`**  
-`!sh(CMD)` executes `CMD` in a `sh` shell
+`!sh(CMD)` executes `CMD` in a `sh` shell.
 
 **`bash`**  
-`!bash(CMD)` executes `CMD` in a `bash` shell
+`!bash(CMD)` executes `CMD` in a `bash` shell.
 
 **`cmd`**  
-`!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe)
+`!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe).
 
 **`bat`**  
-(*deprecated*) See cmd
+`!bat` is *deprecated*. See cmd.
 
 **`python`**  
-`!python(CMD)` executes `CMD` with the default Python interpretor
+`!python(CMD)` executes `CMD` with the default Python interpretor.
 
 **`python2`**  
-`!python2(CMD)` executes `CMD` with Python 2
+`!python2(CMD)` executes `CMD` with Python 2.
 
 **`python3`**  
-`!python3(CMD)` executes `CMD` with Python 3
+`!python3(CMD)` executes `CMD` with Python 3.
 
 **`haskell`**  
-`!python3(CMD)` executes `CMD` as a Haskell script with `runhaskell`
+`!python3(CMD)` executes `CMD` as a Haskell script with `runhaskell`.
 
 **`stack`**  
-`!python3(CMD)` executes `CMD` as a Haskell script with `stack`
+`!python3(CMD)` executes `CMD` as a Haskell script with `stack`.
 
 **`powershell`**  
-`!cmd(CMD)` executes `CMD` in a Windows shell (Powershell)
+`!cmd(CMD)` executes `CMD` in a Windows shell (Powershell).
 
 **`dot`**  
 `!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot diagram with Graphviz.
@@ -828,7 +828,7 @@ is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:
 OS support
 ==========
 
-PP is meant to be portable and multi platform. To be OS agnostic, the use free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, ...). Python is also a good choice.
+PP is meant to be portable and multi platform. To be OS agnostic, the use of free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, ...). Python is also a good choice.
 
 Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (`!os`, `!arch`). E.g.:
 

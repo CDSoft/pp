@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Tuesday 31 October 2017</p>
+<p class="date">Wednesday 1 November 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -174,7 +174,7 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <p>For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The <code>include</code> macro is an exception: its output is also preprocessed. The <code>rawinclude</code> macro can include a file without preprocessing it.</p>
 <dl>
 <dt><strong><code>define</code></strong>, <strong><code>def</code></strong></dt>
-<dd><code>!def[ine](SYMBOL)[[(DOC)](VALUE)]</code> adds the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> … <code>!n</code> in <code>VALUE</code>. If <code>DOC</code> is given it is used to document the macro (see the <code>-help</code> option)
+<dd><code>!def[ine](SYMBOL)[[(DOC)](VALUE)]</code> adds the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> … <code>!n</code> in <code>VALUE</code>. If <code>DOC</code> is given it is used to document the macro (see the <code>-help</code> option).
 </dd>
 <dt><strong><code>undefine</code></strong>, <strong><code>undef</code></strong></dt>
 <dd><code>!undef[ine](SYMBOL)</code> removes the symbol <code>SYMBOL</code> from the current environment.
@@ -231,16 +231,16 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!langs</code> lists the known languages (en, fr, it, es).
 </dd>
 <dt><strong><code>en</code></strong></dt>
-<dd>!<code>en(TEXT)</code> returns <code>TEXT</code> if the current language is <code>en</code>.
+<dd><code>!en(TEXT)</code> returns <code>TEXT</code> if the current language is <code>en</code>.
 </dd>
 <dt><strong><code>fr</code></strong></dt>
-<dd>!<code>fr(TEXT)</code> returns <code>TEXT</code> if the current language is <code>fr</code>.
+<dd><code>!fr(TEXT)</code> returns <code>TEXT</code> if the current language is <code>fr</code>.
 </dd>
 <dt><strong><code>it</code></strong></dt>
-<dd>!<code>it(TEXT)</code> returns <code>TEXT</code> if the current language is <code>it</code>.
+<dd><code>!it(TEXT)</code> returns <code>TEXT</code> if the current language is <code>it</code>.
 </dd>
 <dt><strong><code>es</code></strong></dt>
-<dd>!<code>es(TEXT)</code> returns <code>TEXT</code> if the current language is <code>es</code>.
+<dd><code>!es(TEXT)</code> returns <code>TEXT</code> if the current language is <code>es</code>.
 </dd>
 <dt><strong><code>format</code></strong></dt>
 <dd><code>!format</code> returns the current output format.
@@ -249,19 +249,19 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!formats</code> lists the known formats (html, pdf, odf, epub, mobi).
 </dd>
 <dt><strong><code>html</code></strong></dt>
-<dd>!<code>html(TEXT)</code> returns <code>TEXT</code> if the current format is <code>html</code>.
+<dd><code>!html(TEXT)</code> returns <code>TEXT</code> if the current format is <code>html</code>.
 </dd>
 <dt><strong><code>pdf</code></strong></dt>
-<dd>!<code>pdf(TEXT)</code> returns <code>TEXT</code> if the current format is <code>pdf</code>.
+<dd><code>!pdf(TEXT)</code> returns <code>TEXT</code> if the current format is <code>pdf</code>.
 </dd>
 <dt><strong><code>odf</code></strong></dt>
-<dd>!<code>odf(TEXT)</code> returns <code>TEXT</code> if the current format is <code>odf</code>.
+<dd><code>!odf(TEXT)</code> returns <code>TEXT</code> if the current format is <code>odf</code>.
 </dd>
 <dt><strong><code>epub</code></strong></dt>
-<dd>!<code>epub(TEXT)</code> returns <code>TEXT</code> if the current format is <code>epub</code>.
+<dd><code>!epub(TEXT)</code> returns <code>TEXT</code> if the current format is <code>epub</code>.
 </dd>
 <dt><strong><code>mobi</code></strong></dt>
-<dd>!<code>mobi(TEXT)</code> returns <code>TEXT</code> if the current format is <code>mobi</code>.
+<dd><code>!mobi(TEXT)</code> returns <code>TEXT</code> if the current format is <code>mobi</code>.
 </dd>
 <dt><strong><code>dialect</code></strong></dt>
 <dd><code>!dialect</code> returns the current output dialect.
@@ -270,10 +270,10 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!dialects</code> lists the kown output dialects (md, rst).
 </dd>
 <dt><strong><code>md</code></strong></dt>
-<dd>!<code>md(TEXT)</code> returns <code>TEXT</code> if the current dialect is <code>md</code>.
+<dd><code>!md(TEXT)</code> returns <code>TEXT</code> if the current dialect is <code>md</code>.
 </dd>
 <dt><strong><code>rst</code></strong></dt>
-<dd>!<code>rst(TEXT)</code> returns <code>TEXT</code> if the current dialect is <code>rst</code>.
+<dd><code>!rst(TEXT)</code> returns <code>TEXT</code> if the current dialect is <code>rst</code>.
 </dd>
 <dt><strong><code>env</code></strong></dt>
 <dd><code>!env(VARNAME)</code> preprocesses and returns the value of the process environment variable <code>VARNAME</code>.
@@ -291,37 +291,37 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!exec(COMMAND)</code> executes a shell command with the default shell (<code>sh</code> or <code>cmd</code> according to the OS).
 </dd>
 <dt><strong><code>rawexec</code></strong></dt>
-<dd>(<em>deprecated</em>) See exec
+<dd><code>!rawexec</code> is <em>deprecated</em>. See exec.
 </dd>
 <dt><strong><code>sh</code></strong></dt>
-<dd><code>!sh(CMD)</code> executes <code>CMD</code> in a <code>sh</code> shell
+<dd><code>!sh(CMD)</code> executes <code>CMD</code> in a <code>sh</code> shell.
 </dd>
 <dt><strong><code>bash</code></strong></dt>
-<dd><code>!bash(CMD)</code> executes <code>CMD</code> in a <code>bash</code> shell
+<dd><code>!bash(CMD)</code> executes <code>CMD</code> in a <code>bash</code> shell.
 </dd>
 <dt><strong><code>cmd</code></strong></dt>
-<dd><code>!cmd(CMD)</code> executes <code>CMD</code> in a Windows shell (cmd.exe)
+<dd><code>!cmd(CMD)</code> executes <code>CMD</code> in a Windows shell (cmd.exe).
 </dd>
 <dt><strong><code>bat</code></strong></dt>
-<dd>(<em>deprecated</em>) See cmd
+<dd><code>!bat</code> is <em>deprecated</em>. See cmd.
 </dd>
 <dt><strong><code>python</code></strong></dt>
-<dd><code>!python(CMD)</code> executes <code>CMD</code> with the default Python interpretor
+<dd><code>!python(CMD)</code> executes <code>CMD</code> with the default Python interpretor.
 </dd>
 <dt><strong><code>python2</code></strong></dt>
-<dd><code>!python2(CMD)</code> executes <code>CMD</code> with Python 2
+<dd><code>!python2(CMD)</code> executes <code>CMD</code> with Python 2.
 </dd>
 <dt><strong><code>python3</code></strong></dt>
-<dd><code>!python3(CMD)</code> executes <code>CMD</code> with Python 3
+<dd><code>!python3(CMD)</code> executes <code>CMD</code> with Python 3.
 </dd>
 <dt><strong><code>haskell</code></strong></dt>
-<dd><code>!python3(CMD)</code> executes <code>CMD</code> as a Haskell script with <code>runhaskell</code>
+<dd><code>!python3(CMD)</code> executes <code>CMD</code> as a Haskell script with <code>runhaskell</code>.
 </dd>
 <dt><strong><code>stack</code></strong></dt>
-<dd><code>!python3(CMD)</code> executes <code>CMD</code> as a Haskell script with <code>stack</code>
+<dd><code>!python3(CMD)</code> executes <code>CMD</code> as a Haskell script with <code>stack</code>.
 </dd>
 <dt><strong><code>powershell</code></strong></dt>
-<dd><code>!cmd(CMD)</code> executes <code>CMD</code> in a Windows shell (Powershell)
+<dd><code>!cmd(CMD)</code> executes <code>CMD</code> in a Windows shell (Powershell).
 </dd>
 <dt><strong><code>dot</code></strong></dt>
 <dd><code>!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)</code> renders a dot diagram with Graphviz.
@@ -778,7 +778,7 @@ air, moon roof, loaded&quot;,4799.00
 </tbody>
 </table>
 <h1 id="os-support">OS support</h1>
-<p>PP is meant to be portable and multi platform. To be OS agnostic, the use free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, …). Python is also a good choice.</p>
+<p>PP is meant to be portable and multi platform. To be OS agnostic, the use of free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, …). Python is also a good choice.</p>
 <p>Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (<code>!os</code>, <code>!arch</code>). E.g.:</p>
 <pre><code>!quiet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

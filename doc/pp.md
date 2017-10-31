@@ -777,7 +777,7 @@ OS support
 ==========
 
 PP is meant to be portable and multi platform.
-To be OS agnostic, the use free script languages is strongly recommended.
+To be OS agnostic, the use of free script languages is strongly recommended.
 For instance, bash scripts are preferred to proprietary closed languages
 because they can run on any platform. It is standard on Linux and pretty
 well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, ...).

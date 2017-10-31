@@ -101,16 +101,16 @@ builtin = [ define, undefine, rawdef
           [ readEnv, getos, getarch
           , add
           , exec, rawexec `deprecated` "exec"
-          , script "sh"         "sh"          ""          ".sh" "`!sh(CMD)` executes `CMD` in a `sh` shell"
-          , script "bash"       "bash"        ""          ".sh" "`!bash(CMD)` executes `CMD` in a `bash` shell"
-          , script "cmd"        cmdexe        "@echo off" ".bat" "`!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe)"
+          , script "sh"         "sh"          ""          ".sh" "`!sh(CMD)` executes `CMD` in a `sh` shell."
+          , script "bash"       "bash"        ""          ".sh" "`!bash(CMD)` executes `CMD` in a `bash` shell."
+          , script "cmd"        cmdexe        "@echo off" ".bat" "`!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe)."
           , script "bat"        cmdexe        "@echo off" ".bat" "" `deprecated` "cmd"
-          , script "python"     "python"      ""          ".py" "`!python(CMD)` executes `CMD` with the default Python interpretor"
-          , script "python2"    "python2"     ""          ".py" "`!python2(CMD)` executes `CMD` with Python 2"
-          , script "python3"    "python3"     ""          ".py" "`!python3(CMD)` executes `CMD` with Python 3"
-          , script "haskell"    "runhaskell"  ""          ".hs" "`!python3(CMD)` executes `CMD` as a Haskell script with `runhaskell`"
-          , script "stack"      "stack"       ""          ".hs" "`!python3(CMD)` executes `CMD` as a Haskell script with `stack`"
-          , windowsonly $ script "powershell" powershellexe "" ".ps1" "`!cmd(CMD)` executes `CMD` in a Windows shell (Powershell)"
+          , script "python"     "python"      ""          ".py" "`!python(CMD)` executes `CMD` with the default Python interpretor."
+          , script "python2"    "python2"     ""          ".py" "`!python2(CMD)` executes `CMD` with Python 2."
+          , script "python3"    "python3"     ""          ".py" "`!python3(CMD)` executes `CMD` with Python 3."
+          , script "haskell"    "runhaskell"  ""          ".hs" "`!python3(CMD)` executes `CMD` as a Haskell script with `runhaskell`."
+          , script "stack"      "stack"       ""          ".hs" "`!python3(CMD)` executes `CMD` as a Haskell script with `stack`."
+          , windowsonly $ script "powershell" powershellexe "" ".ps1" "`!cmd(CMD)` executes `CMD` in a Windows shell (Powershell)."
           ]
           ++ [diagram Graphviz diag "" "" | d <- graphvizDiagrams, let diag = showCap d]
           ++ [diagram PlantUML diag ("@start"++diag) ("@end"++diag) | d <- plantumlDiagrams, let diag = showCap d]
@@ -134,7 +134,7 @@ deprecated (Macro name aliases _ impl) new =
             let file = fromMaybe "-" $ currentFile env
             hPutStrLn stderr $ "WARNING: " ++ file ++ ": \"" ++ name ++ "\" is deprecated. Please consider using \"" ++ new ++ "\" instead."
             impl env args
-        docstring = "(*deprecated*) See " ++ new
+        docstring = "`!"++name++"` is *deprecated*. See "++new++"."
 
 windowsonly :: Macro -> Macro
 #if mingw32_HOST_OS
@@ -404,7 +404,7 @@ getCurrentLang = Macro "lang" []
 -- language preprocesses src only if the current language is lang.
 language :: Lang -> Macro
 language lang = Macro lang' []
-    ("!`" ++ lang' ++ "(TEXT)` returns `TEXT` if the current language is `" ++ lang' ++ "`.")
+    ("`!" ++ lang' ++ "(TEXT)` returns `TEXT` if the current language is `" ++ lang' ++ "`.")
     (\env args -> case args of
         [src] -> case currentLang env of
             val | val == lang -> ppAndStrip env src
@@ -431,7 +431,7 @@ getCurrentFormat = Macro "format" []
 -- format preprocesses src only if the current format is fmt.
 format :: Format -> Macro
 format fmt = Macro fmt' []
-    ("!`" ++ fmt' ++ "(TEXT)` returns `TEXT` if the current format is `" ++ fmt' ++ "`.")
+    ("`!" ++ fmt' ++ "(TEXT)` returns `TEXT` if the current format is `" ++ fmt' ++ "`.")
     (\env args -> case args of
         [src] -> case fileFormat env of
             Just val | val == fmt -> ppAndStrip env src
@@ -458,7 +458,7 @@ getCurrentDialect = Macro "dialect" []
 -- dialect preprocesses src only if the current dialect is dial.
 dialect :: Dialect -> Macro
 dialect dial = Macro dial' []
-    ("!`" ++ dial' ++ "(TEXT)` returns `TEXT` if the current dialect is `" ++ dial' ++ "`.")
+    ("`!" ++ dial' ++ "(TEXT)` returns `TEXT` if the current dialect is `" ++ dial' ++ "`.")
     (\env args -> case args of
         [src] -> case currentDialect env of
             val | val == dial -> ppAndStrip env src
@@ -476,7 +476,7 @@ dialect dial = Macro dial' []
 -- when the macro is evaluated (to allow macros with parameters).
 define :: Macro
 define = Macro "define" ["def"]
-    "`!def[ine](SYMBOL)[[(DOC)](VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`. If `DOC` is given it is used to document the macro (see the `-help` option)"
+    "`!def[ine](SYMBOL)[[(DOC)](VALUE)]` adds the symbol `SYMBOL` to the current environment and associate it with the optional value `VALUE`. Arguments are denoted by `!1` ... `!n` in `VALUE`. If `DOC` is given it is used to document the macro (see the `-help` option)."
     impl
     where
         impl env [name, doc, value] = do
@@ -988,7 +988,7 @@ source = Macro "source" ["src"]
             lang' <- ppAndStrip' env' lang
             content <- readFileUTF8 name'
             let formatedCode = litShow env (Just lang') content
-            return (env', formatedCode)
+            return (addDep env' name', formatedCode)
 
         -- !src(name) reads a source file.
         -- The language is the default one according to name.
@@ -998,7 +998,7 @@ source = Macro "source" ["src"]
             let lang = litLang env' name'
             content <- readFileUTF8 name'
             let formatedCode = litShow env lang content
-            return (env', formatedCode)
+            return (addDep env' name', formatedCode)
 
         impl _ _ = arityError "source"
 
@@ -1219,7 +1219,7 @@ csv = Macro "csv" []
             let fields = splitOn "|" header'
             csvData <- readFileUTF8 filename'
             let table = makeTable (currentDialect env) (Just fields) csvData
-            return (env, table)
+            return (addDep env filename', table)
 
         impl _ _ = arityError "csv"
 

@@ -1,1 +1,1 @@
-outputfile: test/pp-test-lib.i test/pp-test.md test/pp-test.i /tmp/pp-test-f1 /tmp/pp-test-f2 /tmp/pp-test-f3 /tmp/table1.csv ./.stack-work/foo
+outputfile: test/pp-test-lib.i test/pp-test.md test/pp-test.i /tmp/pp-test-f1 /tmp/pp-test-f2 /tmp/pp-test-f3 .stack-work/mylib.h /tmp/table1.csv /tmp/table2.csv ./.stack-work/foo
