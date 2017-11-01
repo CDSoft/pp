@@ -14,6 +14,7 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 -   macros
 -   literate programming
 -   [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) diagrams
+-   [Asymptote](http://asymptote.sourceforge.net/) figures
 -   [Bash](https://www.gnu.org/software/bash/), [Cmd](https://en.wikipedia.org/wiki/Cmd.exe), [PowerShell](https://en.wikipedia.org/wiki/PowerShell), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
 
 Open source
@@ -43,7 +44,7 @@ Installation
 -   Run `make install` to copy `pp` in `~/.local/bin`.
 -   or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires [Graphviz](http://graphviz.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
+`pp` requires [Graphviz](http://graphviz.org/), [Asymptote](http://asymptote.sourceforge.net/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
 
 **Precompiled binaries**:
 
@@ -326,6 +327,9 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 **`ditaa`**  
 `!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa diagram with PlantUML.
 
+**`asy`**  
+`!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy diagram with Asymptote.
+
 **`literate`**, **`lit`**  
 `!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features. If `LANG` is not given, pp uses the previously defined language for the same file or macro or a default language according to its name. If `CONTENT`is not given, pp returns the current content of `FILENAME`.
 
@@ -576,6 +580,50 @@ Once generated the graph looks like:
 ![This is just a Ditaa diagram example](doc/img/pp-ditaa-example.png)
 
 [ditaa](http://plantuml.sourceforge.net) is written in Java and is embedded in `pp`. Java must be installed.
+
+### Asymptote
+
+[Asymptote](http://asymptote.sourceforge.net/) is executed when the keyword `asy` is used.
+
+    !asy(pp-asy-example)(This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import geometry;
+    size(7.5cm,0);
+
+    // Affichage du repère par défaut (O,vec{i},vec_{j})
+    show(defaultcoordsys);
+
+    real a=5, b=4, theta=-27, poids=3;
+    ellipse el = ellipse(origin, a, b);
+    arc     ar = arc(el,(0,-b),(a,0),CCW);
+    path p = (0,-b-1)--ar--(a+1,0)--(a+1,-b-1)--cycle;
+    point pO = (0,0), pM=angpoint(ar,90+theta);
+    abscissa abscM = nodabscissa(el,pM);
+    real     timeM = abscM.x;
+    vector utangM = -dir(el,timeM), 
+        unormM = rotate(90)*utangM,
+        vpoids=(0,-poids),
+        vreactionN = -dot(vpoids,unormM)*unormM,
+        vfrottement = -dot(vpoids,utangM)*utangM;
+
+    filldraw(p,lightgray,blue);
+    draw(pO--pM,dashed);
+    markangle("$\theta$",1.5cm,pM,origin,(1,0));
+
+    // Affichage d'un nouveau repère (M,vec{u_{\theta}},vec_{u_{r}})
+    coordsys R=cartesiansystem(pM,i=utangM,j=unormM);
+    show("$M$", "$\vec{u_{\theta}}$", "$\vec{u_{r}}$", R, xpen=invisible);
+
+    // Affichage des trois vecteurs dans le repère R
+    point RpM=changecoordsys(R, pM);
+    show(Label("$\vec{f}$",EndPoint),RpM+vfrottement);
+    show(Label("$\vec{R}$",EndPoint),RpM+vreactionN);
+    show(Label("$\vec{P}$",EndPoint),RpM+vpoids);
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the figure looks like:
+
+![This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>](doc/img/pp-asy-example.png)
 
 ### Bash
 

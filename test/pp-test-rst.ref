@@ -96,6 +96,12 @@ The diagram test does not check the generated images, just the links in the outp
     Test of ditaa
 
 
+.. figure:: img/asy-test.png
+
+
+    Test of Asymptote
+
+
 .. figure:: img/size_small.png
     :width: 50
 

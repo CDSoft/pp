@@ -318,6 +318,13 @@ The diagram test does not check the generated images, just the links in the outp
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+!asy        (asy-test)         (Test of Asymptote)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import math;
+size(7cm,0);
+add(grid(7,3));
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 !dot    (size_small    {.img width=50})                        (digraph { small })
 
 !dot    (size_smallt   {.img width=50})    (Small with title)  (digraph { small })

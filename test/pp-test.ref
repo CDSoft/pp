@@ -304,6 +304,8 @@ The diagram test does not check the generated images, just the links in the outp
 
 ![Test of ditaa](img/ditaa-test.png)
 
+![Test of Asymptote](img/asy-test.png)
+
 ![](img/size_small.png){.img width=50}
 
 ![Small with title](img/size_smallt.png){.img width=50}
@@ -697,6 +699,7 @@ patchwork
 osage
 uml
 ditaa
+asy
 literate
 lit
 flushliterate
@@ -938,6 +941,10 @@ userhelp
 **`ditaa`**
 :   `!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa diagram
     with PlantUML.
+
+**`asy`**
+:   `!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy diagram
+    with Asymptote.
 
 **`literate`**, **`lit`**
 :   `!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to

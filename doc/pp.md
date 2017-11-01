@@ -15,6 +15,7 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 [pp.tgz]: http://cdsoft.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
+[Asymptote]: http://asymptote.sourceforge.net/
 [ditaa]: http://ditaa.sourceforge.net/
 [GPP]: http://en.nothingisreal.com/wiki/GPP
 [Pandoc]: http://pandoc.org/
@@ -45,6 +46,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - macros
 - literate programming
 - [GraphViz], [PlantUML] and [ditaa] diagrams
+- [Asymptote] figures
 - [Bash], [Cmd], [PowerShell], [Python] and [Haskell] scripts
 
 Open source
@@ -75,7 +77,7 @@ Installation
 - Run `make install` to copy `pp` in `~/.local/bin`.
 - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires [Graphviz] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
+`pp` requires [Graphviz], [Asymptote] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
 
 **Precompiled binaries**:
 
@@ -551,6 +553,84 @@ Once generated the graph looks like:
 
 [ditaa](http://plantuml.sourceforge.net) is written in Java and is embedded in `pp`.
 Java must be installed.
+
+### Asymptote
+
+[Asymptote] is executed when the keyword `asy` is used.
+
+    !asy(pp-asy-example)(This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    import geometry;
+    size(7.5cm,0);
+
+    // Affichage du repère par défaut (O,vec{i},vec_{j})
+    show(defaultcoordsys);
+
+    real a=5, b=4, theta=-27, poids=3;
+    ellipse el = ellipse(origin, a, b);
+    arc     ar = arc(el,(0,-b),(a,0),CCW);
+    path p = (0,-b-1)--ar--(a+1,0)--(a+1,-b-1)--cycle;
+    point pO = (0,0), pM=angpoint(ar,90+theta);
+    abscissa abscM = nodabscissa(el,pM);
+    real     timeM = abscM.x;
+    vector utangM = -dir(el,timeM), 
+        unormM = rotate(90)*utangM,
+        vpoids=(0,-poids),
+        vreactionN = -dot(vpoids,unormM)*unormM,
+        vfrottement = -dot(vpoids,utangM)*utangM;
+
+    filldraw(p,lightgray,blue);
+    draw(pO--pM,dashed);
+    markangle("$\theta$",1.5cm,pM,origin,(1,0));
+
+    // Affichage d'un nouveau repère (M,vec{u_{\theta}},vec_{u_{r}})
+    coordsys R=cartesiansystem(pM,i=utangM,j=unormM);
+    show("$M$", "$\vec{u_{\theta}}$", "$\vec{u_{r}}$", R, xpen=invisible);
+
+    // Affichage des trois vecteurs dans le repère R
+    point RpM=changecoordsys(R, pM);
+    show(Label("$\vec{f}$",EndPoint),RpM+vfrottement);
+    show(Label("$\vec{R}$",EndPoint),RpM+vreactionN);
+    show(Label("$\vec{P}$",EndPoint),RpM+vpoids);
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the figure looks like:
+
+§asy(pp-asy-example)(This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import geometry;
+size(7.5cm,0);
+
+// Affichage du repère par défaut (O,vec{i},vec_{j})
+show(defaultcoordsys);
+
+real a=5, b=4, theta=-27, poids=3;
+ellipse el = ellipse(origin, a, b);
+arc     ar = arc(el,(0,-b),(a,0),CCW);
+path p = (0,-b-1)--ar--(a+1,0)--(a+1,-b-1)--cycle;
+point pO = (0,0), pM=angpoint(ar,90+theta);
+abscissa abscM = nodabscissa(el,pM);
+real     timeM = abscM.x;
+vector utangM = -dir(el,timeM), 
+    unormM = rotate(90)*utangM,
+    vpoids=(0,-poids),
+    vreactionN = -dot(vpoids,unormM)*unormM,
+    vfrottement = -dot(vpoids,utangM)*utangM;
+
+filldraw(p,lightgray,blue);
+draw(pO--pM,dashed);
+markangle("$\theta$",1.5cm,pM,origin,(1,0));
+
+// Affichage d'un nouveau repère (M,vec{u_{\theta}},vec_{u_{r}})
+coordsys R=cartesiansystem(pM,i=utangM,j=unormM);
+show("$M$", "$\vec{u_{\theta}}$", "$\vec{u_{r}}$", R, xpen=invisible);
+
+// Affichage des trois vecteurs dans le repère R
+point RpM=changecoordsys(R, pM);
+show(Label("$\vec{f}$",EndPoint),RpM+vfrottement);
+show(Label("$\vec{R}$",EndPoint),RpM+vreactionN);
+show(Label("$\vec{P}$",EndPoint),RpM+vpoids);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Bash
 

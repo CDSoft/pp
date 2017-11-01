@@ -25,6 +25,7 @@ module Formats ( Dialect(..), dialects
                , Diagram(..)
                , GraphvizDiagram(..), graphvizDiagrams
                , PlantumlDiagram(..), plantumlDiagrams
+               , AsymptoteDiagram(..), asymptoteDiagrams
                , readCap
                , readCapMaybe
                , showCap
@@ -55,12 +56,17 @@ data GraphvizDiagram = Dot | Neato | Twopi | Circo | Fdp | Sfdp | Patchwork | Os
                      deriving (Show, Read, Enum, Bounded)
 data PlantumlDiagram = Uml | Ditaa
                      deriving (Show, Read, Enum, Bounded)
+data AsymptoteDiagram = Asy
+                      deriving (Show, Read, Enum, Bounded)
 
 graphvizDiagrams :: [GraphvizDiagram]
 graphvizDiagrams = [(minBound :: GraphvizDiagram) .. ]
 
 plantumlDiagrams :: [PlantumlDiagram]
 plantumlDiagrams = [(minBound :: PlantumlDiagram) .. ]
+
+asymptoteDiagrams :: [AsymptoteDiagram]
+asymptoteDiagrams = [(minBound :: AsymptoteDiagram) .. ]
 
 -- Convert a string to a Haskell type
 
