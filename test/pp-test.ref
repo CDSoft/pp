@@ -282,10 +282,35 @@ Raw script output:                  !mymacro(42)
 Preprocessed script output:         mymacro(42) has been evaluated!
 ----------------------------------- ------------------------------------------------------------------------------
 
-And a Haskell Stack script:
+A Haskell Stack script:
 
 hi
 
+
+A R script:
+
+```
+
+Call:
+lm(formula = dist ~ speed, data = cars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-29.069  -9.525  -2.272   9.215  43.201 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+speed         3.9324     0.4155   9.464 1.49e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 15.38 on 48 degrees of freedom
+Multiple R-squared:  0.6511,	Adjusted R-squared:  0.6438 
+F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
+
+
+```
 
 Diagrams
 ========
@@ -317,6 +342,8 @@ The diagram test does not check the generated images, just the links in the outp
 ![](img/size_big.png){.img width=150}
 
 ![Big with title](img/size_bigt.png){.img width=150}
+
+![Test of R plot](img/rplot-test.png)
 
 Literate programming
 ====================
@@ -688,6 +715,7 @@ python2
 python3
 haskell
 stack
+Rscript
 powershell
 dot
 neato
@@ -700,6 +728,7 @@ osage
 uml
 ditaa
 asy
+Rplot
 literate
 lit
 flushliterate
@@ -899,52 +928,59 @@ userhelp
 **`stack`**
 :   `!python3(CMD)` executes `CMD` as a Haskell script with `stack`.
 
+**`Rscript`**
+:   `!Rscript(CMD)` executes `CMD` as a R script with Rscript.
+
 **`powershell`**
 :   `!cmd(CMD)` executes `CMD` in a Windows shell (Powershell).
 
 **`dot`**
-:   `!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot diagram
-    with Graphviz.
+:   `!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot image with
+    Graphviz.
 
 **`neato`**
-:   `!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato diagram
+:   `!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato image
     with Graphviz.
 
 **`twopi`**
-:   `!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi diagram
+:   `!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi image
     with Graphviz.
 
 **`circo`**
-:   `!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo diagram
+:   `!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo image
     with Graphviz.
 
 **`fdp`**
-:   `!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp diagram
-    with Graphviz.
+:   `!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp image with
+    Graphviz.
 
 **`sfdp`**
-:   `!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp diagram
+:   `!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp image
     with Graphviz.
 
 **`patchwork`**
 :   `!patchwork(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a patchwork
-    diagram with Graphviz.
+    image with Graphviz.
 
 **`osage`**
-:   `!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage diagram
+:   `!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage image
     with Graphviz.
 
 **`uml`**
-:   `!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml diagram
-    with PlantUML.
+:   `!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml image with
+    PlantUML.
 
 **`ditaa`**
-:   `!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa diagram
+:   `!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa image
     with PlantUML.
 
 **`asy`**
-:   `!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy diagram
-    with Asymptote.
+:   `!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy image with
+    Asymptote.
+
+**`Rplot`**
+:   `!Rplot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a Rplot image
+    with R.
 
 **`literate`**, **`lit`**
 :   `!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to

@@ -14,8 +14,8 @@ I started using Markdown and [Pandoc](http://pandoc.org/) with [GPP](http://en.n
 -   macros
 -   literate programming
 -   [GraphViz](http://graphviz.org/), [PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) diagrams
--   [Asymptote](http://asymptote.sourceforge.net/) figures
--   [Bash](https://www.gnu.org/software/bash/), [Cmd](https://en.wikipedia.org/wiki/Cmd.exe), [PowerShell](https://en.wikipedia.org/wiki/PowerShell), [Python](https://www.python.org/) and [Haskell](https://www.haskell.org/) scripts
+-   [Asymptote](http://asymptote.sourceforge.net/) and [R](https://www.r-project.org/) figures
+-   [Bash](https://www.gnu.org/software/bash/), [Cmd](https://en.wikipedia.org/wiki/Cmd.exe), [PowerShell](https://en.wikipedia.org/wiki/PowerShell), [Python](https://www.python.org/), [Haskell](https://www.haskell.org/) and [R](https://www.r-project.org/) scripts
 
 Open source
 ===========
@@ -44,7 +44,7 @@ Installation
 -   Run `make install` to copy `pp` in `~/.local/bin`.
 -   or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires [Graphviz](http://graphviz.org/), [Asymptote](http://asymptote.sourceforge.net/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
+`pp` requires (*optionally*) [Graphviz](http://graphviz.org/), [Asymptote](http://asymptote.sourceforge.net/), [R](https://www.r-project.org/) and Java ([PlantUML](http://plantuml.sourceforge.net/) and [ditaa](http://ditaa.sourceforge.net/) are embedded in `pp`).
 
 **Precompiled binaries**:
 
@@ -294,41 +294,47 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 **`stack`**  
 `!python3(CMD)` executes `CMD` as a Haskell script with `stack`.
 
+**`Rscript`**  
+`!Rscript(CMD)` executes `CMD` as a R script with Rscript.
+
 **`powershell`**  
 `!cmd(CMD)` executes `CMD` in a Windows shell (Powershell).
 
 **`dot`**  
-`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot diagram with Graphviz.
+`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot image with Graphviz.
 
 **`neato`**  
-`!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato diagram with Graphviz.
+`!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato image with Graphviz.
 
 **`twopi`**  
-`!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi diagram with Graphviz.
+`!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi image with Graphviz.
 
 **`circo`**  
-`!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo diagram with Graphviz.
+`!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo image with Graphviz.
 
 **`fdp`**  
-`!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp diagram with Graphviz.
+`!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp image with Graphviz.
 
 **`sfdp`**  
-`!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp diagram with Graphviz.
+`!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp image with Graphviz.
 
 **`patchwork`**  
-`!patchwork(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a patchwork diagram with Graphviz.
+`!patchwork(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a patchwork image with Graphviz.
 
 **`osage`**  
-`!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage diagram with Graphviz.
+`!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage image with Graphviz.
 
 **`uml`**  
-`!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml diagram with PlantUML.
+`!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml image with PlantUML.
 
 **`ditaa`**  
-`!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa diagram with PlantUML.
+`!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa image with PlantUML.
 
 **`asy`**  
-`!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy diagram with Asymptote.
+`!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy image with Asymptote.
+
+**`Rplot`**  
+`!Rplot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a Rplot image with R.
 
 **`literate`**, **`lit`**  
 `!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features. If `LANG` is not given, pp uses the previously defined language for the same file or macro or a default language according to its name. If `CONTENT`is not given, pp returns the current content of `FILENAME`.
@@ -472,6 +478,8 @@ The diagram generator can be:
 -   osage
 -   uml
 -   ditaa
+-   asy
+-   Rplot
 
 `pp` will not create any directory, the path where the image is written must already exist.
 
@@ -496,6 +504,7 @@ The script language macro can be:
 -   `bash` (or `sh`)
 -   `python`
 -   `haskell` (or `stack`)
+-   `Rscript`
 -   `cmd` (DOS/Windows batch language)
 -   `powershell` (Windows only)
 
@@ -625,6 +634,19 @@ Once generated the figure looks like:
 
 ![This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>](doc/img/pp-asy-example.png)
 
+### R (plot)
+
+[R](https://www.r-project.org/) is executed when the keyword `Rplot` is used.
+
+    !Rplot(rplot-test)(This is just an R plot example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    plot(pressure)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the image looks like:
+
+![This is just an R plot example](doc/img/rplot-test.png)
+
 ### Bash
 
 [Bash](https://www.gnu.org/software/bash/) is executed when the keyword `bash` is used.
@@ -742,6 +764,37 @@ This script outputs:
 
     Hi, I'm Haskell 8.0
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
+
+### R (script)
+
+[R](https://www.r-project.org/) is executed when the keyword `Rscript` is used.
+
+    !Rscript
+    ~~~~~
+    model = lm(dist~speed, data = cars)
+    summary(model)
+    ~~~~~
+
+This script outputs:
+
+
+    Call:
+    lm(formula = dist ~ speed, data = cars)
+
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -29.069  -9.525  -2.272   9.215  43.201 
+
+    Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+    (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+    speed         3.9324     0.4155   9.464 1.49e-12 ***
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+    Residual standard error: 15.38 on 48 degrees of freedom
+    Multiple R-squared:  0.6511,    Adjusted R-squared:  0.6438 
+    F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
 
 CSV tables
 ==========

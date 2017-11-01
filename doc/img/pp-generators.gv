@@ -3,16 +3,18 @@ digraph {
 
     subgraph cluster_cmd {
         label = "diagram generators"
-        dot neato twopi circo fdp sfdp patchwork osage uml ditaa
+        dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot
     }
 
     PP [label="pp" shape=diamond]
-    dot neato twopi circo fdp sfdp patchwork osage uml ditaa
+    dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot
     GraphViz [shape=box]
     PlantUML [shape=box]
     DITAA [shape=box label=ditaa]
+    Asymptote [shape=box]
+    Rplot [shape=box]
 
-    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa}
+    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot}
     dot -> GraphViz
     neato -> GraphViz
     twopi -> GraphViz
@@ -23,6 +25,8 @@ digraph {
     osage -> GraphViz
     uml -> PlantUML
     ditaa -> DITAA
+    asy -> Asymptote
+    Rplot -> Rscript
 }
 
 

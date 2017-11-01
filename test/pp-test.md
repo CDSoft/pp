@@ -280,13 +280,23 @@ Raw script output:                  !sh(printf "!%s(%d)" mymacro 42)
 Preprocessed script output:         !pp[!sh(printf "!%s(%d)" mymacro 42)]
 ----------------------------------- ------------------------------------------------------------------------------
 
-And a Haskell Stack script:
+A Haskell Stack script:
 
 !stack
 ~~~~~
 {- stack script --resolver lts-9.1 --package base -}
 main = putStrLn "hi"
 ~~~~~
+
+A R script:
+
+```
+!Rscript
+~~~~~
+model = lm(dist~speed, data = cars)
+summary(model)
+~~~~~
+```
 
 Diagrams
 ========
@@ -336,6 +346,11 @@ add(grid(7,3));
 !dot    (size_big      {.img width=150})                       (digraph { big })
 
 !dot    (size_bigt     {.img width=150})   (Big with title)    (digraph { big })
+
+!Rplot(rplot-test)(Test of R plot)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+plot(pressure)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Literate programming
 ====================

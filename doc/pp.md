@@ -16,6 +16,7 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
 [Asymptote]: http://asymptote.sourceforge.net/
+[R]: https://www.r-project.org/
 [ditaa]: http://ditaa.sourceforge.net/
 [GPP]: http://en.nothingisreal.com/wiki/GPP
 [Pandoc]: http://pandoc.org/
@@ -46,8 +47,8 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - macros
 - literate programming
 - [GraphViz], [PlantUML] and [ditaa] diagrams
-- [Asymptote] figures
-- [Bash], [Cmd], [PowerShell], [Python] and [Haskell] scripts
+- [Asymptote] and [R] figures
+- [Bash], [Cmd], [PowerShell], [Python], [Haskell] and [R] scripts
 
 Open source
 ===========
@@ -77,7 +78,7 @@ Installation
 - Run `make install` to copy `pp` in `~/.local/bin`.
 - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires [Graphviz], [Asymptote] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
+`pp` requires (*optionally*) [Graphviz], [Asymptote], [R] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
 
 **Precompiled binaries**:
 
@@ -348,6 +349,8 @@ The diagram generator can be:
 - osage
 - uml
 - ditaa
+- asy
+- Rplot
 
 `pp` will not create any directory,
 the path where the image is written must already exist.
@@ -358,16 +361,18 @@ digraph {
 
     subgraph cluster_cmd {
         label = "diagram generators"
-        dot neato twopi circo fdp sfdp patchwork osage uml ditaa
+        dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot
     }
 
     PP [label="pp" shape=diamond]
-    dot neato twopi circo fdp sfdp patchwork osage uml ditaa
+    dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot
     GraphViz [shape=box]
     PlantUML [shape=box]
     DITAA [shape=box label=ditaa]
+    Asymptote [shape=box]
+    Rplot [shape=box]
 
-    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa}
+    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot}
     dot -> GraphViz
     neato -> GraphViz
     twopi -> GraphViz
@@ -378,6 +383,8 @@ digraph {
     osage -> GraphViz
     uml -> PlantUML
     ditaa -> DITAA
+    asy -> Asymptote
+    Rplot -> Rscript
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -404,6 +411,7 @@ The script language macro can be:
 - `bash` (or `sh`)
 - `python`
 - `haskell` (or `stack`)
+- `Rscript`
 - `cmd` (DOS/Windows batch language)
 - `powershell` (Windows only)
 
@@ -415,7 +423,7 @@ digraph {
 
     subgraph cluster_cmd {
         label = "script languages"
-        bash sh python haskell stack cmd powershell
+        bash sh python haskell stack Rscript cmd powershell
     }
 
     PP [shape=diamond label="pp"]
@@ -425,15 +433,17 @@ digraph {
     Python [shape=box label="python\nor python.exe"]
     Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
     Stack [shape=box label="stack\nor stack.exe"]
+    Rscriptexe [shape=box label="Rscript\nor Rscript.exe"]
     Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     PowerShell [shape=box label="(Windows only)\npowershell.exe"]
 
-    PP -> {bash sh python haskell stack cmd powershell}
+    PP -> {bash sh python haskell stack Rscript cmd powershell}
     bash -> Bash
     sh -> Sh
     python -> Python
     haskell -> Haskell
     stack -> Stack
+    Rscript -> Rscriptexe
     cmd -> Cmd
     powershell -> PowerShell
 }
@@ -632,6 +642,22 @@ show(Label("$\vec{R}$",EndPoint),RpM+vreactionN);
 show(Label("$\vec{P}$",EndPoint),RpM+vpoids);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+### R (plot)
+
+[R] is executed when the keyword `Rplot` is used.
+
+    !Rplot(rplot-test)(This is just an R plot example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    plot(pressure)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the image looks like:
+
+§Rplot(rplot-test)(This is just an R plot example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+plot(pressure)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ### Bash
 
 [Bash] is executed when the keyword `bash` is used.
@@ -806,6 +832,26 @@ main = do
     putStrLn $ "Hi, I'm Haskell " ++ version
     putStrLn $ "The first 10 prime numbers are: " ++
                 intercalate " " (map show (take 10 primes))
+~~~~~
+~~~~~~~~~~
+
+### R (script)
+
+[R] is executed when the keyword `Rscript` is used.
+
+    !Rscript
+    ~~~~~
+    model = lm(dist~speed, data = cars)
+    summary(model)
+    ~~~~~
+
+This script outputs:
+
+~~~~~~~~~~
+§Rscript
+~~~~~
+model = lm(dist~speed, data = cars)
+summary(model)
 ~~~~~
 ~~~~~~~~~~
 
