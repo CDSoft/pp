@@ -7,3 +7,4 @@ pp-darwin-*.txz
 tmp
 src/Tag.hs
 tags
+doc/img/*.eps

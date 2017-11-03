@@ -869,8 +869,10 @@ diagram name runtime exe header footer = Macro name []
                     PlantUML -> do
                         plantuml <- resource "plantuml.jar" plantumlJar
                         try readProcessUTF8 "java" ["-jar", plantuml, "-charset", "UTF-8", src]
-                    Asymptote ->
-                        try readProcessUTF8 exe ["-f", "png", "-o", img, src]
+                    Asymptote -> do
+                        let eps = src -<.> "eps"
+                        void $ try readProcessUTF8 exe ["-o", eps, src]
+                        try readProcessUTF8 "convert" ["-density", "600", eps, img]
                     R ->
                         try readProcessUTF8 "Rscript" [src]
             let link = case currentDialect env of
@@ -891,10 +893,10 @@ indent' n = unlines . map (replicate n ' ' ++) . lines
 -- An optional text between curly brackets at the end are image attributs that
 -- are added after the link in the markdown output.
 parseImageAttributes :: Env -> String -> (FilePath, FilePath, FilePath, String, String)
-parseImageAttributes env s = ( localPath ++ ".gv"
-                             , localPath ++ ".dat"
-                             , localPath ++ ".png"
-                             , linkPath  ++ ".png"
+parseImageAttributes env s = ( localPath <.> "gv"
+                             , localPath <.> "dat"
+                             , localPath <.> "png"
+                             , linkPath  <.> "png"
                              , attrs )
     where
         prefix = imagePath env
