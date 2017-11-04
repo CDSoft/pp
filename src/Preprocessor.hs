@@ -870,9 +870,9 @@ diagram name runtime exe header footer = Macro name []
                         plantuml <- resource "plantuml.jar" plantumlJar
                         try readProcessUTF8 "java" ["-jar", plantuml, "-charset", "UTF-8", src]
                     Asymptote -> do
-                        let eps = src -<.> "eps"
-                        void $ try readProcessUTF8 exe ["-o", eps, src]
-                        try readProcessUTF8 "convert" ["-density", "600", eps, img]
+                        let pdf = src -<.> "pdf"
+                        void $ try readProcessUTF8 exe ["-f", "pdf", "-o", pdf, src]
+                        try readProcessUTF8 "convert" ["-density", "600", pdf, img]
                     R ->
                         try readProcessUTF8 "Rscript" [src]
             let link = case currentDialect env of
