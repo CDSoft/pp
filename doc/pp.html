@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Saturday 4 November 2017</p>
+<p class="date">Monday 6 November 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -290,6 +290,9 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 </dd>
 <dt><strong><code>add</code></strong></dt>
 <dd><code>!add(VARNAME)[(INCREMENT)]</code> computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
+</dd>
+<dt><strong><code>append</code></strong></dt>
+<dd><code>!append(VARNAME)[(TEXT)]</code> appends <code>TEXT</code> to <code>!VARNAME</code> and stores the result to <code>VARNAME</code>.
 </dd>
 <dt><strong><code>exec</code></strong></dt>
 <dd><code>!exec(COMMAND)</code> executes a shell command with the default shell (<code>sh</code> or <code>cmd</code> according to the OS).

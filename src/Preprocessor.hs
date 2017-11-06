@@ -99,7 +99,7 @@ builtin = [ define, undefine, rawdef
           ++ map dialect dialects
           ++
           [ readEnv, getos, getarch
-          , add
+          , add, append
           , exec, rawexec `deprecated` "exec"
           , script "sh"         "sh"          ""          ".sh" "`!sh(CMD)` executes `CMD` in a `sh` shell."
           , script "bash"       "bash"        ""          ".sh" "`!bash(CMD)` executes `CMD` in a `bash` shell."
@@ -774,6 +774,25 @@ atoi :: String -> Integer
 atoi s = case reads s of
             [(i, "")] -> i
             _ -> 0
+
+---------------------------------------------------------------------
+-- String macros
+---------------------------------------------------------------------
+
+-- !append(name)(val) preprocesses name and val and appends val to
+-- the value stored in name. If name is not defined its value is an empty string.
+append :: Macro
+append = Macro "append" []
+    "`!append(VARNAME)[(TEXT)]` appends `TEXT` to `!VARNAME` and stores the result to `VARNAME`."
+    impl
+    where
+        impl env [name, text] = do
+            name' <- ppAndStrip' env name
+            let text0 = fromVal $ getSymbol env (Def name')
+            text1 <- ppAndStrip' env text
+            let env' = env{vars = (Def name', Val (text0++text1)) : clean (Def name') (vars env)}
+            return (env', "")
+        impl _ _ = arityError "append"
 
 ---------------------------------------------------------------------
 -- Script macros

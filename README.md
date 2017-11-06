@@ -261,6 +261,9 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 **`add`**  
 `!add(VARNAME)[(INCREMENT)]` computes `VARNAME+INCREMENT` and stores the result to `VARNAME`. The default value of the increment is 1.
 
+**`append`**  
+`!append(VARNAME)[(TEXT)]` appends `TEXT` to `!VARNAME` and stores the result to `VARNAME`.
+
 **`exec`**  
 `!exec(COMMAND)` executes a shell command with the default shell (`sh` or `cmd` according to the OS).
 
