@@ -37,7 +37,7 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 module Tag(describe) where
 
 describe :: String
-describe = "$(git describe --tags)"
+describe = "$(git describe --tags || awk '$1=="version:" { print $2 }' pp.cabal)"
 
 EOF
 

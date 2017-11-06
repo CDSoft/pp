@@ -87,7 +87,7 @@ Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
 - Latest Linux and Windows binaries:
 
-    - Fedora §sh[cat /etc/redhat-release | tr -d -c "[0-9]"] (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
     - Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
 
 - Older version archive:
@@ -682,6 +682,17 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to `bash`.
 
+§def(hascmd)
+§ifne(os)(windows)
+````````````````````````````````````````````
+§ifne(§sh(hash wine; echo $?))(0)
+~~~~~~~~~
+§undef(hascmd)
+~~~~~~~~~
+````````````````````````````````````````````
+
+§ifdef(hascmd)
+````````````````````````````````````````````
 ### Cmd
 
 Windows' [command-line interpreter][Cmd] is executed when the keyword `cmd` is used.
@@ -711,6 +722,7 @@ if "%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%" == "" (
 )
 ~~~~~
 ~~~~~~~~~~
+````````````````````````````````````````````
 
 ### Python
 

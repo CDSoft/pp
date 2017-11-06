@@ -67,7 +67,7 @@ endif
 BUILD = .stack-work
 
 TAG = src/Tag.hs
-$(shell test -d .git && ./tag.sh $(TAG))
+$(shell ( test -d .git || ! test -f $(TAG) ) && ./tag.sh $(TAG))
 
 install: $(PP)
 	@$(call title,"installing $<")
@@ -98,7 +98,7 @@ README.md: doc/pp.md
 # archives
 #####################################################################
 
-pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard tools/*) $(wildcard test/*) README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml
+pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard tools/*) $(wildcard test/*) tag.sh README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml
 	@$(call title,"source archive: $@")
 	tar -czf $@ $^
 
@@ -151,7 +151,7 @@ doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(dir $@) doc/img
-	stack exec -- pp -en -img=doc/img $< | pandoc -S --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	stack exec -- pp -en -img=doc/img $< | pandoc --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 	@$(call ok,"$@")
 
 #####################################################################
@@ -180,7 +180,7 @@ $(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i test/pp-test-lib.i
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
 	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
-	pandoc -S --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
+	pandoc --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
 ref: $(BUILD)/pp-test.output
@@ -198,7 +198,7 @@ $(BUILD)/pp-test-rst.output: test/pp-test.rst
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
 	TESTENVVAR=42 stack exec -- pp -rst -img="[$(BUILD)/]img" -en -html $< > $@
-	pandoc -S --toc -c doc/pp.css -f rst -t html5 $@ -o $(@:.output=.html)
+	pandoc --toc -c doc/pp.css -f rst -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref-rst
 ref-rst: $(BUILD)/pp-test-rst.output

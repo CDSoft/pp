@@ -80,7 +80,7 @@
 <li>improve the documentation</li>
 <li>add some nicer examples</li>
 <li>find new usages</li>
-<li>…</li>
+<li>...</li>
 </ul>
 <h1 id="installation">Installation</h1>
 <p><strong>Compilation</strong>:</p>
@@ -113,7 +113,7 @@
 </ul></li>
 </ul>
 <h1 id="usage">Usage</h1>
-<p><code>pp</code> is a simple preprocessor written in Haskell. It’s mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP, for instance, but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.</p>
+<p><code>pp</code> is a simple preprocessor written in Haskell. It's mainly designed for Pandoc but may be used as a generic preprocessor. It is not intended to be as powerful as GPP, for instance, but is a simple implementation for my own needs, as well as an opportunity to play with Haskell.</p>
 <p><code>pp</code> takes strings as input and incrementally builds an environment which is a lookup table containing variables and various other information. Built-in macros are Haskell functions that takes arguments (strings) and the current environment and build a new environment in the IO monad. User defined macros are simple definitions, arguments are numbered 1 to N.</p>
 <p><code>pp</code> emits the preprocessed document on the standard output. Inputs are listed on the command line and concatenated, the standard input is used when no input is specified.</p>
 <h2 id="command-line">Command line</h2>
@@ -157,7 +157,7 @@
 </dd>
 </dl>
 <p>Other arguments are filenames.</p>
-<p>Files are read and preprocessed using the current state of the environment. The special filename “<code>-</code>” can be used to preprocess the standard input.</p>
+<p>Files are read and preprocessed using the current state of the environment. The special filename &quot;<code>-</code>&quot; can be used to preprocess the standard input.</p>
 <h2 id="macros">Macros</h2>
 <p>Built-in macros are hard coded in <code>pp</code> and can not be redefined. User defined macros are simple text substitutions that may have any number of parameters (named <code>!1</code> to <code>!n</code>). User macros can be (re)defined on the command line or in the documents.</p>
 <p>Macro names are:</p>
@@ -165,7 +165,7 @@
 <li>case sensitive (i.e.: <code>!my_macro</code> and <code>!My_Macro</code> are different macros)</li>
 <li>made of letters, digits and underscores (<code>a-zA-Z0-9_</code>)</li>
 </ul>
-<p>To get the value of a variable you just have to write its name after a ‘<code>!</code>’. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>!foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:</p>
+<p>To get the value of a variable you just have to write its name after a '<code>!</code>'. Macros can be given arguments. Each argument is enclosed in parenthesis, curly braces or square brackets. For instance, the macro <code>foo</code> with two arguments can be called as <code>!foo(x)(y)</code>, <code>!foo{x}{y}</code> or even <code>!foo[x][y]</code>. Mixing brackets, braces and parenthesis within a single macro is not allowed: all parameters must be enclosed within the same type of delimiters. This helps ending a list of arguments in some edge cases:</p>
 <pre><code>!macro(x)(y)
 
 [link]: foo bar
@@ -178,7 +178,7 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <p>For most of the macros, arguments are preprocessed before executing the macro. Macros results are not preprocessed (unless used as a parameter of an outer macro). The <code>include</code> macro is an exception: its output is also preprocessed. The <code>rawinclude</code> macro can include a file without preprocessing it.</p>
 <dl>
 <dt><strong><code>define</code></strong>, <strong><code>def</code></strong></dt>
-<dd><code>!def[ine](SYMBOL)[[(DOC)](VALUE)]</code> adds the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> … <code>!n</code> in <code>VALUE</code>. If <code>DOC</code> is given it is used to document the macro (see the <code>-help</code> option).
+<dd><code>!def[ine](SYMBOL)[[(DOC)](VALUE)]</code> adds the symbol <code>SYMBOL</code> to the current environment and associate it with the optional value <code>VALUE</code>. Arguments are denoted by <code>!1</code> ... <code>!n</code> in <code>VALUE</code>. If <code>DOC</code> is given it is used to document the macro (see the <code>-help</code> option).
 </dd>
 <dt><strong><code>undefine</code></strong>, <strong><code>undef</code></strong></dt>
 <dd><code>!undef[ine](SYMBOL)</code> removes the symbol <code>SYMBOL</code> from the current environment.
@@ -214,10 +214,10 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!comment(TEXT)</code> considers <code>TEXT</code> as well as any additional parameters as comment. Nothing is preprocessed or returned.
 </dd>
 <dt><strong><code>quiet</code></strong></dt>
-<dd><code>!quiet(TEXT)</code> quietly preprocesses <code>TEXT</code> and returns nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
+<dd><code>!quiet(TEXT)</code> quietly preprocesses <code>TEXT</code> and returns nothing. Only the side effects (e.g. macro definitions) are kept in the environment.
 </dd>
 <dt><strong><code>pp</code></strong></dt>
-<dd><code>!pp(TEXT)</code> preprocesses and return <code>TEXT</code>. This macro is useful to preprocess the output of script macros for instance (<code>!sh</code>, <code>!python</code>, …).
+<dd><code>!pp(TEXT)</code> preprocesses and return <code>TEXT</code>. This macro is useful to preprocess the output of script macros for instance (<code>!sh</code>, <code>!python</code>, ...).
 </dd>
 <dt><strong><code>mdate</code></strong></dt>
 <dd><code>!mdate(FILES)</code> returns the modification date of the most recent file.
@@ -286,7 +286,7 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!os</code> returns the OS name (e.g. <code>linux</code> on Linux, <code>darwin</code> on MacOS, <code>windows</code> on Windows).
 </dd>
 <dt><strong><code>arch</code></strong></dt>
-<dd><code>!arch</code> returns the machine architecture (e.g. <code>x86_64</code>, <code>i386</code>, …).
+<dd><code>!arch</code> returns the machine architecture (e.g. <code>x86_64</code>, <code>i386</code>, ...).
 </dd>
 <dt><strong><code>add</code></strong></dt>
 <dd><code>!add(VARNAME)[(INCREMENT)]</code> computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
@@ -370,7 +370,7 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!Rplot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)</code> renders a Rplot image with R.
 </dd>
 <dt><strong><code>literate</code></strong>, <strong><code>lit</code></strong></dt>
-<dd><code>!lit[erate](FILENAME)[(LANG)][(CONTENT)]</code> appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it’s a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc --list-highlight-languages</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features. If <code>LANG</code> is not given, pp uses the previously defined language for the same file or macro or a default language according to its name. If <code>CONTENT</code>is not given, pp returns the current content of <code>FILENAME</code>.
+<dd><code>!lit[erate](FILENAME)[(LANG)][(CONTENT)]</code> appends <code>CONTENT</code> to the file <code>FILENAME</code>. If <code>FILENAME</code> starts with <code>@</code> it's a macro, not a file. The output is highlighted using the programming language <code>LANGUAGE</code>. The list of possible languages is given by <code>pandoc --list-highlight-languages</code>. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features. If <code>LANG</code> is not given, pp uses the previously defined language for the same file or macro or a default language according to its name. If <code>CONTENT</code>is not given, pp returns the current content of <code>FILENAME</code>.
 </dd>
 <dt><strong><code>flushliterate</code></strong>, <strong><code>flushlit</code></strong></dt>
 <dd><code>!flushlit[erate]</code> writes files built with <code>!lit</code> before reaching the end of the document. This macro is automatically executed before any script execution or file inclusion with <code>!src</code>.
@@ -388,13 +388,13 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!csv(FILENAME)[(HEADER)]</code> converts a CSV file to a Markdown or reStructuredText table. <code>HEADER</code> defines the header of the table, fields are separated by pipes (<code>|</code>). If <code>HEADER</code> is not defined, the first line of the file is used as the header of the table.
 </dd>
 <dt><strong><code>macrochars</code></strong></dt>
-<dd><code>!macrochars(CHARS)</code> defines the chars used to call a macro. The default value is <code>&quot;!&quot;</code>. Any non space character can start a macro call (e.g. after <code>!macrochars(!\)</code> both <code>!foo</code> and <code>\foo</code> are valid macro calls.
+<dd><code>!macrochars(CHARS)</code> defines the chars used to call a macro. The default value is <code>&quot;!&quot;</code>. Any non space character can start a macro call (e.g. after <code>!macrochars(!\)</code> both <code>!foo</code> and <code>\foo</code> are valid macro calls.
 </dd>
 <dt><strong><code>macroargs</code></strong></dt>
-<dd><code>!macroargs(CHARS)</code> defines the chars used to separate macro arguments. The default value is <code>&quot;(){}[]&quot;</code> (e.g. after <code>!macroargs(()«»)</code> both <code>!foo(...)</code> and <code>!foo«...»</code> are valid macro calls).
+<dd><code>!macroargs(CHARS)</code> defines the chars used to separate macro arguments. The default value is <code>&quot;(){}[]&quot;</code> (e.g. after <code>!macroargs(()«»)</code> both <code>!foo(...)</code> and <code>!foo«...»</code> are valid macro calls).
 </dd>
 <dt><strong><code>literatemacrochars</code></strong></dt>
-<dd><code>!literatemacrochars(CHARS)</code> defines the chars used to identify literate programming macros. The default value is <code>&quot;@&quot;</code>. Any non space character can start a literate programming macro (e.g. after <code>!literatemacrochars(@&amp;)</code> both <code>@foo</code> and <code>&amp;foo</code> are valid macro calls.
+<dd><code>!literatemacrochars(CHARS)</code> defines the chars used to identify literate programming macros. The default value is <code>&quot;@&quot;</code>. Any non space character can start a literate programming macro (e.g. after <code>!literatemacrochars(@&amp;)</code> both <code>@foo</code> and <code>&amp;foo</code> are valid macro calls.
 </dd>
 <dt><strong><code>macros</code></strong></dt>
 <dd><code>!macros</code> lists the builtin macros.
@@ -424,12 +424,12 @@ void main()
 ~~~~~~~~~~~~~~~~~~~~
 #include &lt;stdio.h&gt;
 ~~~~~~~~~~~~~~~~~~~~</code></pre>
-<p>The program must first say “Hello” :</p>
+<p>The program must first say &quot;Hello&quot; :</p>
 <pre><code>!lit(@messages)(C)
 ~~~~~~~~~~~~~~~~~~~~
     puts(&quot;Hello...\n&quot;);
 ~~~~~~~~~~~~~~~~~~~~</code></pre>
-<p>And also finally “Goodbye”:</p>
+<p>And also finally &quot;Goodbye&quot;:</p>
 <pre><code>!lit(@messages)
 ~~~~~~~~~~~~~~~~~~~~
     puts(&quot;Goodbye.&quot;);
@@ -464,10 +464,10 @@ void main()
 <li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:
 <ul>
 <li>the CSS path shall be the actual path where the CSS file is stored</li>
-<li>the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won’t find them)</li>
+<li>the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won't find them)</li>
 <li>e.g.: <code>outputpath/img/diag42</code></li>
 </ul></li>
-<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:
+<li>the document is not self contained, i.e. the CSS and images are stored apart from the document:
 <ul>
 <li>the CSS path shall be relative to the output document</li>
 <li>the image path in diagrams shall be relative to output document in HTML links and shall also describe the actual path where the images are stored.</li>
@@ -521,7 +521,7 @@ echo Hello World!
 </figure>
 <h2 id="examples">Examples</h2>
 <p>The <a href="pp.md">source code</a> of this document contains some diagrams.</p>
-<p>Here are some simple examples. For further details about diagrams’ syntax, please read the documentation of <a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a>.</p>
+<p>Here are some simple examples. For further details about diagrams' syntax, please read the documentation of <a href="http://graphviz.org/">GraphViz</a>, <a href="http://plantuml.sourceforge.net/">PlantUML</a> and <a href="http://ditaa.sourceforge.net/">ditaa</a>.</p>
 <h3 id="graphviz">Graphviz</h3>
 <p><a href="http://graphviz.org/">GraphViz</a> is executed when one of these keywords is used: <code>dot</code>, <code>neato</code>, <code>twopi</code>, <code>circo</code>, <code>fdp</code>, <code>sfdp</code>, <code>patchwork</code>, <code>osage</code></p>
 <pre><code>!twopi(doc/img/pp-graphviz-example)(This is just a GraphViz diagram example)
@@ -647,7 +647,7 @@ Here are a few random numbers: 17766, 11151, 23481
 </code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="cmd">Cmd</h3>
-<p>Windows’ <a href="https://en.wikipedia.org/wiki/Cmd.exe">command-line interpreter</a> is executed when the keyword <code>cmd</code> is used.</p>
+<p>Windows' <a href="https://en.wikipedia.org/wiki/Cmd.exe">command-line interpreter</a> is executed when the keyword <code>cmd</code> is used.</p>
 <pre><code>!cmd
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo Hi, I'm %COMSPEC%
@@ -798,14 +798,14 @@ air, moon roof, loaded&quot;,4799.00
 <tr class="even">
 <td style="text-align: right;"><p>1999</p></td>
 <td style="text-align: left;"><p>Chevy</p></td>
-<td style="text-align: left;"><p>Venture “Extended Edition”</p></td>
+<td style="text-align: left;"><p>Venture &quot;Extended Edition&quot;</p></td>
 <td style="text-align: left;"></td>
 <td style="text-align: right;"><p>4900.00</p></td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;"><p>1999</p></td>
 <td style="text-align: left;"><p>Chevy</p></td>
-<td style="text-align: left;"><p>Venture “Extended Edition, Very Large”</p></td>
+<td style="text-align: left;"><p>Venture &quot;Extended Edition, Very Large&quot;</p></td>
 <td style="text-align: left;"></td>
 <td style="text-align: right;"><p>5000.00</p></td>
 </tr>
@@ -855,14 +855,14 @@ air, moon roof, loaded&quot;,4799.00
 <tr class="even">
 <td style="text-align: right;"><p>1999</p></td>
 <td style="text-align: left;"><p>Chevy</p></td>
-<td style="text-align: left;"><p>Venture “Extended Edition”</p></td>
+<td style="text-align: left;"><p>Venture &quot;Extended Edition&quot;</p></td>
 <td style="text-align: left;"></td>
 <td style="text-align: right;"><p>4900.00</p></td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;"><p>1999</p></td>
 <td style="text-align: left;"><p>Chevy</p></td>
-<td style="text-align: left;"><p>Venture “Extended Edition, Very Large”</p></td>
+<td style="text-align: left;"><p>Venture &quot;Extended Edition, Very Large&quot;</p></td>
 <td style="text-align: left;"></td>
 <td style="text-align: right;"><p>5000.00</p></td>
 </tr>
@@ -876,7 +876,7 @@ air, moon roof, loaded&quot;,4799.00
 </tbody>
 </table>
 <h1 id="os-support">OS support</h1>
-<p>PP is meant to be portable and multi platform. To be OS agnostic, the use of free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, …). Python is also a good choice.</p>
+<p>PP is meant to be portable and multi platform. To be OS agnostic, the use of free script languages is strongly recommended. For instance, bash scripts are preferred to proprietary closed languages because they can run on any platform. It is standard on Linux and pretty well supported on Windows (Cygwin, MSYS/Mingw, Git Bash, BusyBox, ...). Python is also a good choice.</p>
 <p>Anyway, if some documents require portability and specific tools, PP provides some macros to detect the OS (<code>!os</code>, <code>!arch</code>). E.g.:</p>
 <pre><code>!quiet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
