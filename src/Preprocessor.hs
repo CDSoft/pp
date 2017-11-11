@@ -553,7 +553,7 @@ ifndef = Macro "ifndef" []
 -- e is optional.
 ifeq :: Macro
 ifeq = Macro "ifeq" []
-    "`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]` returns `TEXT_IF_EQUAL` if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y`are different. Two pieces of text are equal if all non-space characters are the same."
+    "`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]` returns `TEXT_IF_EQUAL` if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y` are different. Two pieces of text are equal if all non-space characters are the same."
     impl
     where
         impl env [x, y, t, e] = do
@@ -567,7 +567,7 @@ ifeq = Macro "ifeq" []
 -- !ifne(x)(y)(t)(e) is equivalent to !ifeq(x)(y)(e)(t)
 ifne :: Macro
 ifne = Macro "ifne" []
-    "`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT` if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y`are equal."
+    "`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT` if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y` are equal."
     impl
     where
         Macro _ _ _ ifeqImpl = ifeq
@@ -859,7 +859,7 @@ rawexec = Macro "rawexec" [] doc impl
 -- (thanks to Vittorio Romeo for the suggestion).
 diagram :: String -> DiagramRuntime -> String -> (String->String) -> (String->String) -> Macro
 diagram name runtime exe header footer = Macro name []
-    ("`!"++name++"(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a " ++ name ++ " image with " ++ show runtime ++ ".")
+    ("`!"++name++"(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a " ++ name ++ " image with " ++ show runtime ++ ".")
     impl
     where
         impl env [path, title, code] = do
@@ -1269,43 +1269,40 @@ csv = Macro "csv" []
 ---------------------------------------------------------------------
 
 macrochars :: Macro
-
 macrochars = Macro "macrochars" []
     "`!macrochars(CHARS)` defines the chars used to call a macro. The default value is `\"!\"`. Any non space character can start a macro call (e.g. after `!macrochars(!\\)` both `!foo` and `\\foo` are valid macro calls."
     (\env args -> case args of
         [chars] -> do
             chars' <- ppAndStrip' env chars
             let env' = env{macroChars = filter (not . isSpace) chars'}
-            unless (checkParserConsistency env') $ macrocharsError chars'
+            unless (checkParserConsistency env') $ macrocharsError (fromVal chars)
             return (env', "")
         _ -> arityError "macrochars"
     )
 
 macroargs :: Macro
-
 macroargs = Macro "macroargs" []
     "`!macroargs(CHARS)` defines the chars used to separate macro arguments. The default value is `\"(){}[]\"` (e.g. after `!macroargs(()«»)` both `!foo(...)` and `!foo«...»` are valid macro calls)."
     (\env args -> case args of
         [chars] -> do
             chars' <- ppAndStrip' env chars
             let pairs = chunksOf 2 $ filter (not . isSpace) chars'
-            unless (all ((==2) . length) pairs) $ macroargsError chars'
+            unless (all ((==2) . length) pairs) $ macroargsError (fromVal chars)
             let assoc = map (\[o,c] -> (o,c)) pairs
             let env' = env{openCloseChars = assoc}
-            unless (checkParserConsistency env') $ macroargsError chars'
+            unless (checkParserConsistency env') $ macroargsError (fromVal chars)
             return (env', "")
         _ -> arityError "macroargs"
     )
 
 literatemacrochars :: Macro
-
 literatemacrochars = Macro "literatemacrochars" []
     "`!literatemacrochars(CHARS)` defines the chars used to identify literate programming macros. The default value is `\"@\"`. Any non space character can start a literate programming macro (e.g. after `!literatemacrochars(@&)` both `@foo` and `&foo` are valid macro calls."
     (\env args -> case args of
         [chars] -> do
             chars' <- ppAndStrip' env chars
             let env' = env{literateMacroChars = filter (not . isSpace) chars'}
-            unless (checkParserConsistency env') $ literatemacrocharsError chars'
+            unless (checkParserConsistency env') $ literatemacrocharsError (fromVal chars)
             return (env', "")
         _ -> arityError "literatemacrochars"
     )

@@ -784,14 +784,14 @@ userhelp
 
 **`ifeq`**
 :   `!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]` returns `TEXT_IF_EQUAL`
-    if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y`are
-    different. Two pieces of text are equal if all non-space characters
+    if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y`
+    are different. Two pieces of text are equal if all non-space characters
     are the same.
 
 **`ifne`**
 :   `!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT`
-    if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y`are
-    equal.
+    if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y`
+    are equal.
 
 **`import`**
 :   `!import(FILENAME)` works as `!include(FILENAME)` but returns
@@ -948,51 +948,51 @@ userhelp
 :   `!cmd(CMD)` executes `CMD` in a Windows shell (Powershell).
 
 **`dot`**
-:   `!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot image with
-    Graphviz.
+:   `!dot(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a dot image
+    with Graphviz.
 
 **`neato`**
-:   `!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato image
+:   `!neato(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a neato image
     with Graphviz.
 
 **`twopi`**
-:   `!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi image
+:   `!twopi(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a twopi image
     with Graphviz.
 
 **`circo`**
-:   `!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo image
+:   `!circo(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a circo image
     with Graphviz.
 
 **`fdp`**
-:   `!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp image with
-    Graphviz.
+:   `!fdp(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a fdp image
+    with Graphviz.
 
 **`sfdp`**
-:   `!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp image
+:   `!sfdp(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a sfdp image
     with Graphviz.
 
 **`patchwork`**
-:   `!patchwork(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a patchwork
+:   `!patchwork(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a patchwork
     image with Graphviz.
 
 **`osage`**
-:   `!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage image
+:   `!osage(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a osage image
     with Graphviz.
 
 **`uml`**
-:   `!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml image with
-    PlantUML.
+:   `!uml(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a uml image
+    with PlantUML.
 
 **`ditaa`**
-:   `!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa image
+:   `!ditaa(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a ditaa image
     with PlantUML.
 
 **`asy`**
-:   `!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy image with
-    Asymptote.
+:   `!asy(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a asy image
+    with Asymptote.
 
 **`Rplot`**
-:   `!Rplot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a Rplot image
+:   `!Rplot(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a Rplot image
     with R.
 
 **`literate`**, **`lit`**

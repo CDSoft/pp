@@ -8,12 +8,12 @@ digraph {
 
     PP [shape=diamond label="pp"]
     bash sh cmd python haskell stack
-    Bash [shape=box label="bash\nor bash.exe"]
-    Sh [shape=box label="sh\nor sh.exe"]
-    Python [shape=box label="python\nor python.exe"]
-    Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
-    Stack [shape=box label="stack\nor stack.exe"]
-    Rscriptexe [shape=box label="Rscript\nor Rscript.exe"]
+    Bash [shape=box label="bash"]
+    Sh [shape=box label="sh"]
+    Python [shape=box label="python"]
+    Haskell [shape=box label="runhaskell"]
+    Stack [shape=box label="stack"]
+    Rscriptexe [shape=box label="Rscript"]
     Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     PowerShell [shape=box label="(Windows only)\npowershell.exe"]
 

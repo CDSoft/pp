@@ -71,14 +71,16 @@ Installation
 1. Download and extract [pp.tgz].
 2. Run `make`.
 
-[PP] is written in [Haskell] and is built with [Stack]. On MacOS, running `make` requires the GNU version of `tar` which can be installed with `brew install gnu-tar`.
+[PP] is written in [Haskell] and is built with [Stack].
+On MacOS, running `make` requires the GNU version of `tar` which can be installed with `brew install gnu-tar`.
 
 **Installation**:
 
 - Run `make install` to copy `pp` in `~/.local/bin`.
 - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires (*optionally*) [Graphviz], [Asymptote], [R] and Java ([PlantUML] and [ditaa] are embedded in `pp`).
+`pp` requires (*optionally*) [Graphviz], [Asymptote], [R] and Java
+([PlantUML] and [ditaa] are embedded in `pp`).
 
 **Precompiled binaries**:
 
@@ -428,12 +430,12 @@ digraph {
 
     PP [shape=diamond label="pp"]
     bash sh cmd python haskell stack
-    Bash [shape=box label="bash\nor bash.exe"]
-    Sh [shape=box label="sh\nor sh.exe"]
-    Python [shape=box label="python\nor python.exe"]
-    Haskell [shape=box label="runhaskell\nor runhaskell.exe"]
-    Stack [shape=box label="stack\nor stack.exe"]
-    Rscriptexe [shape=box label="Rscript\nor Rscript.exe"]
+    Bash [shape=box label="bash"]
+    Sh [shape=box label="sh"]
+    Python [shape=box label="python"]
+    Haskell [shape=box label="runhaskell"]
+    Stack [shape=box label="stack"]
+    Rscriptexe [shape=box label="Rscript"]
     Cmd [shape=box label="wine cmd /c\nor cmd /c"]
     PowerShell [shape=box label="(Windows only)\npowershell.exe"]
 
@@ -568,7 +570,8 @@ Java must be installed.
 
 [Asymptote] is executed when the keyword `asy` is used.
 
-    !asy(pp-asy-example)(This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
+    !asy(pp-asy-example)
+        (This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     import geometry;
     size(7.5cm,0);
@@ -606,7 +609,8 @@ Java must be installed.
 
 Once generated the figure looks like:
 
-§asy(pp-asy-example)(This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
+§asy(pp-asy-example{width=50%})
+    (This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import geometry;
 size(7.5cm,0);

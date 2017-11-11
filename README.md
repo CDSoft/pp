@@ -163,10 +163,10 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 `!ifndef(SYMBOL)(TEXT_IF_NOT_DEFINED)[(TEXT_IF_DEFINED)]` returns `TEXT_IF_NOT_DEFINED` if `SYMBOL` is not defined or `TEXT_IF_DEFINED` if it is defined.
 
 **`ifeq`**  
-`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]` returns `TEXT_IF_EQUAL` if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y`are different. Two pieces of text are equal if all non-space characters are the same.
+`!ifeq(X)(Y)(TEXT_IF_EQUAL)[(TEXT_IF_DIFFERENT)]` returns `TEXT_IF_EQUAL` if `X` and `Y` are equal or `TEXT_IF_DIFFERENT` if `X` and `Y` are different. Two pieces of text are equal if all non-space characters are the same.
 
 **`ifne`**  
-`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT` if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y`are equal.
+`!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT` if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y` are equal.
 
 **`import`**  
 `!import(FILENAME)` works as `!include(FILENAME)` but returns nothing. This is useful to import macro definitions.
@@ -304,40 +304,40 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 `!cmd(CMD)` executes `CMD` in a Windows shell (Powershell).
 
 **`dot`**  
-`!dot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a dot image with Graphviz.
+`!dot(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a dot image with Graphviz.
 
 **`neato`**  
-`!neato(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a neato image with Graphviz.
+`!neato(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a neato image with Graphviz.
 
 **`twopi`**  
-`!twopi(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a twopi image with Graphviz.
+`!twopi(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a twopi image with Graphviz.
 
 **`circo`**  
-`!circo(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a circo image with Graphviz.
+`!circo(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a circo image with Graphviz.
 
 **`fdp`**  
-`!fdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a fdp image with Graphviz.
+`!fdp(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a fdp image with Graphviz.
 
 **`sfdp`**  
-`!sfdp(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a sfdp image with Graphviz.
+`!sfdp(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a sfdp image with Graphviz.
 
 **`patchwork`**  
-`!patchwork(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a patchwork image with Graphviz.
+`!patchwork(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a patchwork image with Graphviz.
 
 **`osage`**  
-`!osage(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a osage image with Graphviz.
+`!osage(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a osage image with Graphviz.
 
 **`uml`**  
-`!uml(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a uml image with PlantUML.
+`!uml(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a uml image with PlantUML.
 
 **`ditaa`**  
-`!ditaa(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a ditaa image with PlantUML.
+`!ditaa(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a ditaa image with PlantUML.
 
 **`asy`**  
-`!asy(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a asy image with Asymptote.
+`!asy(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a asy image with Asymptote.
 
 **`Rplot`**  
-`!Rplot(IMAGE)(LEGEND)(GRAPH DESCRIPTION)` renders a Rplot image with R.
+`!Rplot(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a Rplot image with R.
 
 **`literate`**, **`lit`**  
 `!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to the file `FILENAME`. If `FILENAME` starts with `@` it's a macro, not a file. The output is highlighted using the programming language `LANGUAGE`. The list of possible languages is given by `pandoc --list-highlight-languages`. Files are actually written when all the documents have been successfully preprocessed. Macros are expanded when the files are written. This macro provides basic literate programming features. If `LANG` is not given, pp uses the previously defined language for the same file or macro or a default language according to its name. If `CONTENT`is not given, pp returns the current content of `FILENAME`.
@@ -597,7 +597,8 @@ Once generated the graph looks like:
 
 [Asymptote](http://asymptote.sourceforge.net/) is executed when the keyword `asy` is used.
 
-    !asy(pp-asy-example)(This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
+    !asy(pp-asy-example)
+        (This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     import geometry;
     size(7.5cm,0);
@@ -635,7 +636,7 @@ Once generated the graph looks like:
 
 Once generated the figure looks like:
 
-![This is just an Asymptote example from <http://asy.marris.fr/asymptote/Sciences_physiques/index.html>](doc/img/pp-asy-example.png)
+<img src="doc/img/pp-asy-example.png" alt="This is just an Asymptote example from http://asy.marris.fr/asymptote/Sciences_physiques/index.html" style="width:50.0%" />
 
 ### R (plot)
 
@@ -687,7 +688,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.18)
+    Microsoft Windows 10.0.15063 (2.19)
     This script is run from wine under Linux
 
 ### Python
@@ -708,8 +709,8 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.13 (default, Sep  5 2017, 08:53:59) 
-    [GCC 7.1.1 20170622 (Red Hat 7.1.1-3)]
+    Hi, I'm Python 2.7.14 (default, Nov  2 2017, 18:42:05) 
+    [GCC 7.2.1 20170915 (Red Hat 7.2.1-2)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell
