@@ -56,7 +56,98 @@ Undefinition test:                  mac1 is not defined
 Undefinition test:                  
 Undefinition test:                  mac1 is not defined
 Undefinition test:                  swap is defined
+Macro defined:                      1 0
 ----------------------------------- -------------------------------------------------------------
+
+## Expressions
+
+
+
+"-1" => -1 (true)
+
+"1" => 1 (true)
+
+"2+3" => 5 (true)
+
+"4-5" => -1 (true)
+
+"6*7*8" => 336 (true)
+
+"8/2" => 4 (true)
+
+"! 0" => 1 (true)
+ "not 0" => 1 (true)
+ "! """ => 1 (true)
+ "not """ => 1 (true)
+
+"! 3" => 0 (false)
+ "not 3" => 0 (false)
+ "! "?"" => 0 (false)
+ "not "?"" => 0 (false)
+
+"3 and 4" => 1 (true)
+ "3 and 0" => 0 (false)
+ "0 and 4" => 0 (false)
+ "0 and 0" => 0 (false)
+
+"3 && 4" => 1 (true)
+ "3 && 0" => 0 (false)
+ "0 && 4" => 0 (false)
+ "0 && 0" => 0 (false)
+
+"3 or 4" => 1 (true)
+ "3 or 0" => 1 (true)
+ "0 or 4" => 1 (true)
+ "0 or 0" => 0 (false)
+
+"3 || 4" => 1 (true)
+ "3 || 0" => 1 (true)
+ "0 || 4" => 1 (true)
+ "0 || 0" => 0 (false)
+
+"3 xor 4" => 0 (false)
+ "3 xor 0" => 1 (true)
+ "0 xor 4" => 1 (true)
+ "0 xor 0" => 0 (false)
+
+"3 == 2+1" => 1 (true)
+ "3 == 2+2" => 0 (false)
+ "3 == 2-1" => 0 (false)
+
+"3 /= 2+1" => 0 (false)
+ "3 /= 2+2" => 1 (true)
+ "3 /= 2-1" => 1 (true)
+
+"3 != 2+1" => 0 (false)
+ "3 != 2+2" => 1 (true)
+ "3 != 2-1" => 1 (true)
+
+"3 <= 2+1" => 1 (true)
+ "3 <= 2+2" => 1 (true)
+ "3 <= 2-1" => 0 (false)
+
+"3 < 2+1" => 0 (false)
+ "3 < 2+2" => 1 (true)
+ "3 < 2-1" => 0 (false)
+
+"3 >= 2+1" => 1 (true)
+ "3 >= 2+2" => 0 (false)
+ "3 >= 2-1" => 1 (true)
+
+"3 > 2+1" => 0 (false)
+ "3 > 2+2" => 0 (false)
+ "3 > 2-1" => 1 (true)
+
+"1" => 1 (true)
+
+"0" => 0 (false)
+
+"1 and 0" => 0 (false)
+
+"1 or 0" => 1 (true)
+
+"1 and not 0" => 1 (true)
+
 
 ## Testing argument scopes (see issue #33)
 
@@ -674,11 +765,14 @@ define
 def
 undefine
 undef
+defined
 rawdef
 ifdef
 ifndef
 ifeq
 ifne
+if
+eval
 import
 include
 inc
@@ -769,6 +863,9 @@ userhelp
 :   `!undef[ine](SYMBOL)` removes the symbol `SYMBOL` from the current
     environment.
 
+**`defined`**
+:   `!defined(SYMBOL)` returns 1 if `SYMBOL` is defined, 0 otherwise.
+
 **`rawdef`**
 :   `!rawdef(X)` returns the raw (unevaluated) definition of `X`.
 
@@ -792,6 +889,14 @@ userhelp
 :   `!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT`
     if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y`
     are equal.
+
+**`if`**
+:   `!if(EXPR)(TEXT_IF_EXPR_IS_TRUE)[(TEXT_IF_EXPR_IS_FALSE)]` returns
+    `TEXT_IF_EXPR_IS_TRUE` if `EXPR` is true or `TEXT_IF_EXPR_IS_FALSE`
+    if `EXPR` is false.
+
+**`eval`**
+:   `!eval(EXPR) evaluates `EXPR`.
 
 **`import`**
 :   `!import(FILENAME)` works as `!include(FILENAME)` but returns

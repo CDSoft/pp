@@ -55,6 +55,7 @@ import System.IO.Temp
 import CSV
 import Environment
 import ErrorMessages
+import Expr
 import Formats
 import Localization
 import OSAbstraction
@@ -79,8 +80,8 @@ data DiagramRuntime = Graphviz | PlantUML | Asymptote | R deriving (Show)
 
 -- list of builtin macros
 builtin :: [Macro]
-builtin = [ define, undefine, rawdef
-          , ifdef, ifndef, ifeq, ifne
+builtin = [ define, undefine, defined, rawdef
+          , ifdef, ifndef, ifeq, ifne, if_, eval_
           , importFile, include
           , raw, rawinc
           , comment, quiet, forcepp
@@ -548,6 +549,18 @@ ifndef = Macro "ifndef" []
         impl env [name, t] = ifdefImpl env [name, Val "", t]
         impl _ _ = arityError "ifndef"
 
+defined :: Macro
+defined = Macro "defined" []
+    "`!defined(SYMBOL)` returns 1 if `SYMBOL` is defined, 0 otherwise."
+    impl
+    where
+        impl env [name] = do
+            name' <- ppAndStrip' env name
+            case (lookup name' (arguments env), lookup (Def name') (vars env)) of
+                (Nothing, Nothing) -> return (env, "0")
+                _ -> return (env, "1")
+        impl _ _ = arityError "defined"
+
 -- !ifeq(x)(y)(t)(e) preprocesses x and y. If they are equal
 -- (spaces are ignored), it preprocessed t, otherwise e.
 -- e is optional.
@@ -574,6 +587,30 @@ ifne = Macro "ifne" []
         impl env [x, y, t, e] = ifeqImpl env [x, y, e, t]
         impl env [x, y, t] = ifeqImpl env [x, y, Val "", t]
         impl _ _ = arityError "ifne"
+
+if_ :: Macro
+if_ = Macro "if" []
+    "`!if(EXPR)(TEXT_IF_EXPR_IS_TRUE)[(TEXT_IF_EXPR_IS_FALSE)]` returns `TEXT_IF_EXPR_IS_TRUE` if `EXPR` is true or `TEXT_IF_EXPR_IS_FALSE` if `EXPR` is false."
+    impl
+    where
+        impl env [expr, t, e] = do
+            expr' <- ppAndStrip' env expr
+            ppAndStrip env $ case eval (fromMaybe "-" $ currentFile env) expr' of
+                (_, True) -> t
+                (_, False) -> e
+        impl env [expr, t] = impl env [expr, t, Val ""]
+        impl _ _ = arityError "if"
+
+eval_ :: Macro
+eval_ = Macro "eval" []
+    "`!eval(EXPR) evaluates `EXPR`."
+    impl
+    where
+        impl env [expr] = do
+            expr' <- ppAndStrip' env expr
+            case eval (fromMaybe "-" $ currentFile env) expr' of
+                (val, _) -> return (env, val)
+        impl _ _ = arityError "eval"
 
 -- !rawdef(name) preprocesses name and emits the raw definition
 -- (no preprocessing)

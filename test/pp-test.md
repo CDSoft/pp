@@ -56,7 +56,41 @@ Undefinition test:                  !ifndef(mac1)(mac1 is not defined)
 Undefinition test:                  !ifndef(swap)(swap is not defined)
 Undefinition test:                  !ifndef(mac1)(mac1 is not defined)(mac1 is defined)
 Undefinition test:                  !ifndef(swap)(swap is not defined)(swap is defined)
+Macro defined:                      !defined(swap) !defined(mac1)
 ----------------------------------- -------------------------------------------------------------
+
+## Expressions
+
+!def(test)
+```
+"!1" => !eval{!1} (!if(!1)(true)(false))
+```
+
+!test(-1)
+!test(1)
+!test(2+3)
+!test(4-5)
+!test(6*7*8)
+!test(8/2)
+!test(! 0) !test(not 0) !test(! "") !test(not "")
+!test(! 3) !test(not 3) !test(! "?") !test(not "?")
+!test(3 and 4) !test(3 and 0) !test(0 and 4) !test(0 and 0)
+!test(3 && 4) !test(3 && 0) !test(0 && 4) !test(0 && 0)
+!test(3 or 4) !test(3 or 0) !test(0 or 4) !test(0 or 0)
+!test(3 || 4) !test(3 || 0) !test(0 || 4) !test(0 || 0)
+!test(3 xor 4) !test(3 xor 0) !test(0 xor 4) !test(0 xor 0)
+!test(3 == 2+1) !test(3 == 2+2) !test(3 == 2-1)
+!test(3 /= 2+1) !test(3 /= 2+2) !test(3 /= 2-1)
+!test(3 != 2+1) !test(3 != 2+2) !test(3 != 2-1)
+!test(3 <= 2+1) !test(3 <= 2+2) !test(3 <= 2-1)
+!test(3 < 2+1) !test(3 < 2+2) !test(3 < 2-1)
+!test(3 >= 2+1) !test(3 >= 2+2) !test(3 >= 2-1)
+!test(3 > 2+1) !test(3 > 2+2) !test(3 > 2-1)
+!test(!defined(swap))
+!test(!defined(mac1))
+!test(!defined(swap) and !defined(mac1))
+!test(!defined(swap) or !defined(mac1))
+!test(!defined(swap) and not !defined(mac1))
 
 ## Testing argument scopes (see issue #33)
 

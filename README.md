@@ -52,7 +52,7 @@ The recommended way to get PP binaries is to compile them from the sources. Anyw
 
 -   Latest Linux and Windows binaries:
 
-    -   Fedora 26 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    -   Fedora 27 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
     -   Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
 
 -   Older version archive:
@@ -153,6 +153,9 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 **`undefine`**, **`undef`**  
 `!undef[ine](SYMBOL)` removes the symbol `SYMBOL` from the current environment.
 
+**`defined`**  
+`!defined(SYMBOL)` returns 1 if `SYMBOL` is defined, 0 otherwise.
+
 **`rawdef`**  
 `!rawdef(X)` returns the raw (unevaluated) definition of `X`.
 
@@ -167,6 +170,12 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 
 **`ifne`**  
 `!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]` returns `TEXT_IF_DIFFERENT` if `X` and `Y` are different or `TEXT_IF_EQUAL` if `X` and `Y` are equal.
+
+**`if`**  
+`!if(EXPR)(TEXT_IF_EXPR_IS_TRUE)[(TEXT_IF_EXPR_IS_FALSE)]` returns `TEXT_IF_EXPR_IS_TRUE` if `EXPR` is true or `TEXT_IF_EXPR_IS_FALSE` if `EXPR` is false.
+
+**`eval`**  
+`!eval(EXPR) evaluates`EXPR\`.
 
 **`import`**  
 `!import(FILENAME)` works as `!include(FILENAME)` but returns nothing. This is useful to import macro definitions.
@@ -377,6 +386,26 @@ For most of the macros, arguments are preprocessed before executing the macro. M
 
 **`userhelp`**  
 `!userhelp` prints user macro help.
+
+Expressions
+===========
+
+The `!if` and `!eval` macros take an expression and evaluate it. Expressions are made of:
+
+-   integers
+-   string (`"..."`)
+-   integer operators (`+`, `-`, `*`, `/`)
+-   boolean operators (`!`, `not`, `&&`, `and`, `||`, `or`, `xor`)
+-   relational operators (`==`, `/=`, `!=`, `<`, `<=`, `>`, `>=`)
+-   parentheses, brackets and braces
+
+Boolean values are coded as integers or string (`0` and `""` are false, other values are true).
+
+Macros can be called in expressions. They are preprocessed before evaluating the expression.
+
+e.g.:
+
+    !if( !defined(FOO) or !BAR == 42 ) (say something)
 
 Literate programming example
 ============================
@@ -688,7 +717,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
 
-    Microsoft Windows 10.0.15063 (2.19)
+    Microsoft Windows 10.0.15063 (2.20)
     This script is run from wine under Linux
 
 ### Python
@@ -709,7 +738,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Python 2.7.14 (default, Nov  2 2017, 18:42:05) 
+    Hi, I'm Python 2.7.14 (default, Nov  3 2017, 10:55:25) 
     [GCC 7.2.1 20170915 (Red Hat 7.2.1-2)]
     Here are a few random numbers: 640, 25, 275
 

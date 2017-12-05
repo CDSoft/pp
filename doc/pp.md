@@ -228,6 +228,29 @@ The `rawinclude` macro can include a file without preprocessing it.
 
 §help
 
+Expressions
+===========
+
+The `!if` and `!eval` macros take an expression and evaluate it.
+Expressions are made of:
+
+- integers
+- string (`"..."`)
+- integer operators (`+`, `-`, `*`, `/`)
+- boolean operators (`!`, `not`, `&&`, `and`, `||`, `or`, `xor`)
+- relational operators (`==`, `/=`, `!=`, `<`, `<=`, `>`, `>=`)
+- parentheses, brackets and braces
+
+Boolean values are coded as integers or string (`0` and `""` are false,
+other values are true).
+
+Macros can be called in expressions.
+They are preprocessed before evaluating the expression.
+
+e.g.:
+
+    !if( !defined(FOO) or !BAR == 42 ) (say something)
+
 Literate programming example
 ============================
 

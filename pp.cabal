@@ -1,5 +1,5 @@
 name:                pp
-version:             2.1.5
+version:             2.2
 synopsis:            Generic Preprocessor (for Pandoc)
 description:         text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText)
 homepage:            http://CDSoft.fr/pp
@@ -27,6 +27,7 @@ library
                      , UTF8
                      , Version
                      , PlantumlJar
+                     , Expr
   c-sources:           .stack-work/PlantumlJar_c.c
   include-dirs:        .stack-work
   other-extensions:    CPP
@@ -42,6 +43,7 @@ library
                      , spreadsheet
                      , explicit-exception
                      , split
+                     , parsec
   default-language:    Haskell2010
 
 executable pp

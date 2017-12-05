@@ -16,7 +16,7 @@
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Saturday 11 November 2017</p>
+<p class="date">Tuesday 5 December 2017</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -27,6 +27,7 @@
 <li><a href="#command-line">Command line</a></li>
 <li><a href="#macros">Macros</a></li>
 </ul></li>
+<li><a href="#expressions">Expressions</a></li>
 <li><a href="#literate-programming-example">Literate programming example</a></li>
 <li><a href="#diagram-and-script-examples">Diagram and script examples</a><ul>
 <li><a href="#diagrams">Diagrams</a></li>
@@ -100,7 +101,7 @@
 <ul>
 <li><p>Latest Linux and Windows binaries:</p>
 <ul>
-<li>Fedora 26 (64 bit): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
+<li>Fedora 27 (64 bit): <a href="http://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
 <li>Windows (64 bit): <a href="http://cdsoft.fr/pp/pp-win.7z" class="uri">http://cdsoft.fr/pp/pp-win.7z</a></li>
 </ul></li>
 <li><p>Older version archive:</p>
@@ -183,6 +184,9 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dt><strong><code>undefine</code></strong>, <strong><code>undef</code></strong></dt>
 <dd><code>!undef[ine](SYMBOL)</code> removes the symbol <code>SYMBOL</code> from the current environment.
 </dd>
+<dt><strong><code>defined</code></strong></dt>
+<dd><code>!defined(SYMBOL)</code> returns 1 if <code>SYMBOL</code> is defined, 0 otherwise.
+</dd>
 <dt><strong><code>rawdef</code></strong></dt>
 <dd><code>!rawdef(X)</code> returns the raw (unevaluated) definition of <code>X</code>.
 </dd>
@@ -197,6 +201,12 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 </dd>
 <dt><strong><code>ifne</code></strong></dt>
 <dd><code>!ifne(X)(Y)(TEXT_IF_DIFFERENT)[(TEXT_IF_EQUAL)]</code> returns <code>TEXT_IF_DIFFERENT</code> if <code>X</code> and <code>Y</code> are different or <code>TEXT_IF_EQUAL</code> if <code>X</code> and <code>Y</code> are equal.
+</dd>
+<dt><strong><code>if</code></strong></dt>
+<dd><code>!if(EXPR)(TEXT_IF_EXPR_IS_TRUE)[(TEXT_IF_EXPR_IS_FALSE)]</code> returns <code>TEXT_IF_EXPR_IS_TRUE</code> if <code>EXPR</code> is true or <code>TEXT_IF_EXPR_IS_FALSE</code> if <code>EXPR</code> is false.
+</dd>
+<dt><strong><code>eval</code></strong></dt>
+<dd><code>!eval(EXPR) evaluates</code>EXPR`.
 </dd>
 <dt><strong><code>import</code></strong></dt>
 <dd><code>!import(FILENAME)</code> works as <code>!include(FILENAME)</code> but returns nothing. This is useful to import macro definitions.
@@ -409,6 +419,20 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!userhelp</code> prints user macro help.
 </dd>
 </dl>
+<h1 id="expressions">Expressions</h1>
+<p>The <code>!if</code> and <code>!eval</code> macros take an expression and evaluate it. Expressions are made of:</p>
+<ul>
+<li>integers</li>
+<li>string (<code>&quot;...&quot;</code>)</li>
+<li>integer operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>)</li>
+<li>boolean operators (<code>!</code>, <code>not</code>, <code>&amp;&amp;</code>, <code>and</code>, <code>||</code>, <code>or</code>, <code>xor</code>)</li>
+<li>relational operators (<code>==</code>, <code>/=</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>)</li>
+<li>parentheses, brackets and braces</li>
+</ul>
+<p>Boolean values are coded as integers or string (<code>0</code> and <code>&quot;&quot;</code> are false, other values are true).</p>
+<p>Macros can be called in expressions. They are preprocessed before evaluating the expression.</p>
+<p>e.g.:</p>
+<pre><code>!if( !defined(FOO) or !BAR == 42 ) (say something)</code></pre>
 <h1 id="literate-programming-example">Literate programming example</h1>
 <p>The main program just prints some messages:</p>
 <pre><code>!lit(main.c)(C)
@@ -662,7 +686,7 @@ if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
 <p>This script outputs:</p>
 <pre><code>Hi, I'm C:\windows\system32\cmd.exe
 
-Microsoft Windows 10.0.15063 (2.19)
+Microsoft Windows 10.0.15063 (2.20)
 This script is run from wine under Linux
 </code></pre>
 <h3 id="python">Python</h3>
@@ -679,7 +703,7 @@ if __name__ == &quot;__main__&quot;:
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Python 2.7.14 (default, Nov  2 2017, 18:42:05) 
+<pre><code>Hi, I'm Python 2.7.14 (default, Nov  3 2017, 10:55:25) 
 [GCC 7.2.1 20170915 (Red Hat 7.2.1-2)]
 Here are a few random numbers: 640, 25, 275
 </code></pre>

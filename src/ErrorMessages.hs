@@ -33,6 +33,7 @@ module ErrorMessages ( unexpectedEndOfFile
                      , macroargsError
                      , literatemacrocharsError
                      , defaultParserConfigurationError
+                     , exprError
 #if linux_HOST_OS || darwin_HOST_OS
                      , windowsOnlyError
 #endif
@@ -92,3 +93,7 @@ defaultParserConfigurationError = errorWithoutStackTrace "Unexpected error: Inva
 windowsOnlyError :: String -> t
 windowsOnlyError name = errorWithoutStackTrace $ name ++ " is available on Windows only"
 #endif
+
+-- Expression parser error
+exprError :: String -> t
+exprError msg = errorWithoutStackTrace $ "Expression error: " ++ msg
