@@ -96,6 +96,7 @@ data Env = Env { vars :: [(Var, Val)]               -- lookup table of global va
                , openCloseChars :: [(Char, Char)]   -- parameter delimiters
                , blockChars :: Chars                -- block delimiter chars
                , literateMacroChars :: Chars        -- literate programming macro delimiters
+               , ignoreStdin :: Bool                -- some command line arguments disable stdin
                }
 
 fromVal :: Val -> String
@@ -159,6 +160,7 @@ initialEnvironment defaultLang defaultDialect = do
                , openCloseChars = defaultOpenCloseChars
                , blockChars = defaultBlockChars
                , literateMacroChars = defaultLiterateMacroChars
+               , ignoreStdin = False
                }
 
 -- track dependencies

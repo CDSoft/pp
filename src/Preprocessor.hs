@@ -34,6 +34,7 @@ module Preprocessor ( ppFile
                     , isValidMacroName
                     , isValidMacroNameChar
                     , longHelp
+                    , longUserHelp
                     , builtin
                     )
 where
@@ -1373,7 +1374,7 @@ usermacros = Macro "usermacros" []
     "`!usermacros` lists the user macros."
     (\env args -> case args of
         [] -> do
-            let macroList = reverse $ nub [ name | (Def name, _) <- vars env ]
+            let macroList = reverse $ nub [ name | (Def name, _) <- vars env, not ("_" `isPrefixOf` name) ]
             return (env, unlines macroList)
         _ -> arityError "usermacros"
     )
@@ -1383,7 +1384,7 @@ help = Macro "help" []
     "`!help` prints built-in macro help."
     (\env args -> case args of
         [] -> do
-            let docs = renderMarkdownHelp [(name:aliases, doc) | Macro name aliases doc _ <- builtin]
+            let docs = renderMarkdownHelp [ (name:aliases, doc) | Macro name aliases doc _ <- builtin ]
             return (env, docs)
         _ -> arityError "help"
     )
@@ -1393,7 +1394,7 @@ userhelp = Macro "userhelp" []
     "`!userhelp` prints user macro help."
     (\env args -> case args of
         [] -> do
-            let docs = renderMarkdownHelp [([name], doc) | (Def name, doc) <- docstrings env]
+            let docs = renderMarkdownHelp [ ([name], doc) | (Def name, doc) <- docstrings env, not ("_" `isPrefixOf` name) ]
             return (env, docs)
         _ -> arityError "help"
     )
@@ -1412,14 +1413,25 @@ longHelp env = unlines $ copyright ++ commandline ++ builtinMacros ++ userMacros
         builtinMacros =
             [ "BUILT-IN MACROS"
             , ""
-            , indent' 4 $ renderPlainHelp [(name:aliases, doc) | Macro name aliases doc _ <- builtin]
+            , indent' 4 $ renderPlainHelp [ (name:aliases, doc) | Macro name aliases doc _ <- builtin ]
             ]
         userMacros
             | null (docstrings env) = []
             | otherwise =
                 [ "USER MACROS"
                 , ""
-                , indent' 4 $ renderPlainHelp [([name], doc) | (Def name, doc) <- docstrings env]
+                , indent' 4 $ renderPlainHelp [ ([name], doc) | (Def name, doc) <- docstrings env, not ("_" `isPrefixOf` name) ]
+                ]
+
+longUserHelp :: Env -> String
+longUserHelp env = unlines userMacros
+    where
+        userMacros
+            | null (docstrings env) = []
+            | otherwise =
+                [ "USER MACROS"
+                , ""
+                , indent' 4 $ renderPlainHelp [ ([name], doc) | (Def name, doc) <- docstrings env, not ("_" `isPrefixOf` name) ]
                 ]
 
 renderMarkdownHelp :: [([String], String)] -> String

@@ -627,6 +627,7 @@ User macro documentation
 !def(foo)(foo's docstring)(great macro)
 !def(useless)(this macro is not documented)
 !def(bar)(bar's docstring)(another great macro)
+!def(_internal_)(internal docstring)(internal macro not listed)
 
 !usermacros
 

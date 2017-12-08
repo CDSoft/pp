@@ -149,6 +149,9 @@ The user can define and undefine variables and list input files.
 **`-help`**
 :   displays a longer help and exits.
 
+**`-userhelp`**
+:   displays a longer help for user macros only and exits.
+
 **`-DSYMBOL[=VALUE]`** or **`-D SYMBOL[=VALUE]`**
 :   adds the symbol `SYMBOL` to the current environment and associates it to
     the optional value `VALUE`. If no value is provided, the symbol is simply
@@ -173,6 +176,9 @@ The user can define and undefine variables and list input files.
 **`-<macro>[=<arg>]`**
 :   calls a builtin macro with an optional argument
     (see `pp -help` for the full macro list).
+    Some macros may prevent pp from reading stdin when no file
+    is given on the command line (`langs`, `formats`, `dialects`,
+    `os`, `arch`, `macros`, `usermacros`).
 
 Other arguments are filenames.
 
@@ -191,6 +197,8 @@ Macro names are:
 
 - case sensitive (i.e.: `!my_macro` and `!My_Macro` are different macros)
 - made of letters, digits and underscores (`a-zA-Z0-9_`)
+
+User macros starting with `_` are not listed in macros lists and help texts.
 
 To get the value of a variable you just have to write its name after a '`!`'.
 Macros can be given arguments.

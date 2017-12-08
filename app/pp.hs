@@ -35,6 +35,14 @@ import Preprocessor
 import UTF8
 import qualified Version
 
+exitMacros :: [String]
+exitMacros = [ "langs", "formats", "dialects" ]
+           ++ map show langs
+           ++ map show formats
+           ++ map show dialects
+           ++ [ "os", "arch" ]
+           ++ [ "macros", "usermacros" ]
+
 -- The main function builds the initial environment, parses the input
 -- and print the output on stdout.
 main :: IO ()
@@ -70,12 +78,14 @@ doArgs env (arg:args) = do
 -- mainFileTag is put in the environment only when a file has been preprocessed.
 -- This variable is not set when no file is given on the command line.
 -- In this case, pp preprocesses stdin.
-doArgs env [] = case mainFile env of
+doArgs env [] = case (mainFile env, ignoreStdin env) of
     -- nothing has been preprocessed, let's try stdin
-    Nothing -> do (env', doc, _) <- doArg env "-" []
-                  return (env', doc)
+    (Nothing, False) -> do
+        (env', doc, _) <- doArg env "-" []
+        return (env', doc)
     -- something has already been preprocessed
-    Just _ -> return (env, "")
+    -- or stdin is ignored when some macros are use on the command line
+    _ -> return (env, "")
 
 -- "doArg env arg" parses one argument
 -- and returns an updated environment, the output produced by the argument and the remaining arguments.
@@ -89,6 +99,9 @@ doArg _ "-h" _ = putStrLn Version.help >> exitSuccess
 
 -- "doArg" env "-help" show a longer help message
 doArg env "-help" _ = putStrLn (longHelp env) >> exitSuccess
+
+-- "doArg" env "-userhelp" show a longer help message (user macros only)
+doArg env "-userhelp" _ = putStrLn (longUserHelp env) >> exitSuccess
 
 -- "doArg env "-D name=value"" adds a new definition to the environment.
 doArg env "-D" (def:args) = return (env{vars=(Def name, Val (drop 1 value)) : clean (Def name) (vars env)}, "", args)
@@ -151,7 +164,8 @@ doArg env ('-':arg) args
         -- Macros can be called from the command line
         Just _ -> do
             (env', s) <- pp env code
-            return (env', if null s then s else s++"\n", args)
+            let env'' = env'{ignoreStdin = ignoreStdin env' || name `elem` exitMacros}
+            return (env'', if null s then s else s++"\n", args)
         -- Other arguments starting with "-" are invalid.
         Nothing -> errorWithoutStackTrace $ "Unexpected argument: " ++ arg
     where
