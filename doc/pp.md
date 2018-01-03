@@ -995,7 +995,7 @@ Licenses
 PP
 --
 
-Copyright (C) 2015, 2016, 2017 Christophe Delord <br>
+Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord <br>
 <http://www.cdsoft.fr/pp>
 
 PP is free software: you can redistribute it and/or modify

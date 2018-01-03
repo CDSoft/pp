@@ -1,5 +1,5 @@
 name:                pp
-version:             2.2.1
+version:             2.2.2
 synopsis:            Generic Preprocessor (for Pandoc)
 description:         text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText)
 homepage:            http://CDSoft.fr/pp
@@ -7,7 +7,7 @@ license:             GPL-3
 license-file:        LICENSE
 author:              Christophe Delord
 maintainer:          cdsoft.fr
-copyright:           2015, 2016, 2017 Christophe Delord
+copyright:           2015, 2016, 2017, 2018 Christophe Delord
 category:            Preprocessor
 build-type:          Simple
 extra-source-files:  README.md

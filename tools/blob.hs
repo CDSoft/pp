@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack
   script
-  --resolver lts-9.12
+  --resolver lts-10.2
   --package bytestring
   --package filepath
   --package split
@@ -9,7 +9,7 @@
 
 {- PP
 
-Copyright (C) 2015, 2016, 2017 Christophe Delord
+Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
 
 http://www.cdsoft.fr/pp
 

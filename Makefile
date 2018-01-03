@@ -1,5 +1,5 @@
 # PP
-# Copyright (C) 2015, 2016, 2017 Christophe Delord
+# Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
 # http://www.cdsoft.fr/pp
 #
 # This file is part of PP.
@@ -91,7 +91,7 @@ README.md: $(PP)
 README.md: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p doc/img
-	stack exec -- pp -en -img=doc/img -DREADME $< | pandoc -f markdown -t markdown_github > $@
+	stack exec -- pp -en -img=doc/img -DREADME $< | pandoc -f markdown -t gfm > $@
 	@$(call ok,"$@")
 
 #####################################################################
