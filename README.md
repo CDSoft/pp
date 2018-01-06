@@ -896,7 +896,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-9.1 --package base -}
+    {- stack script --resolver lts-10.2 --package base -}
     
     import System.Info
     import Data.Version
@@ -916,7 +916,7 @@ beginning of the script.
 
 This script outputs:
 
-    Hi, I'm Haskell 8.0
+    Hi, I'm Haskell 8.2
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### R (script)

@@ -217,7 +217,7 @@ border: none;
 <header>
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="http://cdsoft.fr/pp" class="uri">http://cdsoft.fr/pp</a></p>
-<p class="date">Wednesday 3 January 2018</p>
+<p class="date">Saturday 6 January 2018</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -935,7 +935,7 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 <p><a href="https://www.haskell.org/">Haskell</a> is also executed when the keyword <code>stack</code> is used. In this case stack meta data must be added at the beginning of the script.</p>
 <pre><code>!stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{- stack script --resolver lts-9.1 --package base -}
+{- stack script --resolver lts-10.2 --package base -}
 
 import System.Info
 import Data.Version
@@ -953,7 +953,7 @@ main = do
                 intercalate &quot; &quot; (map show (take 10 primes))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Haskell 8.0
+<pre><code>Hi, I'm Haskell 8.2
 The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 </code></pre>
 <h3 id="r-script">R (script)</h3>
