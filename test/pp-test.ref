@@ -416,33 +416,33 @@ Diagrams
 
 The diagram test does not check the generated images, just the links in the output document.
 
-![Test of dot](img/dot-test.png)
-![Test of neato](img/neato-test.png)
-![Test of twopi](img/twopi-test.png)
-![Test of circo](img/circo-test.png)
-![Test of fdp](img/fdp-test.png)
-![Test of patchwork](img/patchwork-test.png)
-![Test of osage](img/osage-test.png)
+![Test of dot](img/dot-test.svg)
+![Test of neato](img/neato-test.svg)
+![Test of twopi](img/twopi-test.svg)
+![Test of circo](img/circo-test.svg)
+![Test of fdp](img/fdp-test.svg)
+![Test of patchwork](img/patchwork-test.svg)
+![Test of osage](img/osage-test.svg)
 
-![Test of uml](img/uml-test.png)
+![Test of uml](img/uml-test.svg)
 
 ![Test of ditaa](img/ditaa-test.png)
 
-![Test of Asymptote](img/asy-test.png)
+![Test of Asymptote](img/asy-test.svg)
 
-![](img/size_small.png){.img width=50}
+![](img/size_small.svg){.img width=50}
 
-![Small with title](img/size_smallt.png){.img width=50}
+![Small with title](img/size_smallt.svg){.img width=50}
 
-![](img/size_normal.png){.img width=100}
+![](img/size_normal.svg){.img width=100}
 
-![Normal with title](img/size_normalt.png){.img width=100}
+![Normal with title](img/size_normalt.svg){.img width=100}
 
-![](img/size_big.png){.img width=150}
+![](img/size_big.svg){.img width=150}
 
-![Big with title](img/size_bigt.png){.img width=150}
+![Big with title](img/size_bigt.svg){.img width=150}
 
-![Test of R plot](img/rplot-test.png)
+![Test of R plot](img/rplot-test.svg)
 
 Literate programming
 ====================

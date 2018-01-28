@@ -1,4 +1,0 @@
-png('doc/img/rplot-test.png');
-plot(pressure)
-
-

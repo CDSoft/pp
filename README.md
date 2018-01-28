@@ -525,7 +525,10 @@ Diagrams are written in code blocks as argument of a diagram macro. The
 first line contains the macro:
 
   - the diagram generator (the macro name)
-  - the image name without the extension (first argument)
+  - the image name with or without the extension (first argument)
+      - the default format is `svg` if no extension is provided (unless
+        for ditaa diagrams which support `png` only)
+      - the supported formats are `png` and `svg`
   - the legend (second optional argument)
 
 Block delimiters are made of three or more tilda or back quotes, at the
@@ -539,10 +542,17 @@ least as long as the beginning delimiter.
         }
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This extremely meaningful diagram is rendered as `path/imagename.png`
+This extremely meaningful diagram is rendered as `path/imagename.svg`
 and looks like:
 
-![optional legend](doc/img/pp-syntax.png)
+![optional legend](doc/img/pp-syntax.svg)
+
+The image file extension can be `.svg` or `.png`. `SVG` is the default
+format if no extension is provided (unless for ditaa diagrams).
+`!dot(path/imagename.svg)(optional legend)` or
+`!dot(path/imagename)(optional legend)` are rendered as
+`path/imagename.svg`. `!dot(path/imagename.png)(optional legend)` is
+rendered as `path/imagename.png`.
 
 The image link in the output markdown document may have to be different
 than the actual path in the file system. This happens when then `.md` or
@@ -608,7 +618,7 @@ The diagram generator can be:
 `pp` will not create any directory, the path where the image is written
 must already exist.
 
-![](doc/img/pp-generators.png)
+![](doc/img/pp-generators.svg)
 
 ## Scripts
 
@@ -635,7 +645,7 @@ The script language macro can be:
 `pp` will create a temporary script before calling the associated
 interpretor.
 
-![](doc/img/pp-scripts.png)
+![](doc/img/pp-scripts.svg)
 
 ## Examples
 
@@ -681,7 +691,7 @@ is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`,
 Once generated the graph looks like:
 
 ![This is just a GraphViz diagram
-example](doc/img/pp-graphviz-example.png)
+example](doc/img/pp-graphviz-example.svg)
 
 [GraphViz](http://graphviz.org/) must be installed.
 
@@ -702,7 +712,7 @@ keyword `uml` is used. The lines `@startuml` and `@enduml` required by
 Once generated the graph looks like:
 
 ![This is just a PlantUML diagram
-example](doc/img/pp-plantuml-example.png)
+example](doc/img/pp-plantuml-example.svg)
 
 [PlantUML](http://plantuml.sourceforge.net) is written in Java and is
 embedded in `pp`. Java must be installed.
@@ -777,7 +787,12 @@ keyword `asy` is used.
 Once generated the figure looks like:
 
 ![This is just an Asymptote example from
-<http://asy.marris.fr/asymptote/Sciences_physiques/index.html>](doc/img/pp-asy-example.png)
+<http://asy.marris.fr/asymptote/Sciences_physiques/index.html>](doc/img/pp-asy-example.svg)
+
+**Note**: Asymptote handles transparency in PDF format only, which is
+converted to PNG by `pp`. If you need transparency, you must use the
+`.png` format. If you need scalable images, you must use the `.svg`
+format, which is the default format for Asymptote diagrams.
 
 ### R (plot)
 
@@ -791,7 +806,7 @@ used.
 
 Once generated the image looks like:
 
-![This is just an R plot example](doc/img/rplot-test.png)
+![This is just an R plot example](doc/img/rplot-test.svg)
 
 ### Bash
 
@@ -856,7 +871,7 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.14 (default, Dec 11 2017, 14:52:53) 
+    Hi, I'm Python 2.7.14 (default, Jan 17 2018, 14:28:32) 
     [GCC 7.2.1 20170915 (Red Hat 7.2.1-2)]
     Here are a few random numbers: 640, 25, 275
 

@@ -1,4 +1,4 @@
-
+import settings; libgs="";
 import geometry;
 size(7.5cm,0);
 

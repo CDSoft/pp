@@ -303,7 +303,9 @@ Diagrams are written in code blocks as argument of a diagram macro.
 The first line contains the macro:
 
 - the diagram generator (the macro name)
-- the image name without the extension (first argument)
+- the image name with or without the extension (first argument)
+    - the default format is `svg` if no extension is provided (unless for ditaa diagrams which support `png` only)
+    - the supported formats are `png` and `svg`
 - the legend (second optional argument)
 
 Block delimiters are made of three or more tilda or back quotes,
@@ -317,7 +319,7 @@ The end delimiter must at least as long as the beginning delimiter.
         }
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This extremely meaningful diagram is rendered as `path/imagename.png`
+This extremely meaningful diagram is rendered as `path/imagename.svg`
 and looks like:
 
 §dot(pp-syntax)(optional legend)
@@ -326,6 +328,11 @@ graph {
     "source code of the diagram"
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The image file extension can be `.svg` or `.png`.
+`SVG` is the default format if no extension is provided (unless for ditaa diagrams).
+`!dot(path/imagename.svg)(optional legend)` or `!dot(path/imagename)(optional legend)` are rendered as `path/imagename.svg`.
+`!dot(path/imagename.png)(optional legend)` is rendered as `path/imagename.png`.
 
 The image link in the output markdown document may have to be different than the
 actual path in the file system. This happens when then `.md` or `.html` files are not
@@ -676,6 +683,11 @@ show(Label("$\vec{f}$",EndPoint),RpM+vfrottement);
 show(Label("$\vec{R}$",EndPoint),RpM+vreactionN);
 show(Label("$\vec{P}$",EndPoint),RpM+vpoids);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Note**: Asymptote handles transparency in PDF format only, which is converted to PNG by `pp`.
+If you need transparency, you must use the `.png` format.
+If you need scalable images, you must use the `.svg` format,
+which is the default format for Asymptote diagrams.
 
 ### R (plot)
 

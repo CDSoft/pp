@@ -27,6 +27,7 @@ module Formats ( Dialect(..), dialects
                , PlantumlDiagram(..), plantumlDiagrams
                , AsymptoteDiagram(..), asymptoteDiagrams
                , RDiagram(..), rDiagrams
+               , Ext(..)
                , readCap
                , readCapMaybe
                , showCap
@@ -61,6 +62,8 @@ data AsymptoteDiagram = Asy
                       deriving (Show, Read, Enum, Bounded)
 data RDiagram = Rplot
                 deriving (Show, Read, Enum, Bounded)
+
+data Ext = PNG | SVG
 
 graphvizDiagrams :: [GraphvizDiagram]
 graphvizDiagrams = [(minBound :: GraphvizDiagram) .. ]

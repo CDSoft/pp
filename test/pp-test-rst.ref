@@ -48,43 +48,43 @@ Diagrams
 
 The diagram test does not check the generated images, just the links in the output document.
 
-.. figure:: img/dot-test.png
+.. figure:: img/dot-test.svg
 
 
     Test of dot
 
-.. figure:: img/neato-test.png
+.. figure:: img/neato-test.svg
 
 
     Test of neato
 
-.. figure:: img/twopi-test.png
+.. figure:: img/twopi-test.svg
 
 
     Test of twopi
 
-.. figure:: img/circo-test.png
+.. figure:: img/circo-test.svg
 
 
     Test of circo
 
-.. figure:: img/fdp-test.png
+.. figure:: img/fdp-test.svg
 
 
     Test of fdp
 
-.. figure:: img/patchwork-test.png
+.. figure:: img/patchwork-test.svg
 
 
     Test of patchwork
 
-.. figure:: img/osage-test.png
+.. figure:: img/osage-test.svg
 
 
     Test of osage
 
 
-.. figure:: img/uml-test.png
+.. figure:: img/uml-test.svg
 
 
     Test of uml
@@ -96,48 +96,48 @@ The diagram test does not check the generated images, just the links in the outp
     Test of ditaa
 
 
-.. figure:: img/asy-test.png
+.. figure:: img/asy-test.svg
 
 
     Test of Asymptote
 
 
-.. figure:: img/size_small.png
+.. figure:: img/size_small.svg
     :width: 50
 
 
     
 
 
-.. figure:: img/size_smallt.png
+.. figure:: img/size_smallt.svg
     :width: 50
 
 
     Small with title
 
 
-.. figure:: img/size_normal.png
+.. figure:: img/size_normal.svg
     :width: 100
 
 
     
 
 
-.. figure:: img/size_normalt.png
+.. figure:: img/size_normalt.svg
     :width: 100
 
 
     Normal with title
 
 
-.. figure:: img/size_big.png
+.. figure:: img/size_big.svg
     :width: 150
 
 
     
 
 
-.. figure:: img/size_bigt.png
+.. figure:: img/size_bigt.svg
     :width: 150
 
 
