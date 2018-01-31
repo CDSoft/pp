@@ -63,7 +63,7 @@ data AsymptoteDiagram = Asy
 data RDiagram = Rplot
                 deriving (Show, Read, Enum, Bounded)
 
-data Ext = PNG | SVG
+data Ext = PNG | SVG | PDF
 
 graphvizDiagrams :: [GraphvizDiagram]
 graphvizDiagrams = [(minBound :: GraphvizDiagram) .. ]

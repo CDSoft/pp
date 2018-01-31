@@ -913,6 +913,7 @@ diagram name runtime exe header footer = Macro name []
             let (ext, ext', local, link) = case takeExtension linkMaybeExt of
                     ".png" -> (PNG, "png", localMaybeExt, linkMaybeExt)
                     ".svg" -> (SVG, "svg", localMaybeExt, linkMaybeExt)
+                    ".pdf" -> (PDF, "pdf", localMaybeExt, linkMaybeExt)
                     _ -> (f, e, localMaybeExt<.>e, linkMaybeExt<.>e)
                             where (f, e) = case (runtime, exe) of
                                     (Graphviz, _) -> (SVG, "svg")
@@ -952,6 +953,8 @@ diagram name runtime exe header footer = Macro name []
                             try readProcessUTF8 "convert" ["-density", "600", pdf, img]
                         SVG ->
                             try readProcessUTF8 exe ["-f", "svg", "-o", img, src]
+                        PDF ->
+                            try readProcessUTF8 exe ["-f", "pdf", "-o", img, src]
                     R ->
                         try readProcessUTF8 "Rscript" [src]
             let hyperlink = case currentDialect env of
