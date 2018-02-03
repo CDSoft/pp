@@ -158,9 +158,9 @@ doc/pp.html: doc/pp.md
 # tests
 #####################################################################
 
-.PHONY: test hspec test-md test-rst
+.PHONY: test hspec test-md test-rst test-formats
 
-test: hspec test-md test-rst test-md-d
+test: hspec test-md test-rst test-md-d test-formats
 	@$(call ok,"all pp tests passed!")
 
 # Hspec tests
@@ -221,3 +221,33 @@ $(BUILD)/pp-test.d: test/pp-test.md test/pp-test.i test/pp-test-lib.i
 ref-d: $(BUILD)/pp-test.d
 	meld $< test/pp-test.d.ref 2>/dev/null
 
+# Diagram formats tests
+
+test-formats: $(BUILD)/test-format.html \
+			  $(BUILD)/test-format.pdf \
+			  $(BUILD)/test-format.odt \
+			  $(BUILD)/test-format.epub
+
+$(BUILD)/test-format.html: $(PP)
+$(BUILD)/test-format.html: test/formats.md
+	@$(call title,"checking default diagram formats for HTML documents")
+	stack exec -- pp -img="[$(BUILD)/]img" -html $< | pandoc -t html -o $@
+	@$(call ok,"default diagram formats for HTML documents works!")
+
+$(BUILD)/test-format.pdf: $(PP)
+$(BUILD)/test-format.pdf: test/formats.md
+	@$(call title,"checking default diagram formats for PDF documents")
+	stack exec -- pp -img="$(BUILD)/img" -pdf $< | pandoc -t latex -o $@
+	@$(call ok,"default diagram formats for PDF documents works!")
+
+$(BUILD)/test-format.odt: $(PP)
+$(BUILD)/test-format.odt: test/formats.md
+	@$(call title,"checking default diagram formats for ODT documents")
+	stack exec -- pp -img="$(BUILD)/img" -odf $< | pandoc -t odt -o $@
+	@$(call ok,"default diagram formats for ODT documents works!")
+
+$(BUILD)/test-format.epub: $(PP)
+$(BUILD)/test-format.epub: test/formats.md
+	@$(call title,"checking default diagram formats for EPUB documents")
+	stack exec -- pp -img="$(BUILD)/img" -epub $< | pandoc -t epub -o $@
+	@$(call ok,"default diagram formats for EPUB documents works!")

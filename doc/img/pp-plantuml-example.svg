@@ -7,11 +7,11 @@ Alice <- - Bob: another authentication Response
 
 @enduml
 
-PlantUML version 1.2017.20(Mon Dec 11 17:57:05 CET 2017)
+PlantUML version 1.2018.01(Sun Jan 28 19:08:22 CET 2018)
 (GPL source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 1.8.0_151-b12
+Java Version: 1.8.0_161-b14
 Operating System: Linux
 OS Version: 4.14.14-300.fc27.x86_64
 Default Encoding: UTF-8

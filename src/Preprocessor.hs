@@ -915,14 +915,18 @@ diagram name runtime exe header footer = Macro name []
                     ".svg" -> (SVG, "svg", localMaybeExt, linkMaybeExt)
                     ".pdf" -> (PDF, "pdf", localMaybeExt, linkMaybeExt)
                     _ -> (f, e, localMaybeExt<.>e, linkMaybeExt<.>e)
-                            where (f, e) = case (runtime, exe) of
-                                    (Graphviz, _) -> (SVG, "svg")
-                                    (PlantUML, "ditaa") -> (PNG, "png")
-                                    (PlantUML, _) -> (SVG, "svg")
-                                    (Asymptote, _) -> (SVG, "svg")
-                                    (R, _) -> (SVG, "svg")
+                            where (f, e) = case (runtime, exe, fileFormat env) of
+                                    (Graphviz, _, Just Pdf)  -> (PDF, "pdf")
+                                    (Graphviz, _, _)         -> (SVG, "svg")
+                                    (PlantUML, "ditaa", _)   -> (PNG, "png")
+                                    (PlantUML, _, Just Pdf)  -> (PNG, "png")
+                                    (PlantUML, _, _)         -> (SVG, "svg")
+                                    (Asymptote, _, Just Pdf) -> (PDF, "pdf")
+                                    (Asymptote, _, _)        -> (SVG, "svg")
+                                    (R, _, Just Pdf)         -> (PDF, "pdf")
+                                    (R, _, _)                -> (SVG, "svg")
             let src = local -<.> srcExt
-            let dat = local -<.> "dat"
+            let dat = src <.> ext' <.> "dat"
             let img = local
             let url = link
             let code'' = unlines [header img, code', footer img]
