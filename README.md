@@ -361,10 +361,10 @@ preprocessing it.
   - **`python3`**  
     `!python3(CMD)` executes `CMD` with Python 3.
   - **`haskell`**  
-    `!python3(CMD)` executes `CMD` as a Haskell script with
+    `!haskell(CMD)` executes `CMD` as a Haskell script with
     `runhaskell`.
   - **`stack`**  
-    `!python3(CMD)` executes `CMD` as a Haskell script with `stack`.
+    `!stack(CMD)` executes `CMD` as a Haskell script with `stack`.
   - **`Rscript`**  
     `!Rscript(CMD)` executes `CMD` as a R script with Rscript.
   - **`powershell`**  

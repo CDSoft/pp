@@ -110,8 +110,8 @@ builtin = [ define, undefine, defined, rawdef
           , script "python"     "python"      ""          ".py" "`!python(CMD)` executes `CMD` with the default Python interpretor."
           , script "python2"    "python2"     ""          ".py" "`!python2(CMD)` executes `CMD` with Python 2."
           , script "python3"    "python3"     ""          ".py" "`!python3(CMD)` executes `CMD` with Python 3."
-          , script "haskell"    "runhaskell"  ""          ".hs" "`!python3(CMD)` executes `CMD` as a Haskell script with `runhaskell`."
-          , script "stack"      "stack"       ""          ".hs" "`!python3(CMD)` executes `CMD` as a Haskell script with `stack`."
+          , script "haskell"    "runhaskell"  ""          ".hs" "`!haskell(CMD)` executes `CMD` as a Haskell script with `runhaskell`."
+          , script "stack"      "stack"       ""          ".hs" "`!stack(CMD)` executes `CMD` as a Haskell script with `stack`."
           , script "Rscript"    "Rscript"     ""          ".R"  "`!Rscript(CMD)` executes `CMD` as a R script with Rscript."
           , windowsonly $ script "powershell" powershellexe "" ".ps1" "`!cmd(CMD)` executes `CMD` in a Windows shell (Powershell)."
           ]
