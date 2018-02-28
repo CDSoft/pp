@@ -119,7 +119,7 @@ pp-darwin-%.txz: $(PP) doc/pp.html
 #####################################################################
 
 PLANTUML = Plantuml
-PLANTUML_URL = http://sourceforge.net/projects/plantuml/files/plantuml.jar
+PLANTUML_URL = http://cdsoft.fr/pp/plantuml.jar
 
 BLOB = tools/blob.hs
 

@@ -825,7 +825,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm /bin/bash 4.4.12(1)-release
+    Hi, I'm /bin/bash 4.4.19(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -852,7 +852,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (2.20)
+    Microsoft Windows 10.0.15063 (3.1)
     This script is run from wine under Linux
 
 ### Python
@@ -874,8 +874,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.14 (default, Jan 17 2018, 14:28:32) 
-    [GCC 7.2.1 20170915 (Red Hat 7.2.1-2)]
+    Hi, I'm Python 2.7.14 (default, Feb 17 2018, 10:42:17) 
+    [GCC 7.3.1 20180130 (Red Hat 7.3.1-2)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell

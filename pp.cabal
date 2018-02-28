@@ -1,5 +1,5 @@
 name:                pp
-version:             2.3.2
+version:             2.3.3
 synopsis:            Generic Preprocessor (for Pandoc)
 description:         text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText)
 homepage:            http://CDSoft.fr/pp
