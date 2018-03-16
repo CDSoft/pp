@@ -852,7 +852,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (3.1)
+    Microsoft Windows 10.0.15063 (3.3)
     This script is run from wine under Linux
 
 ### Python
@@ -874,7 +874,7 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.14 (default, Feb 17 2018, 10:42:17) 
+    Hi, I'm Python 2.7.14 (default, Feb 27 2018, 20:43:24) 
     [GCC 7.3.1 20180130 (Red Hat 7.3.1-2)]
     Here are a few random numbers: 640, 25, 275
 
