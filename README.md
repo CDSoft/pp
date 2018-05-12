@@ -1,29 +1,29 @@
 # PP - Generic preprocessor (with pandoc in mind)
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a
 text preprocessor designed for Pandoc (and more generally Markdown and
 reStructuredText).
 
-The [PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)")
+The [PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)")
 package used to contain three preprocessors for
 [Pandoc](http://pandoc.org/).
 
 I started using Markdown and [Pandoc](http://pandoc.org/) with
 [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote
-[DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)") to
-embed diagrams in Markdown documents. And finally
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") which
-merges the functionalities of
+[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
+to embed diagrams in Markdown documents. And finally
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)")
+which merges the functionalities of
 [GPP](http://en.nothingisreal.com/wiki/GPP) and
-[DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
+[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
 
 [GPP](http://en.nothingisreal.com/wiki/GPP) and
-[DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
+[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
 are no longer included in
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as
 `pp` can now be used standalone. `dpp` and `gpp` can be found in the
 legacy
-[DPP](http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
+[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
 repository.
 
 `pp` now implements:
@@ -44,8 +44,8 @@ repository.
 
 # Open source
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is an
-Open source software. Anybody can contribute on
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
+an Open source software. Anybody can contribute on
 [GitHub](https://github.com/CDSoft/pp) to:
 
   - suggest or add new features
@@ -59,10 +59,10 @@ Open source software. Anybody can contribute on
 
 **Compilation**:
 
-1.  Download and extract [pp.tgz](http://cdsoft.fr/pp/pp.tgz).
+1.  Download and extract [pp.tgz](https://cdsoft.fr/pp/pp.tgz).
 2.  Run `make`.
 
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
 written in [Haskell](https://www.haskell.org/) and is built with
 [Stack](https://docs.haskellstack.org/en/stable/README/). On MacOS,
 running `make` requires the GNU version of `tar` which can be installed
@@ -87,12 +87,12 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 27 (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
-      - Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
+      - Fedora 28 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+      - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
   - Older version archive:
     
-      - Fedora & Windows: <http://cdsoft.fr/pp/download.html>
+      - Fedora & Windows: <https://cdsoft.fr/pp/download.html>
 
   - User contributed Mac OS binaries (outdated):
     
@@ -852,7 +852,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (3.3)
+    Microsoft Windows 10.0.15063 (3.6)
     This script is run from wine under Linux
 
 ### Python
@@ -874,8 +874,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.14 (default, Feb 27 2018, 20:43:24) 
-    [GCC 7.3.1 20180130 (Red Hat 7.3.1-2)]
+    Hi, I'm Python 2.7.14 (default, Mar 14 2018, 16:45:33) 
+    [GCC 8.0.1 20180222 (Red Hat 8.0.1-0.16)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell
@@ -914,7 +914,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-10.2 --package base -}
+    {- stack script --resolver lts-11.8 --package base -}
     
     import System.Info
     import Data.Version
@@ -1068,7 +1068,7 @@ according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
 ## PP
 
 Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord <br>
-<http://www.cdsoft.fr/pp>
+<https://www.cdsoft.fr/pp>
 
 PP is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free
@@ -1086,7 +1086,7 @@ with PP. If not, see <http://www.gnu.org/licenses/>.
 ## PlantUML
 
 PlantUML.jar is integrated in
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)").
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)").
 [PlantUML](http://plantuml.sourceforge.net/) is distributed under the
 [GPL license](http://www.gnu.org/copyleft/gpl.html). See
 <http://plantuml.sourceforge.net/faq.html>.
@@ -1094,7 +1094,7 @@ PlantUML.jar is integrated in
 ## ditaa
 
 ditaa.jar is not integrated anymore in
-[PP](http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"). The
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"). The
 [ditaa](http://ditaa.sourceforge.net/) version used is the one already
 integrated in [PlantUML](http://plantuml.sourceforge.net/).
 [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU
@@ -1105,4 +1105,4 @@ General Public License version 2.0
 # Feedback
 
 Your feedback and contributions are welcome. You can contact me at
-<http://cdsoft.fr>
+<https://cdsoft.fr>

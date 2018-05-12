@@ -2,7 +2,7 @@
 
 Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
 
-http://www.cdsoft.fr/pp
+https://www.cdsoft.fr/pp
 
 This file is part of PP.
 
@@ -1313,7 +1313,7 @@ csv = Macro "csv" []
             csvData <- readFileUTF8 filename'
             let table = makeTable (currentDialect env) Nothing csvData
             return (addDep env filename', table)
-        --
+
         -- !csv(filename)(header) converts a CSV file to a markdown or reStructuredText table
         -- The delimiter is automagically infered (hope it works...).
         -- The first line of the CSV file is the header of the table.

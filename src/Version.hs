@@ -2,7 +2,7 @@
 
 Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
 
-http://www.cdsoft.fr/pp
+https://www.cdsoft.fr/pp
 
 This file is part of PP.
 
@@ -38,7 +38,7 @@ dates :: [Int]
 dates = [2015, 2016, 2017, 2018]
 
 url :: String
-url = "http://cdsoft.fr/" ++ name
+url = "https://cdsoft.fr/" ++ name
 
 copyright :: String
 copyright = unlines [

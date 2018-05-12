@@ -326,7 +326,7 @@ A Haskell Stack script:
 
 !stack
 ~~~~~
-{- stack script --resolver lts-10.2 --package base -}
+{- stack script --resolver lts-11.8 --package base -}
 main = putStrLn "hi"
 ~~~~~
 

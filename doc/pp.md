@@ -1,5 +1,5 @@
 % PP - Generic preprocessor (with pandoc in mind)
-% Christophe Delord - <http://cdsoft.fr/pp>
+% Christophe Delord - <https://cdsoft.fr/pp>
 % !mdate{app/pp.hs !sh(ls src/******.hs) doc/pp.md}
 
 !quiet
@@ -10,9 +10,9 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 !macrochars(§)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[PP]: http://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
-[DPP]: http://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"
-[pp.tgz]: http://cdsoft.fr/pp/pp.tgz
+[PP]: https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
+[DPP]: https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"
+[pp.tgz]: https://cdsoft.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
 [Asymptote]: http://asymptote.sourceforge.net/
@@ -89,12 +89,12 @@ Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
 - Latest Linux and Windows binaries:
 
-    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <http://cdsoft.fr/pp/pp-linux-x86_64.txz>
-    - Windows (64 bit): <http://cdsoft.fr/pp/pp-win.7z>
+    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
 - Older version archive:
 
-    - Fedora & Windows: <http://cdsoft.fr/pp/download.html>
+    - Fedora & Windows: <https://cdsoft.fr/pp/download.html>
 
 - User contributed Mac OS binaries (outdated):
 
@@ -855,7 +855,7 @@ In this case stack meta data must be added at the beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-10.2 --package base -}
+    {- stack script --resolver lts-11.8 --package base -}
 
     import System.Info
     import Data.Version
@@ -878,7 +878,7 @@ This script outputs:
 ~~~~~~~~~~
 §stack
 ~~~~~
-{- stack script --resolver lts-10.2 --package base -}
+{- stack script --resolver lts-11.8 --package base -}
 
 import System.Info
 import Data.Version
@@ -1010,7 +1010,7 @@ PP
 --
 
 Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord <br>
-<http://www.cdsoft.fr/pp>
+<https://www.cdsoft.fr/pp>
 
 PP is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1044,4 +1044,4 @@ Feedback
 ========
 
 Your feedback and contributions are welcome.
-You can contact me at <http://cdsoft.fr>
+You can contact me at <https://cdsoft.fr>

@@ -1,6 +1,6 @@
 # PP
 # Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
-# http://www.cdsoft.fr/pp
+# https://www.cdsoft.fr/pp
 #
 # This file is part of PP.
 #
@@ -120,7 +120,7 @@ pp-darwin-%.txz: $(PP) doc/pp.html
 
 PLANTUML = Plantuml
 PLANTUML_URL_1 = http://sourceforge.net/projects/plantuml/files/plantuml.jar
-PLANTUML_URL_2 = http://cdsoft.fr/pp/plantuml.jar
+PLANTUML_URL_2 = https://cdsoft.fr/pp/plantuml.jar
 
 BLOB = tools/blob.hs
 

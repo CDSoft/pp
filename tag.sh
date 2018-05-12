@@ -16,7 +16,7 @@ cat <<EOF > $TMPTAG
 
 Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
 
-http://www.cdsoft.fr/pp
+https://www.cdsoft.fr/pp
 
 This file is part of PP.
 

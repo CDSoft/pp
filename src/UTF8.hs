@@ -2,7 +2,7 @@
 
 Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
 
-http://www.cdsoft.fr/pp
+https://www.cdsoft.fr/pp
 
 This file is part of PP.
 
@@ -30,7 +30,7 @@ where
 
 import System.IO
 import qualified System.IO.Strict as SIO
-import System.Process hiding (env)
+import System.Process
 
 -- setUTF8Encoding sets UTF8 as the current encoding of a file handle
 setUTF8Encoding :: Handle -> IO ()
