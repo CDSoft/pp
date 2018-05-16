@@ -59,6 +59,14 @@ Undefinition test:                  swap is defined
 Macro defined:                      1 0
 ----------------------------------- -------------------------------------------------------------
 
+## Multiple code block arguments
+
+ 
+
+foo is defined
+
+bar is not defined
+
 ## Expressions
 
 
@@ -385,7 +393,6 @@ A Haskell Stack script:
 
 hi
 
-
 A R script:
 
 ```
@@ -407,7 +414,6 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 15.38 on 48 degrees of freedom
 Multiple R-squared:  0.6511,	Adjusted R-squared:  0.6438 
 F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
-
 
 ```
 
@@ -455,13 +461,11 @@ Lets write and test a useful library:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.c}
 // This is a C library
 @functionImplementations
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 The `fib` function computes Fibonacci's numbers:
 
@@ -470,7 +474,6 @@ int fib(int n);
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.C}
 int fib(int n)
 {
@@ -478,7 +481,6 @@ int fib(int n)
 }
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 The `fact` function computes factorial numbers:
 
@@ -493,7 +495,6 @@ int fact(int n)
 }
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 Some tests of `mylib.c`:
 
@@ -515,7 +516,6 @@ int main(int argc, char * argv[])
 }
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 
@@ -636,7 +636,6 @@ air, moon roof, loaded",4799.00
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-
 is rendered by `!csv(file.csv)` as:
 
 +------+-------+----------------------------------------+-----------------------------------+---------+
@@ -662,7 +661,6 @@ This file without any header:
 air, moon roof, loaded",4799.00
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:

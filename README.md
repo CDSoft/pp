@@ -208,7 +208,7 @@ edge cases:
 Arguments are stripped. Removing leading and trailing spaces helps
 preserving line structure in the document.
 
-The last argument can be enclosed between lines of tildas or backquotes
+The last arguments can be enclosed between lines of tildas or backquotes
 (of the same length) instead of parenthesis, brackets or braces and.
 This is useful for literate programming, diagrams or scripts (see
 [examples](#examples)). Code block arguments are not stripped: spaces
@@ -852,7 +852,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (3.6)
+    Microsoft Windows 10.0.15063 (3.8)
     This script is run from wine under Linux
 
 ### Python
@@ -874,8 +874,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.14 (default, Mar 14 2018, 16:45:33) 
-    [GCC 8.0.1 20180222 (Red Hat 8.0.1-0.16)]
+    Hi, I'm Python 2.7.15 (default, May  2 2018, 14:12:52) 
+    [GCC 8.0.1 20180324 (Red Hat 8.0.1-0.20)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell
@@ -969,7 +969,6 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 15.38 on 48 degrees of freedom
 Multiple R-squared:  0.6511,    Adjusted R-squared:  0.6438 
 F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
-
 ```
 
 # CSV tables

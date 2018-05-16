@@ -226,16 +226,20 @@ pp env (c0:cs)
         (Just (Macro _ _ _ func), _) -> do
             let (fargs, cs') = readArgs env name Nothing csAfterName
             (env', doc) <- func env fargs
+            let nl | hasBlocks fargs && not (null doc) && not (hasTerminalNewline doc) = osnl
+                   | otherwise = ""
             (env'', doc') <- pp env' cs'
-            return (env'', doc++doc')
+            return (env'', doc++nl++doc')
         -- the name is a user macro name
         (Nothing, Just value) -> do
             let (margs, cs') = readArgs env name Nothing csAfterName
             -- args that contain !i should be replaced by their definition in env to avoid infinite recursion
             let margs' = replaceUserMacroArgs env margs
             (env', doc) <- ppAndStrip env{arguments=zip (map show [1::Int ..]) margs'} value
+            let nl | hasBlocks margs && not (null doc) && not (hasTerminalNewline doc) = osnl
+                   | otherwise = ""
             (env'', doc') <- pp env'{arguments=arguments env} cs'
-            return (env'', doc++doc')
+            return (env'', doc++nl++doc')
         -- unknown macro => keep it unpreprocessed
         (Nothing, Nothing) -> do
             (env', doc) <- pp env csAfterName
@@ -272,13 +276,10 @@ readArgs :: Env -> String -> Maybe (Char, Char) -> String -> ([Val], String)
 
 -- read the first argument
 readArgs env name Nothing s = case dropSpaces s of
-    -- code block => it's the last argument
-    Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock env name c s1 of
-        Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
-        Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
-        Just (_, '\n':block, _, s2) -> ([Block block], s2)
-        Just (_, block, _, s2) -> ([Block block], s2)
-        Nothing -> ([], s)
+    -- code block => last arguments
+    Just s1@(c:_) | c `elem` charsBlock -> case readArgBlocks env name c s1 of
+        ([], _) -> ([], s) -- keep initial spaces
+        args -> args
     -- argument starting with an open delimiter
     Just (left:s1) ->
         case lookup left charsOpenClose of
@@ -300,13 +301,10 @@ readArgs env name Nothing s = case dropSpaces s of
 
 -- read another argument
 readArgs env name leftright@(Just (left, right)) s = case dropSpaces s of
-    -- code block => it's the last argument
-    Just s1@(c:_) | c `elem` charsBlock -> case readArgBlock env name c s1 of
-        Just (_, '\n':'\r':block, _, s2) -> ([Block block], s2)
-        Just (_, '\r':'\n':block, _, s2) -> ([Block block], s2)
-        Just (_, '\n':block, _, s2) -> ([Block block], s2)
-        Just (_, block, _, s2) -> ([Block block], s2)
-        Nothing -> ([], s)
+    -- code block => last arguments
+    Just s1@(c:_) | c `elem` charsBlock -> case readArgBlocks env name c s1 of
+        ([], _) -> ([], s) -- keep initial spaces
+        args -> args
     -- argument starting with the same delimiter
     Just (left':s1) | left' == left ->
         -- read one argument
@@ -354,6 +352,31 @@ readArg env name left right level (c:s) = (c:cs'', s')
         -- read the rest of the argument
         (cs'', s') = readArg env name left right level' s
 
+-- read zero or many arguments as code blocks
+-- readArgBlocks c s reads arguments with lines of c as separators.
+-- If blocks with valid start and end separator is found, it returns
+-- a list of blocks and the rest of the string.
+readArgBlocks :: Env -> String -> Char -> String -> ([Val], String)
+readArgBlocks env name c s =
+    let maybeArg = case readArgBlock env name c s of
+            Just (_, '\n':'\r':block, _, s2) -> (Just (Block block), skipEOL s2)
+            Just (_, '\r':'\n':block, _, s2) -> (Just (Block block), skipEOL s2)
+            Just (_, '\n':block, _, s2) -> (Just (Block block), skipEOL s2)
+            Just (_, block, _, s2) -> (Just (Block block), skipEOL s2)
+            Nothing -> (Nothing, s)
+    in case maybeArg of
+        (Nothing, _) -> ([], s)
+        (Just arg, s3) -> let (args, s4) = readArgBlocks env name c s3
+                          in (arg:args, s4)
+
+hasBlocks :: [Val] -> Bool
+hasBlocks (Block _:_) = True
+hasBlocks (_:args) = hasBlocks args
+hasBlocks [] = False
+
+hasTerminalNewline :: String -> Bool
+hasTerminalNewline s = '\n' `elem` takeWhile isSpace (reverse s)
+
 -- read an argument as a code block
 -- readArgBlock c s reads an argument with lines of c as separators.
 -- If a block with valid start and end separator is found, it returns
@@ -370,6 +393,14 @@ readArgBlock env name c s
         readBlock s' | start `isPrefixOf` s' = ([], span (==c) s')
         readBlock (c':s') = (c':cs'', (end', s'')) where (cs'', (end', s'')) = readBlock s'
         readBlock [] = unexpectedEndOfFile env name
+
+-- skip spaces until the end of the current line and remove the new line character
+skipEOL :: String -> String
+skipEOL ('\n':'\r':s) = s
+skipEOL ('\r':'\n':s) = s
+skipEOL ('\n':s) = s
+skipEOL (c:s) | isSpace c = skipEOL s
+skipEOL s = s
 
 -- replace user macro arguments by their definition without any side effect
 -- see issue#29 on github

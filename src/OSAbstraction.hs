@@ -27,6 +27,7 @@ module OSAbstraction ( osname
                      , cmdexe
                      , powershellexe
                      , envVarStorage
+                     , osnl
                      )
 where
 
@@ -70,4 +71,13 @@ envVarStorage = id
 #endif
 #if mingw32_HOST_OS
 envVarStorage = map toUpper
+#endif
+
+-- OS end of line
+osnl :: String
+#if mingw32_HOST_OS
+osnl = "\r\n"
+#endif
+#if linux_HOST_OS || darwin_HOST_OS
+osnl = "\n"
 #endif

@@ -59,6 +59,26 @@ Undefinition test:                  !ifndef(swap)(swap is not defined)(swap is d
 Macro defined:                      !defined(swap) !defined(mac1)
 ----------------------------------- -------------------------------------------------------------
 
+## Multiple code block arguments
+
+!def(foo) !undef(bar)
+
+!ifdef(foo)
+```
+foo is defined
+```
+```
+foo is not defined
+```
+
+!ifdef(bar)
+```
+bar is defined
+```
+```
+bar is not defined
+```
+
 ## Expressions
 
 !def(test)

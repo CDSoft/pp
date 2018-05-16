@@ -218,7 +218,7 @@ This helps ending a list of arguments in some edge cases:
 Arguments are stripped. Removing leading and trailing spaces helps preserving
 line structure in the document.
 
-The last argument can be enclosed between lines of tildas or backquotes
+The last arguments can be enclosed between lines of tildas or backquotes
 (of the same length) instead of parenthesis, brackets or braces and.
 This is useful for literate programming, diagrams or scripts (see [examples](#examples)).
 Code block arguments are not stripped: spaces and blank lines are preserved.
