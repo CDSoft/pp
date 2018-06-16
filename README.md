@@ -874,8 +874,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.15 (default, May  2 2018, 14:12:52) 
-    [GCC 8.0.1 20180324 (Red Hat 8.0.1-0.20)]
+    Hi, I'm Python 2.7.15 (default, May 16 2018, 17:50:09) 
+    [GCC 8.1.1 20180502 (Red Hat 8.1.1-1)]
     Here are a few random numbers: 640, 25, 275
 
 ### Haskell
