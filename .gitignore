@@ -9,3 +9,4 @@ src/Tag.hs
 tags
 doc/img/*.eps
 doc/img/*.pdf
+pp.cabal
