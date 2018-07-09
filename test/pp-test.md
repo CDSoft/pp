@@ -335,6 +335,7 @@ Command line (uses sh):             exec(echo "hi é")
 `python` script:                    !python(print("hi"))
 `python2` script:                   !python2(print "hi")
 `python3` script:                   !python3(print("hi"))
+`lua` script:                       !lua(print "hi")
 `haskell` script:                   !haskell(main = putStrLn "hi")
 `exec` script:                      !exec(!raw(echo "!def(x)(42)!x"))
 `rawexec` script:                   !rawexec(!raw(echo "!def(x)(42)!x"))
@@ -346,7 +347,7 @@ A Haskell Stack script:
 
 !stack
 ~~~~~
-{- stack script --resolver lts-11.8 --package base -}
+{- stack script --resolver lts-12.0 --package base -}
 main = putStrLn "hi"
 ~~~~~
 

@@ -38,7 +38,7 @@ repository.
   - [Bash](https://www.gnu.org/software/bash/),
     [Cmd](https://en.wikipedia.org/wiki/Cmd.exe),
     [PowerShell](https://en.wikipedia.org/wiki/PowerShell),
-    [Python](https://www.python.org/),
+    [Python](https://www.python.org/), [Lua](http://www.lua.org/),
     [Haskell](https://www.haskell.org/) and
     [R](https://www.r-project.org/) scripts
 
@@ -360,6 +360,8 @@ preprocessing it.
     `!python2(CMD)` executes `CMD` with Python 2.
   - **`python3`**  
     `!python3(CMD)` executes `CMD` with Python 3.
+  - **`lua`**  
+    `!lua(CMD)` executes `CMD` with Lua.
   - **`haskell`**  
     `!haskell(CMD)` executes `CMD` as a Haskell script with
     `runhaskell`.
@@ -825,7 +827,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm /bin/bash 4.4.19(1)-release
+    Hi, I'm /bin/bash 4.4.23(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -852,7 +854,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (3.8)
+    Microsoft Windows 10.0.15063 (3.11)
     This script is run from wine under Linux
 
 ### Python
@@ -877,6 +879,24 @@ This script outputs:
     Hi, I'm Python 2.7.15 (default, May 16 2018, 17:50:09) 
     [GCC 8.1.1 20180502 (Red Hat 8.1.1-1)]
     Here are a few random numbers: 640, 25, 275
+
+### Lua
+
+[Lua](http://www.lua.org/) is executed when the keyword `lua` is used.
+
+    !lua
+    ~~~~~
+    print("Hi, I'm ".._VERSION)
+    math.randomseed(42)
+    t = {}
+    for i = 1, 3 do table.insert(t, math.random(0, 999)) end
+    print("Here are a few random numbers: "..table.concat(t, ", "))
+    ~~~~~
+
+This script outputs:
+
+    Hi, I'm Lua 5.3
+    Here are a few random numbers: 329, 690, 422
 
 ### Haskell
 
@@ -903,7 +923,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 8.2
+    Hi, I'm Haskell 8.4
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### Stack
@@ -914,7 +934,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-11.8 --package base -}
+    {- stack script --resolver lts-12.0 --package base -}
     
     import System.Info
     import Data.Version
@@ -934,7 +954,7 @@ beginning of the script.
 
 This script outputs:
 
-    Hi, I'm Haskell 8.2
+    Hi, I'm Haskell 8.4
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### R (script)
