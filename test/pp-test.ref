@@ -70,7 +70,6 @@ bar is not defined
 ## Expressions
 
 
-
 "-1" => -1 (true)
 
 "1" => 1 (true)
@@ -284,10 +283,7 @@ Comments and quiet definitions
 
 
 
-
-
 ## Quiet definitions
-
 
 
 ----------------------------------- -----------------------------------------------------------------
@@ -296,7 +292,6 @@ Definitions:                        3.14
 
 File modification date
 ======================
-
 
 
 ----------------------------------- -----------------------------------------------------------------
@@ -382,6 +377,7 @@ Command line (uses sh):             exec(echo "hi é")
 `python` script:                    hi
 `python2` script:                   hi
 `python3` script:                   hi
+`lua` script:                       hi
 `haskell` script:                   hi
 `exec` script:                      !def(x)(42)!x
 `rawexec` script:                   !def(x)(42)!x
@@ -814,6 +810,7 @@ bat
 python
 python2
 python3
+lua
 haskell
 stack
 Rscript
@@ -1037,6 +1034,9 @@ userhelp
 
 **`python3`**
 :   `!python3(CMD)` executes `CMD` with Python 3.
+
+**`lua`**
+:   `!lua(CMD)` executes `CMD` with Lua.
 
 **`haskell`**
 :   `!haskell(CMD)` executes `CMD` as a Haskell script with `runhaskell`.

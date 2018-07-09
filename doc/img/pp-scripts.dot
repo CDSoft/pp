@@ -11,6 +11,7 @@ digraph {
     Bash [shape=box label="bash"]
     Sh [shape=box label="sh"]
     Python [shape=box label="python"]
+    Lua [shape=box label="lua"]
     Haskell [shape=box label="runhaskell"]
     Stack [shape=box label="stack"]
     Rscriptexe [shape=box label="Rscript"]
@@ -21,6 +22,7 @@ digraph {
     bash -> Bash
     sh -> Sh
     python -> Python
+    lua -> Lua
     haskell -> Haskell
     stack -> Stack
     Rscript -> Rscriptexe

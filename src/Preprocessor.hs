@@ -110,6 +110,7 @@ builtin = [ define, undefine, defined, rawdef
           , script "python"     "python"      ""          ".py" "`!python(CMD)` executes `CMD` with the default Python interpretor."
           , script "python2"    "python2"     ""          ".py" "`!python2(CMD)` executes `CMD` with Python 2."
           , script "python3"    "python3"     ""          ".py" "`!python3(CMD)` executes `CMD` with Python 3."
+          , script "lua"        "lua"         ""          ".lua" "`!lua(CMD)` executes `CMD` with Lua."
           , script "haskell"    "runhaskell"  ""          ".hs" "`!haskell(CMD)` executes `CMD` as a Haskell script with `runhaskell`."
           , script "stack"      "stack"       ""          ".hs" "`!stack(CMD)` executes `CMD` as a Haskell script with `stack`."
           , script "Rscript"    "Rscript"     ""          ".R"  "`!Rscript(CMD)` executes `CMD` as a R script with Rscript."
@@ -1148,7 +1149,7 @@ codeblock = Macro "codeblock" []
 
         -- "!codeblock(len)(ch)" stores the new codeblock separator (ch repeated len times)
         impl env [len, ch] = do
-            len' <- (fromIntegral . atoi) <$> ppAndStrip' env len
+            len' <- fromIntegral . atoi <$> ppAndStrip' env len
             when (len' < 3) codeblockError
             s' <- ppAndStrip' env ch
             let line = case s' of
@@ -1170,7 +1171,7 @@ indent = Macro "indent" []
 
         -- "!indent(n)(block)" indents block by n spaces (n is optional)
         impl env [n, block] = do
-            n' <- (fromIntegral . atoi) <$> ppAndStrip' env n
+            n' <- fromIntegral . atoi <$> ppAndStrip' env n
             when (n' < 3) indentError
             (env', block') <- pp env (fromVal block)
             return (env', indent' n' block')

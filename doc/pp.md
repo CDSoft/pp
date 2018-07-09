@@ -24,6 +24,7 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 [Cmd]: https://en.wikipedia.org/wiki/Cmd.exe
 [PowerShell]: https://en.wikipedia.org/wiki/PowerShell
 [Python]: https://www.python.org/
+[Lua]: http://www.lua.org/
 [Haskell]: https://www.haskell.org/
 [Stack]: https://docs.haskellstack.org/en/stable/README/
 [GitHub]: https://github.com/CDSoft/pp
@@ -48,7 +49,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - literate programming
 - [GraphViz], [PlantUML] and [ditaa] diagrams
 - [Asymptote] and [R] figures
-- [Bash], [Cmd], [PowerShell], [Python], [Haskell] and [R] scripts
+- [Bash], [Cmd], [PowerShell], [Python], [Lua], [Haskell] and [R] scripts
 
 Open source
 ===========
@@ -472,6 +473,7 @@ digraph {
     Bash [shape=box label="bash"]
     Sh [shape=box label="sh"]
     Python [shape=box label="python"]
+    Lua [shape=box label="lua"]
     Haskell [shape=box label="runhaskell"]
     Stack [shape=box label="stack"]
     Rscriptexe [shape=box label="Rscript"]
@@ -482,6 +484,7 @@ digraph {
     bash -> Bash
     sh -> Sh
     python -> Python
+    lua -> Lua
     haskell -> Haskell
     stack -> Stack
     Rscript -> Rscriptexe
@@ -805,6 +808,31 @@ if __name__ == "__main__":
 ~~~~~
 ~~~~~~~~~~
 
+### Lua
+[Lua] is executed when the keyword `lua` is used.
+
+    !lua
+    ~~~~~
+    print("Hi, I'm ".._VERSION)
+    math.randomseed(42)
+    t = {}
+    for i = 1, 3 do table.insert(t, math.random(0, 999)) end
+    print("Here are a few random numbers: "..table.concat(t, ", "))
+    ~~~~~
+
+This script outputs:
+
+~~~~~~~~~~
+§lua
+~~~~~
+print("Hi, I'm ".._VERSION)
+math.randomseed(42)
+t = {}
+for i = 1, 3 do table.insert(t, math.random(0, 999)) end
+print("Here are a few random numbers: "..table.concat(t, ", "))
+~~~~~
+~~~~~~~~~~
+
 ### Haskell
 
 [Haskell] is executed when the keyword `haskell` is used.
@@ -855,7 +883,7 @@ In this case stack meta data must be added at the beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-11.8 --package base -}
+    {- stack script --resolver lts-12.0 --package base -}
 
     import System.Info
     import Data.Version
@@ -878,7 +906,7 @@ This script outputs:
 ~~~~~~~~~~
 §stack
 ~~~~~
-{- stack script --resolver lts-11.8 --package base -}
+{- stack script --resolver lts-12.0 --package base -}
 
 import System.Info
 import Data.Version
