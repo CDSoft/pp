@@ -177,10 +177,10 @@ test-md: $(BUILD)/pp-test.output test/pp-test.ref
 	@$(call ok,"Markdown test passed!")
 
 $(BUILD)/pp-test.output: $(PP) doc/pp.css
-$(BUILD)/pp-test.output: test/pp-test.md test/pp-test.i test/pp-test-lib.i
+$(BUILD)/pp-test.output: test/pp-test.md test/subdir/pp-test.i test/subdir/pp-test-lib.i
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
+	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -en -html -import=test/subdir/pp-test-lib.i $< > $@
 	pandoc --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
@@ -213,10 +213,10 @@ test-md-d: $(BUILD)/pp-test.d test/pp-test.d.ref
 	@$(call ok,"Dependency test passed!")
 
 $(BUILD)/pp-test.d: $(PP)
-$(BUILD)/pp-test.d: test/pp-test.md test/pp-test.i test/pp-test-lib.i
+$(BUILD)/pp-test.d: test/pp-test.md test/subdir/pp-test.i test/subdir/pp-test-lib.i
 	@$(call title,"tracking dependencies of $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 stack exec -- pp -M outputfile -md -img="[$(BUILD)/]img" -en -html -import=test/pp-test-lib.i $< > $@
+	TESTENVVAR=42 stack exec -- pp -M outputfile -md -img="[$(BUILD)/]img" -en -html -import=test/subdir/pp-test-lib.i $< > $@
 
 .PHONY: ref-d
 ref-d: $(BUILD)/pp-test.d

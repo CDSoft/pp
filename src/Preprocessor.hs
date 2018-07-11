@@ -88,6 +88,7 @@ builtin = [ define, undefine, defined, rawdef
           , comment, quiet, forcepp
           , mdate
           , getMainFile, getCurrentFile
+          , getRootDir, getCurrentDir
           , getCurrentLang, identList "langs" (map showCap langs) "lists the known languages"
           ]
           ++ map language langs
@@ -781,6 +782,28 @@ getCurrentFile = Macro "file" []
     (\env args -> case args of
         [] -> return (env, fromMaybe "-" (currentFile env))
         _ -> arityError "file"
+    )
+
+-- !root returns the directory name of the main file
+getRootDir :: Macro
+getRootDir = Macro "root" []
+    "`!root` returns the directory name of the main file."
+    (\env args -> case args of
+        [] -> case mainFile env of
+            Just name | name /= "-" -> return (env, takeDirectory name)
+            _ -> return (env, ".")
+        _ -> arityError "root"
+    )
+
+-- !cwd returns the directory name of the current file
+getCurrentDir :: Macro
+getCurrentDir = Macro "cwd" []
+    "`!cwd` returns the directory name of the current file."
+    (\env args -> case args of
+        [] -> case currentFile env of
+            Just name | name /= "-" -> return (env, takeDirectory name)
+            _ -> return (env, ".")
+        _ -> arityError "cwd"
     )
 
 ---------------------------------------------------------------------

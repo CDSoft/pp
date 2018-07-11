@@ -215,27 +215,31 @@ Evaluated:                          b a
 File inclusion
 ==============
 
-## Before including `pp-test.i`
+## Before including `subdir/pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
 File name of the main file:         test/pp-test.md
+Directory of the main file:         test
 File name of the current file:      test/pp-test.md
+Directory of the current file:      test
 ----------------------------------- -----------------------------------------------------------------
 
-## Inclusion of `pp-test.i`
+## Inclusion of `subdir/pp-test.i`
 
 First line of the included file.
 
 ----------------------------------- -----------------------------------------------------------------
 File name of the main file:         test/pp-test.md
-File name of the included file:     test/pp-test.i
+Directory of the main file:         test
+File name of the included file:     test/subdir/pp-test.i
+Directory of the included file:     test/subdir
 Definitions:                        answer = 42
 ----------------------------------- -----------------------------------------------------------------
 
 Last line of the included file.
 
 
-## After including `pp-test.i`
+## After including `subdir/pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
 Definitions:                        42
@@ -251,7 +255,9 @@ First line of the included file.
 
 ----------------------------------- -----------------------------------------------------------------
 File name of the main file:         !main
+Directory of the main file:         !root
 File name of the included file:     !file
+Directory of the included file:     !cwd
 Definitions:                        !def(answer)(42)answer = !answer
 ----------------------------------- -----------------------------------------------------------------
 
@@ -779,6 +785,8 @@ pp
 mdate
 main
 file
+root
+cwd
 lang
 langs
 en
@@ -934,6 +942,12 @@ userhelp
 
 **`file`**
 :   `!file` returns the name of the current file.
+
+**`root`**
+:   `!root` returns the directory name of the main file.
+
+**`cwd`**
+:   `!cwd` returns the directory name of the current file.
 
 **`lang`**
 :   `!lang` returns the current language.

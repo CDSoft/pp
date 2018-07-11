@@ -293,6 +293,10 @@ preprocessing it.
     line).
   - **`file`**  
     `!file` returns the name of the current file.
+  - **`root`**  
+    `!root` returns the directory name of the main file.
+  - **`cwd`**  
+    `!cwd` returns the directory name of the current file.
   - **`lang`**  
     `!lang` returns the current language.
   - **`langs`**  

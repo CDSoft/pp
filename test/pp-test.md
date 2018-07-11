@@ -171,18 +171,20 @@ Evaluated:                          !swap(a)(b)
 File inclusion
 ==============
 
-## Before including `pp-test.i`
+## Before including `subdir/pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
 File name of the main file:         !main
+Directory of the main file:         !root
 File name of the current file:      !file
+Directory of the current file:      !cwd
 ----------------------------------- -----------------------------------------------------------------
 
-## Inclusion of `pp-test.i`
+## Inclusion of `subdir/pp-test.i`
 
-!include(pp-test.i)
+!include(subdir/pp-test.i)
 
-## After including `pp-test.i`
+## After including `subdir/pp-test.i`
 
 ----------------------------------- -----------------------------------------------------------------
 Definitions:                        !answer
@@ -194,7 +196,7 @@ Definitions:                        !answer
 Undefinition:                       !undef(answer)
 ----------------------------------- -----------------------------------------------------------------
 
-!rawinclude(pp-test.i)
+!rawinclude(subdir/pp-test.i)
 
 ----------------------------------- -----------------------------------------------------------------
 No definitions:                     !answer
@@ -207,7 +209,7 @@ In the document:
 !undef(answer)
 
 Before importing: answer = !answer
-!import(pp-test.i)
+!import(subdir/pp-test.i)
 After import: answer = !answer
 
 And from the command line:
