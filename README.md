@@ -41,6 +41,7 @@ repository.
     [Python](https://www.python.org/), [Lua](http://www.lua.org/),
     [Haskell](https://www.haskell.org/) and
     [R](https://www.r-project.org/) scripts
+  - [Mustache](https://github.com/JustusAdam/mustache)
 
 # Open source
 
@@ -285,6 +286,9 @@ preprocessing it.
     `!pp(TEXT)` preprocesses and return `TEXT`. This macro is useful to
     preprocess the output of script macros for instance (`!sh`,
     `!python`, …).
+  - **`mustache`**  
+    `!mustache(JSON/YAML file)(TEMPLATE)` preprocesses `TEMPLATE` with
+    mustache, using a `JSON/YAML file`.
   - **`mdate`**  
     `!mdate(FILES)` returns the modification date of the most recent
     file.
@@ -858,7 +862,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (3.11)
+    Microsoft Windows 10.0.15063 (3.12)
     This script is run from wine under Linux
 
 ### Python
@@ -994,6 +998,42 @@ Residual standard error: 15.38 on 48 degrees of freedom
 Multiple R-squared:  0.6511,    Adjusted R-squared:  0.6438 
 F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
 ```
+
+# Mustache templates
+
+`pp` uses a builtin Haskell
+[Mustache](https://github.com/JustusAdam/mustache) implementation that
+reads JSON or YAML files and generates text from a Mustache template.
+
+[Mustache](https://github.com/JustusAdam/mustache) is executed when the
+keyword `mustache` is used.
+
+    !mustache(../package.yaml)
+    ```````````````````````````````````````
+    This is the documentation for `{{name}}` version {{version}} by {{author}}.
+    Copyright !bold({{copyright}}).
+    ```````````````````````````````````````
+
+`package.yaml` contains:
+
+    name:                pp
+    version:             2.6
+    github:              "CDSoft/pp"
+    license:             GPL-3
+    author:              "Christophe Delord"
+    maintainer:          "cdsoft.fr"
+    copyright:           "2015, 2016, 2017, 2018 Christophe Delord"
+
+Lambdas are not supported but the template is preprocessed by `pp`
+before calling Mustache. E.g. `!bold` can be defined as
+`!def(bold)(**!1**)`. These “*lambda macros*” can be defined in the
+YAML/JSON data file as well, which is a non standard way to define
+Mustache lambdas that works with `pp` only.
+
+This outputs:
+
+    This is the documentation for `pp` version 2.6 by Christophe Delord.
+    Copyright **2015, 2016, 2017, 2018 Christophe Delord**.
 
 # CSV tables
 

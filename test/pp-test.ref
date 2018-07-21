@@ -4,10 +4,10 @@
 Introduction
 ============
 
-This document is a test file for `pp`.
-It is preprocessed and compared with `pp-test.ref`.
+This document is a test file for `pp` version 2.6 by Christophe Delord.
+Copyright 2015, 2016, 2017, 2018 Christophe Delord.
 
-The document also computes the test results.
+It is preprocessed and compared with `pp-test.ref`.
 
 Macros definition
 =================
@@ -281,6 +281,18 @@ After import: answer = 42
 And from the command line:
 
 imported_macro: The imported macro works!
+
+## Mustache template preprocessor
+
+
+
+**Greetings**
+
+Hi chris!
+Hi mark!
+Hi scott!
+
+The template is preprocessed before mustache is called.
 
 Comments and quiet definitions
 ==============================
@@ -782,6 +794,7 @@ rawinc
 comment
 quiet
 pp
+mustache
 mdate
 main
 file
@@ -931,6 +944,10 @@ userhelp
 :   `!pp(TEXT)` preprocesses and return `TEXT`. This macro is useful
     to preprocess the output of script macros for instance (`!sh`,
     `!python`, ...).
+
+**`mustache`**
+:   `!mustache(JSON/YAML file)(TEMPLATE)` preprocesses `TEMPLATE`
+    with mustache, using a `JSON/YAML file`.
 
 **`mdate`**
 :   `!mdate(FILES)` returns the modification date of the most recent
@@ -1198,6 +1215,7 @@ one
 un
 two
 answer
+note
 pi
 x
 y

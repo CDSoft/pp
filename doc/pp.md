@@ -28,6 +28,7 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 [Haskell]: https://www.haskell.org/
 [Stack]: https://docs.haskellstack.org/en/stable/README/
 [GitHub]: https://github.com/CDSoft/pp
+[Mustache]: https://github.com/JustusAdam/mustache
 
 PP - Generic preprocessor (with pandoc in mind)
 ===============================================
@@ -50,6 +51,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - [GraphViz], [PlantUML] and [ditaa] diagrams
 - [Asymptote] and [R] figures
 - [Bash], [Cmd], [PowerShell], [Python], [Lua], [Haskell] and [R] scripts
+- [Mustache]
 
 Open source
 ===========
@@ -942,6 +944,41 @@ This script outputs:
 model = lm(dist~speed, data = cars)
 summary(model)
 ~~~~~
+~~~~~~~~~~
+
+Mustache templates
+==================
+
+`pp` uses a builtin Haskell [Mustache] implementation that reads JSON or YAML files
+and generates text from a Mustache template.
+
+[Mustache] is executed when the keyword `mustache` is used.
+
+    !mustache(../package.yaml)
+    ```````````````````````````````````````
+    This is the documentation for `{{name}}` version {{version}} by {{author}}.
+    Copyright !bold({{copyright}}).
+    ```````````````````````````````````````
+
+`package.yaml` contains:
+
+§indent(§sh(sed '/copyright/q' §root/../package.yaml))
+
+Lambdas are not supported but the template is preprocessed by `pp` before calling Mustache.
+E.g. `!bold` can be defined as `!def(bold)(**!1**)`.
+These "*lambda macros*" can be defined in the YAML/JSON data file as well,
+which is a non standard way to define Mustache lambdas that works with `pp` only.
+
+This outputs:
+
+§def(bold)(**§1**)
+
+~~~~~~~~~~
+§mustache(../package.yaml)
+```````````````````````````````````````
+This is the documentation for `{{name}}` version {{version}} by {{author}}.
+Copyright §bold({{copyright}}).
+```````````````````````````````````````
 ~~~~~~~~~~
 
 CSV tables

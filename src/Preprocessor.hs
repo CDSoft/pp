@@ -53,6 +53,13 @@ import System.IO
 import System.IO.Error
 import System.IO.Temp
 
+import qualified Data.Text as T
+import Text.Mustache (compileTemplate, substitute, toMustache)
+import Data.Aeson (Value, eitherDecode)
+import Data.Yaml (decodeEither')
+import qualified Data.ByteString.Char8 as BS8
+import qualified Data.ByteString.Lazy.Char8 as BL8
+
 import CSV
 import Environment
 import ErrorMessages
@@ -86,6 +93,7 @@ builtin = [ define, undefine, defined, rawdef
           , importFile, include
           , raw, rawinc
           , comment, quiet, forcepp
+          , mustache
           , mdate
           , getMainFile, getCurrentFile
           , getRootDir, getCurrentDir
@@ -687,11 +695,14 @@ locateFile env name = do
     let name' = case name of
             ('~' : '/' : relname) -> fromVal (getSymbol env (EnvVar (envVarStorage "HOME"))) </> relname
             _ -> name
-    let path = [ takeDirectory (fromMaybe "-" (f env)) | f <- [currentFile, mainFile] ] ++ [ "." ]
+    let path = searchSpace env
     found <- findFile path name'
     case found of
         Just foundFile -> return foundFile
         Nothing -> fileNotFound name
+
+searchSpace :: Env -> [FilePath]
+searchSpace env = [ takeDirectory (fromMaybe "-" (f env)) | f <- [currentFile, mainFile] ] ++ [ "." ]
 
 -- !raw(text) emits text unpreprocessed
 raw :: Macro
@@ -725,6 +736,38 @@ forcepp = Macro "pp" []
             (env'', text'') <- pp env' text'
             return (env'', text'')
         _ -> arityError "pp"
+    )
+
+-- !mustache(json/yaml file)(template) preprocesses template with mustache, using a json/yaml file
+mustache :: Macro
+mustache = Macro "mustache" []
+    "`!mustache(JSON/YAML file)(TEMPLATE)` preprocesses `TEMPLATE` with mustache, using a `JSON/YAML file`."
+    (\env args -> case args of
+        [dataFileName, template] -> do
+            (env', dataContent) <- ppAndStrip' env dataFileName >>= locateFile env >>= ppFile env
+            (env'', template') <- pp env' (fromVal template)
+            let templateFileName = fromMaybe "-" (currentFile env)
+            let eitherTemplate = compileTemplate templateFileName (T.pack template')
+            case eitherTemplate of
+                Left err -> mustacheError templateFileName(show err)
+                Right compiledTemplate -> do
+                    let readJSON :: String -> Either String Value
+                        readJSON s = eitherDecode (BL8.pack s)
+                    let readYAML :: String -> Either String Value
+                        readYAML s = case decodeEither' (BS8.pack s) of
+                            Left err -> Left (show err)
+                            Right yaml -> Right yaml
+                    let decoder = case takeExtension (fromVal dataFileName) of
+                            ".yml" -> readYAML
+                            ".yaml" -> readYAML
+                            _ -> readJSON
+                    let eitherDecoded = decoder dataContent
+                    case eitherDecoded of
+                        Left err -> mustacheError (fromVal dataFileName) err
+                        Right decodedData -> do
+                            let txt = substitute compiledTemplate (toMustache decodedData)
+                            return (env'', T.unpack txt)
+        _ -> arityError "mustache"
     )
 
 -- !comment[(title)](text) ignores title and text (just comments, no preprocessing)

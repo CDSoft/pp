@@ -4,10 +4,13 @@
 Introduction
 ============
 
-This document is a test file for `pp`.
-It is preprocessed and compared with `pp-test.ref`.
+!mustache(../package.yaml)
+```````````````````````````````````````
+This document is a test file for `{{name}}` version {{version}} by {{author}}.
+Copyright {{copyright}}.
+```````````````````````````````````````
 
-The document also computes the test results.
+It is preprocessed and compared with `pp-test.ref`.
 
 Macros definition
 =================
@@ -215,6 +218,21 @@ After import: answer = !answer
 And from the command line:
 
 imported_macro: !imported_macro
+
+## Mustache template preprocessor
+
+!def(note)(The template is preprocessed before mustache is called.)
+
+!mustache(subdir/mustache.yaml)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Greetings**
+
+{{#names}}
+Hi {{name}}!
+{{/names}}
+
+!note
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Comments and quiet definitions
 ==============================
