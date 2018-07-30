@@ -1,5 +1,5 @@
 name:                pp
-version:             2.5
+version:             2.6
 github:              "CDSoft/pp"
 license:             GPL-3
 author:              "Christophe Delord"
@@ -48,6 +48,11 @@ library:
   - explicit-exception
   - split
   - parsec
+  - mustache
+  - aeson
+  - yaml
+  - text
+  - bytestring
 
 executables:
   pp:

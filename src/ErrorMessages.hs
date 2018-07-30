@@ -34,6 +34,7 @@ module ErrorMessages ( unexpectedEndOfFile
                      , literatemacrocharsError
                      , defaultParserConfigurationError
                      , exprError
+                     , mustacheError
 #if linux_HOST_OS || darwin_HOST_OS
                      , windowsOnlyError
 #endif
@@ -97,3 +98,7 @@ windowsOnlyError name = errorWithoutStackTrace $ name ++ " is available on Windo
 -- Expression parser error
 exprError :: String -> t
 exprError msg = errorWithoutStackTrace $ "Expression error: " ++ msg
+
+-- Mustache error
+mustacheError :: FilePath -> String -> t
+mustacheError file msg = errorWithoutStackTrace $ "Mustache ("++file++"): " ++ msg
