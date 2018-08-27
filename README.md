@@ -862,7 +862,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.15063 (3.12)
+    Microsoft Windows 6.1.7601 (3.14)
     This script is run from wine under Linux
 
 ### Python
@@ -942,7 +942,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-12.0 --package base -}
+    {- stack script --resolver lts-12.7 --package base -}
     
     import System.Info
     import Data.Version
