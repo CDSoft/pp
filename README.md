@@ -358,6 +358,10 @@ preprocessing it.
     `!sh(CMD)` executes `CMD` in a `sh` shell.
   - **`bash`**  
     `!bash(CMD)` executes `CMD` in a `bash` shell.
+  - **`zsh`**  
+    `!zsh(CMD)` executes `CMD` in a `zsh` shell.
+  - **`fish`**  
+    `!fish(CMD)` executes `CMD` in a `fish` shell.
   - **`cmd`**  
     `!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe).
   - **`bat`**  
@@ -647,8 +651,10 @@ With no surprise, this script generates:
 
 The script language macro can be:
 
-  - `bash` (or `sh`)
+  - `sh`, `bash`, `zsh`, `fish` or any other shell with `sh` and a
+    [shebang header](https://en.wikipedia.org/wiki/Shebang_\(Unix\))
   - `python`
+  - `lua`
   - `haskell` (or `stack`)
   - `Rscript`
   - `cmd` (DOS/Windows batch language)
@@ -862,7 +868,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 6.1.7601 (3.14)
+    Microsoft Windows 6.1.7601 (3.16)
     This script is run from wine under Linux
 
 ### Python
@@ -884,8 +890,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.15 (default, May 16 2018, 17:50:09) 
-    [GCC 8.1.1 20180502 (Red Hat 8.1.1-1)]
+    Hi, I'm Python 2.7.15 (default, Sep 21 2018, 23:26:48) 
+    [GCC 8.1.1 20180712 (Red Hat 8.1.1-5)]
     Here are a few random numbers: 640, 25, 275
 
 ### Lua
@@ -1017,7 +1023,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.6
+    version:             2.7
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1032,7 +1038,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.6 by Christophe Delord.
+    This is the documentation for `pp` version 2.7 by Christophe Delord.
     Copyright **2015, 2016, 2017, 2018 Christophe Delord**.
 
 # CSV tables

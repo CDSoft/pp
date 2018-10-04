@@ -3,31 +3,26 @@ digraph {
 
     subgraph cluster_cmd {
         label = "script languages"
-        bash sh python haskell stack Rscript cmd powershell
+        shell script cmd powershell
     }
 
     PP [shape=diamond label="pp"]
-    bash sh cmd python haskell stack
-    Bash [shape=box label="bash"]
-    Sh [shape=box label="sh"]
-    Python [shape=box label="python"]
-    Lua [shape=box label="lua"]
-    Haskell [shape=box label="runhaskell"]
-    Stack [shape=box label="stack"]
-    Rscriptexe [shape=box label="Rscript"]
-    Cmd [shape=box label="wine cmd /c\nor cmd /c"]
-    PowerShell [shape=box label="(Windows only)\npowershell.exe"]
 
-    PP -> {bash sh python haskell stack Rscript cmd powershell}
-    bash -> Bash
-    sh -> Sh
-    python -> Python
-    lua -> Lua
-    haskell -> Haskell
-    stack -> Stack
-    Rscript -> Rscriptexe
-    cmd -> Cmd
-    powershell -> PowerShell
+    shell [label="sh\nbash\nzsh\nfish"]
+    script [label="python\nlua\nhaskell\nstack\nRscript"]
+    cmd [label="cmd"]
+    powershell [label="powershell"]
+
+    shellexe [shape=box label="sh\nbash\nzsh\nfish"]
+    scriptexe [shape=box label="python\nlua\nrunhaskell\nstack\nRscript"]
+    cmdexe [shape=box label="wine cmd /c\nor cmd /c"]
+    powershellexe [shape=box label="(Windows only)\npowershell.exe"]
+
+    PP -> {shell script cmd powershell}
+    shell -> shellexe
+    script -> scriptexe
+    cmd -> cmdexe
+    powershell -> powershellexe
 }
 
 

@@ -1,5 +1,5 @@
 name:                pp
-version:             2.6
+version:             2.7
 github:              "CDSoft/pp"
 license:             GPL-3
 author:              "Christophe Delord"
@@ -53,6 +53,7 @@ library:
   - yaml
   - text
   - bytestring
+  - unix-compat
 
 executables:
   pp:

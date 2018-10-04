@@ -4,7 +4,7 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.6 by Christophe Delord.
+This document is a test file for `pp` version 2.7 by Christophe Delord.
 Copyright 2015, 2016, 2017, 2018 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
@@ -390,6 +390,8 @@ External commands and scripts execution
 Command line (uses sh):             exec(echo "hi é")
 `sh` script:                        hi é
 `bash` script:                      hi à
+`zsh` script:                       hi à
+`fish` script:                      hi à
 `bat` script:                       hi ç
 `cmd` script:                       hi ç
 `python` script:                    hi
@@ -430,6 +432,12 @@ Multiple R-squared:  0.6511,	Adjusted R-squared:  0.6438
 F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
 
 ```
+
+Any other script language can be used, provided the shebang header is interpreted, with `sh`and `exec`:
+
+Hello from Python
+
+Hello from Lua
 
 Diagrams
 ========
@@ -826,6 +834,8 @@ exec
 rawexec
 sh
 bash
+zsh
+fish
 cmd
 bat
 python
@@ -1050,6 +1060,12 @@ userhelp
 
 **`bash`**
 :   `!bash(CMD)` executes `CMD` in a `bash` shell.
+
+**`zsh`**
+:   `!zsh(CMD)` executes `CMD` in a `zsh` shell.
+
+**`fish`**
+:   `!fish(CMD)` executes `CMD` in a `fish` shell.
 
 **`cmd`**
 :   `!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe).

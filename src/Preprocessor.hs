@@ -49,6 +49,7 @@ import Foreign hiding (void, new)
 import Foreign.C.Types
 import System.Directory
 import System.FilePath
+import System.PosixCompat.Files
 import System.IO
 import System.IO.Error
 import System.IO.Temp
@@ -112,8 +113,10 @@ builtin = [ define, undefine, defined, rawdef
           [ readEnv, getos, getarch
           , add, append
           , exec, rawexec `deprecated` "exec"
-          , script "sh"         "sh"          ""          ".sh" "`!sh(CMD)` executes `CMD` in a `sh` shell."
+          , script "sh"         "sh -c"       ""          ".sh" "`!sh(CMD)` executes `CMD` in a `sh` shell."
           , script "bash"       "bash"        ""          ".sh" "`!bash(CMD)` executes `CMD` in a `bash` shell."
+          , script "zsh"        "zsh"         ""          ".sh" "`!zsh(CMD)` executes `CMD` in a `zsh` shell."
+          , script "fish"       "fish"        ""          ".sh" "`!fish(CMD)` executes `CMD` in a `fish` shell."
           , script "cmd"        cmdexe        "@echo off" ".bat" "`!cmd(CMD)` executes `CMD` in a Windows shell (cmd.exe)."
           , script "bat"        cmdexe        "@echo off" ".bat" "" `deprecated` "cmd"
           , script "python"     "python"      ""          ".py" "`!python(CMD)` executes `CMD` with the default Python interpretor."
@@ -960,6 +963,7 @@ script lang cmd header ext doc = Macro lang []
                                             [] -> src'
                                             _ -> unlines [header, src']
                 hClose handle
+                setFileMode path 0o550
                 try readProcessUTF8 exe (params ++ [path])
             case src of
                 Val _ -> return (env', strip output)
@@ -973,7 +977,7 @@ exec :: Macro
 exec = macro doc
     where
 #if linux_HOST_OS || darwin_HOST_OS
-        macro = script "exec" "sh" "" ".sh"
+        macro = script "exec" "sh -c" "" ".sh"
 #endif
 #if mingw32_HOST_OS
         macro = script "exec" cmdexe "@echo off" ".bat"

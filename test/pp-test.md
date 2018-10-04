@@ -350,6 +350,8 @@ External commands and scripts execution
 Command line (uses sh):             exec(echo "hi é")
 `sh` script:                        !sh(echo "hi é")
 `bash` script:                      !bash(echo hi à)
+`zsh` script:                       !zsh(echo hi à)
+`fish` script:                      !fish(echo hi à)
 `bat` script:                       !bat(echo hi ç)
 `cmd` script:                       !cmd(echo hi ç)
 `python` script:                    !python(print("hi"))
@@ -380,6 +382,23 @@ model = lm(dist~speed, data = cars)
 summary(model)
 ~~~~~
 ```
+
+Any other script language can be used, provided the shebang header is interpreted, with `sh`and `exec`:
+
+!sh
+~~~~~
+#!/usr/bin/env python
+def hi():
+    print("Hello from Python")
+hi()
+~~~~~
+
+!exec
+~~~~~
+#!/usr/bin/env lua
+function hi() print "Hello from Lua" end
+hi()
+~~~~~
 
 Diagrams
 ========
