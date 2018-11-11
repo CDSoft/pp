@@ -1021,7 +1021,7 @@ diagram name runtime exe header footer = Macro name []
                                     (Graphviz, _, Just Pdf)  -> (PDF, "pdf")
                                     (Graphviz, _, _)         -> (SVG, "svg")
                                     (PlantUML, "ditaa", _)   -> (PNG, "png")
-                                    (PlantUML, _, Just Pdf)  -> (PNG, "png")
+                                    (PlantUML, _, Just Pdf)  -> (PDF, "pdf")
                                     (PlantUML, _, _)         -> (SVG, "svg")
                                     (Asymptote, _, Just Pdf) -> (PDF, "pdf")
                                     (Asymptote, _, _)        -> (SVG, "svg")

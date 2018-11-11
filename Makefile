@@ -119,8 +119,7 @@ pp-darwin-%.txz: $(PP) doc/pp.html
 #####################################################################
 
 PLANTUML = Plantuml
-PLANTUML_URL_1 = http://sourceforge.net/projects/plantuml/files/plantuml.jar
-PLANTUML_URL_2 = https://cdsoft.fr/pp/plantuml.jar
+PLANTUML_URL = https://github.com/vasil-sd/plantuml-pdf-math/raw/master/plantuml.jar
 
 BLOB = tools/blob.hs
 
@@ -133,7 +132,7 @@ $(BUILD)/%Jar_c.c $(BUILD)/%Jar.hs: $(BUILD)/%.jar $(BLOB)
 $(BUILD)/$(PLANTUML).jar:
 	@$(call title,"downloading $(notdir $@)")
 	@mkdir -p $(dir $@)
-	wget $(PLANTUML_URL_1) -O $@ || wget $(PLANTUML_URL_2) -O $@
+	@wget $(PLANTUML_URL) -O $@
 	@$(call ok,"$@")
 
 #####################################################################
