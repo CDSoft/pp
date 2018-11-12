@@ -88,7 +88,7 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 28 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+      - Fedora (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
       - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
   - Older version archive:
@@ -841,30 +841,6 @@ This script outputs:
 **Note**: the keyword `sh` executes `sh` which is generally a link to
 `bash`.
 
-### Cmd
-
-Windows’ [command-line
-interpreter](https://en.wikipedia.org/wiki/Cmd.exe) is executed when the
-keyword `cmd` is used.
-
-    !cmd
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo Hi, I'm %COMSPEC%
-    ver
-    if "%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%" == "" (
-        echo This script is run from wine under Linux
-    ) else (
-        echo This script is run from a real Windows
-    )
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This script outputs:
-
-    Hi, I'm C:\windows\system32\cmd.exe
-    
-    Microsoft Windows 6.1.7601 (3.14)
-    This script is run from wine under Linux
-
 ### Python
 
 [Python](https://www.python.org/) is executed when the keyword `python`
@@ -884,9 +860,9 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.15 (default, May 16 2018, 17:50:09) 
-    [GCC 8.1.1 20180502 (Red Hat 8.1.1-1)]
-    Here are a few random numbers: 640, 25, 275
+    Hi, I'm Python 3.7.1 (default, Oct 22 2018, 10:41:28) 
+    [GCC 8.2.1 20180831]
+    Here are a few random numbers: 654, 114, 25
 
 ### Lua
 

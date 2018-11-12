@@ -69,5 +69,5 @@ hWriteFileUTF8 handle content = do
 -- and returns the standard output produced by the command.
 readProcessUTF8 :: String -> [String] -> IO String
 readProcessUTF8 cmd args = do
-    (_, out, _) <- readCreateProcessWithExitCode (shell (foldr (++) "" (map (++ " ") (cmd : args)))) ""
+    (_, out, _) <- readCreateProcessWithExitCode (shell (unwords (cmd : args))) ""
     return out
