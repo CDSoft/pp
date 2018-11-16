@@ -988,6 +988,19 @@ rawexec = Macro "rawexec" [] doc impl
 -- Diagrams macros
 ---------------------------------------------------------------------
 
+-- for PlantUML newpage in seq. diagrams
+find_all_diagramms :: String -> [String] -> IO [String]
+find_all_diagramms url lst = do
+    let ext = takeExtension url
+    let basename = dropExtension url
+    let newbasename = basename ++ "_" ++ to_num (1 + (length lst))
+    let newname = newbasename ++ ext
+    is_exists <- doesFileExist newname
+    case is_exists of
+        True -> find_all_diagramms url (newname : lst)
+        False -> return lst
+    where to_num num = show (div num 100) ++ show (mod (div num 10) 10) ++ show (mod num 10)
+
 -- diagram generates a GraphViz, PlantUML, ditaa or Asymptote diagram.
 -- The metadata file associated to the diagram source file contains
 -- additional information that can not be in the source file but
@@ -1059,9 +1072,11 @@ diagram name runtime exe header footer = Macro name []
                             try readProcessUTF8 exe ["-f", "pdf", "-o", img, src]
                     R ->
                         try readProcessUTF8 "Rscript" [src]
+            urls_ <- find_all_diagramms url []
+            let urls = url : (reverse urls_)
             let hyperlink = case currentDialect env of
-                        Md -> "!["++title'++"]("++url++")"++attrs
-                        Rst -> unlines [".. figure:: " ++ url, indent' 4 attrs, "", "    " ++ title']
+                        Md -> foldr (++) "" (map (\u -> "!["++title'++"]("++u++")"++attrs++"\n") urls)
+                        Rst -> foldr (++) "" (map (\u -> (unlines [".. figure:: " ++ u, indent' 4 attrs, "", "    " ++ title']) ++ "\n") urls)
             return (env, hyperlink)
         impl env [path, code] = impl env [path, Val "", code]
         impl _ _ = arityError name
