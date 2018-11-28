@@ -88,7 +88,7 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 28 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+      - Fedora 29 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
       - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
   - Older version archive:
@@ -868,7 +868,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 6.1.7601 (3.16)
+    Microsoft Windows 10.0.17134 (3.20)
     This script is run from wine under Linux
 
 ### Python
@@ -890,8 +890,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.15 (default, Sep 21 2018, 23:26:48) 
-    [GCC 8.1.1 20180712 (Red Hat 8.1.1-5)]
+    Hi, I'm Python 2.7.15 (default, Oct 15 2018, 15:26:09) 
+    [GCC 8.2.1 20180801 (Red Hat 8.2.1-2)]
     Here are a few random numbers: 640, 25, 275
 
 ### Lua
@@ -1023,7 +1023,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.7
+    version:             2.7.1
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1036,9 +1036,10 @@ before calling Mustache. E.g. `!bold` can be defined as
 YAML/JSON data file as well, which is a non standard way to define
 Mustache lambdas that works with `pp` only.
 
-This outputs:
+This
+    outputs:
 
-    This is the documentation for `pp` version 2.7 by Christophe Delord.
+    This is the documentation for `pp` version 2.7.1 by Christophe Delord.
     Copyright **2015, 2016, 2017, 2018 Christophe Delord**.
 
 # CSV tables

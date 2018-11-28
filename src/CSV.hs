@@ -107,27 +107,37 @@ joinMultiLines = map (map (map join . filter (/= '\r')))
 
 -- generates a markdown or reStructuredText table
 makeTable :: Dialect -> Maybe [String] -> String -> String
-makeTable dialect header csvData = unlines $
-    [ sepLine
-    , makeLine headerRow
-    , headerSepLine
-    ] ++ concat [ [makeLine row, sepLine] | row <- rows ]
+makeTable dialect header csvData = unlines $ case dialect of
+        Md -> makePipeTable
+        Rst -> makeGridTable
+
     where
+
         (columnFormats, table) = parseCSV header csvData
         (headerRow : rows) = table
 
-        sepLine = concat ["+", intercalate "+" (map makeSep columnFormats), "+"]
-        headerSepLine = concat ["+", intercalate "+" (map makeBigSep columnFormats), "+"]
+        makeRow corner cells = concat [ corner, intercalate corner cells, corner ]
+        makeSepRow corner cell = makeRow corner (map cell columnFormats)
 
         makeSep (LeftAligned w) = replicate (w+2) '-'
         makeSep (RightAligned w) = replicate (w+2) '-'
 
-        makeBigSep (LeftAligned w) = alignmentChar ++ replicate (w+1) '='
-        makeBigSep (RightAligned w) = replicate (w+1) '=' ++ alignmentChar
+        makeBigSep c (LeftAligned w) = alignmentChar ++ replicate (w+1) c
+        makeBigSep c (RightAligned w) = replicate (w+1) c ++ alignmentChar
 
         alignmentChar = case dialect of
             Md -> ":"
             Rst -> "="
 
-        makeLine row = concat [ "|", intercalate "|" row, "|" ]
-        
+        makeGridTable =
+            [ sepLine
+            , makeRow "|" headerRow
+            , makeSepRow "+" (makeBigSep '=')
+            ] ++ concat [ [makeRow "|" row, sepLine] | row <- rows ]
+            where
+                sepLine = makeSepRow "+" makeSep
+
+        makePipeTable =
+            [ makeRow "|" headerRow
+            , makeSepRow "|" (makeBigSep '-')
+            ] ++ map (makeRow "|") rows
