@@ -214,10 +214,10 @@ border: none;
   <![endif]-->
 </head>
 <body>
-<header>
+<header id="title-block-header">
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="https://cdsoft.fr/pp" class="uri">https://cdsoft.fr/pp</a></p>
-<p class="date">Wednesday 28 November 2018</p>
+<p class="date">Wednesday 2 January 2019</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -510,10 +510,10 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dd><code>!env(VARNAME)</code> preprocesses and returns the value of the process environment variable <code>VARNAME</code>.
 </dd>
 <dt><strong><code>os</code></strong></dt>
-<dd><code>!os</code> returns the OS name (e.g. <code>linux</code> on Linux, <code>darwin</code> on MacOS, <code>windows</code> on Windows).
+<dd><code>!os</code> returns the OS name (e.g. <code>linux</code> on Linux, <code>darwin</code> on MacOS, <code>windows</code> on Windows).
 </dd>
 <dt><strong><code>arch</code></strong></dt>
-<dd><code>!arch</code> returns the machine architecture (e.g. <code>x86_64</code>, <code>i386</code>, …).
+<dd><code>!arch</code> returns the machine architecture (e.g. <code>x86_64</code>, <code>i386</code>, …).
 </dd>
 <dt><strong><code>add</code></strong></dt>
 <dd><code>!add(VARNAME)[(INCREMENT)]</code> computes <code>VARNAME+INCREMENT</code> and stores the result to <code>VARNAME</code>. The default value of the increment is 1.
@@ -716,7 +716,7 @@ void main()
 <pre><code>img/diag42.png</code></pre>
 <p>For instance, if you use Pandoc to generate HTML documents with diagrams in a different directory, there are two possibilities:</p>
 <ol type="1">
-<li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:
+<li>the document is a self contained HTML file (option <code>--self-contained</code>), i.e. the CSS and images are stored inside the document:
 <ul>
 <li>the CSS path shall be the actual path where the CSS file is stored</li>
 <li>the image path in diagrams shall be the actual path where the images are stored (otherwise Pandoc won’t find them)</li>
@@ -811,7 +811,7 @@ Alice &lt;-- Bob: another authentication Response
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>Once generated the graph looks like:</p>
 <figure>
-<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIGhlaWdodD0iMjE1cHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDoyOTlweDtoZWlnaHQ6MjE1cHg7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyOTkgMjE1IiB3aWR0aD0iMjk5cHgiIHpvb21BbmRQYW49Im1hZ25pZnkiPjxkZWZzPjxmaWx0ZXIgaGVpZ2h0PSIzMDAlIiBpZD0iZjM0d29wNGt1bHIybCIgd2lkdGg9IjMwMCUiIHg9Ii0xIiB5PSItMSI+PGZlR2F1c3NpYW5CbHVyIHJlc3VsdD0iYmx1ck91dCIgc3RkRGV2aWF0aW9uPSIyLjAiLz48ZmVDb2xvck1hdHJpeCBpbj0iYmx1ck91dCIgcmVzdWx0PSJibHVyT3V0MiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIC40IDAiLz48ZmVPZmZzZXQgZHg9IjQuMCIgZHk9IjQuMCIgaW49ImJsdXJPdXQyIiByZXN1bHQ9ImJsdXJPdXQzIi8+PGZlQmxlbmQgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iYmx1ck91dDMiIG1vZGU9Im5vcm1hbCIvPjwvZmlsdGVyPjwvZGVmcz48Zz48bGluZSBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsgc3Ryb2tlLWRhc2hhcnJheTogNS4wLDUuMDsiIHgxPSIzMyIgeDI9IjMzIiB5MT0iMzguMjk2OSIgeTI9IjE3NC44MjgxIi8+PGxpbmUgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7IHN0cm9rZS1kYXNoYXJyYXk6IDUuMCw1LjA7IiB4MT0iMjY5IiB4Mj0iMjY5IiB5MT0iMzguMjk2OSIgeTI9IjE3NC44MjgxIi8+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YzNHdvcDRrdWxyMmwpIiBoZWlnaHQ9IjMwLjI5NjkiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjQ2IiB4PSI4IiB5PSIzIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMzIiIHg9IjE1IiB5PSIyMi45OTUxIj5BbGljZTwvdGV4dD48cmVjdCBmaWxsPSIjRkVGRUNFIiBmaWx0ZXI9InVybCgjZjM0d29wNGt1bHIybCkiIGhlaWdodD0iMzAuMjk2OSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjU7IiB3aWR0aD0iNDYiIHg9IjgiIHk9IjE3My44MjgxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMzIiIHg9IjE1IiB5PSIxOTMuODIzMiI+QWxpY2U8L3RleHQ+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YzNHdvcDRrdWxyMmwpIiBoZWlnaHQ9IjMwLjI5NjkiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjQyIiB4PSIyNDYiIHk9IjMiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIyOCIgeD0iMjUzIiB5PSIyMi45OTUxIj5Cb2I8L3RleHQ+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YzNHdvcDRrdWxyMmwpIiBoZWlnaHQ9IjMwLjI5NjkiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjQyIiB4PSIyNDYiIHk9IjE3My44MjgxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMjgiIHg9IjI1MyIgeT0iMTkzLjgyMzIiPkJvYjwvdGV4dD48cG9seWdvbiBmaWxsPSIjQTgwMDM2IiBwb2ludHM9IjI1Nyw2NS40Mjk3LDI2Nyw2OS40Mjk3LDI1Nyw3My40Mjk3LDI2MSw2OS40Mjk3IiBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiIHgxPSIzMyIgeDI9IjI2MyIgeTE9IjY5LjQyOTciIHkyPSI2OS40Mjk3Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTQ5IiB4PSI0MCIgeT0iNjQuMzYzOCI+QXV0aGVudGljYXRpb24gUmVxdWVzdDwvdGV4dD48cG9seWdvbiBmaWxsPSIjQTgwMDM2IiBwb2ludHM9IjQ0LDk0LjU2MjUsMzQsOTguNTYyNSw0NCwxMDIuNTYyNSw0MCw5OC41NjI1IiBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsgc3Ryb2tlLWRhc2hhcnJheTogMi4wLDIuMDsiIHgxPSIzOCIgeDI9IjI2OCIgeTE9Ijk4LjU2MjUiIHkyPSI5OC41NjI1Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTU5IiB4PSI1MCIgeT0iOTMuNDk2NiI+QXV0aGVudGljYXRpb24gUmVzcG9uc2U8L3RleHQ+PHBvbHlnb24gZmlsbD0iI0E4MDAzNiIgcG9pbnRzPSIyNTcsMTIzLjY5NTMsMjY3LDEyNy42OTUzLDI1NywxMzEuNjk1MywyNjEsMTI3LjY5NTMiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS4wOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS4wOyIgeDE9IjMzIiB4Mj0iMjYzIiB5MT0iMTI3LjY5NTMiIHkyPSIxMjcuNjk1MyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjIwMyIgeD0iNDAiIHk9IjEyMi42Mjk0Ij5Bbm90aGVyIGF1dGhlbnRpY2F0aW9uIFJlcXVlc3Q8L3RleHQ+PHBvbHlnb24gZmlsbD0iI0E4MDAzNiIgcG9pbnRzPSI0NCwxNTIuODI4MSwzNCwxNTYuODI4MSw0NCwxNjAuODI4MSw0MCwxNTYuODI4MSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7IHN0cm9rZS1kYXNoYXJyYXk6IDIuMCwyLjA7IiB4MT0iMzgiIHgyPSIyNjgiIHkxPSIxNTYuODI4MSIgeTI9IjE1Ni44MjgxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMjEyIiB4PSI1MCIgeT0iMTUxLjc2MjIiPmFub3RoZXIgYXV0aGVudGljYXRpb24gUmVzcG9uc2U8L3RleHQ+PCEtLQpAc3RhcnR1bWwNCkFsaWNlIC0+IEJvYjogQXV0aGVudGljYXRpb24gUmVxdWVzdA0KQm9iIC0gLT4gQWxpY2U6IEF1dGhlbnRpY2F0aW9uIFJlc3BvbnNlDQpBbGljZSAtPiBCb2I6IEFub3RoZXIgYXV0aGVudGljYXRpb24gUmVxdWVzdA0KQWxpY2UgPC0gLSBCb2I6IGFub3RoZXIgYXV0aGVudGljYXRpb24gUmVzcG9uc2UNCg0KQGVuZHVtbA0KClBsYW50VU1MIHZlcnNpb24gMS4yMDE4LjEzKE1vbiBOb3YgMjYgMTg6MTE6NTEgQ0VUIDIwMTgpCihHUEwgc291cmNlIGRpc3RyaWJ1dGlvbikKSmF2YSBSdW50aW1lOiBPcGVuSkRLIFJ1bnRpbWUgRW52aXJvbm1lbnQKSlZNOiBPcGVuSkRLIDY0LUJpdCBTZXJ2ZXIgVk0KSmF2YSBWZXJzaW9uOiAxLjguMF8xOTEtYjEyCk9wZXJhdGluZyBTeXN0ZW06IExpbnV4Ck9TIFZlcnNpb246IDQuMTkuMy0zMDAuZmMyOS54ODZfNjQKRGVmYXVsdCBFbmNvZGluZzogVVRGLTgKTGFuZ3VhZ2U6IGZyCkNvdW50cnk6IEZSCi0tPjwvZz48L3N2Zz4=" alt="This is just a PlantUML diagram example" /><figcaption>This is just a PlantUML diagram example</figcaption>
+<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIGhlaWdodD0iMjE1cHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDoyOTlweDtoZWlnaHQ6MjE1cHg7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyOTkgMjE1IiB3aWR0aD0iMjk5cHgiIHpvb21BbmRQYW49Im1hZ25pZnkiPjxkZWZzPjxmaWx0ZXIgaGVpZ2h0PSIzMDAlIiBpZD0iZjM0d29wNGt1bHIybCIgd2lkdGg9IjMwMCUiIHg9Ii0xIiB5PSItMSI+PGZlR2F1c3NpYW5CbHVyIHJlc3VsdD0iYmx1ck91dCIgc3RkRGV2aWF0aW9uPSIyLjAiLz48ZmVDb2xvck1hdHJpeCBpbj0iYmx1ck91dCIgcmVzdWx0PSJibHVyT3V0MiIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIC40IDAiLz48ZmVPZmZzZXQgZHg9IjQuMCIgZHk9IjQuMCIgaW49ImJsdXJPdXQyIiByZXN1bHQ9ImJsdXJPdXQzIi8+PGZlQmxlbmQgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iYmx1ck91dDMiIG1vZGU9Im5vcm1hbCIvPjwvZmlsdGVyPjwvZGVmcz48Zz48bGluZSBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsgc3Ryb2tlLWRhc2hhcnJheTogNS4wLDUuMDsiIHgxPSIzMyIgeDI9IjMzIiB5MT0iMzguMjk2OSIgeTI9IjE3NC44MjgxIi8+PGxpbmUgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7IHN0cm9rZS1kYXNoYXJyYXk6IDUuMCw1LjA7IiB4MT0iMjY5IiB4Mj0iMjY5IiB5MT0iMzguMjk2OSIgeTI9IjE3NC44MjgxIi8+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YzNHdvcDRrdWxyMmwpIiBoZWlnaHQ9IjMwLjI5NjkiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjQ2IiB4PSI4IiB5PSIzIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMzIiIHg9IjE1IiB5PSIyMi45OTUxIj5BbGljZTwvdGV4dD48cmVjdCBmaWxsPSIjRkVGRUNFIiBmaWx0ZXI9InVybCgjZjM0d29wNGt1bHIybCkiIGhlaWdodD0iMzAuMjk2OSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjU7IiB3aWR0aD0iNDYiIHg9IjgiIHk9IjE3My44MjgxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMzIiIHg9IjE1IiB5PSIxOTMuODIzMiI+QWxpY2U8L3RleHQ+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YzNHdvcDRrdWxyMmwpIiBoZWlnaHQ9IjMwLjI5NjkiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjQyIiB4PSIyNDYiIHk9IjMiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIyOCIgeD0iMjUzIiB5PSIyMi45OTUxIj5Cb2I8L3RleHQ+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YzNHdvcDRrdWxyMmwpIiBoZWlnaHQ9IjMwLjI5NjkiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjQyIiB4PSIyNDYiIHk9IjE3My44MjgxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMjgiIHg9IjI1MyIgeT0iMTkzLjgyMzIiPkJvYjwvdGV4dD48cG9seWdvbiBmaWxsPSIjQTgwMDM2IiBwb2ludHM9IjI1Nyw2NS40Mjk3LDI2Nyw2OS40Mjk3LDI1Nyw3My40Mjk3LDI2MSw2OS40Mjk3IiBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiIHgxPSIzMyIgeDI9IjI2MyIgeTE9IjY5LjQyOTciIHkyPSI2OS40Mjk3Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTQ5IiB4PSI0MCIgeT0iNjQuMzYzOCI+QXV0aGVudGljYXRpb24gUmVxdWVzdDwvdGV4dD48cG9seWdvbiBmaWxsPSIjQTgwMDM2IiBwb2ludHM9IjQ0LDk0LjU2MjUsMzQsOTguNTYyNSw0NCwxMDIuNTYyNSw0MCw5OC41NjI1IiBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsgc3Ryb2tlLWRhc2hhcnJheTogMi4wLDIuMDsiIHgxPSIzOCIgeDI9IjI2OCIgeTE9Ijk4LjU2MjUiIHkyPSI5OC41NjI1Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTU5IiB4PSI1MCIgeT0iOTMuNDk2NiI+QXV0aGVudGljYXRpb24gUmVzcG9uc2U8L3RleHQ+PHBvbHlnb24gZmlsbD0iI0E4MDAzNiIgcG9pbnRzPSIyNTcsMTIzLjY5NTMsMjY3LDEyNy42OTUzLDI1NywxMzEuNjk1MywyNjEsMTI3LjY5NTMiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS4wOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS4wOyIgeDE9IjMzIiB4Mj0iMjYzIiB5MT0iMTI3LjY5NTMiIHkyPSIxMjcuNjk1MyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjIwMyIgeD0iNDAiIHk9IjEyMi42Mjk0Ij5Bbm90aGVyIGF1dGhlbnRpY2F0aW9uIFJlcXVlc3Q8L3RleHQ+PHBvbHlnb24gZmlsbD0iI0E4MDAzNiIgcG9pbnRzPSI0NCwxNTIuODI4MSwzNCwxNTYuODI4MSw0NCwxNjAuODI4MSw0MCwxNTYuODI4MSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7IHN0cm9rZS1kYXNoYXJyYXk6IDIuMCwyLjA7IiB4MT0iMzgiIHgyPSIyNjgiIHkxPSIxNTYuODI4MSIgeTI9IjE1Ni44MjgxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMjEyIiB4PSI1MCIgeT0iMTUxLjc2MjIiPmFub3RoZXIgYXV0aGVudGljYXRpb24gUmVzcG9uc2U8L3RleHQ+PCEtLQpAc3RhcnR1bWwNCkFsaWNlIC0+IEJvYjogQXV0aGVudGljYXRpb24gUmVxdWVzdA0KQm9iIC0gLT4gQWxpY2U6IEF1dGhlbnRpY2F0aW9uIFJlc3BvbnNlDQpBbGljZSAtPiBCb2I6IEFub3RoZXIgYXV0aGVudGljYXRpb24gUmVxdWVzdA0KQWxpY2UgPC0gLSBCb2I6IGFub3RoZXIgYXV0aGVudGljYXRpb24gUmVzcG9uc2UNCg0KQGVuZHVtbA0KClBsYW50VU1MIHZlcnNpb24gMS4yMDE4LjE0KEZyaSBEZWMgMjEgMTc6MzM6MTYgQ0VUIDIwMTgpCihHUEwgc291cmNlIGRpc3RyaWJ1dGlvbikKSmF2YSBSdW50aW1lOiBPcGVuSkRLIFJ1bnRpbWUgRW52aXJvbm1lbnQKSlZNOiBPcGVuSkRLIDY0LUJpdCBTZXJ2ZXIgVk0KSmF2YSBWZXJzaW9uOiAxLjguMF8xOTEtYjEyCk9wZXJhdGluZyBTeXN0ZW06IExpbnV4Ck9TIFZlcnNpb246IDQuMTkuMTAtMzAwLmZjMjkueDg2XzY0CkRlZmF1bHQgRW5jb2Rpbmc6IFVURi04Ckxhbmd1YWdlOiBmcgpDb3VudHJ5OiBGUgotLT48L2c+PC9zdmc+" alt="This is just a PlantUML diagram example" /><figcaption>This is just a PlantUML diagram example</figcaption>
 </figure>
 <p><a href="http://plantuml.sourceforge.net">PlantUML</a> is written in Java and is embedded in <code>pp</code>. Java must be installed.</p>
 <h3 id="ditaa">Ditaa</h3>
@@ -861,7 +861,7 @@ filldraw(p,lightgray,blue);
 draw(pO--pM,dashed);
 markangle(&quot;$\theta$&quot;,1.5cm,pM,origin,(1,0));
 
-// Affichage d'un nouveau repère (M,vec{u_{\theta}},vec_{u_{r}})
+// Affichage d&#39;un nouveau repère (M,vec{u_{\theta}},vec_{u_{r}})
 coordsys R=cartesiansystem(pM,i=utangM,j=unormM);
 show(&quot;$M$&quot;, &quot;$\vec{u_{\theta}}$&quot;, &quot;$\vec{u_{r}}$&quot;, R, xpen=invisible);
 
@@ -890,19 +890,19 @@ plot(pressure)
 <p><a href="https://www.gnu.org/software/bash/">Bash</a> is executed when the keyword <code>bash</code> is used.</p>
 <pre><code>!bash
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo &quot;Hi, I'm $SHELL $BASH_VERSION&quot;
+echo &quot;Hi, I&#39;m $SHELL $BASH_VERSION&quot;
 RANDOM=42 # seed
 echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm /bin/bash 4.4.23(1)-release
+<pre><code>Hi, I&#39;m /bin/bash 4.4.23(1)-release
 Here are a few random numbers: 17766, 11151, 23481</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="cmd">Cmd</h3>
 <p>Windows’ <a href="https://en.wikipedia.org/wiki/Cmd.exe">command-line interpreter</a> is executed when the keyword <code>cmd</code> is used.</p>
 <pre><code>!cmd
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo Hi, I'm %COMSPEC%
+echo Hi, I&#39;m %COMSPEC%
 ver
 if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
     echo This script is run from wine under Linux
@@ -911,9 +911,9 @@ if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
 )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm C:\windows\system32\cmd.exe
+<pre><code>Hi, I&#39;m C:\windows\system32\cmd.exe
 
-Microsoft Windows 10.0.17134 (3.20)
+Microsoft Windows 10.0.17134 (4.0-rc2)
 This script is run from wine under Linux</code></pre>
 <h3 id="python">Python</h3>
 <p><a href="https://www.python.org/">Python</a> is executed when the keyword <code>python</code> is used.</p>
@@ -923,27 +923,27 @@ import sys
 import random
 
 if __name__ == &quot;__main__&quot;:
-    print(&quot;Hi, I'm Python %s&quot;%sys.version)
+    print(&quot;Hi, I&#39;m Python %s&quot;%sys.version)
     random.seed(42)
     randoms = [random.randint(0, 1000) for i in range(3)]
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Python 2.7.15 (default, Oct 15 2018, 15:26:09) 
+<pre><code>Hi, I&#39;m Python 2.7.15 (default, Oct 15 2018, 15:26:09) 
 [GCC 8.2.1 20180801 (Red Hat 8.2.1-2)]
 Here are a few random numbers: 640, 25, 275</code></pre>
 <h3 id="lua">Lua</h3>
 <p><a href="http://www.lua.org/">Lua</a> is executed when the keyword <code>lua</code> is used.</p>
 <pre><code>!lua
 ~~~~~
-print(&quot;Hi, I'm &quot;.._VERSION)
+print(&quot;Hi, I&#39;m &quot;.._VERSION)
 math.randomseed(42)
 t = {}
 for i = 1, 3 do table.insert(t, math.random(0, 999)) end
 print(&quot;Here are a few random numbers: &quot;..table.concat(t, &quot;, &quot;))
 ~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Lua 5.3
+<pre><code>Hi, I&#39;m Lua 5.3
 Here are a few random numbers: 329, 690, 422</code></pre>
 <h3 id="haskell">Haskell</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is executed when the keyword <code>haskell</code> is used.</p>
@@ -960,18 +960,18 @@ primes = filterPrime [2..]
 version = showVersion compilerVersion
 
 main = do
-    putStrLn $ &quot;Hi, I'm Haskell &quot; ++ version
+    putStrLn $ &quot;Hi, I&#39;m Haskell &quot; ++ version
     putStrLn $ &quot;The first 10 prime numbers are: &quot; ++
                 intercalate &quot; &quot; (map show (take 10 primes))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Haskell 8.4
+<pre><code>Hi, I&#39;m Haskell 8.6
 The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29</code></pre>
 <h3 id="stack">Stack</h3>
 <p><a href="https://www.haskell.org/">Haskell</a> is also executed when the keyword <code>stack</code> is used. In this case stack meta data must be added at the beginning of the script.</p>
 <pre><code>!stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{- stack script --resolver lts-12.7 --package base -}
+{- stack script --resolver lts-13.1 --package base -}
 
 import System.Info
 import Data.Version
@@ -984,12 +984,12 @@ primes = filterPrime [2..]
 version = showVersion compilerVersion
 
 main = do
-    putStrLn $ &quot;Hi, I'm Haskell &quot; ++ version
+    putStrLn $ &quot;Hi, I&#39;m Haskell &quot; ++ version
     putStrLn $ &quot;The first 10 prime numbers are: &quot; ++
                 intercalate &quot; &quot; (map show (take 10 primes))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I'm Haskell 8.4
+<pre><code>Hi, I&#39;m Haskell 8.6
 The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29</code></pre>
 <h3 id="r-script">R (script)</h3>
 <p><a href="https://www.r-project.org/">R</a> is executed when the keyword <code>Rscript</code> is used.</p>
@@ -1028,16 +1028,16 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             2.7.1
+version:             2.7.2
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
 maintainer:          &quot;cdsoft.fr&quot;
-copyright:           &quot;2015, 2016, 2017, 2018 Christophe Delord&quot;</code></pre>
+copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.7.1 by Christophe Delord.
-Copyright **2015, 2016, 2017, 2018 Christophe Delord**.</code></pre>
+<pre><code>This is the documentation for `pp` version 2.7.2 by Christophe Delord.
+Copyright **2015-2019 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>
 <h2 id="files-with-a-header-line">Files with a header line</h2>
@@ -1158,7 +1158,7 @@ air, moon roof, loaded&quot;,4799.00
 `````````````````````
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-!win(Sorry, you're running Windows)
+!win(Sorry, you&#39;re running Windows)
 !linux(Hello, happy GNU/Linux user)</code></pre>
 <p>The <code>!exec</code> macro is also OS aware. It runs the <em>default</em> shell according to the OS (<code>sh</code> on Linux and MacOS, <code>cmd</code> on Windows).</p>
 <h1 id="third-party-documentations-tutorials-and-macros">Third-party documentations, tutorials and macros</h1>
@@ -1168,7 +1168,7 @@ air, moon roof, loaded&quot;,4799.00
 </ul>
 <h1 id="licenses">Licenses</h1>
 <h2 id="pp">PP</h2>
-<p>Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord <br> <a href="https://www.cdsoft.fr/pp" class="uri">https://www.cdsoft.fr/pp</a></p>
+<p>Copyright (C) 2015-2019 Christophe Delord <br> <a href="https://www.cdsoft.fr/pp" class="uri">https://www.cdsoft.fr/pp</a></p>
 <p>PP is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
 <p>PP is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License along with PP. If not, see <a href="http://www.gnu.org/licenses/" class="uri">http://www.gnu.org/licenses/</a>.</p>

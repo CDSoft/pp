@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
+Copyright (C) 2015-2019 Christophe Delord
 
 https://www.cdsoft.fr/pp
 
@@ -22,7 +22,6 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 
 module Version(copyright, help) where
 
-import Data.List
 import Data.Version
 import System.Info
 
@@ -34,8 +33,8 @@ name = "pp"
 author :: String
 author = "Christophe Delord"
 
-dates :: [Int]
-dates = [2015, 2016, 2017, 2018]
+dates :: String
+dates = "2015-2019"
 
 url :: String
 url = "https://cdsoft.fr/" ++ name
@@ -45,7 +44,7 @@ copyright = unlines [
         name ++ " " ++ Tag.describe ++ " (" ++ os ++ " " ++ arch ++ ", " ++ compilerName ++ " " ++ showVersion compilerVersion ++ ")",
         "Generic text Preprocessor (designed for Pandoc)",
         "",
-        "Copyright (C) " ++ intercalate ", " (map show dates) ++ " " ++ author ++ ".",
+        "Copyright (C) " ++ dates ++ " " ++ author ++ ".",
         "This is free software; see the source for copying conditions.  There is NO",
         "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
         "",

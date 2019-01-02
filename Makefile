@@ -1,5 +1,5 @@
 # PP
-# Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord
+# Copyright (C) 2015-2019 Christophe Delord
 # https://www.cdsoft.fr/pp
 #
 # This file is part of PP.

@@ -339,10 +339,10 @@ preprocessing it.
     `!env(VARNAME)` preprocesses and returns the value of the process
     environment variable `VARNAME`.
   - **`os`**  
-    `!os` returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS,
+    `!os` returns the OS name (e.g. `linux` on Linux, `darwin` on MacOS,
     `windows` on Windows).
   - **`arch`**  
-    `!arch` returns the machine architecture (e.g. `x86_64`, `i386`, …).
+    `!arch` returns the machine architecture (e.g. `x86_64`, `i386`, …).
   - **`add`**  
     `!add(VARNAME)[(INCREMENT)]` computes `VARNAME+INCREMENT` and stores
     the result to `VARNAME`. The default value of the increment is 1.
@@ -591,7 +591,7 @@ For instance, if you use Pandoc to generate HTML documents with diagrams
 in a different directory, there are two possibilities:
 
 1.  the document is a self contained HTML file (option
-    `--self-contained`), i.e. the CSS and images are stored inside the
+    `--self-contained`), i.e. the CSS and images are stored inside the
     document:
       - the CSS path shall be the actual path where the CSS file is
         stored
@@ -868,7 +868,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.17134 (3.20)
+    Microsoft Windows 10.0.17134 (4.0-rc2)
     This script is run from wine under Linux
 
 ### Python
@@ -937,7 +937,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 8.4
+    Hi, I'm Haskell 8.6
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### Stack
@@ -948,7 +948,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-12.7 --package base -}
+    {- stack script --resolver lts-13.1 --package base -}
     
     import System.Info
     import Data.Version
@@ -968,7 +968,7 @@ beginning of the script.
 
 This script outputs:
 
-    Hi, I'm Haskell 8.4
+    Hi, I'm Haskell 8.6
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### R (script)
@@ -1023,12 +1023,12 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.7.1
+    version:             2.7.2
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
     maintainer:          "cdsoft.fr"
-    copyright:           "2015, 2016, 2017, 2018 Christophe Delord"
+    copyright:           "2015-2019 Christophe Delord"
 
 Lambdas are not supported but the template is preprocessed by `pp`
 before calling Mustache. E.g. `!bold` can be defined as
@@ -1039,8 +1039,8 @@ Mustache lambdas that works with `pp` only.
 This
     outputs:
 
-    This is the documentation for `pp` version 2.7.1 by Christophe Delord.
-    Copyright **2015, 2016, 2017, 2018 Christophe Delord**.
+    This is the documentation for `pp` version 2.7.2 by Christophe Delord.
+    Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables
 
@@ -1137,7 +1137,7 @@ according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
 
 ## PP
 
-Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord <br>
+Copyright (C) 2015-2019 Christophe Delord <br>
 <https://www.cdsoft.fr/pp>
 
 PP is free software: you can redistribute it and/or modify it under the

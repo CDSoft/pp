@@ -882,7 +882,7 @@ In this case stack meta data must be added at the beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-12.7 --package base -}
+    {- stack script --resolver lts-13.1 --package base -}
 
     import System.Info
     import Data.Version
@@ -905,7 +905,7 @@ This script outputs:
 ~~~~~~~~~~
 §stack
 ~~~~~
-{- stack script --resolver lts-12.7 --package base -}
+{- stack script --resolver lts-13.1 --package base -}
 
 import System.Info
 import Data.Version
@@ -1071,7 +1071,7 @@ Licenses
 PP
 --
 
-Copyright (C) 2015, 2016, 2017, 2018 Christophe Delord <br>
+Copyright (C) 2015-2019 Christophe Delord <br>
 <https://www.cdsoft.fr/pp>
 
 PP is free software: you can redistribute it and/or modify

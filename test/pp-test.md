@@ -369,7 +369,7 @@ A Haskell Stack script:
 
 !stack
 ~~~~~
-{- stack script --resolver lts-12.7 --package base -}
+{- stack script --resolver lts-13.1 --package base -}
 main = putStrLn "hi"
 ~~~~~
 
