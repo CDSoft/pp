@@ -4,7 +4,7 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.7.2 by Christophe Delord.
+This document is a test file for `pp` version 2.7.3 by Christophe Delord.
 Copyright 2015-2019 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
@@ -286,11 +286,21 @@ imported_macro: The imported macro works!
 
 
 
-**Greetings**
+**Greetings from a YAML file**
 
 Hi chris!
 Hi mark!
 Hi scott!
+Hi Éric!
+
+The template is preprocessed before mustache is called.
+
+**Greetings from a JSON file**
+
+Hi chris!
+Hi mark!
+Hi scott!
+Hi Éric!
 
 The template is preprocessed before mustache is called.
 

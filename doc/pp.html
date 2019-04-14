@@ -1028,7 +1028,7 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             2.7.2
+version:             2.7.3
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
@@ -1036,7 +1036,7 @@ maintainer:          &quot;cdsoft.fr&quot;
 copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.7.2 by Christophe Delord.
+<pre><code>This is the documentation for `pp` version 2.7.3 by Christophe Delord.
 Copyright **2015-2019 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>

@@ -177,7 +177,7 @@ test-md: $(BUILD)/pp-test.output test/pp-test.ref
 	@$(call ok,"Markdown test passed!")
 
 $(BUILD)/pp-test.output: $(PP) doc/pp.css
-$(BUILD)/pp-test.output: test/pp-test.md test/subdir/pp-test.i test/subdir/pp-test-lib.i
+$(BUILD)/pp-test.output: test/pp-test.md test/subdir/pp-test.i test/subdir/pp-test-lib.i test/subdir/mustache.yaml test/subdir/mustache.json
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
 	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -en -html -import=test/subdir/pp-test-lib.i $< > $@

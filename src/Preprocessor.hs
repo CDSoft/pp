@@ -45,6 +45,7 @@ import Data.List
 import Data.List.Split
 import Data.Maybe
 import Data.Time
+import Data.Text.Encoding
 import Foreign hiding (void, new)
 import Foreign.C.Types
 import System.Directory
@@ -58,7 +59,7 @@ import qualified Data.Text as T
 import Text.Mustache (compileTemplate, substitute, toMustache)
 import Data.Aeson (Value, eitherDecode)
 import Data.Yaml (decodeEither')
-import qualified Data.ByteString.Char8 as BS8
+--import qualified Data.ByteString.Char8 as BS8
 import qualified Data.ByteString.Lazy.Char8 as BL8
 
 import CSV
@@ -755,9 +756,9 @@ mustache = Macro "mustache" []
                 Left err -> mustacheError templateFileName(show err)
                 Right compiledTemplate -> do
                     let readJSON :: String -> Either String Value
-                        readJSON s = eitherDecode (BL8.pack s)
+                        readJSON s = eitherDecode (BL8.fromStrict $ encodeUtf8 $ T.pack s)
                     let readYAML :: String -> Either String Value
-                        readYAML s = case decodeEither' (BS8.pack s) of
+                        readYAML s = case decodeEither' (encodeUtf8 $ T.pack s) of
                             Left err -> Left (show err)
                             Right yaml -> Right yaml
                     let decoder = case takeExtension (fromVal dataFileName) of

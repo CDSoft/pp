@@ -225,7 +225,18 @@ imported_macro: !imported_macro
 
 !mustache(subdir/mustache.yaml)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**Greetings**
+**Greetings from a YAML file**
+
+{{#names}}
+Hi {{name}}!
+{{/names}}
+
+!note
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+!mustache(subdir/mustache.json)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Greetings from a JSON file**
 
 {{#names}}
 Hi {{name}}!
