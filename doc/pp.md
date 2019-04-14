@@ -725,7 +725,7 @@ This script outputs:
 ~~~~~~~~~~
 §bash
 ~~~~~
-echo "Hi, I'm $SHELL $BASH_VERSION"
+echo "Hi, I'm bash $BASH_VERSION"
 RANDOM=42 # seed
 echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 ~~~~~

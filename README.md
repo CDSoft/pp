@@ -841,7 +841,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm /bin/bash 4.4.23(1)-release
+    Hi, I'm bash 4.4.23(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -868,7 +868,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.17134 (4.0-rc2)
+    Microsoft Windows 10.0.17134 (4.5)
     This script is run from wine under Linux
 
 ### Python
