@@ -971,7 +971,7 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29</code></pre>
 <p><a href="https://www.haskell.org/">Haskell</a> is also executed when the keyword <code>stack</code> is used. In this case stack meta data must be added at the beginning of the script.</p>
 <pre><code>!stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{- stack script --resolver lts-13.1 --package base -}
+{- stack script --resolver lts-13.19 --package base -}
 
 import System.Info
 import Data.Version
@@ -1028,7 +1028,7 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             2.7.3
+version:             2.7.4
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
@@ -1036,7 +1036,7 @@ maintainer:          &quot;cdsoft.fr&quot;
 copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.7.3 by Christophe Delord.
+<pre><code>This is the documentation for `pp` version 2.7.4 by Christophe Delord.
 Copyright **2015-2019 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>
