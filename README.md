@@ -88,7 +88,7 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 29 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+      - Fedora 30 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
       - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
   - Older version archive:
@@ -841,7 +841,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 4.4.23(1)-release
+    Hi, I'm bash 5.0.2(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -868,7 +868,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.17134 (4.5)
+    Microsoft Windows 10.0.17134 (4.7)
     This script is run from wine under Linux
 
 ### Python
@@ -890,8 +890,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.15 (default, Oct 15 2018, 15:26:09) 
-    [GCC 8.2.1 20180801 (Red Hat 8.2.1-2)]
+    Hi, I'm Python 2.7.16 (default, Apr 30 2019, 15:54:43) 
+    [GCC 9.0.1 20190312 (Red Hat 9.0.1-0.10)]
     Here are a few random numbers: 640, 25, 275
 
 ### Lua

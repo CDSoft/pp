@@ -882,7 +882,7 @@ In this case stack meta data must be added at the beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-13.1 --package base -}
+    {- stack script --resolver §RESOLVER --package base -}
 
     import System.Info
     import Data.Version
@@ -905,7 +905,7 @@ This script outputs:
 ~~~~~~~~~~
 §stack
 ~~~~~
-{- stack script --resolver lts-13.1 --package base -}
+{- stack script --resolver §RESOLVER --package base -}
 
 import System.Info
 import Data.Version

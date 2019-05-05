@@ -1,7 +1,6 @@
 #!/usr/bin/env stack
 {- stack
   script
-  --resolver lts-13.1
   --package bytestring
   --package filepath
   --package split

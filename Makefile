@@ -27,7 +27,7 @@ ok = /bin/echo -e "\x1b[1m\x1b[32m[OK] $1\x1b[0m"
 # Platform detection
 #####################################################################
 
-OS = $(shell uname)
+OS := $(shell uname)
 
 BIN_DIR := $(shell stack path --local-install-root)/bin
 
@@ -66,6 +66,8 @@ endif
 
 BUILD = .stack-work
 
+RESOLVER := $(shell awk '$$1=="resolver:" { print $$2 }' stack.yaml)
+
 TAG = src/Tag.hs
 $(shell ( test -d .git || ! test -f $(TAG) ) && ./tag.sh $(TAG))
 
@@ -91,7 +93,7 @@ README.md: $(PP)
 README.md: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p doc/img
-	stack exec -- pp -en -img=doc/img -DREADME $< | pandoc -f markdown -t gfm > $@
+	stack exec -- pp -en -img=doc/img -DRESOLVER=$(RESOLVER) -DREADME $< | pandoc -f markdown -t gfm > $@
 	@$(call ok,"$@")
 
 #####################################################################
@@ -127,7 +129,7 @@ BLOB = tools/blob.hs
 $(BUILD)/%Jar_c.c $(BUILD)/%Jar.hs: $(BUILD)/%.jar $(BLOB)
 	@$(call title,"converting $< to C")
 	@mkdir -p $(dir $@)
-	stack $(BLOB) $<
+	stack --resolver $(RESOLVER) $(BLOB) $<
 	@$(call ok,"$@")
 
 $(BUILD)/$(PLANTUML).jar:
@@ -152,7 +154,7 @@ doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(dir $@) doc/img
-	stack exec -- pp -en -img=doc/img $< | pandoc --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	stack exec -- pp -en -img=doc/img -DRESOLVER=$(RESOLVER) $< | pandoc --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
 	@$(call ok,"$@")
 
 #####################################################################
@@ -180,7 +182,7 @@ $(BUILD)/pp-test.output: $(PP) doc/pp.css
 $(BUILD)/pp-test.output: test/pp-test.md test/subdir/pp-test.i test/subdir/pp-test-lib.i test/subdir/mustache.yaml test/subdir/mustache.json
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -en -html -import=test/subdir/pp-test-lib.i $< > $@
+	TESTENVVAR=42 stack exec -- pp -md -img="[$(BUILD)/]img" -DRESOLVER=$(RESOLVER) -en -html -import=test/subdir/pp-test-lib.i $< > $@
 	pandoc --toc -c doc/pp.css -f markdown -t html5 $@ -o $(@:.output=.html)
 
 .PHONY: ref
@@ -216,7 +218,7 @@ $(BUILD)/pp-test.d: $(PP)
 $(BUILD)/pp-test.d: test/pp-test.md test/subdir/pp-test.i test/subdir/pp-test-lib.i
 	@$(call title,"tracking dependencies of $<")
 	@mkdir -p $(BUILD)/img
-	TESTENVVAR=42 stack exec -- pp -M outputfile -md -img="[$(BUILD)/]img" -en -html -import=test/subdir/pp-test-lib.i $< > $@
+	TESTENVVAR=42 stack exec -- pp -M outputfile -md -img="[$(BUILD)/]img" -DRESOLVER=$(RESOLVER) -en -html -import=test/subdir/pp-test-lib.i $< > $@
 
 .PHONY: ref-d
 ref-d: $(BUILD)/pp-test.d
