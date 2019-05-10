@@ -1,6 +1,8 @@
 
 digraph {
 
+    rankdir=LR
+
     subgraph cluster_cmd {
         label = "script languages"
         shell script cmd powershell

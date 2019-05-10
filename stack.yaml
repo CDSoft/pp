@@ -11,7 +11,7 @@
 # The location of a snapshot can be provided as a file or url. Stack assumes
 # a snapshot provided as a file might change, whereas a url resource does not.
 
-resolver: lts-13.19
+resolver: lts-13.20
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.

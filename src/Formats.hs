@@ -23,9 +23,10 @@ along with PP.  If not, see <http://www.gnu.org/licenses/>.
 module Formats ( Dialect(..), dialects
                , Format(..), formats
                , Diagram(..)
-               , GraphvizDiagram(..), graphvizDiagrams
-               , PlantumlDiagram(..), plantumlDiagrams
-               , AsymptoteDiagram(..), asymptoteDiagrams
+               , GraphvizDiagram, graphvizDiagrams
+               , PlantumlDiagram, plantumlDiagrams
+               , BlockDiagram, blockDiagrams
+               , AsymptoteDiagram, asymptoteDiagrams
                , RDiagram(..), rDiagrams
                , Ext(..)
                , readCap
@@ -53,11 +54,13 @@ dialects :: [Dialect]
 dialects = [(minBound :: Dialect) .. ]
 
 -- Diagrams
-data Diagram = GraphvizDiagram | PlantumlDiagram | AsymptoteDiagram | RDiagram
+data Diagram = GraphvizDiagram | PlantumlDiagram | BlockDiagram | AsymptoteDiagram | RDiagram
 data GraphvizDiagram = Dot | Neato | Twopi | Circo | Fdp | Sfdp | Patchwork | Osage
                      deriving (Show, Read, Enum, Bounded)
 data PlantumlDiagram = Uml | Ditaa
                      deriving (Show, Read, Enum, Bounded)
+data BlockDiagram = BlockDiag | SeqDiag | ActDiag | NwDiag | RackDiag | PacketDiag
+                  deriving (Show, Read, Enum, Bounded)
 data AsymptoteDiagram = Asy
                       deriving (Show, Read, Enum, Bounded)
 data RDiagram = Rplot
@@ -70,6 +73,9 @@ graphvizDiagrams = [(minBound :: GraphvizDiagram) .. ]
 
 plantumlDiagrams :: [PlantumlDiagram]
 plantumlDiagrams = [(minBound :: PlantumlDiagram) .. ]
+
+blockDiagrams :: [BlockDiagram]
+blockDiagrams = [(minBound :: BlockDiagram) .. ]
 
 asymptoteDiagrams :: [AsymptoteDiagram]
 asymptoteDiagrams = [(minBound :: AsymptoteDiagram) .. ]

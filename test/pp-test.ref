@@ -4,7 +4,7 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.7.3 by Christophe Delord.
+This document is a test file for `pp` version 2.8 by Christophe Delord.
 Copyright 2015-2019 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
@@ -466,6 +466,18 @@ The diagram test does not check the generated images, just the links in the outp
 
 ![Test of ditaa](img/ditaa-test.png)
 
+![Test of blockdiag](img/blockdiag-test.svg)
+
+![Test of seqdiag](img/seqdiag-test.svg)
+
+![Test of actdiag](img/actdiag-test.svg)
+
+![Test of nwdiag](img/nwdiag-test.svg)
+
+![Test of rackdiag](img/rackdiag-test.svg)
+
+![Test of packetdiag](img/packetdiag-test.svg)
+
 ![Test of Asymptote](img/asy-test.svg)
 
 ![](img/size_small.svg){.img width=50}
@@ -856,6 +868,12 @@ patchwork
 osage
 uml
 ditaa
+blockdiag
+seqdiag
+actdiag
+nwdiag
+rackdiag
+packetdiag
 asy
 Rplot
 literate
@@ -1136,6 +1154,30 @@ userhelp
 **`ditaa`**
 :   `!ditaa(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a ditaa image
     with PlantUML.
+
+**`blockdiag`**
+:   `!blockdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a blockdiag
+    image with BlockDiag.
+
+**`seqdiag`**
+:   `!seqdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a seqdiag
+    image with BlockDiag.
+
+**`actdiag`**
+:   `!actdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a actdiag
+    image with BlockDiag.
+
+**`nwdiag`**
+:   `!nwdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a nwdiag
+    image with BlockDiag.
+
+**`rackdiag`**
+:   `!rackdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a rackdiag
+    image with BlockDiag.
+
+**`packetdiag`**
+:   `!packetdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a packetdiag
+    image with BlockDiag.
 
 **`asy`**
 :   `!asy(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a asy image

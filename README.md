@@ -31,8 +31,9 @@ repository.
   - macros
   - literate programming
   - [GraphViz](http://graphviz.org/),
-    [PlantUML](http://plantuml.sourceforge.net/) and
-    [ditaa](http://ditaa.sourceforge.net/) diagrams
+    [PlantUML](http://plantuml.sourceforge.net/),
+    [ditaa](http://ditaa.sourceforge.net/) and
+    [blockdiag](http://blockdiag.com/) diagrams
   - [Asymptote](http://asymptote.sourceforge.net/) and
     [R](https://www.r-project.org/) figures
   - [Bash](https://www.gnu.org/software/bash/),
@@ -75,6 +76,7 @@ with `brew install gnu-tar`.
   - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
 `pp` requires (*optionally*) [Graphviz](http://graphviz.org/),
+[blockdiag](http://blockdiag.com/),
 [Asymptote](http://asymptote.sourceforge.net/),
 [R](https://www.r-project.org/) and Java
 ([PlantUML](http://plantuml.sourceforge.net/) and
@@ -413,6 +415,24 @@ preprocessing it.
   - **`ditaa`**  
     `!ditaa(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a ditaa image
     with PlantUML.
+  - **`blockdiag`**  
+    `!blockdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a blockdiag
+    image with BlockDiag.
+  - **`seqdiag`**  
+    `!seqdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a seqdiag
+    image with BlockDiag.
+  - **`actdiag`**  
+    `!actdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a actdiag
+    image with BlockDiag.
+  - **`nwdiag`**  
+    `!nwdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a nwdiag image
+    with BlockDiag.
+  - **`rackdiag`**  
+    `!rackdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a rackdiag
+    image with BlockDiag.
+  - **`packetdiag`**  
+    `!packetdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a
+    packetdiag image with BlockDiag.
   - **`asy`**  
     `!asy(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a asy image with
     Asymptote.
@@ -628,6 +648,12 @@ The diagram generator can be:
   - osage
   - uml
   - ditaa
+  - blockdiag
+  - seqdiag
+  - actdiag
+  - nwdiag
+  - rackdiag
+  - packetdiag
   - asy
   - Rplot
 
@@ -672,8 +698,9 @@ The [source code](pp.md) of this document contains some diagrams.
 Here are some simple examples. For further details about diagrams’
 syntax, please read the documentation of
 [GraphViz](http://graphviz.org/),
-[PlantUML](http://plantuml.sourceforge.net/) and
-[ditaa](http://ditaa.sourceforge.net/).
+[PlantUML](http://plantuml.sourceforge.net/),
+[ditaa](http://ditaa.sourceforge.net/) and
+[blockdiag](http://blockdiag.com/).
 
 ### Graphviz
 
@@ -759,6 +786,29 @@ Once generated the graph looks like:
 
 [ditaa](http://plantuml.sourceforge.net) is written in Java and is
 embedded in `pp`. Java must be installed.
+
+### BlockDiag
+
+[blockdiag](http://blockdiag.com/) is executed when one of these
+keywords is used: `blockdiag`, `seqdiag`, `actdiag`, `nwdiag`,
+`rackdiag`,
+    `packetdiag`
+
+    !blockdiag(pp-blockdiag-example)(This is just a blockdiag diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        A -> B -> C -> D
+        A -> E -> F -> D
+        F -> F
+        D -> A
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the graph looks like:
+
+![This is just a blockdiag diagram
+example](doc/img/pp-blockdiag-example.svg)
+
+[blockdiag](http://blockdiag.com/) (`blockdiag`, `seqdiag`, `actdiag`
+and `nwdiag`) must be installed.
 
 ### Asymptote
 
@@ -868,7 +918,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 10.0.17134 (4.7)
+    Microsoft Windows 6.1.7601 (4.7)
     This script is run from wine under Linux
 
 ### Python
@@ -948,7 +998,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-13.19 --package base -}
+    {- stack script --resolver lts-13.20 --package base -}
     
     import System.Info
     import Data.Version
@@ -1023,7 +1073,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.7.4
+    version:             2.8
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1036,10 +1086,9 @@ before calling Mustache. E.g. `!bold` can be defined as
 YAML/JSON data file as well, which is a non standard way to define
 Mustache lambdas that works with `pp` only.
 
-This
-    outputs:
+This outputs:
 
-    This is the documentation for `pp` version 2.7.4 by Christophe Delord.
+    This is the documentation for `pp` version 2.8 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables

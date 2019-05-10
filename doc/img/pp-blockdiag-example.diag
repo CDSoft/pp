@@ -1,0 +1,7 @@
+blockdiag {
+    A -> B -> C -> D
+    A -> E -> F -> D
+    F -> F
+    D -> A
+
+}

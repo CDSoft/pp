@@ -15,9 +15,10 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 [pp.tgz]: https://cdsoft.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
+[ditaa]: http://ditaa.sourceforge.net/
+[blockdiag]: http://blockdiag.com/
 [Asymptote]: http://asymptote.sourceforge.net/
 [R]: https://www.r-project.org/
-[ditaa]: http://ditaa.sourceforge.net/
 [GPP]: http://en.nothingisreal.com/wiki/GPP
 [Pandoc]: http://pandoc.org/
 [Bash]: https://www.gnu.org/software/bash/
@@ -48,7 +49,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
 - macros
 - literate programming
-- [GraphViz], [PlantUML] and [ditaa] diagrams
+- [GraphViz], [PlantUML], [ditaa] and [blockdiag] diagrams
 - [Asymptote] and [R] figures
 - [Bash], [Cmd], [PowerShell], [Python], [Lua], [Haskell] and [R] scripts
 - [Mustache]
@@ -82,7 +83,7 @@ On MacOS, running `make` requires the GNU version of `tar` which can be installe
 - Run `make install` to copy `pp` in `~/.local/bin`.
 - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires (*optionally*) [Graphviz], [Asymptote], [R] and Java
+`pp` requires (*optionally*) [Graphviz], [blockdiag], [Asymptote], [R] and Java
 ([PlantUML] and [ditaa] are embedded in `pp`).
 
 **Precompiled binaries**:
@@ -393,6 +394,12 @@ The diagram generator can be:
 - osage
 - uml
 - ditaa
+- blockdiag
+- seqdiag
+- actdiag
+- nwdiag
+- rackdiag
+- packetdiag
 - asy
 - Rplot
 
@@ -403,20 +410,23 @@ the path where the image is written must already exist.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 digraph {
 
+    rankdir=LR
+
     subgraph cluster_cmd {
         label = "diagram generators"
-        dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot
+        dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot
     }
 
     PP [label="pp" shape=diamond]
-    dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot
+    dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot
     GraphViz [shape=box]
     PlantUML [shape=box]
     DITAA [shape=box label=ditaa]
+    BlockDiag [shape=box label=blockdiag]
     Asymptote [shape=box]
-    Rplot [shape=box]
+    Rscript [shape=box]
 
-    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa asy Rplot}
+    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot}
     dot -> GraphViz
     neato -> GraphViz
     twopi -> GraphViz
@@ -427,6 +437,12 @@ digraph {
     osage -> GraphViz
     uml -> PlantUML
     ditaa -> DITAA
+    blockdiag -> BlockDiag
+    seqdiag -> BlockDiag
+    actdiag -> BlockDiag
+    nwdiag -> BlockDiag
+    rackdiag -> BlockDiag
+    packetdiag -> BlockDiag
     asy -> Asymptote
     Rplot -> Rscript
 }
@@ -467,6 +483,8 @@ The script language macro can be:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 digraph {
 
+    rankdir=LR
+
     subgraph cluster_cmd {
         label = "script languages"
         shell script cmd powershell
@@ -498,7 +516,7 @@ The [source code](pp.md) of this document contains some diagrams.
 
 Here are some simple examples.
 For further details about diagrams' syntax, please read the documentation of
-[GraphViz], [PlantUML] and [ditaa].
+[GraphViz], [PlantUML], [ditaa] and [blockdiag].
 
 ### Graphviz
 
@@ -606,6 +624,31 @@ Once generated the graph looks like:
 
 [ditaa](http://plantuml.sourceforge.net) is written in Java and is embedded in `pp`.
 Java must be installed.
+
+### BlockDiag
+
+[blockdiag] is executed when one of these keywords is used:
+`blockdiag`, `seqdiag`, `actdiag`, `nwdiag`, `rackdiag`, `packetdiag`
+
+    !blockdiag(pp-blockdiag-example)(This is just a blockdiag diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        A -> B -> C -> D
+        A -> E -> F -> D
+        F -> F
+        D -> A
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the graph looks like:
+
+§blockdiag(pp-blockdiag-example)(This is just a blockdiag diagram example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    A -> B -> C -> D
+    A -> E -> F -> D
+    F -> F
+    D -> A
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[blockdiag] (`blockdiag`, `seqdiag`, `actdiag` and `nwdiag`) must be installed.
 
 ### Asymptote
 
