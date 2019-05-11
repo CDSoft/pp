@@ -26,6 +26,7 @@ module Formats ( Dialect(..), dialects
                , GraphvizDiagram, graphvizDiagrams
                , PlantumlDiagram, plantumlDiagrams
                , BlockDiagram, blockDiagrams
+               , MermaidDiagram, mermaidDiagrams
                , AsymptoteDiagram, asymptoteDiagrams
                , RDiagram(..), rDiagrams
                , Ext(..)
@@ -61,6 +62,8 @@ data PlantumlDiagram = Uml | Ditaa
                      deriving (Show, Read, Enum, Bounded)
 data BlockDiagram = BlockDiag | SeqDiag | ActDiag | NwDiag | RackDiag | PacketDiag
                   deriving (Show, Read, Enum, Bounded)
+data MermaidDiagram = Mermaid
+                    deriving (Show, Read, Enum, Bounded)
 data AsymptoteDiagram = Asy
                       deriving (Show, Read, Enum, Bounded)
 data RDiagram = Rplot
@@ -76,6 +79,9 @@ plantumlDiagrams = [(minBound :: PlantumlDiagram) .. ]
 
 blockDiagrams :: [BlockDiagram]
 blockDiagrams = [(minBound :: BlockDiagram) .. ]
+
+mermaidDiagrams :: [MermaidDiagram]
+mermaidDiagrams = [(minBound :: MermaidDiagram) .. ]
 
 asymptoteDiagrams :: [AsymptoteDiagram]
 asymptoteDiagrams = [(minBound :: AsymptoteDiagram) .. ]

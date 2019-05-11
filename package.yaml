@@ -1,5 +1,5 @@
 name:                pp
-version:             2.8
+version:             2.9
 github:              "CDSoft/pp"
 license:             GPL-3
 author:              "Christophe Delord"
@@ -37,6 +37,7 @@ library:
   - -Werror
   - -O3
   - -fwarn-unused-do-bind
+  - -fno-strictness
   dependencies:
   - strict
   - process
@@ -64,6 +65,7 @@ executables:
     - -Werror
     - -O3
     - -fwarn-unused-do-bind
+    - -fno-strictness
     dependencies:
     - pp
 
@@ -76,6 +78,7 @@ tests:
     - -Werror
     - -O3
     - -fwarn-unused-do-bind
+    - -fno-strictness
     dependencies:
     - pp
     - hspec

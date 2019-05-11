@@ -5,19 +5,20 @@ digraph {
 
     subgraph cluster_cmd {
         label = "diagram generators"
-        dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot
+        dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag mermaid asy Rplot
     }
 
     PP [label="pp" shape=diamond]
-    dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot
+    dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag mermaid asy Rplot
     GraphViz [shape=box]
     PlantUML [shape=box]
     DITAA [shape=box label=ditaa]
     BlockDiag [shape=box label=blockdiag]
     Asymptote [shape=box]
     Rscript [shape=box]
+    Mermaid [shape=box label=mmdc]
 
-    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot}
+    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag mermaid asy Rplot}
     dot -> GraphViz
     neato -> GraphViz
     twopi -> GraphViz
@@ -34,6 +35,7 @@ digraph {
     nwdiag -> BlockDiag
     rackdiag -> BlockDiag
     packetdiag -> BlockDiag
+    mermaid -> Mermaid
     asy -> Asymptote
     Rplot -> Rscript
 }

@@ -86,7 +86,7 @@ isValidMacroName = all isValidMacroNameChar
 type Prepro = Env -> String ->  IO (Env, String)
 
 -- Diagram types managed by pp
-data DiagramRuntime = Graphviz | PlantUML | BlockDiag | Asymptote | R deriving (Show)
+data DiagramRuntime = Graphviz | PlantUML | BlockDiag | Mermaid | Asymptote | R deriving (Show)
 
 -- list of builtin macros
 builtin :: [Macro]
@@ -132,6 +132,7 @@ builtin = [ define, undefine, defined, rawdef
           ++ [diagram name Graphviz exe (const "") (const "") | (name, exe) <- graphvizExe <$> graphvizDiagrams]
           ++ [diagram name PlantUML exe (const $ "@start"++exe) (const $ "@end"++exe) | (name, exe) <- plantumlExe <$> plantumlDiagrams]
           ++ [diagram name BlockDiag exe (const $ exe++" {") (const "}") | (name, exe) <- blockdiagExe <$> blockDiagrams]
+          ++ [diagram name Mermaid exe (const "") (const "") | (name, exe) <- mermaidExe <$> mermaidDiagrams]
           ++ [diagram name Asymptote exe (const "import settings; libgs=\"\";") (const "") | (name, exe) <- asymptoteExe <$> asymptoteDiagrams]
           ++ [diagram name R exe (\img -> drop 1 (takeExtension img)++"('"++img++"');") (const "") | (name, exe) <- rExe <$> rDiagrams]
           ++
@@ -153,6 +154,9 @@ plantumlExe d = (showCap d, showCap d)
 
 blockdiagExe :: BlockDiagram -> (String, String)
 blockdiagExe d = (showCap d, showCap d)
+
+mermaidExe :: MermaidDiagram -> (String, String)
+mermaidExe d = (showCap d, "mmdc")
 
 asymptoteExe :: AsymptoteDiagram -> (String, String)
 asymptoteExe d = (showCap d, showCap d)
@@ -1016,6 +1020,7 @@ diagram name runtime exe header footer = Macro name []
                     Graphviz -> "dot"
                     PlantUML -> "uml"
                     BlockDiag -> "diag"
+                    Mermaid -> "mmd"
                     Asymptote -> "asy"
                     R -> "r"
             let (ext, ext', local, link) = case takeExtension linkMaybeExt of
@@ -1031,6 +1036,8 @@ diagram name runtime exe header footer = Macro name []
                                     (PlantUML, _, _)         -> (SVG, "svg")
                                     (BlockDiag, _, Just Pdf) -> (PDF, "pdf")
                                     (BlockDiag, _, _)        -> (SVG, "svg")
+                                    (Mermaid, _, Just Pdf)   -> (PDF, "pdf")
+                                    (Mermaid, _, _)          -> (SVG, "svg")
                                     (Asymptote, _, Just Pdf) -> (PDF, "pdf")
                                     (Asymptote, _, _)        -> (SVG, "svg")
                                     (R, _, Just Pdf)         -> (PDF, "pdf")
@@ -1062,6 +1069,8 @@ diagram name runtime exe header footer = Macro name []
                         try readProcessUTF8 "java" ["-jar", plantuml, "-t"++ext', "-charset", "UTF-8", src]
                     BlockDiag ->
                         try readProcessUTF8 exe ["-a", "-T"++ext', "-o", img, src]
+                    Mermaid ->
+                        try readProcessUTF8 exe ["-i", src, "-o", img, "-b", "transparent"]
                     Asymptote -> case ext of
                         PNG -> do
                             let pdf = src -<.> "pdf"

@@ -17,6 +17,7 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 [PlantUML]: http://plantuml.sourceforge.net/
 [ditaa]: http://ditaa.sourceforge.net/
 [blockdiag]: http://blockdiag.com/
+[mermaid]: https://github.com/mermaidjs/mermaid.cli
 [Asymptote]: http://asymptote.sourceforge.net/
 [R]: https://www.r-project.org/
 [GPP]: http://en.nothingisreal.com/wiki/GPP
@@ -49,7 +50,7 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 
 - macros
 - literate programming
-- [GraphViz], [PlantUML], [ditaa] and [blockdiag] diagrams
+- [GraphViz], [PlantUML], [ditaa], [blockdiag] and [mermaid] diagrams
 - [Asymptote] and [R] figures
 - [Bash], [Cmd], [PowerShell], [Python], [Lua], [Haskell] and [R] scripts
 - [Mustache]
@@ -83,7 +84,7 @@ On MacOS, running `make` requires the GNU version of `tar` which can be installe
 - Run `make install` to copy `pp` in `~/.local/bin`.
 - or copy `pp` (`pp.exe` on Windows) wherever you want.
 
-`pp` requires (*optionally*) [Graphviz], [blockdiag], [Asymptote], [R] and Java
+`pp` requires (*optionally*) [Graphviz], [blockdiag], [mermaid], [Asymptote], [R] and Java
 ([PlantUML] and [ditaa] are embedded in `pp`).
 
 **Precompiled binaries**:
@@ -400,6 +401,7 @@ The diagram generator can be:
 - nwdiag
 - rackdiag
 - packetdiag
+- mermaid
 - asy
 - Rplot
 
@@ -414,19 +416,20 @@ digraph {
 
     subgraph cluster_cmd {
         label = "diagram generators"
-        dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot
+        dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag mermaid asy Rplot
     }
 
     PP [label="pp" shape=diamond]
-    dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot
+    dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag mermaid asy Rplot
     GraphViz [shape=box]
     PlantUML [shape=box]
     DITAA [shape=box label=ditaa]
     BlockDiag [shape=box label=blockdiag]
     Asymptote [shape=box]
     Rscript [shape=box]
+    Mermaid [shape=box label=mmdc]
 
-    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag asy Rplot}
+    PP -> {dot neato twopi circo fdp sfdp patchwork osage uml ditaa blockdiag seqdiag actdiag nwdiag rackdiag packetdiag mermaid asy Rplot}
     dot -> GraphViz
     neato -> GraphViz
     twopi -> GraphViz
@@ -443,6 +446,7 @@ digraph {
     nwdiag -> BlockDiag
     rackdiag -> BlockDiag
     packetdiag -> BlockDiag
+    mermaid -> Mermaid
     asy -> Asymptote
     Rplot -> Rscript
 }
@@ -516,7 +520,7 @@ The [source code](pp.md) of this document contains some diagrams.
 
 Here are some simple examples.
 For further details about diagrams' syntax, please read the documentation of
-[GraphViz], [PlantUML], [ditaa] and [blockdiag].
+[GraphViz], [PlantUML], [ditaa], [blockdiag] and [mermaid].
 
 ### Graphviz
 
@@ -649,6 +653,26 @@ Once generated the graph looks like:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [blockdiag] (`blockdiag`, `seqdiag`, `actdiag` and `nwdiag`) must be installed.
+
+### Mermaid
+
+[mermaid] is executed when the keyword `mermaid` is used.
+
+    !mermaid(pp-mermaid-example)(This is just a mermaid diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        graph TD
+        A --> B
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the graph looks like:
+
+§mermaid(pp-mermaid-example)(This is just a mermaid diagram example)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    graph TD
+    A --> B
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[mermaid] must be installed.
 
 ### Asymptote
 

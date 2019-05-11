@@ -4,7 +4,7 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.8 by Christophe Delord.
+This document is a test file for `pp` version 2.9 by Christophe Delord.
 Copyright 2015-2019 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
@@ -478,6 +478,8 @@ The diagram test does not check the generated images, just the links in the outp
 
 ![Test of packetdiag](img/packetdiag-test.svg)
 
+![Test of mermaid](img/mermaid-test.svg)
+
 ![Test of Asymptote](img/asy-test.svg)
 
 ![](img/size_small.svg){.img width=50}
@@ -874,6 +876,7 @@ actdiag
 nwdiag
 rackdiag
 packetdiag
+mermaid
 asy
 Rplot
 literate
@@ -1178,6 +1181,10 @@ userhelp
 **`packetdiag`**
 :   `!packetdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a packetdiag
     image with BlockDiag.
+
+**`mermaid`**
+:   `!mermaid(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a mermaid
+    image with Mermaid.
 
 **`asy`**
 :   `!asy(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a asy image

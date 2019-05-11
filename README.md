@@ -32,8 +32,9 @@ repository.
   - literate programming
   - [GraphViz](http://graphviz.org/),
     [PlantUML](http://plantuml.sourceforge.net/),
-    [ditaa](http://ditaa.sourceforge.net/) and
-    [blockdiag](http://blockdiag.com/) diagrams
+    [ditaa](http://ditaa.sourceforge.net/),
+    [blockdiag](http://blockdiag.com/) and
+    [mermaid](https://github.com/mermaidjs/mermaid.cli) diagrams
   - [Asymptote](http://asymptote.sourceforge.net/) and
     [R](https://www.r-project.org/) figures
   - [Bash](https://www.gnu.org/software/bash/),
@@ -77,6 +78,7 @@ with `brew install gnu-tar`.
 
 `pp` requires (*optionally*) [Graphviz](http://graphviz.org/),
 [blockdiag](http://blockdiag.com/),
+[mermaid](https://github.com/mermaidjs/mermaid.cli),
 [Asymptote](http://asymptote.sourceforge.net/),
 [R](https://www.r-project.org/) and Java
 ([PlantUML](http://plantuml.sourceforge.net/) and
@@ -433,6 +435,9 @@ preprocessing it.
   - **`packetdiag`**  
     `!packetdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a
     packetdiag image with BlockDiag.
+  - **`mermaid`**  
+    `!mermaid(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a mermaid
+    image with Mermaid.
   - **`asy`**  
     `!asy(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a asy image with
     Asymptote.
@@ -654,6 +659,7 @@ The diagram generator can be:
   - nwdiag
   - rackdiag
   - packetdiag
+  - mermaid
   - asy
   - Rplot
 
@@ -699,8 +705,9 @@ Here are some simple examples. For further details about diagrams’
 syntax, please read the documentation of
 [GraphViz](http://graphviz.org/),
 [PlantUML](http://plantuml.sourceforge.net/),
-[ditaa](http://ditaa.sourceforge.net/) and
-[blockdiag](http://blockdiag.com/).
+[ditaa](http://ditaa.sourceforge.net/),
+[blockdiag](http://blockdiag.com/) and
+[mermaid](https://github.com/mermaidjs/mermaid.cli).
 
 ### Graphviz
 
@@ -809,6 +816,24 @@ example](doc/img/pp-blockdiag-example.svg)
 
 [blockdiag](http://blockdiag.com/) (`blockdiag`, `seqdiag`, `actdiag`
 and `nwdiag`) must be installed.
+
+### Mermaid
+
+[mermaid](https://github.com/mermaidjs/mermaid.cli) is executed when the
+keyword `mermaid` is used.
+
+    !mermaid(pp-mermaid-example)(This is just a mermaid diagram example)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        graph TD
+        A --> B
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once generated the graph looks like:
+
+![This is just a mermaid diagram
+example](doc/img/pp-mermaid-example.svg)
+
+[mermaid](https://github.com/mermaidjs/mermaid.cli) must be installed.
 
 ### Asymptote
 
@@ -1073,7 +1098,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.8
+    version:             2.9
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1088,7 +1113,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.8 by Christophe Delord.
+    This is the documentation for `pp` version 2.9 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables
