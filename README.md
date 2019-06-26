@@ -90,7 +90,7 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 30 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+      - Fedora (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
       - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
   - Older version archive:
@@ -456,8 +456,9 @@ preprocessing it.
     the end of the document. This macro is automatically executed before
     any script execution or file inclusion with `!src`.
   - **`source`**, **`src`**  
-    `!source(FILENAME)[(LANG)]` or `!src(FILENAME)[(LANG)]` formats an
-    existing source file in a colorized code block.
+    `!source(FILENAME)[(LANG)][(FROM)(TO)]` or
+    `!src(FILENAME)[(LANG)][(FROM)(TO)]` formats an existing source file
+    in a colorized code block.
   - **`codeblock`**  
     `!codeblock(LENGTH)[(CHAR)]` sets the default line separator for
     code blocks. The default value is a 70 tilda row
@@ -791,8 +792,7 @@ embedded in `pp`. Java must be installed.
 
 [blockdiag](http://blockdiag.com/) is executed when one of these
 keywords is used: `blockdiag`, `seqdiag`, `actdiag`, `nwdiag`,
-`rackdiag`,
-    `packetdiag`
+`rackdiag`, `packetdiag`
 
     !blockdiag(pp-blockdiag-example)(This is just a blockdiag diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -891,7 +891,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 5.0.2(1)-release
+    Hi, I'm bash 4.4.19(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -918,7 +918,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 6.1.7601 (4.7)
+    Microsoft Windows 6.1.7601 (4.0.1)
     This script is run from wine under Linux
 
 ### Python
@@ -940,8 +940,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.16 (default, Apr 30 2019, 15:54:43) 
-    [GCC 9.0.1 20190312 (Red Hat 9.0.1-0.10)]
+    Hi, I'm Python 2.7.15+ (default, Nov 27 2018, 23:36:35) 
+    [GCC 7.3.0]
     Here are a few random numbers: 640, 25, 275
 
 ### Lua
@@ -1109,8 +1109,7 @@ This file:
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
 
-is rendered by `!csv(file.csv)`
-as:
+is rendered by `!csv(file.csv)` as:
 
 | Year | Make  | Model                                  | Description                        |   Price |
 | ---: | :---- | :------------------------------------- | :--------------------------------- | ------: |
@@ -1129,8 +1128,7 @@ This file:
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
 
-is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)`
-as:
+is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:
 
 | Year | Make  | Model                                  | Description                        |   Price |
 | ---: | :---- | :------------------------------------- | :--------------------------------- | ------: |

@@ -1192,9 +1192,37 @@ lit = Macro "literate" ["lit"]
 source :: Macro
 
 source = Macro "source" ["src"]
-    "`!source(FILENAME)[(LANG)]` or `!src(FILENAME)[(LANG)]` formats an existing source file in a colorized code block."
+    "`!source(FILENAME)[(LANG)][(FROM)(TO)]` or `!src(FILENAME)[(LANG)][(FROM)(TO)]` formats an existing source file in a colorized code block."
     impl
     where
+
+        -- !src(name)(lang)(from)(to) reads a range of lines from a source file.
+        -- In the markdown output, the content will be colored according to the language lang.
+        -- The source file will be read int the lines range (from, to).
+        impl env [name, lang, from, to] = do
+            (env', _) <- flushlitImpl env []
+            name' <- ppAndStrip' env' name
+            lang' <- ppAndStrip' env' lang
+            from' <- fromIntegral . atoi <$> ppAndStrip' env' from
+            to' <- fromIntegral . atoi <$> ppAndStrip' env' to
+            content <- readFileUTF8 name'
+            let new_content = take (to' - from' + 1) (drop from' (lines content))
+            let formatedCode = litShow env (Just lang') (unlines new_content)
+            return (addDep env' name', formatedCode)
+
+        -- !src(name)(from)(to) reads a range of lines from a source file.
+        -- The language is the default one according to name.
+        -- The source file will be read int the lines range (from, to).
+        impl env [name, from, to] = do
+            (env', _) <- flushlitImpl env []
+            name' <- ppAndStrip' env' name
+            let lang = litLang env' name'
+            from' <- fromIntegral . atoi <$> ppAndStrip' env' from
+            to' <- fromIntegral . atoi <$> ppAndStrip' env' to
+            content <- readFileUTF8 name'
+            let new_content = take (to' - from' + 1) (drop from' (lines content))
+            let formatedCode = litShow env lang (unlines new_content)
+            return (addDep env' name', formatedCode)
 
         -- !src(name)(lang) reads a source file.
         -- In the markdown output, the content will be colored according to the language lang.
@@ -1572,7 +1600,7 @@ longUserHelp env = unlines userMacros
                 ]
 
 renderMarkdownHelp :: [([String], String)] -> String
-renderMarkdownHelp docs = 
+renderMarkdownHelp docs =
     unlines $ concat [ [ renderNames names, renderDoc doc ] | (names, doc) <- docs ]
     where
         renderNames :: [String] -> String
@@ -1581,7 +1609,7 @@ renderMarkdownHelp docs =
         renderDoc = (':':) . drop 1 . indent' 4 . unlines . wrap 60
 
 renderPlainHelp :: [([String], String)] -> String
-renderPlainHelp docs = 
+renderPlainHelp docs =
     unlines $ concat [ [ renderNames names, renderDoc doc ] | (names, doc) <- docs ]
     where
         renderNames :: [String] -> String
