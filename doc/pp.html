@@ -217,7 +217,7 @@ border: none;
 <header id="title-block-header">
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="https://cdsoft.fr/pp" class="uri">https://cdsoft.fr/pp</a></p>
-<p class="date">Saturday 11 May 2019</p>
+<p class="date">Sunday 7 July 2019</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -648,6 +648,9 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 <dt><strong><code>macroargs</code></strong></dt>
 <dd><code>!macroargs(CHARS)</code> defines the chars used to separate macro arguments. The default value is <code>&quot;(){}[]&quot;</code> (e.g. after <code>!macroargs(()«»)</code> both <code>!foo(...)</code> and <code>!foo«...»</code> are valid macro calls).
 </dd>
+<dt><strong><code>macroblockargs</code></strong></dt>
+<dd><code>!macroblockargs(CHARS)</code> defines the chars used to separate macro block arguments. The default value is <code>&quot;~`&quot;</code>.
+</dd>
 <dt><strong><code>literatemacrochars</code></strong></dt>
 <dd><code>!literatemacrochars(CHARS)</code> defines the chars used to identify literate programming macros. The default value is <code>&quot;@&quot;</code>. Any non space character can start a literate programming macro (e.g. after <code>!literatemacrochars(@&amp;)</code> both <code>@foo</code> and <code>&amp;foo</code> are valid macro calls.
 </dd>
@@ -934,7 +937,7 @@ RANDOM=42 # seed
 echo &quot;Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM&quot;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I&#39;m bash 5.0.2(1)-release
+<pre><code>Hi, I&#39;m bash 5.0.7(1)-release
 Here are a few random numbers: 17766, 11151, 23481</code></pre>
 <p><strong>Note</strong>: the keyword <code>sh</code> executes <code>sh</code> which is generally a link to <code>bash</code>.</p>
 <h3 id="cmd">Cmd</h3>
@@ -952,7 +955,7 @@ if &quot;%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%&quot; == &quot;&quot; (
 <p>This script outputs:</p>
 <pre><code>Hi, I&#39;m C:\windows\system32\cmd.exe
 
-Microsoft Windows 6.1.7601 (4.7)
+Microsoft Windows 10.0.17134
 This script is run from wine under Linux</code></pre>
 <h3 id="python">Python</h3>
 <p><a href="https://www.python.org/">Python</a> is executed when the keyword <code>python</code> is used.</p>
@@ -1010,7 +1013,7 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29</code></pre>
 <p><a href="https://www.haskell.org/">Haskell</a> is also executed when the keyword <code>stack</code> is used. In this case stack meta data must be added at the beginning of the script.</p>
 <pre><code>!stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{- stack script --resolver lts-13.20 --package base -}
+{- stack script --resolver lts-13.27 --package base -}
 
 import System.Info
 import Data.Version
@@ -1067,7 +1070,7 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             2.8
+version:             2.9
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
@@ -1075,7 +1078,7 @@ maintainer:          &quot;cdsoft.fr&quot;
 copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.8 by Christophe Delord.
+<pre><code>This is the documentation for `pp` version 2.9 by Christophe Delord.
 Copyright **2015-2019 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>

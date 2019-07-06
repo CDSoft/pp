@@ -29,6 +29,7 @@ module Preprocessor ( ppFile
                     , saveLiterateContent
                     , macrochars
                     , macroargs
+                    , macroblockargs
                     , literatemacrochars
                     , checkParserConsistency
                     , isValidMacroName
@@ -140,7 +141,7 @@ builtin = [ define, undefine, defined, rawdef
           , codeblock
           , indent
           , csv
-          , macrochars, macroargs, literatemacrochars
+          , macrochars, macroargs, macroblockargs, literatemacrochars
           , builtinmacros, usermacros
           , help, userhelp
           ]
@@ -1468,6 +1469,18 @@ macroargs = Macro "macroargs" []
             unless (checkParserConsistency env') $ macroargsError (fromVal chars)
             return (env', "")
         _ -> arityError "macroargs"
+    )
+
+macroblockargs :: Macro
+macroblockargs = Macro "macroblockargs" []
+    "`!macroblockargs(CHARS)` defines the chars used to separate macro block arguments. The default value is ``\"~`\"``."
+    (\env args -> case args of
+        [chars] -> do
+            chars' <- ppAndStrip' env chars
+            let env' = env{blockChars = filter (not . isSpace) chars'}
+            unless (checkParserConsistency env') $ macroblockargsError (fromVal chars)
+            return (env', "")
+        _ -> arityError "macroblockargs"
     )
 
 literatemacrochars :: Macro

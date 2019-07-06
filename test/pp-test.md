@@ -746,6 +746,40 @@ Active  : `[]` => !bar[42]
 Inactive: `<>` => !bar<42>
 Inactive: `«»` => !bar«42»
 
+Change the macro block args: !macroblockargs(+=)
+
+!foo
+`````````
+This is not an argument here!
+`````````
+
+!foo
++++++++++++
+This is an argument
++++++++++++
+
+!foo
+===========
+This is an argument too
+===========
+
+Restore the default behaviour: !macroblockargs(~`)
+
+!foo
++++++++++
+This is not an argument here!
++++++++++
+
+!foo
+```````````
+This is an argument
+```````````
+
+!foo
+~~~~~~~~~~~~
+This is an argument too
+~~~~~~~~~~~~
+
 ## Literate macros
 
 Set new literate macro chars: `$` !literatemacrochars($)

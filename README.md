@@ -480,6 +480,9 @@ preprocessing it.
     arguments. The default value is `"(){}[]"` (e.g. after
     `!macroargs(()«»)` both `!foo(...)` and `!foo«...»` are valid macro
     calls).
+  - **`macroblockargs`**  
+    `!macroblockargs(CHARS)` defines the chars used to separate macro
+    block arguments. The default value is ``"~`"``.
   - **`literatemacrochars`**  
     `!literatemacrochars(CHARS)` defines the chars used to identify
     literate programming macros. The default value is `"@"`. Any non
@@ -791,8 +794,7 @@ embedded in `pp`. Java must be installed.
 
 [blockdiag](http://blockdiag.com/) is executed when one of these
 keywords is used: `blockdiag`, `seqdiag`, `actdiag`, `nwdiag`,
-`rackdiag`,
-    `packetdiag`
+`rackdiag`, `packetdiag`
 
     !blockdiag(pp-blockdiag-example)(This is just a blockdiag diagram example)
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -891,7 +893,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 5.0.2(1)-release
+    Hi, I'm bash 5.0.7(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -918,7 +920,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 6.1.7601 (4.7)
+    Microsoft Windows 10.0.17134
     This script is run from wine under Linux
 
 ### Python
@@ -998,7 +1000,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-13.20 --package base -}
+    {- stack script --resolver lts-13.27 --package base -}
     
     import System.Info
     import Data.Version
@@ -1073,7 +1075,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.8
+    version:             2.9
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1088,7 +1090,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.8 by Christophe Delord.
+    This is the documentation for `pp` version 2.9 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables
@@ -1109,8 +1111,7 @@ This file:
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
 
-is rendered by `!csv(file.csv)`
-as:
+is rendered by `!csv(file.csv)` as:
 
 | Year | Make  | Model                                  | Description                        |   Price |
 | ---: | :---- | :------------------------------------- | :--------------------------------- | ------: |
@@ -1129,8 +1130,7 @@ This file:
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
 
-is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)`
-as:
+is rendered by `!csv(file.csv)(Year|Make|Model|Description|Price)` as:
 
 | Year | Make  | Model                                  | Description                        |   Price |
 | ---: | :---- | :------------------------------------- | :--------------------------------- | ------: |
