@@ -29,42 +29,40 @@ ok = /bin/echo -e "\x1b[1m\x1b[32m[OK] $1\x1b[0m"
 
 OS := $(shell uname)
 
-BIN_DIR := $(shell stack path --local-install-root)/bin
+export STACK_WORK	:= .stack-work
+BUILD 				:= $(STACK_WORK)
+BIN_DIR 			:= $(shell stack path --local-install-root)/bin
+
+PP 		= $(BIN_DIR)/pp
+PP_WINE	= $(BUILD)/wine/pp.exe
+
+compile: $(PP)
+doc: README.md doc/pp.html
+dist: pp.tgz
+
+all: compile doc test dist
 
 # Linux
 ifeq "$(OS)" "Linux"
 
-PP = $(BIN_DIR)/pp
-
-all: $(PP)
-all: README.md doc/pp.html
-all: pp.tgz
-all: pp-linux-$(shell uname -m).txz
+dist: pp-linux-$(shell uname -m).txz
+.PHONY: wine
+wine: pp-win.7z
 
 # MacOS
 else ifeq "$(OS)" "Darwin"
 
-PP 	= $(BIN_DIR)/pp
-
-all: $(PP)
-all: README.md doc/pp.html
-all: pp.tgz
-all: pp-darwin-$(shell uname -m).txz
+dist: pp-darwin-$(shell uname -m).txz
 
 # Windows
 else ifeq "$(shell echo $(OS) | grep 'MSYS\|MINGW\|CYGWIN' >/dev/null && echo Windows)" "Windows"
 
-PP 	= $(BIN_DIR)/pp.exe
-
-all: $(PP)
-all: doc/pp.html
+dist: pp-win.7z
 
 # Unknown platform (please contribute ;-)
 else
 $(error "Unknown platform: $(OS)")
 endif
-
-BUILD = .stack-work
 
 RESOLVER := $(shell awk '$$1=="resolver:" { print $$2 }' stack.yaml)
 
@@ -81,7 +79,7 @@ clean:
 	rm -rf $(BUILD)
 	rm -f doc/pp.html
 	rm -rf doc/img
-	rm -f pp*.tgz pp-win.7z pp-linux-*.txz pp-darwin-*.txz
+	rm -f pp*.{tgz,7z,txz}
 
 .DELETE_ON_ERROR:
 
@@ -100,13 +98,18 @@ README.md: doc/pp.md
 # archives
 #####################################################################
 
-pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard tools/*) $(wildcard test/*) tag.sh README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml
+pp.tgz: Makefile $(wildcard app/*) $(wildcard doc/pp.*) $(wildcard src/*) $(wildcard tools/*) $(wildcard test/*) $(wildcard test/subdir/*) tag.sh README.md LICENSE .gitignore Setup.hs pp.cabal stack.yaml package.yaml
 	@$(call title,"source archive: $@")
 	tar -czf $@ $^
 
-pp-win.7z: $(PP) doc/pp.html
+ifeq "$(OS)" "Linux"
+pp-win.7z: $(PP_WINE)
+else
+pp-win.7z: $(PP)
+endif
+pp-win.7z: doc/pp.html
 	@$(call title,"Windows binary archive: $@")
-	7z -mx9 a $@ $^
+	7z -mx9 a $@ $(shell realpath $^)
 
 pp-linux-%.txz: $(PP) doc/pp.html
 	@$(call title,"Linux binary archive: $@")
@@ -145,9 +148,17 @@ $(BUILD)/$(PLANTUML).jar:
 LIB_SOURCES = $(wildcard src/*.hs) $(BUILD)/$(PLANTUML)Jar_c.c $(BUILD)/$(PLANTUML)Jar.hs
 PP_SOURCES = app/pp.hs
 
+$(PP): package.yaml
 $(PP): $(PP_SOURCES) $(LIB_SOURCES)
 	@$(call title,"building $@")
 	stack build
+	@$(call ok,"$@")
+
+$(PP_WINE): package.yaml
+$(PP_WINE): $(PP_SOURCES) $(LIB_SOURCES)
+	@$(call title,"building $@")
+	@mkdir -p $(dir $@)
+	wine ghc --make $(PP_SOURCES) $(LIB_SOURCES) -o $@ -dumpdir $(dir $@) -hidir $(dir $@) -odir $(dir $@) -outputdir $(dir $@) -stubdir $(dir $@) -tmpdir $(dir $@)
 	@$(call ok,"$@")
 
 doc/pp.html: $(PP) doc/pp.css

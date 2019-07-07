@@ -1075,7 +1075,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.9
+    version:             "2.10"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1090,7 +1090,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.9 by Christophe Delord.
+    This is the documentation for `pp` version 2.10 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables

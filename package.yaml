@@ -1,5 +1,5 @@
 name:                pp
-version:             2.9
+version:             "2.10"
 github:              "CDSoft/pp"
 license:             GPL-3
 author:              "Christophe Delord"
