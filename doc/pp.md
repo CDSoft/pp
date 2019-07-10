@@ -93,7 +93,7 @@ Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
 - Latest Linux and Windows binaries:
 
-    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+    - §sh[(uname -s -r -m) || true]: <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
     - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
 - Older version archive:
