@@ -1,0 +1,65 @@
+#!/bin/sh
+# Outputs OS Name, Version & misc. info in a machine-readable way.
+# See also NeoFetch for a more professional and elaborate bash script:
+# https://github.com/dylanaraps/neofetch
+
+SEP=" "
+PRINT_HEADER=false
+
+OS=`uname -s`
+DIST="N/A"
+REV=`uname -r`
+MACH=`uname -m`
+PSUEDONAME="N/A"
+
+GetVersionFromFile()
+{
+    VERSION=`cat $1 | tr "\n" ' ' | sed s/.*VERSION.*=\ // `
+}
+
+if [ "${OS}" = "SunOS" ] ; then
+    DIST=Solaris
+    DIST_VER=`uname -v`
+    # also: cat /etc/release
+elif [ "${OS}" = "AIX" ] ; then
+    DIST="${OS}"
+    DIST_VER=`oslevel -r`
+elif [ "${OS}" = "Linux" ] ; then
+    if [ -f /etc/redhat-release ] ; then
+        DIST='RedHat'
+        PSUEDONAME=`sed -e 's/.*\(//' -e 's/\)//' /etc/redhat-release `
+        DIST_VER=`sed -e 's/.*release\ //' -e 's/\ .*//' /etc/redhat-release `
+    elif [ -f /etc/SuSE-release ] ; then
+        DIST=`cat /etc/SuSE-release | tr "\n" ' '| sed s/VERSION.*//`
+        DIST_VER=`cat /etc/SuSE-release | tr "\n" ' ' | sed s/.*=\ //`
+    elif [ -f /etc/mandrake-release ] ; then
+        DIST='Mandrake'
+        PSUEDONAME=`sed -e 's/.*\(//' -e 's/\)//' /etc/mandrake-release`
+        DIST_VER=`sed -e 's/.*release\ //' -e 's/\ .*//' /etc/mandrake-release`
+    elif [ -f /etc/debian_version ] ; then
+        DIST="Debian"
+        DIST_VER=`cat /etc/debian_version`
+	PSUEDONAME=`lsb_release -a 2> /dev/null | grep '^Codename:' | sed -e 's/.*[[:space:]]//'`
+    #elif [ -f /etc/gentoo-release ] ; then
+        #TODO
+    #elif [ -f /etc/slackware-version ] ; then
+        #TODO
+    elif [ -f /etc/issue ] ; then
+        # We use this indirection because /etc/issue may look like
+	# "Debian GNU/Linux 10 \n \l"
+        ISSUE=`cat /etc/issue`
+        ISSUE=`echo -e "${ISSUE}" | head -n 1 | sed -e 's/[[:space:]]\+$//'`
+        DIST=`echo -e "${ISSUE}" | sed -e 's/[[:space:]].*//'`
+        DIST_VER=`echo -e "${ISSUE}" | sed -e 's/.*[[:space:]]//'`
+    fi
+    if [ -f /etc/UnitedLinux-release ] ; then
+        DIST="${DIST}[`cat /etc/UnitedLinux-release | tr "\n" ' ' | sed s/VERSION.*//`]"
+    fi
+fi
+
+if $PRINT_HEADER
+then
+    echo "OS${SEP}Distribution${SEP}Distribution-Version${SEP}Pseudo-Name${SEP}Kernel-Revision${SEP}Machine-Architecture"
+fi
+echo "${OS}${SEP}${DIST}${SEP}${DIST_VER}${SEP}${PSUEDONAME}${SEP}${REV}${SEP}${MACH}"
+
