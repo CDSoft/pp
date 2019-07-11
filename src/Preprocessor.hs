@@ -1117,7 +1117,7 @@ parseImageAttributes env s = (localPath, linkPath, attrs)
             let (xs, cs') = span (/=right) cs
             in (xs, dropWhile (==right) cs')
 
--- "ressource name content" writes content (a C string containing PlantUML)
+-- "resource name content" writes content (a C string containing PlantUML)
 -- to a temporary file. It returns the path of the temporary file so the caller
 -- can execute it.
 resource :: FilePath -> (Ptr CChar, Ptr CInt) -> IO FilePath
