@@ -78,6 +78,13 @@ Installation
 [PP] is written in [Haskell] and is built with [Stack].
 On MacOS, running `make` requires the GNU version of `tar` which can be installed with `brew install gnu-tar`.
 
+**Docker**:
+
+A Linux docker made by [Joshua Dotson](https://github.com/josdotso) is available here:
+
+- https://hub.docker.com/r/josdotso/pp
+- https://github.com/josdotso/docker-pp
+
 **Installation**:
 
 - Run `make install` to copy `pp` in `~/.local/bin`.

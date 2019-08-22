@@ -70,6 +70,14 @@ written in [Haskell](https://www.haskell.org/) and is built with
 running `make` requires the GNU version of `tar` which can be installed
 with `brew install gnu-tar`.
 
+**Docker**:
+
+A Linux docker made by [Joshua Dotson](https://github.com/josdotso) is
+available here:
+
+  - https://hub.docker.com/r/josdotso/pp
+  - https://github.com/josdotso/docker-pp
+
 **Installation**:
 
   - Run `make install` to copy `pp` in `~/.local/bin`.
@@ -481,6 +489,9 @@ preprocessing it.
     arguments. The default value is `"(){}[]"` (e.g. after
     `!macroargs(()«»)` both `!foo(...)` and `!foo«...»` are valid macro
     calls).
+  - **`macroblockargs`**  
+    `!macroblockargs(CHARS)` defines the chars used to separate macro
+    block arguments. The default value is ``"~`"``.
   - **`literatemacrochars`**  
     `!literatemacrochars(CHARS)` defines the chars used to identify
     literate programming macros. The default value is `"@"`. Any non
@@ -891,7 +902,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 4.4.19(1)-release
+    Hi, I'm bash 5.0.7(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -918,7 +929,7 @@ This script outputs:
 
     Hi, I'm C:\windows\system32\cmd.exe
     
-    Microsoft Windows 6.1.7601 (4.0.1)
+    Microsoft Windows 10.0.17134
     This script is run from wine under Linux
 
 ### Python
@@ -998,7 +1009,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-13.20 --package base -}
+    {- stack script --resolver lts-13.27 --package base -}
     
     import System.Info
     import Data.Version
@@ -1073,7 +1084,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             2.8
+    version:             "2.10"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1088,7 +1099,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.8 by Christophe Delord.
+    This is the documentation for `pp` version 2.10 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables

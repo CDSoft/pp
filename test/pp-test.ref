@@ -4,7 +4,7 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.8 by Christophe Delord.
+This document is a test file for `pp` version 2.10 by Christophe Delord.
 Copyright 2015-2019 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
@@ -767,6 +767,28 @@ Active  : `[]` => bar:arg1="42" - text after macro call:
 Inactive: `<>` => bar:arg1="" - text after macro call:<42>
 Inactive: `«»` => bar:arg1="" - text after macro call:«42»
 
+Change the macro block args: 
+
+foo has been called
+`````````
+This is not an argument here!
+`````````
+
+foo has been called
+
+foo has been called
+
+Restore the default behaviour: 
+
+foo has been called
++++++++++
+This is not an argument here!
++++++++++
+
+foo has been called
+
+foo has been called
+
 ## Literate macros
 
 Set new literate macro chars: `$` 
@@ -887,6 +909,7 @@ indent
 csv
 macrochars
 macroargs
+macroblockargs
 literatemacrochars
 macros
 usermacros
@@ -1232,6 +1255,10 @@ userhelp
 :   `!macroargs(CHARS)` defines the chars used to separate macro arguments.
     The default value is `"(){}[]"` (e.g. after `!macroargs(()«»)`
     both `!foo(...)` and `!foo«...»` are valid macro calls).
+
+**`macroblockargs`**
+:   `!macroblockargs(CHARS)` defines the chars used to separate macro
+    block arguments. The default value is ``"~`"``.
 
 **`literatemacrochars`**
 :   `!literatemacrochars(CHARS)` defines the chars used to identify

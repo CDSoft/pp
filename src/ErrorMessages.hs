@@ -31,6 +31,7 @@ module ErrorMessages ( unexpectedEndOfFile
                      , indentError
                      , macrocharsError
                      , macroargsError
+                     , macroblockargsError
                      , literatemacrocharsError
                      , defaultParserConfigurationError
                      , exprError
@@ -81,6 +82,10 @@ macrocharsError chars = errorWithoutStackTrace $ "macrochars invalid parameter: 
 -- raise a parser consistency error
 macroargsError :: String -> t
 macroargsError chars = errorWithoutStackTrace $ "macroargs invalid parameter: \"" ++ chars ++ "\""
+
+-- raise a parser consistency error
+macroblockargsError :: String -> t
+macroblockargsError chars = errorWithoutStackTrace $ "macroblockargs invalid parameter: \"" ++ chars ++ "\""
 
 -- raise a parser consistency error
 literatemacrocharsError :: String -> t
