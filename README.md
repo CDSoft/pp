@@ -1083,7 +1083,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.10"
+    version:             "2.11"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1098,7 +1098,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.10 by Christophe Delord.
+    This is the documentation for `pp` version 2.11 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables
@@ -1217,6 +1217,12 @@ PlantUML.jar is integrated in
 [PlantUML](http://plantuml.sourceforge.net/) is distributed under the
 [GPL license](http://www.gnu.org/copyleft/gpl.html). See
 <http://plantuml.sourceforge.net/faq.html>.
+
+The current version of [PlantUML](http://plantuml.sourceforge.net/)
+embedded in
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is:
+
+![](doc/img/PP-plantuml-version.svg)
 
 ## ditaa
 

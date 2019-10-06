@@ -1144,6 +1144,10 @@ PlantUML.jar is integrated in [PP].
 [PlantUML] is distributed under the [GPL license](http://www.gnu.org/copyleft/gpl.html).
 See <http://plantuml.sourceforge.net/faq.html>.
 
+The current version of [PlantUML] embedded in [PP] is:
+
+§uml(PP-plantuml-version)(version)
+
 ditaa
 -----
 
