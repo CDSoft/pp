@@ -173,6 +173,8 @@ define and undefine variables and list input files.
     dependencies. The target name is necessary since it can not be
     infered by `pp`. This option only lists files that are imported,
     included and used with `mdate` and `csv`macros.
+  - **`-plantuml=FILE`** or **`-plantuml FILE`**  
+    use `FILE` instead of the embedded plantuml.jar file.
   - **`-<macro>[=<arg>]`**  
     calls a builtin macro with an optional argument (see `pp -help` for
     the full macro list). Some macros may prevent pp from reading stdin
@@ -1008,7 +1010,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-13.27 --package base -}
+    {- stack script --resolver lts-14.10 --package base -}
     
     import System.Info
     import Data.Version
@@ -1083,7 +1085,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.11"
+    version:             "2.12"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1098,7 +1100,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.11 by Christophe Delord.
+    This is the documentation for `pp` version 2.12 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables

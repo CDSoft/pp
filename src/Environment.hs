@@ -97,6 +97,7 @@ data Env = Env { vars :: [(Var, Val)]               -- lookup table of global va
                , blockChars :: Chars                -- block delimiter chars
                , literateMacroChars :: Chars        -- literate programming macro delimiters
                , ignoreStdin :: Bool                -- some command line arguments disable stdin
+               , customPlantuml :: Maybe FilePath   -- external PlantUML jar file to use
                }
 
 fromVal :: Val -> String
@@ -161,6 +162,7 @@ initialEnvironment defaultLang defaultDialect = do
                , blockChars = defaultBlockChars
                , literateMacroChars = defaultLiterateMacroChars
                , ignoreStdin = False
+               , customPlantuml = Nothing
                }
 
 -- track dependencies

@@ -1048,18 +1048,23 @@ diagram name runtime exe header footer = Macro name []
                                    , "Source   : " ++ src
                                    , "Image    : " ++ img
                                    ]
+            imgExists <- doesFileExist img
             oldCodeExists <- doesFileExist src
             oldCode <- if oldCodeExists then readFileUTF8 src else return ""
             oldMetaDataExists <- doesFileExist dat
             oldMetaData <- if oldMetaDataExists then readFileUTF8 dat else return ""
-            when (code'' /= oldCode || metaData /= oldMetaData) $ do
+            when (not imgExists || code'' /= oldCode || metaData /= oldMetaData) $ do
                 writeFileUTF8 dat metaData
                 writeFileUTF8 src code''
                 void $ case runtime of
                     Graphviz ->
                         try readProcessUTF8 exe ["-T"++ext', "-o", img, src]
                     PlantUML -> do
-                        plantuml <- resource "plantuml.jar" plantumlJar
+                        plantuml <- case customPlantuml env of
+                            Nothing -> resource "plantuml.jar" plantumlJar
+                            Just jarPath -> return jarPath
+                        jarExists <- doesFileExist plantuml
+                        unless jarExists $ errorWithoutStackTrace $ plantuml ++ " not found"
                         try readProcessUTF8 "java" ["-jar", plantuml, "-t"++ext', "-charset", "UTF-8", src]
                     BlockDiag ->
                         try readProcessUTF8 exe ["-a", "-T"++ext', "-o", img, src]

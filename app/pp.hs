@@ -159,6 +159,14 @@ doArg env "-M" (target:args) =
 doArg env ('-':'M':'=':target) args =
     return (env{makeTarget=Just target}, "", args)
 
+-- "doArg" env "-plantuml" <path to plantuml.jar> uses a specific plantuml.jar instead of the embedded one
+doArg env "-plantuml" (plantumlJar:args) =
+    return (env{customPlantuml=Just plantumlJar}, "", args)
+
+-- "doArg" env "-plantuml=<path to plantuml.jar>" uses a specific plantuml.jar instead of the embedded one
+doArg env ('-':'p':'l':'a':'n':'t':'u':'m':'l':'=':plantumlJar) args =
+    return (env{customPlantuml=Just plantumlJar}, "", args)
+
 doArg env ('-':arg) args
     | not (null arg) = case maybeMacro of
         -- Macros can be called from the command line

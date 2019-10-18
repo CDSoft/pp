@@ -184,6 +184,9 @@ The user can define and undefine variables and list input files.
     This option only lists files that are imported, included and
     used with `mdate` and `csv`macros.
 
+**`-plantuml=FILE`** or **`-plantuml FILE`**
+:   use `FILE` instead of the embedded plantuml.jar file.
+
 **`-<macro>[=<arg>]`**
 :   calls a builtin macro with an optional argument
     (see `pp -help` for the full macro list).

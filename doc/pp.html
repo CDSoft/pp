@@ -217,7 +217,7 @@ border: none;
 <header id="title-block-header">
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="https://cdsoft.fr/pp" class="uri">https://cdsoft.fr/pp</a></p>
-<p class="date">Sunday 6 October 2019</p>
+<p class="date">Friday 18 October 2019</p>
 </header>
 <nav id="TOC">
 <ul>
@@ -366,6 +366,9 @@ border: none;
 </dd>
 <dt><strong><code>-M TARGET</code></strong> or <strong><code>-M=TARGET</code></strong></dt>
 <dd>tracks dependencies and outputs a make rule listing the dependencies. The target name is necessary since it can not be infered by <code>pp</code>. This option only lists files that are imported, included and used with <code>mdate</code> and <code>csv</code>macros.
+</dd>
+<dt><strong><code>-plantuml=FILE</code></strong> or <strong><code>-plantuml FILE</code></strong></dt>
+<dd>use <code>FILE</code> instead of the embedded plantuml.jar file.
 </dd>
 <dt><strong><code>-&lt;macro&gt;[=&lt;arg&gt;]</code></strong></dt>
 <dd>calls a builtin macro with an optional argument (see <code>pp -help</code> for the full macro list). Some macros may prevent pp from reading stdin when no file is given on the command line (<code>langs</code>, <code>formats</code>, <code>dialects</code>, <code>os</code>, <code>arch</code>, <code>macros</code>, <code>usermacros</code>).
@@ -1019,7 +1022,7 @@ The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29</code></pre>
 <p><a href="https://www.haskell.org/">Haskell</a> is also executed when the keyword <code>stack</code> is used. In this case stack meta data must be added at the beginning of the script.</p>
 <pre><code>!stack
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{- stack script --resolver lts-13.27 --package base -}
+{- stack script --resolver lts-14.10 --package base -}
 
 import System.Info
 import Data.Version
@@ -1076,7 +1079,7 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             &quot;2.11&quot;
+version:             &quot;2.12&quot;
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
@@ -1084,7 +1087,7 @@ maintainer:          &quot;cdsoft.fr&quot;
 copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.11 by Christophe Delord.
+<pre><code>This is the documentation for `pp` version 2.12 by Christophe Delord.
 Copyright **2015-2019 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>
