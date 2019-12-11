@@ -1,5 +1,5 @@
 name:                pp
-version:             "2.12"
+version:             "2.13"
 github:              "CDSoft/pp"
 license:             GPL-3
 author:              "Christophe Delord"
@@ -27,6 +27,7 @@ library:
   - .stack-work
   c-sources:
   - .stack-work/PlantumlJar_c.c
+  - .stack-work/DitaaJar_c.c
   include-dirs:
   - .stack-work
   other-extensions:
@@ -37,6 +38,7 @@ library:
   - -Werror
   - -O3
   - -fwarn-unused-do-bind
+  - -fno-strictness
   dependencies:
   - strict
   - process
@@ -64,6 +66,7 @@ executables:
     - -Werror
     - -O3
     - -fwarn-unused-do-bind
+    - -fno-strictness
     dependencies:
     - pp
 
@@ -76,6 +79,7 @@ tests:
     - -Werror
     - -O3
     - -fwarn-unused-do-bind
+    - -fno-strictness
     dependencies:
     - pp
     - hspec

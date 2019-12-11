@@ -167,6 +167,14 @@ doArg env "-plantuml" (plantumlJar:args) =
 doArg env ('-':'p':'l':'a':'n':'t':'u':'m':'l':'=':plantumlJar) args =
     return (env{customPlantuml=Just plantumlJar}, "", args)
 
+-- "doArg" env "-ditaa" <path to ditaa.jar> uses a specific ditaa.jar instead of the embedded one
+doArg env "-ditaa" (ditaaJar:args) =
+    return (env{customDitaa=Just ditaaJar}, "", args)
+
+-- "doArg" env "-ditaa=<path to ditaa.jar>" uses a specific ditaa.jar instead of the embedded one
+doArg env ('-':'d':'i':'t':'t':'a':'=':ditaaJar) args =
+    return (env{customDitaa=Just ditaaJar}, "", args)
+
 doArg env ('-':arg) args
     | not (null arg) = case maybeMacro of
         -- Macros can be called from the command line

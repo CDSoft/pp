@@ -187,6 +187,9 @@ The user can define and undefine variables and list input files.
 **`-plantuml=FILE`** or **`-plantuml FILE`**
 :   use `FILE` instead of the embedded plantuml.jar file.
 
+**`-ditaa=FILE`** or **`-ditaa FILE`**
+:   use `FILE` instead of the embedded ditaa.jar file.
+
 **`-<macro>[=<arg>]`**
 :   calls a builtin macro with an optional argument
     (see `pp -help` for the full macro list).
@@ -1154,8 +1157,7 @@ The current version of [PlantUML] embedded in [PP] is:
 ditaa
 -----
 
-ditaa.jar is not integrated anymore in [PP].
-The [ditaa] version used is the one already integrated in [PlantUML].
+ditaa.jar is integrated in [PP].
 [ditaa] is distributed under the [GNU General Public License version 2.0 (GPLv2)](http://sourceforge.net/directory/license:gpl/).
 See <http://sourceforge.net/projects/ditaa/>.
 

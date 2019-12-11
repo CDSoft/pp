@@ -71,6 +71,7 @@ import Formats
 import Localization
 import OSAbstraction
 import PlantumlJar
+import DitaaJar
 import UTF8
 import qualified Version
 
@@ -87,9 +88,10 @@ isValidMacroName = all isValidMacroNameChar
 type Prepro = Env -> String ->  IO (Env, String)
 
 -- Diagram types managed by pp
-data DiagramRuntime = Graphviz | PlantUML | BlockDiag | Asymptote | R deriving (Show)
+data DiagramRuntime = Graphviz | PlantUML | Ditaa | BlockDiag | Asymptote | R deriving (Show)
 
 -- list of builtin macros
+{-# NOINLINE builtin #-}
 builtin :: [Macro]
 builtin = [ define, undefine, defined, rawdef
           , ifdef, ifndef, ifeq, ifne, if_, eval_
@@ -132,6 +134,7 @@ builtin = [ define, undefine, defined, rawdef
           ]
           ++ [diagram name Graphviz exe (const "") (const "") | (name, exe) <- graphvizExe <$> graphvizDiagrams]
           ++ [diagram name PlantUML exe (const $ "@start"++exe) (const $ "@end"++exe) | (name, exe) <- plantumlExe <$> plantumlDiagrams]
+          ++ [diagram name Ditaa exe (const "") (const "") | (name, exe) <- ditaaExe <$> ditaaDiagrams]
           ++ [diagram name BlockDiag exe (const $ exe++" {") (const "}") | (name, exe) <- blockdiagExe <$> blockDiagrams]
           ++ [diagram name Asymptote exe (const "import settings; libgs=\"\";") (const "") | (name, exe) <- asymptoteExe <$> asymptoteDiagrams]
           ++ [diagram name R exe (\img -> drop 1 (takeExtension img)++"('"++img++"');") (const "") | (name, exe) <- rExe <$> rDiagrams]
@@ -151,6 +154,9 @@ graphvizExe d = (showCap d, showCap d)
 
 plantumlExe :: PlantumlDiagram -> (String, String)
 plantumlExe d = (showCap d, showCap d)
+
+ditaaExe :: DitaaDiagram -> (String, String)
+ditaaExe d = (showCap d, showCap d)
 
 blockdiagExe :: BlockDiagram -> (String, String)
 blockdiagExe d = (showCap d, showCap d)
@@ -1016,6 +1022,7 @@ diagram name runtime exe header footer = Macro name []
             let srcExt = case runtime of
                     Graphviz -> "dot"
                     PlantUML -> "uml"
+                    Ditaa -> "txt"
                     BlockDiag -> "diag"
                     Asymptote -> "asy"
                     R -> "r"
@@ -1025,17 +1032,18 @@ diagram name runtime exe header footer = Macro name []
                     ".pdf" -> (PDF, "pdf", localMaybeExt, linkMaybeExt)
                     _ -> (f, e, localMaybeExt<.>e, linkMaybeExt<.>e)
                             where (f, e) = case (runtime, exe, fileFormat env) of
-                                    (Graphviz, _, Just Pdf)  -> (PDF, "pdf")
-                                    (Graphviz, _, _)         -> (SVG, "svg")
-                                    (PlantUML, "ditaa", _)   -> (PNG, "png")
-                                    (PlantUML, _, Just Pdf)  -> (PNG, "png")
-                                    (PlantUML, _, _)         -> (SVG, "svg")
-                                    (BlockDiag, _, Just Pdf) -> (PDF, "pdf")
-                                    (BlockDiag, _, _)        -> (SVG, "svg")
-                                    (Asymptote, _, Just Pdf) -> (PDF, "pdf")
-                                    (Asymptote, _, _)        -> (SVG, "svg")
-                                    (R, _, Just Pdf)         -> (PDF, "pdf")
-                                    (R, _, _)                -> (SVG, "svg")
+                                    (Graphviz, _, Just Pdf)     -> (PDF, "pdf")
+                                    (Graphviz, _, _)            -> (SVG, "svg")
+                                    (PlantUML, _, Just Pdf)     -> (PNG, "png")
+                                    (PlantUML, _, _)            -> (SVG, "svg")
+                                    (Ditaa, _, Just Pdf)        -> (PNG, "png")
+                                    (Ditaa, _, _)               -> (SVG, "svg")
+                                    (BlockDiag, _, Just Pdf)    -> (PDF, "pdf")
+                                    (BlockDiag, _, _)           -> (SVG, "svg")
+                                    (Asymptote, _, Just Pdf)    -> (PDF, "pdf")
+                                    (Asymptote, _, _)           -> (SVG, "svg")
+                                    (R, _, Just Pdf)            -> (PDF, "pdf")
+                                    (R, _, _)                   -> (SVG, "svg")
             let src = local -<.> srcExt
             let dat = src <.> ext' <.> "dat"
             let img = local
@@ -1066,6 +1074,17 @@ diagram name runtime exe header footer = Macro name []
                         jarExists <- doesFileExist plantuml
                         unless jarExists $ errorWithoutStackTrace $ plantuml ++ " not found"
                         try readProcessUTF8 "java" ["-jar", plantuml, "-t"++ext', "-charset", "UTF-8", src]
+                    Ditaa -> do
+                        ditaa <- case customDitaa env of
+                            Nothing -> resource "ditaa.jar" ditaaJar
+                            Just jarPath -> return jarPath
+                        jarExists <- doesFileExist ditaa
+                        unless jarExists $ errorWithoutStackTrace $ ditaa ++ " not found"
+                        let opts = case ext of
+                                SVG -> ["--svg"]
+                                PNG -> []
+                                PDF -> []
+                        try readProcessUTF8 "java" $ ["-jar", ditaa, "-o", "-e", "UTF-8"] ++ opts ++ [src, img]
                     BlockDiag ->
                         try readProcessUTF8 exe ["-a", "-T"++ext', "-o", img, src]
                     Asymptote -> case ext of

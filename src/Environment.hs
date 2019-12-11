@@ -98,6 +98,7 @@ data Env = Env { vars :: [(Var, Val)]               -- lookup table of global va
                , literateMacroChars :: Chars        -- literate programming macro delimiters
                , ignoreStdin :: Bool                -- some command line arguments disable stdin
                , customPlantuml :: Maybe FilePath   -- external PlantUML jar file to use
+               , customDitaa :: Maybe FilePath      -- external ditaa jar file to use
                }
 
 fromVal :: Val -> String
@@ -163,6 +164,7 @@ initialEnvironment defaultLang defaultDialect = do
                , literateMacroChars = defaultLiterateMacroChars
                , ignoreStdin = False
                , customPlantuml = Nothing
+               , customDitaa = Nothing
                }
 
 -- track dependencies

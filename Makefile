@@ -127,6 +127,9 @@ PLANTUML = Plantuml
 PLANTUML_URL_1 = http://sourceforge.net/projects/plantuml/files/plantuml.jar
 PLANTUML_URL_2 = https://cdsoft.fr/pp/plantuml.jar
 
+DITAA = Ditaa
+DITAA_URL = https://github.com/stathissideris/ditaa/releases/download/v0.11.0/ditaa-0.11.0-standalone.jar
+
 BLOB = tools/blob.hs
 
 $(BUILD)/%Jar_c.c $(BUILD)/%Jar.hs: $(BUILD)/%.jar $(BLOB)
@@ -141,11 +144,19 @@ $(BUILD)/$(PLANTUML).jar:
 	wget $(PLANTUML_URL_1) -O $@ || wget $(PLANTUML_URL_2) -O $@
 	@$(call ok,"$@")
 
+$(BUILD)/$(DITAA).jar:
+	@$(call title,"downloading $(notdir $@)")
+	@mkdir -p $(dir $@)
+	wget $(DITAA_URL) -O $@
+	@$(call ok,"$@")
+
 #####################################################################
 # PP
 #####################################################################
 
-LIB_SOURCES = $(wildcard src/*.hs) $(BUILD)/$(PLANTUML)Jar_c.c $(BUILD)/$(PLANTUML)Jar.hs
+LIB_SOURCES = $(wildcard src/*.hs)
+LIB_SOURCES += $(BUILD)/$(PLANTUML)Jar_c.c $(BUILD)/$(PLANTUML)Jar.hs
+LIB_SOURCES += $(BUILD)/$(DITAA)Jar_c.c $(BUILD)/$(DITAA)Jar.hs
 PP_SOURCES = app/pp.hs
 
 $(PP): package.yaml

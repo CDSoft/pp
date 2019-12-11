@@ -4,7 +4,7 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.12 by Christophe Delord.
+This document is a test file for `pp` version 2.13 by Christophe Delord.
 Copyright 2015-2019 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
@@ -464,7 +464,7 @@ The diagram test does not check the generated images, just the links in the outp
 
 ![Test of uml](img/uml-test.svg)
 
-![Test of ditaa](img/ditaa-test.png)
+![Test of ditaa](img/ditaa-test.svg)
 
 ![Test of blockdiag](img/blockdiag-test.svg)
 
@@ -1176,7 +1176,7 @@ userhelp
 
 **`ditaa`**
 :   `!ditaa(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a ditaa image
-    with PlantUML.
+    with Ditaa.
 
 **`blockdiag`**
 :   `!blockdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a blockdiag

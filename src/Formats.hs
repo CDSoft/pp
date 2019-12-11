@@ -25,6 +25,7 @@ module Formats ( Dialect(..), dialects
                , Diagram(..)
                , GraphvizDiagram, graphvizDiagrams
                , PlantumlDiagram, plantumlDiagrams
+               , DitaaDiagram, ditaaDiagrams
                , BlockDiagram, blockDiagrams
                , AsymptoteDiagram, asymptoteDiagrams
                , RDiagram(..), rDiagrams
@@ -44,20 +45,22 @@ data Format = Html | Pdf | Odf | Epub | Mobi
               deriving (Show, Read, Eq, Enum, Bounded)
 
 formats :: [Format]
-formats = [(minBound :: Format) .. ]
+formats = [minBound .. ]
 
 -- dialect list
 data Dialect = Md | Rst
              deriving (Show, Read, Eq, Enum, Bounded)
 
 dialects :: [Dialect]
-dialects = [(minBound :: Dialect) .. ]
+dialects = [minBound .. ]
 
 -- Diagrams
-data Diagram = GraphvizDiagram | PlantumlDiagram | BlockDiagram | AsymptoteDiagram | RDiagram
+data Diagram = GraphvizDiagram | PlantumlDiagram | DitaaDiagram | BlockDiagram | AsymptoteDiagram | RDiagram
 data GraphvizDiagram = Dot | Neato | Twopi | Circo | Fdp | Sfdp | Patchwork | Osage
                      deriving (Show, Read, Enum, Bounded)
-data PlantumlDiagram = Uml | Ditaa
+data PlantumlDiagram = Uml
+                     deriving (Show, Read, Enum, Bounded)
+data DitaaDiagram = Ditaa
                      deriving (Show, Read, Enum, Bounded)
 data BlockDiagram = BlockDiag | SeqDiag | ActDiag | NwDiag | RackDiag | PacketDiag
                   deriving (Show, Read, Enum, Bounded)
@@ -69,19 +72,22 @@ data RDiagram = Rplot
 data Ext = PNG | SVG | PDF
 
 graphvizDiagrams :: [GraphvizDiagram]
-graphvizDiagrams = [(minBound :: GraphvizDiagram) .. ]
+graphvizDiagrams = [minBound .. ]
 
 plantumlDiagrams :: [PlantumlDiagram]
-plantumlDiagrams = [(minBound :: PlantumlDiagram) .. ]
+plantumlDiagrams = [minBound .. ]
+
+ditaaDiagrams :: [DitaaDiagram]
+ditaaDiagrams = [minBound .. ]
 
 blockDiagrams :: [BlockDiagram]
-blockDiagrams = [(minBound :: BlockDiagram) .. ]
+blockDiagrams = [minBound .. ]
 
 asymptoteDiagrams :: [AsymptoteDiagram]
-asymptoteDiagrams = [(minBound :: AsymptoteDiagram) .. ]
+asymptoteDiagrams = [minBound .. ]
 
 rDiagrams :: [RDiagram]
-rDiagrams = [(minBound :: RDiagram) .. ]
+rDiagrams = [minBound .. ]
 
 -- Convert a string to a Haskell type
 

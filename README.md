@@ -175,6 +175,8 @@ define and undefine variables and list input files.
     included and used with `mdate` and `csv`macros.
   - **`-plantuml=FILE`** or **`-plantuml FILE`**  
     use `FILE` instead of the embedded plantuml.jar file.
+  - **`-ditaa=FILE`** or **`-ditaa FILE`**  
+    use `FILE` instead of the embedded ditaa.jar file.
   - **`-<macro>[=<arg>]`**  
     calls a builtin macro with an optional argument (see `pp -help` for
     the full macro list). Some macros may prevent pp from reading stdin
@@ -424,7 +426,7 @@ preprocessing it.
     PlantUML.
   - **`ditaa`**  
     `!ditaa(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a ditaa image
-    with PlantUML.
+    with Ditaa.
   - **`blockdiag`**  
     `!blockdiag(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a blockdiag
     image with BlockDiag.
@@ -795,7 +797,7 @@ embedded in `pp`. Java must be installed.
 
 Once generated the graph looks like:
 
-![This is just a Ditaa diagram example](doc/img/pp-ditaa-example.png)
+![This is just a Ditaa diagram example](doc/img/pp-ditaa-example.svg)
 
 [ditaa](http://plantuml.sourceforge.net) is written in Java and is
 embedded in `pp`. Java must be installed.
@@ -952,8 +954,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.16 (default, Apr 30 2019, 15:54:43) 
-    [GCC 9.0.1 20190312 (Red Hat 9.0.1-0.10)]
+    Hi, I'm Python 2.7.17 (default, Oct 21 2019, 17:20:57) 
+    [GCC 9.2.1 20190827 (Red Hat 9.2.1-1)]
     Here are a few random numbers: 640, 25, 275
 
 ### Lua
@@ -1010,7 +1012,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-14.10 --package base -}
+    {- stack script --resolver lts-14.17 --package base -}
     
     import System.Info
     import Data.Version
@@ -1085,7 +1087,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.12"
+    version:             "2.13"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1100,7 +1102,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.12 by Christophe Delord.
+    This is the documentation for `pp` version 2.13 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables
@@ -1228,10 +1230,8 @@ embedded in
 
 ## ditaa
 
-ditaa.jar is not integrated anymore in
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"). The
-[ditaa](http://ditaa.sourceforge.net/) version used is the one already
-integrated in [PlantUML](http://plantuml.sourceforge.net/).
+ditaa.jar is integrated in
+[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)").
 [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU
 General Public License version 2.0
 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See

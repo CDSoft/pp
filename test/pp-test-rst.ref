@@ -90,17 +90,15 @@ The diagram test does not check the generated images, just the links in the outp
     Test of uml
 
 
-.. figure:: img/ditaa-test.png
+.. figure:: img/ditaa-test.svg
 
 
     Test of ditaa
-
 
 .. figure:: img/asy-test.svg
 
 
     Test of Asymptote
-
 
 .. figure:: img/size_small.svg
     :width: 50
@@ -156,12 +154,10 @@ Lets write and test a useful library:
 
 
 
-
 .. code-block:: c
 
     // This is a C library
     @functionImplementations
-
 
 
 
@@ -173,14 +169,12 @@ The ``fib`` function computes Fibonacci's numbers:
 
 
 
-
 .. code-block:: C
 
     int fib(int n)
     {
         return (n < 2) ? 1 : fib(n-1) + fib(n-2);
     }
-
 
 
 
@@ -198,7 +192,6 @@ The ``fact`` function computes factorial numbers:
     {
         return (n <= 1) ? 1 : n * fact(n-1);
     }
-
 
 
 
@@ -221,7 +214,6 @@ Some tests of ``mylib.c``:
         }
         return 0;
     }
-
 
 
 
@@ -316,7 +308,6 @@ This file with a header:
 
 
 
-
 is rendered by `!csv(file.csv)` as:
 
 +------+-------+----------------------------------------+-----------------------------------+---------+
@@ -341,7 +332,6 @@ This file without any header:
     1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
     1996,Jeep,Grand Cherokee,"MUST SELL!
     air, moon roof, loaded",4799.00
-
 
 
 
