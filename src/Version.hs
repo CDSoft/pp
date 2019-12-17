@@ -68,6 +68,8 @@ help = unlines [
         "                       ("++name++" -help for the full macro list)",
         "                       Some macros may prevent pp from reading stdin",
         "                       when no file is given on the command line.",
+        "  -plantuml=<file>     Use external plantuml.jar file",
+        "  -ditaa=<file>        Use external ditaa.jar file",
         "Files:",
         "  filename             Preprocess an existing file",
         "  -                    Preprocess stdin",
