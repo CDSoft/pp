@@ -1111,6 +1111,44 @@ some macros to detect the OS (`!os`, `!arch`). E.g.:
 The `!exec` macro is also OS aware. It runs the *default* shell according
 to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
 
+Tests
+=====
+
+`make test` will test most of pp capabilities.
+They have been designed to run on Linux and require a bunch of softwares:
+
+- a decent Linux distribution
+- [Stack]
+- [Pandoc]
+- [Meld](https://meldmerge.org/)
+- [Bash], [zsh](http://www.zsh.org/), [fish](https://fishshell.com/)
+- [Wine](https://www.winehq.org/)
+- [Python]
+- [Lua]
+- [GraphViz]
+- [Asymptote]
+- [R]
+- [Haskell]
+- [blockdiag]
+- [gcc](https://gcc.gnu.org/)
+- ... and everything I have forgotten
+
+*note*: blockdiag is written in Python.
+According to your Python version, scripts may or may not be suffixed by `2` or `3`.
+In this case, you may have to add appropriate links:
+
+> ``` sh
+> sudo ln -vs /usr/bin/blockdiag3 /usr/bin/blockdiag
+> sudo ln -vs /usr/bin/seqdiag3 /usr/bin/seqdiag
+> sudo ln -vs /usr/bin/actdiag3 /usr/bin/actdiag
+> sudo ln -vs /usr/bin/nwdiag3 /usr/bin/nwdiag
+> sudo ln -vs /usr/bin/rackdiag3 /usr/bin/rackdiag
+> sudo ln -vs /usr/bin/packetdiag3 /usr/bin/packetdiag
+> ```
+
+Some tests may fail if the script interpreters' versions are different.
+`make ref` will open `meld` to show the differences and fix the expected results.
+
 Third-party documentations, tutorials and macros
 ================================================
 

@@ -98,7 +98,7 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 30 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
+      - Fedora 31 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
       - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
 
   - Older version archive:
@@ -905,7 +905,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 5.0.7(1)-release
+    Hi, I'm bash 5.0.11(1)-release
     Here are a few random numbers: 17766, 11151, 23481
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -954,9 +954,9 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 2.7.17 (default, Oct 21 2019, 17:20:57) 
+    Hi, I'm Python 3.7.5 (default, Dec 15 2019, 17:54:26) 
     [GCC 9.2.1 20190827 (Red Hat 9.2.1-1)]
-    Here are a few random numbers: 640, 25, 275
+    Here are a few random numbers: 654, 114, 25
 
 ### Lua
 
@@ -1087,7 +1087,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.13.1"
+    version:             "2.13.2"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1102,7 +1102,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.13.1 by Christophe Delord.
+    This is the documentation for `pp` version 2.13.2 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables
@@ -1182,6 +1182,47 @@ provides some macros to detect the OS (`!os`, `!arch`). E.g.:
 
 The `!exec` macro is also OS aware. It runs the *default* shell
 according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
+
+# Tests
+
+`make test` will test most of pp capabilities. They have been designed
+to run on Linux and require a bunch of softwares:
+
+  - a decent Linux distribution
+  - [Stack](https://docs.haskellstack.org/en/stable/README/)
+  - [Pandoc](http://pandoc.org/)
+  - [Meld](https://meldmerge.org/)
+  - [Bash](https://www.gnu.org/software/bash/),
+    [zsh](http://www.zsh.org/), [fish](https://fishshell.com/)
+  - [Wine](https://www.winehq.org/)
+  - [Python](https://www.python.org/)
+  - [Lua](http://www.lua.org/)
+  - [GraphViz](http://graphviz.org/)
+  - [Asymptote](http://asymptote.sourceforge.net/)
+  - [R](https://www.r-project.org/)
+  - [Haskell](https://www.haskell.org/)
+  - [blockdiag](http://blockdiag.com/)
+  - [gcc](https://gcc.gnu.org/)
+  - … and everything I have forgotten
+
+*note*: blockdiag is written in Python. According to your Python
+version, scripts may or may not be suffixed by `2` or `3`. In this case,
+you may have to add appropriate links:
+
+> 
+> 
+> ``` sh
+> sudo ln -vs /usr/bin/blockdiag3 /usr/bin/blockdiag
+> sudo ln -vs /usr/bin/seqdiag3 /usr/bin/seqdiag
+> sudo ln -vs /usr/bin/actdiag3 /usr/bin/actdiag
+> sudo ln -vs /usr/bin/nwdiag3 /usr/bin/nwdiag
+> sudo ln -vs /usr/bin/rackdiag3 /usr/bin/rackdiag
+> sudo ln -vs /usr/bin/packetdiag3 /usr/bin/packetdiag
+> ```
+
+Some tests may fail if the script interpreters’ versions are different.
+`make ref` will open `meld` to show the differences and fix the expected
+results.
 
 # Third-party documentations, tutorials and macros
 
