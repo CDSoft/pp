@@ -276,6 +276,15 @@ preprocessing it.
     if `EXPR` is false.
   - **`eval`**  
     `!eval(EXPR) evaluates`EXPR\`.
+  - **`info`**  
+    `!info(MESSAGE) prints`MESSAGE\` on stderr.
+  - **`warning`**, **`warn`**  
+    `!warn[ing](MESSAGE) prints`MESSAGE\` on stderr.
+  - **`error`**  
+    `!error[(CODE)](MESSAGE) prints`MESSAGE`on stderr and exits with
+    error code`CODE\`.
+  - **`exit`**  
+    `!exit(CODE) exits with error code`CODE\`.
   - **`import`**  
     `!import(FILENAME)` works as `!include(FILENAME)` but returns
     nothing. This is useful to import macro definitions.
@@ -1087,7 +1096,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.13.2"
+    version:             "2.14.0"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1102,7 +1111,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.13.2 by Christophe Delord.
+    This is the documentation for `pp` version 2.14.0 by Christophe Delord.
     Copyright **2015-2019 Christophe Delord**.
 
 # CSV tables

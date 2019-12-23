@@ -281,7 +281,7 @@ border: none;
 <header id="title-block-header">
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
 <p class="author">Christophe Delord - <a href="https://cdsoft.fr/pp" class="uri">https://cdsoft.fr/pp</a></p>
-<p class="date">Sunday 22 December 2019</p>
+<p class="date">Monday 23 December 2019</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
@@ -493,6 +493,18 @@ Here, [link] is not parsed as a third parameter of !macro</code></pre>
 </dd>
 <dt><strong><code>eval</code></strong></dt>
 <dd><code>!eval(EXPR) evaluates</code>EXPR`.
+</dd>
+<dt><strong><code>info</code></strong></dt>
+<dd><code>!info(MESSAGE) prints</code>MESSAGE` on stderr.
+</dd>
+<dt><strong><code>warning</code></strong>, <strong><code>warn</code></strong></dt>
+<dd><code>!warn[ing](MESSAGE) prints</code>MESSAGE` on stderr.
+</dd>
+<dt><strong><code>error</code></strong></dt>
+<dd><code>!error[(CODE)](MESSAGE) prints</code>MESSAGE<code>on stderr and exits with error code</code>CODE`.
+</dd>
+<dt><strong><code>exit</code></strong></dt>
+<dd><code>!exit(CODE) exits with error code</code>CODE`.
 </dd>
 <dt><strong><code>import</code></strong></dt>
 <dd><code>!import(FILENAME)</code> works as <code>!include(FILENAME)</code> but returns nothing. This is useful to import macro definitions.
@@ -1147,7 +1159,7 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             &quot;2.13.2&quot;
+version:             &quot;2.14.0&quot;
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
@@ -1155,7 +1167,7 @@ maintainer:          &quot;cdsoft.fr&quot;
 copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.13.2 by Christophe Delord.
+<pre><code>This is the documentation for `pp` version 2.14.0 by Christophe Delord.
 Copyright **2015-2019 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>

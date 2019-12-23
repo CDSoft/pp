@@ -24,11 +24,13 @@ module UTF8 ( setUTF8Encoding
             , readFileUTF8
             , writeFileUTF8
             , hWriteFileUTF8
+            , runProcessUTF8
             , readProcessUTF8
             )
 where
 
 import System.IO
+import System.Exit
 import qualified System.IO.Strict as SIO
 import System.Process
 
@@ -65,6 +67,15 @@ hWriteFileUTF8 handle content = do
     hSetEncoding handle utf8
     hPutStr handle content
 
+-- "runrocessUTF8 cmd arg" executes "cmd args"
+runProcessUTF8 :: String -> [String] -> IO ()
+runProcessUTF8 cmd args = do
+    (_, _, _, hProc) <- createProcess (proc cmd args)
+    code <- waitForProcess hProc
+    case code of
+        ExitSuccess -> return ()
+        ExitFailure _ -> exitWith code
+
 -- "readProcessUTF8 cmd arg" executes "cmd args"
 -- and returns the standard output produced by the command.
 readProcessUTF8 :: String -> [String] -> IO String
@@ -72,5 +83,7 @@ readProcessUTF8 cmd args = do
     (_, Just hOut, _, hProc) <- createProcess (proc cmd args) { std_out = CreatePipe }
     hSetEncoding hOut utf8
     out <- SIO.hGetContents hOut
-    _ <- waitForProcess hProc
-    return out
+    code <- waitForProcess hProc
+    case code of
+        ExitSuccess -> return out
+        ExitFailure _ -> exitWith code

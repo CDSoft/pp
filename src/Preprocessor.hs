@@ -53,6 +53,7 @@ import System.Directory
 import System.FilePath
 import System.PosixCompat.Files
 import System.IO
+import System.Exit
 import System.IO.Error
 import System.IO.Temp
 
@@ -95,6 +96,7 @@ data DiagramRuntime = Graphviz | PlantUML | Ditaa | BlockDiag | Asymptote | R de
 builtin :: [Macro]
 builtin = [ define, undefine, defined, rawdef
           , ifdef, ifndef, ifeq, ifne, if_, eval_
+          , info, warning, error_, exit
           , importFile, include
           , raw, rawinc
           , comment, quiet, forcepp
@@ -669,6 +671,48 @@ eval_ = Macro "eval" []
                 (val, _) -> return (env, val)
         impl _ _ = arityError "eval"
 
+info :: Macro
+info = Macro "info" []
+    "`!info(MESSAGE) prints `MESSAGE` on stderr."
+    impl
+    where
+        impl env [msg] = do
+            hPutStrLn stderr =<< ("info:"++) <$> ppAndStrip' env msg
+            return (env, "")
+        impl _ _ = arityError "info"
+
+warning :: Macro
+warning = Macro "warning" ["warn"]
+    "`!warn[ing](MESSAGE) prints `MESSAGE` on stderr."
+    impl
+    where
+        impl env [msg] = do
+            hPutStrLn stderr =<< ("warning:"++) <$> ppAndStrip' env msg
+            return (env, "")
+        impl _ _ = arityError "warning"
+
+error_ :: Macro
+error_ = Macro "error" []
+    "`!error[(CODE)](MESSAGE) prints `MESSAGE` on stderr and exits with error code `CODE`."
+    impl
+    where
+        impl env [code, msg] = do
+            hPutStrLn stderr =<< ("error:"++) <$> ppAndStrip' env msg
+            exitWith =<< (ExitFailure . fromIntegral . atoi <$> ppAndStrip' env code)
+        impl env [msg] = impl env [Val "1", msg]
+        impl _ _ = arityError "error"
+
+exit :: Macro
+exit = Macro "exit" []
+    "`!exit(CODE) exits with error code `CODE`."
+    impl
+    where
+        impl env [code] = do
+            code' <- ppAndStrip' env code
+            hPutStrLn stderr $ "error:"++code'
+            exitWith $ (ExitFailure . fromIntegral . atoi) code'
+        impl _ _ = arityError "exit"
+
 -- !rawdef(name) preprocesses name and emits the raw definition
 -- (no preprocessing)
 rawdef :: Macro
@@ -951,7 +995,7 @@ append = Macro "append" []
 
 -- try runs an IO action on an executable and its arguments.
 -- It returns the output of the IO action or raises an error.
-try :: (FilePath -> [String] -> IO String) -> FilePath -> [String] -> IO String
+try :: (FilePath -> [String] -> IO a) -> FilePath -> [String] -> IO a
 try io exe args = do
     result <- tryIOError (io exe args)
     case result of
@@ -1064,16 +1108,16 @@ diagram name runtime exe header footer = Macro name []
             when (not imgExists || code'' /= oldCode || metaData /= oldMetaData) $ do
                 writeFileUTF8 dat metaData
                 writeFileUTF8 src code''
-                void $ case runtime of
+                case runtime of
                     Graphviz ->
-                        try readProcessUTF8 exe ["-T"++ext', "-o", img, src]
+                        try runProcessUTF8 exe ["-T"++ext', "-o", img, src]
                     PlantUML -> do
                         plantuml <- case customPlantuml env of
                             Nothing -> resource "plantuml.jar" plantumlJar
                             Just jarPath -> return jarPath
                         jarExists <- doesFileExist plantuml
                         unless jarExists $ errorWithoutStackTrace $ plantuml ++ " not found"
-                        try readProcessUTF8 "java" ["-jar", plantuml, "-t"++ext', "-charset", "UTF-8", src]
+                        try runProcessUTF8 "java" ["-jar", plantuml, "-t"++ext', "-charset", "UTF-8", src]
                     Ditaa -> do
                         ditaa <- case customDitaa env of
                             Nothing -> resource "ditaa.jar" ditaaJar
@@ -1084,20 +1128,20 @@ diagram name runtime exe header footer = Macro name []
                                 SVG -> ["--svg"]
                                 PNG -> []
                                 PDF -> []
-                        try readProcessUTF8 "java" $ ["-jar", ditaa, "-o", "-e", "UTF-8"] ++ opts ++ [src, img]
+                        try runProcessUTF8 "java" $ ["-jar", ditaa, "-o", "-e", "UTF-8"] ++ opts ++ [src, img]
                     BlockDiag ->
-                        try readProcessUTF8 exe ["-a", "-T"++ext', "-o", img, src]
+                        try runProcessUTF8 exe ["-a", "-T"++ext', "-o", img, src]
                     Asymptote -> case ext of
                         PNG -> do
                             let pdf = src -<.> "pdf"
-                            void $ try readProcessUTF8 exe ["-f", "pdf", "-o", pdf, src]
-                            try readProcessUTF8 "convert" ["-density", "600", pdf, img]
+                            void $ try runProcessUTF8 exe ["-f", "pdf", "-o", pdf, src]
+                            try runProcessUTF8 "convert" ["-density", "600", pdf, img]
                         SVG ->
-                            try readProcessUTF8 exe ["-f", "svg", "-o", img, src]
+                            try runProcessUTF8 exe ["-f", "svg", "-o", img, src]
                         PDF ->
-                            try readProcessUTF8 exe ["-f", "pdf", "-o", img, src]
+                            try runProcessUTF8 exe ["-f", "pdf", "-o", img, src]
                     R ->
-                        try readProcessUTF8 "Rscript" [src]
+                        try runProcessUTF8 "Rscript" [src]
             let hyperlink = case currentDialect env of
                         Md -> "!["++title'++"]("++url++")"++attrs
                         Rst -> unlines [".. figure:: " ++ url, indent' 4 attrs, "", "    " ++ title']
