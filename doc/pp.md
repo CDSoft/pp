@@ -1,5 +1,5 @@
 % PP - Generic preprocessor (with pandoc in mind)
-% Christophe Delord - <https://cdsoft.fr/pp>
+% Christophe Delord - <http://cdelord.fr/pp>
 % !mdate{app/pp.hs !sh(ls src/******.hs) doc/pp.md}
 
 !quiet
@@ -10,9 +10,9 @@ The default macro execution character is redefined to avoid lots of `raw` calls 
 !macrochars(§)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[PP]: https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)"
-[DPP]: https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"
-[pp.tgz]: https://cdsoft.fr/pp/pp.tgz
+[PP]: http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)"
+[DPP]: http://cdelord.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)"
+[pp.tgz]: http://cdelord.fr/pp/pp.tgz
 [GraphViz]: http://graphviz.org/
 [PlantUML]: http://plantuml.sourceforge.net/
 [ditaa]: http://ditaa.sourceforge.net/
@@ -100,12 +100,12 @@ Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
 - Latest Linux and Windows binaries:
 
-    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
-    - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
+    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
+    - Windows (64 bit): <http://cdelord.fr/pp/pp-win.7z>
 
 - Older version archive:
 
-    - Fedora & Windows: <https://cdsoft.fr/pp/download.html>
+    - Fedora & Windows: <http://cdelord.fr/pp/download.html>
 
 - User contributed Mac OS binaries (outdated):
 
@@ -1165,8 +1165,8 @@ Licenses
 PP
 --
 
-Copyright (C) 2015-2019 Christophe Delord <br>
-<https://www.cdsoft.fr/pp>
+Copyright (C) 2015-2020 Christophe Delord <br>
+<http://cdelord.fr/pp>
 
 PP is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1203,4 +1203,4 @@ Feedback
 ========
 
 Your feedback and contributions are welcome.
-You can contact me at <https://cdsoft.fr>
+You can contact me at <http://cdelord.fr>

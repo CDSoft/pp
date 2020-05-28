@@ -1,29 +1,29 @@
 # PP - Generic preprocessor (with pandoc in mind)
 
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)") is a
 text preprocessor designed for Pandoc (and more generally Markdown and
 reStructuredText).
 
-The [PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)")
+The [PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)")
 package used to contain three preprocessors for
 [Pandoc](http://pandoc.org/).
 
 I started using Markdown and [Pandoc](http://pandoc.org/) with
 [GPP](http://en.nothingisreal.com/wiki/GPP). Then I wrote
-[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
+[DPP](http://cdelord.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
 to embed diagrams in Markdown documents. And finally
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)")
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)")
 which merges the functionalities of
 [GPP](http://en.nothingisreal.com/wiki/GPP) and
-[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
+[DPP](http://cdelord.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)").
 
 [GPP](http://en.nothingisreal.com/wiki/GPP) and
-[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
+[DPP](http://cdelord.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
 are no longer included in
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") as
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)") as
 `pp` can now be used standalone. `dpp` and `gpp` can be found in the
 legacy
-[DPP](https://cdsoft.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
+[DPP](http://cdelord.fr/dpp "DPP - Diagram Preprocessor (for Pandoc)")
 repository.
 
 `pp` now implements:
@@ -46,7 +46,7 @@ repository.
 
 # Open source
 
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
 an Open source software. Anybody can contribute on
 [GitHub](https://github.com/CDSoft/pp) to:
 
@@ -61,10 +61,10 @@ an Open source software. Anybody can contribute on
 
 **Compilation**:
 
-1.  Download and extract [pp.tgz](https://cdsoft.fr/pp/pp.tgz).
+1.  Download and extract [pp.tgz](http://cdelord.fr/pp/pp.tgz).
 2.  Run `make`.
 
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
 written in [Haskell](https://www.haskell.org/) and is built with
 [Stack](https://docs.haskellstack.org/en/stable/README/). On MacOS,
 running `make` requires the GNU version of `tar` which can be installed
@@ -98,12 +98,12 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 31 (64 bit): <https://cdsoft.fr/pp/pp-linux-x86_64.txz>
-      - Windows (64 bit): <https://cdsoft.fr/pp/pp-win.7z>
+      - Fedora 32 (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
+      - Windows (64 bit): <http://cdelord.fr/pp/pp-win.7z>
 
   - Older version archive:
     
-      - Fedora & Windows: <https://cdsoft.fr/pp/download.html>
+      - Fedora & Windows: <http://cdelord.fr/pp/download.html>
 
   - User contributed Mac OS binaries (outdated):
     
@@ -963,8 +963,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 3.7.5 (default, Dec 15 2019, 17:54:26) 
-    [GCC 9.2.1 20190827 (Red Hat 9.2.1-1)]
+    Hi, I'm Python 3.8.2 (default, Feb 28 2020, 00:00:00) 
+    [GCC 10.0.1 20200216 (Red Hat 10.0.1-0.8)]
     Here are a few random numbers: 654, 114, 25
 
 ### Lua
@@ -1096,12 +1096,12 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.14.0"
+    version:             "2.14.1"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
-    maintainer:          "cdsoft.fr"
-    copyright:           "2015-2019 Christophe Delord"
+    maintainer:          "cdelord.fr"
+    copyright:           "2015-2020 Christophe Delord"
 
 Lambdas are not supported but the template is preprocessed by `pp`
 before calling Mustache. E.g. `!bold` can be defined as
@@ -1111,8 +1111,8 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.14.0 by Christophe Delord.
-    Copyright **2015-2019 Christophe Delord**.
+    This is the documentation for `pp` version 2.14.1 by Christophe Delord.
+    Copyright **2015-2020 Christophe Delord**.
 
 # CSV tables
 
@@ -1248,8 +1248,7 @@ results.
 
 ## PP
 
-Copyright (C) 2015-2019 Christophe Delord <br>
-<https://www.cdsoft.fr/pp>
+Copyright (C) 2015-2020 Christophe Delord <br> <http://cdelord.fr/pp>
 
 PP is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free
@@ -1267,21 +1266,21 @@ with PP. If not, see <http://www.gnu.org/licenses/>.
 ## PlantUML
 
 PlantUML.jar is integrated in
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)").
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)").
 [PlantUML](http://plantuml.sourceforge.net/) is distributed under the
 [GPL license](http://www.gnu.org/copyleft/gpl.html). See
 <http://plantuml.sourceforge.net/faq.html>.
 
 The current version of [PlantUML](http://plantuml.sourceforge.net/)
 embedded in
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)") is:
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)") is:
 
 ![](doc/img/PP-plantuml-version.svg)
 
 ## ditaa
 
 ditaa.jar is integrated in
-[PP](https://cdsoft.fr/pp "PP - Generic Preprocessor (for Pandoc)").
+[PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)").
 [ditaa](http://ditaa.sourceforge.net/) is distributed under the [GNU
 General Public License version 2.0
 (GPLv2)](http://sourceforge.net/directory/license:gpl/). See
@@ -1290,4 +1289,4 @@ General Public License version 2.0
 # Feedback
 
 Your feedback and contributions are welcome. You can contact me at
-<https://cdsoft.fr>
+<http://cdelord.fr>

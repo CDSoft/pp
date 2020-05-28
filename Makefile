@@ -1,6 +1,6 @@
 # PP
-# Copyright (C) 2015-2019 Christophe Delord
-# https://www.cdsoft.fr/pp
+# Copyright (C) 2015-2020 Christophe Delord
+# http://cdelord.fr/pp
 #
 # This file is part of PP.
 #
@@ -125,7 +125,7 @@ pp-darwin-%.txz: $(PP) doc/pp.html
 
 PLANTUML = Plantuml
 PLANTUML_URL_1 = http://sourceforge.net/projects/plantuml/files/plantuml.jar
-PLANTUML_URL_2 = https://cdsoft.fr/pp/plantuml.jar
+PLANTUML_URL_2 = http://cdelord.fr/pp/plantuml.jar
 
 DITAA = Ditaa
 DITAA_URL = https://github.com/stathissideris/ditaa/releases/download/v0.11.0/ditaa-0.11.0-standalone.jar

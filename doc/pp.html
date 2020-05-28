@@ -4,77 +4,77 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="author" content="Christophe Delord - https://cdsoft.fr/pp" />
+  <meta name="author" content="Christophe Delord - http://cdelord.fr/pp" />
   <title>PP - Generic preprocessor (with pandoc in mind)</title>
   <style>
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
-  </style>
-  <style>
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <style type="text/css">
 a {
@@ -280,24 +280,27 @@ border: none;
 <body>
 <header id="title-block-header">
 <h1 class="title">PP - Generic preprocessor (with pandoc in mind)</h1>
-<p class="author">Christophe Delord - <a href="https://cdsoft.fr/pp" class="uri">https://cdsoft.fr/pp</a></p>
-<p class="date">Monday 23 December 2019</p>
+<p class="author">Christophe Delord - <a href="http://cdelord.fr/pp" class="uri">http://cdelord.fr/pp</a></p>
+<p class="date">Thursday 28 May 2020</p>
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
 <li><a href="#pp---generic-preprocessor-with-pandoc-in-mind">PP - Generic preprocessor (with pandoc in mind)</a></li>
 <li><a href="#open-source">Open source</a></li>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#usage">Usage</a><ul>
+<li><a href="#usage">Usage</a>
+<ul>
 <li><a href="#command-line">Command line</a></li>
 <li><a href="#macros">Macros</a></li>
 </ul></li>
 <li><a href="#expressions">Expressions</a></li>
 <li><a href="#literate-programming-example">Literate programming example</a></li>
-<li><a href="#diagram-and-script-examples">Diagram and script examples</a><ul>
+<li><a href="#diagram-and-script-examples">Diagram and script examples</a>
+<ul>
 <li><a href="#diagrams">Diagrams</a></li>
 <li><a href="#scripts">Scripts</a></li>
-<li><a href="#examples">Examples</a><ul>
+<li><a href="#examples">Examples</a>
+<ul>
 <li><a href="#graphviz">Graphviz</a></li>
 <li><a href="#plantuml">PlantUML</a></li>
 <li><a href="#ditaa">Ditaa</a></li>
@@ -314,14 +317,16 @@ border: none;
 </ul></li>
 </ul></li>
 <li><a href="#mustache-templates">Mustache templates</a></li>
-<li><a href="#csv-tables">CSV tables</a><ul>
+<li><a href="#csv-tables">CSV tables</a>
+<ul>
 <li><a href="#files-with-a-header-line">Files with a header line</a></li>
 <li><a href="#files-without-any-header-line">Files without any header line</a></li>
 </ul></li>
 <li><a href="#os-support">OS support</a></li>
 <li><a href="#tests">Tests</a></li>
 <li><a href="#third-party-documentations-tutorials-and-macros">Third-party documentations, tutorials and macros</a></li>
-<li><a href="#licenses">Licenses</a><ul>
+<li><a href="#licenses">Licenses</a>
+<ul>
 <li><a href="#pp">PP</a></li>
 <li><a href="#plantuml-1">PlantUML</a></li>
 <li><a href="#ditaa-1">ditaa</a></li>
@@ -330,10 +335,10 @@ border: none;
 </ul>
 </nav>
 <h1 id="pp---generic-preprocessor-with-pandoc-in-mind">PP - Generic preprocessor (with pandoc in mind)</h1>
-<p><a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is a text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText).</p>
-<p>The <a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> package used to contain three preprocessors for <a href="http://pandoc.org/">Pandoc</a>.</p>
-<p>I started using Markdown and <a href="http://pandoc.org/">Pandoc</a> with <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a>. Then I wrote <a href="https://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> to embed diagrams in Markdown documents. And finally <a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> which merges the functionalities of <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="https://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a>.</p>
-<p><a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="https://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> are no longer included in <a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> as <code>pp</code> can now be used standalone. <code>dpp</code> and <code>gpp</code> can be found in the legacy <a href="https://cdsoft.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> repository.</p>
+<p><a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is a text preprocessor designed for Pandoc (and more generally Markdown and reStructuredText).</p>
+<p>The <a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> package used to contain three preprocessors for <a href="http://pandoc.org/">Pandoc</a>.</p>
+<p>I started using Markdown and <a href="http://pandoc.org/">Pandoc</a> with <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a>. Then I wrote <a href="http://cdelord.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> to embed diagrams in Markdown documents. And finally <a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> which merges the functionalities of <a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdelord.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a>.</p>
+<p><a href="http://en.nothingisreal.com/wiki/GPP">GPP</a> and <a href="http://cdelord.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> are no longer included in <a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> as <code>pp</code> can now be used standalone. <code>dpp</code> and <code>gpp</code> can be found in the legacy <a href="http://cdelord.fr/dpp" title="DPP - Diagram Preprocessor (for Pandoc)">DPP</a> repository.</p>
 <p><code>pp</code> now implements:</p>
 <ul>
 <li>macros</li>
@@ -344,7 +349,7 @@ border: none;
 <li><a href="https://github.com/JustusAdam/mustache">Mustache</a></li>
 </ul>
 <h1 id="open-source">Open source</h1>
-<p><a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is an Open source software. Anybody can contribute on <a href="https://github.com/CDSoft/pp">GitHub</a> to:</p>
+<p><a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is an Open source software. Anybody can contribute on <a href="https://github.com/CDSoft/pp">GitHub</a> to:</p>
 <ul>
 <li>suggest or add new features</li>
 <li>report or fix bugs</li>
@@ -356,10 +361,10 @@ border: none;
 <h1 id="installation">Installation</h1>
 <p><strong>Compilation</strong>:</p>
 <ol type="1">
-<li>Download and extract <a href="https://cdsoft.fr/pp/pp.tgz">pp.tgz</a>.</li>
+<li>Download and extract <a href="http://cdelord.fr/pp/pp.tgz">pp.tgz</a>.</li>
 <li>Run <code>make</code>.</li>
 </ol>
-<p><a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is written in <a href="https://www.haskell.org/">Haskell</a> and is built with <a href="https://docs.haskellstack.org/en/stable/README/">Stack</a>. On MacOS, running <code>make</code> requires the GNU version of <code>tar</code> which can be installed with <code>brew install gnu-tar</code>.</p>
+<p><a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is written in <a href="https://www.haskell.org/">Haskell</a> and is built with <a href="https://docs.haskellstack.org/en/stable/README/">Stack</a>. On MacOS, running <code>make</code> requires the GNU version of <code>tar</code> which can be installed with <code>brew install gnu-tar</code>.</p>
 <p><strong>Docker</strong>:</p>
 <p>A Linux docker made by <a href="https://github.com/josdotso">Joshua Dotson</a> is available here:</p>
 <ul>
@@ -377,12 +382,12 @@ border: none;
 <ul>
 <li><p>Latest Linux and Windows binaries:</p>
 <ul>
-<li>Fedora 31 (64 bit): <a href="https://cdsoft.fr/pp/pp-linux-x86_64.txz" class="uri">https://cdsoft.fr/pp/pp-linux-x86_64.txz</a></li>
-<li>Windows (64 bit): <a href="https://cdsoft.fr/pp/pp-win.7z" class="uri">https://cdsoft.fr/pp/pp-win.7z</a></li>
+<li>Fedora 32 (64 bit): <a href="http://cdelord.fr/pp/pp-linux-x86_64.txz" class="uri">http://cdelord.fr/pp/pp-linux-x86_64.txz</a></li>
+<li>Windows (64 bit): <a href="http://cdelord.fr/pp/pp-win.7z" class="uri">http://cdelord.fr/pp/pp-win.7z</a></li>
 </ul></li>
 <li><p>Older version archive:</p>
 <ul>
-<li>Fedora &amp; Windows: <a href="https://cdsoft.fr/pp/download.html" class="uri">https://cdsoft.fr/pp/download.html</a></li>
+<li>Fedora &amp; Windows: <a href="http://cdelord.fr/pp/download.html" class="uri">http://cdelord.fr/pp/download.html</a></li>
 </ul></li>
 <li><p>User contributed Mac OS binaries (outdated):</p>
 <ul>
@@ -1060,8 +1065,8 @@ if __name__ == &quot;__main__&quot;:
     print(&quot;Here are a few random numbers: %s&quot;%(&quot;, &quot;.join(map(str, randoms))))
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</code></pre>
 <p>This script outputs:</p>
-<pre><code>Hi, I&#39;m Python 3.7.5 (default, Dec 15 2019, 17:54:26) 
-[GCC 9.2.1 20190827 (Red Hat 9.2.1-1)]
+<pre><code>Hi, I&#39;m Python 3.8.2 (default, Feb 28 2020, 00:00:00) 
+[GCC 10.0.1 20200216 (Red Hat 10.0.1-0.8)]
 Here are a few random numbers: 654, 114, 25</code></pre>
 <h3 id="lua">Lua</h3>
 <p><a href="http://www.lua.org/">Lua</a> is executed when the keyword <code>lua</code> is used.</p>
@@ -1159,16 +1164,16 @@ Copyright !bold({{copyright}}).
 ```````````````````````````````````````</code></pre>
 <p><code>package.yaml</code> contains:</p>
 <pre><code>name:                pp
-version:             &quot;2.14.0&quot;
+version:             &quot;2.14.1&quot;
 github:              &quot;CDSoft/pp&quot;
 license:             GPL-3
 author:              &quot;Christophe Delord&quot;
-maintainer:          &quot;cdsoft.fr&quot;
-copyright:           &quot;2015-2019 Christophe Delord&quot;</code></pre>
+maintainer:          &quot;cdelord.fr&quot;
+copyright:           &quot;2015-2020 Christophe Delord&quot;</code></pre>
 <p>Lambdas are not supported but the template is preprocessed by <code>pp</code> before calling Mustache. E.g. <code>!bold</code> can be defined as <code>!def(bold)(**!1**)</code>. These “<em>lambda macros</em>” can be defined in the YAML/JSON data file as well, which is a non standard way to define Mustache lambdas that works with <code>pp</code> only.</p>
 <p>This outputs:</p>
-<pre><code>This is the documentation for `pp` version 2.14.0 by Christophe Delord.
-Copyright **2015-2019 Christophe Delord**.</code></pre>
+<pre><code>This is the documentation for `pp` version 2.14.1 by Christophe Delord.
+Copyright **2015-2020 Christophe Delord**.</code></pre>
 <h1 id="csv-tables">CSV tables</h1>
 <p>CSV files can be included in documents and rendered as Markdown or reStructuredText tables. The field separator is inferred from the content of the file. It can be a comma, a semicolon, tabulation or a pipe.</p>
 <h2 id="files-with-a-header-line">Files with a header line</h2>
@@ -1313,12 +1318,12 @@ air, moon roof, loaded&quot;,4799.00
 </ul>
 <p><em>note</em>: blockdiag is written in Python. According to your Python version, scripts may or may not be suffixed by <code>2</code> or <code>3</code>. In this case, you may have to add appropriate links:</p>
 <blockquote>
-<div class="sourceCode" id="cb41"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1"></a><span class="fu">sudo</span> ln -vs /usr/bin/blockdiag3 /usr/bin/blockdiag</span>
-<span id="cb41-2"><a href="#cb41-2"></a><span class="fu">sudo</span> ln -vs /usr/bin/seqdiag3 /usr/bin/seqdiag</span>
-<span id="cb41-3"><a href="#cb41-3"></a><span class="fu">sudo</span> ln -vs /usr/bin/actdiag3 /usr/bin/actdiag</span>
-<span id="cb41-4"><a href="#cb41-4"></a><span class="fu">sudo</span> ln -vs /usr/bin/nwdiag3 /usr/bin/nwdiag</span>
-<span id="cb41-5"><a href="#cb41-5"></a><span class="fu">sudo</span> ln -vs /usr/bin/rackdiag3 /usr/bin/rackdiag</span>
-<span id="cb41-6"><a href="#cb41-6"></a><span class="fu">sudo</span> ln -vs /usr/bin/packetdiag3 /usr/bin/packetdiag</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a><span class="fu">sudo</span> ln -vs /usr/bin/blockdiag3 /usr/bin/blockdiag</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a><span class="fu">sudo</span> ln -vs /usr/bin/seqdiag3 /usr/bin/seqdiag</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a><span class="fu">sudo</span> ln -vs /usr/bin/actdiag3 /usr/bin/actdiag</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a><span class="fu">sudo</span> ln -vs /usr/bin/nwdiag3 /usr/bin/nwdiag</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a><span class="fu">sudo</span> ln -vs /usr/bin/rackdiag3 /usr/bin/rackdiag</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a><span class="fu">sudo</span> ln -vs /usr/bin/packetdiag3 /usr/bin/packetdiag</span></code></pre></div>
 </blockquote>
 <p>Some tests may fail if the script interpreters’ versions are different. <code>make ref</code> will open <code>meld</code> to show the differences and fix the expected results.</p>
 <h1 id="third-party-documentations-tutorials-and-macros">Third-party documentations, tutorials and macros</h1>
@@ -1328,17 +1333,17 @@ air, moon roof, loaded&quot;,4799.00
 </ul>
 <h1 id="licenses">Licenses</h1>
 <h2 id="pp">PP</h2>
-<p>Copyright (C) 2015-2019 Christophe Delord <br> <a href="https://www.cdsoft.fr/pp" class="uri">https://www.cdsoft.fr/pp</a></p>
+<p>Copyright (C) 2015-2020 Christophe Delord <br> <a href="http://cdelord.fr/pp" class="uri">http://cdelord.fr/pp</a></p>
 <p>PP is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
 <p>PP is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License along with PP. If not, see <a href="http://www.gnu.org/licenses/" class="uri">http://www.gnu.org/licenses/</a>.</p>
 <h2 id="plantuml-1">PlantUML</h2>
-<p>PlantUML.jar is integrated in <a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a>. <a href="http://plantuml.sourceforge.net/">PlantUML</a> is distributed under the <a href="http://www.gnu.org/copyleft/gpl.html">GPL license</a>. See <a href="http://plantuml.sourceforge.net/faq.html" class="uri">http://plantuml.sourceforge.net/faq.html</a>.</p>
-<p>The current version of <a href="http://plantuml.sourceforge.net/">PlantUML</a> embedded in <a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is:</p>
+<p>PlantUML.jar is integrated in <a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a>. <a href="http://plantuml.sourceforge.net/">PlantUML</a> is distributed under the <a href="http://www.gnu.org/copyleft/gpl.html">GPL license</a>. See <a href="http://plantuml.sourceforge.net/faq.html" class="uri">http://plantuml.sourceforge.net/faq.html</a>.</p>
+<p>The current version of <a href="http://plantuml.sourceforge.net/">PlantUML</a> embedded in <a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a> is:</p>
 <p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIGhlaWdodD0iMzQxcHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDo1MTZweDtoZWlnaHQ6MzQxcHg7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1MTYgMzQxIiB3aWR0aD0iNTE2cHgiIHpvb21BbmRQYW49Im1hZ25pZnkiPjxkZWZzLz48Zz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9ImJvbGQiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTkzIiB4PSI1IiB5PSIxNi4xMzg3Ij5QbGFudFVNTCB2ZXJzaW9uIDEuMjAxOS4xMzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIyMDQiIHg9IjIwMiIgeT0iMTYuMTM4NyI+KFR1ZSBEZWMgMTAgMTg6MTg6MjkgQ0VUIDIwMTkpPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE1NSIgeD0iNSIgeT0iMzAuMTA3NCI+KEdQTCBzb3VyY2UgZGlzdHJpYnV0aW9uKTwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIyMzkiIHg9IjUiIHk9IjQ0LjA3NjIiPkxvYWRlZCBmcm9tIGphcjpmaWxlOi90bXAvcGxhbnR1bWwuamFyIS88L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMCIgeD0iOSIgeT0iNTguMDQ0OSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjM2NyIgeD0iNSIgeT0iNzIuMDEzNyI+VGhlIGVudmlyb25tZW50IHZhcmlhYmxlIEdSQVBIVklaX0RPVCBoYXMgbm90IGJlZW4gc2V0PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE2MSIgeD0iNSIgeT0iODUuOTgyNCI+RG90IGV4ZWN1dGFibGUgaXMgL2Jpbi9kb3Q8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMjc4IiB4PSI1IiB5PSI5OS45NTEyIj5Eb3QgdmVyc2lvbjogZG90IC0gZ3JhcGh2aXogdmVyc2lvbiAyLjQwLjEgKDApPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iYm9sZCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIyOTYiIHg9IjUiIHk9IjExMy45MTk5Ij5JbnN0YWxsYXRpb24gc2VlbXMgT0suIEZpbGUgZ2VuZXJhdGlvbiBPSzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIwIiB4PSI5IiB5PSIxMjcuODg4NyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjI3NyIgeD0iNSIgeT0iMTQxLjg1NzQiPkphdmEgUnVudGltZTogT3BlbkpESyBSdW50aW1lIEVudmlyb25tZW50PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE4NyIgeD0iNSIgeT0iMTU1LjgyNjIiPkpWTTogT3BlbkpESyA2NC1CaXQgU2VydmVyIFZNPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE3NCIgeD0iNSIgeT0iMTY5Ljc5NDkiPkphdmEgVmVyc2lvbjogMS44LjBfMjMyLWIwOTwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIxNTAiIHg9IjUiIHk9IjE4My43NjM3Ij5PcGVyYXRpbmcgU3lzdGVtOiBMaW51eDwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIxNTAiIHg9IjUiIHk9IjE5Ny43MzI0Ij5EZWZhdWx0IEVuY29kaW5nOiBVVEYtODwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI3OSIgeD0iNSIgeT0iMjExLjcwMTIiPkxhbmd1YWdlOiBmcjwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI3MSIgeD0iNSIgeT0iMjI1LjY2OTkiPkNvdW50cnk6IEZSPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjExMSIgeD0iNSIgeT0iMjM5LjYzODciPk1hY2hpbmU6IGRlc2t0b3A8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTcyIiB4PSI1IiB5PSIyNTMuNjA3NCI+UExBTlRVTUxfTElNSVRfU0laRTogNDA5NjwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI4NiIgeD0iNSIgeT0iMjY3LjU3NjIiPlByb2Nlc3NvcnM6IDQ8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTY0IiB4PSI1IiB5PSIyODEuNTQ0OSI+TWF4IE1lbW9yeTogOTE1LDQwNiw4NDg8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTYzIiB4PSI1IiB5PSIyOTUuNTEzNyI+VG90YWwgTWVtb3J5OiA2MiwzOTAsMjcyPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE2MCIgeD0iNSIgeT0iMzA5LjQ4MjQiPkZyZWUgTWVtb3J5OiA1MSwyMzksNDMyPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE2NCIgeD0iNSIgeT0iMzIzLjQ1MTIiPlVzZWQgTWVtb3J5OiAxMSwxNTAsODQwPC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIHRleHRMZW5ndGg9IjE0MiIgeD0iNSIgeT0iMzM3LjQxOTkiPlRocmVhZCBBY3RpdmUgQ291bnQ6IDE8L3RleHQ+PGltYWdlIGhlaWdodD0iNzEiIHdpZHRoPSI4MCIgeD0iNDM2IiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUZBQUFBQkhDQU1BQUFDbkhEQzhBQUFEQUZCTVZFWC8vLytCcGJ2RDN1L2Y3dmZQejgrbnorZzNrc3VaRURrV0FEci91amx2c2RwVG9kTEN3c09Md09FYmc4VC8vdjZwcWFtWkVUbkx5c3ZUMDlUbzUranFMUzRWQVRqOS9mMjd1N3ZEdzhNVGZzSyt2Ny9qNCtTT3dlSnByZGpMNC9LeHNiRXJpOGprOFBnWGE1N2MyOXVVRVRlejF1dFFvTkoxdE50RW1jOWNwdFdCdXQ2YXlPVy8zTzZZRURqWTZ2VWZoY1hCd2NIczdPenc5L3Y4M3Q3OXVUbjcrL3ZYMTllaG9hSHg4ZkcydExYSHg4ZnVWbGZyTlRZYUJqbi92VUg1K2Zta282V1hsNWYvK2ZuOTV1Yis5UFQrOFBEM3FLaWRtYU14SVVybnFEV2NGajduNWVYMDlQVHU3dTJTa3BLZm5aNnJxNnowbEpUbTR0ekpySFVmRFQzMzkvZUZHRG42dGpjckV6T3ZyYkJ1WjNsNGVvbVNNUzdIejlTbXBxYXN1OFNGaVl1UUVUZmEyZHUxbTZPT00wNTFKME5XVFdMNXhzZTR1TGo2emMzM3I2LzR2Yjd5ZEhYcUxpLzcyZG50VEUzdFIwaWpibjVqVzNDK3U4TkFOVlFyRzBYRnVicVJWR1p6YTRHUUdUMlZhUzdhME5QSnRJNklKai96c3pyZnFrWFh6ci9IdzhjZ0MwTFVxbHRPUTJKc1NDNWJUR2pPcEZhZlNpMitpREd0eXQxNG03VEpoVENQSlVTd29JRy9xYStpa0hpSWdwQ1JIakk5ajhLWGJuYVFIMEZMZjZGR1BscDBjbll5S0Uycmc0OVdqN2RGWEhtY3d0cnA2dXUreE1qdllXTHZXMXo5N2Uzc1BEM3NQMER1VWxQNzA5UFl6ZERQbXpxWldXeVNSVnlnZkhIZDFzbVdrWitQZ25pYkVUcXNsMjYwcTVmTHVwcEpMQy9kcGoySFBGTFR0SHYvdWpyVHdKeTVzNmlXaklpMGlEM2pvVFRDbVUzdHJqdXZaUzJ6bEZ2anEwSFN5TGJZcDBxUnRzMTBYR3hFS0M5eVBWQlFaSU9QZGxOdk1rMk5lWU5xUmx1anRjQ1ZycjNqNWVZMWdLOVFuOUdMcDdsYmVKWFJ4ckNraVpEYW96eXVrb0orSDBCM3JjK09ZeStpcHJKa1lYZGhtcjZlZTBhZnM3OXhxOUJpa3JHS2pJM0ZvbUVpTEZPMGF5Nm5mSW00cFpYUmpURnVoWlNaV20wemNaeUpOMEtOVGs0ZWViTmZkSUdHbFo5M2g1a2NFRDVuT1ZZeVJXYnppSWs5ZEo0a2VyRTVaWXhSVW5MRzFkN3A4UFR2WTJQdFRrLzFuWjF5Y1YvYkFBQUZmRWxFUVZSNDJtTmdvQjdJQUJGTVZEVHdsVE9WRFZ5aURpU1lxV2pnd2M5M0dhZ0pzaGRSTnd6ekw4V0NLRVpxbWVlbWZacDlMNUJtb1piN21Jd1BIMkZnNERlbGtndHpMcG9jUHNQZ3hzUHdtVG91ZEdjeXZuekdqU2ZrMEF6cWVObjlYUHpmQ2N2L25aaS9tenIrZFJjdGNHTllibXNEeWlqVWNDRi9uUHF2WGZ5L0dUajJVQ3VDUlcwWUdFeEViZmtacUpTd3Iya1lncWdicXRReWNMY0JzRUFRN0dmSUJUdVJHb1dEd09LM3ArNTlmYjRyOGpTVkRMeDdkT25SKzIrMDN2NTVSTFdDd1NRYm1GbEVGMUxMeXd3TXovNTNydWQxZW55YWlvV2hNME9HTzFWTFZ3WitGMnFhcG1JRVoxS2pjUEJqNWdPRzRrc0loL0pJTVdQbFB2N3lwcVFaMTFQcUdHaW94L1R0RGNlZkYvZkZmNnM5cDRLQkh6a3UvZm9OTlBBWDgxdCtnYTk4WHlrMnNITlJvTmRxc0lHTW5HODdIckMvbzlSQXhtbnR5bCs1UDRBTi9IUFYrTTk5U2lzcFJ0NGZyUDhmL0RUOXdzWW8rRjMrLytrL0ZMdVFIV2pFWkRVMnpWdnk2cyt1UG1INlJ4VVhNdi80Ry9mK3lGdFFzdjVEYWFwaDVHUGo1dUpsWldLV2hPWVRKZ1lxZzFFREI1R0JuK25sd3BvSjZDcldIa1lYS1NuQll5QnExaFBKWUY2UTVuQUlTU1JZMjM2ZnFPWjFKQkhock5OUGJaNS9RODU2VEgvK003TCtBcnNQSmV1RnVYNnVCRkw5Z1dtYm9TS1dMcTZndXF6ODcrRURNQ3RUNzRBa0hWTVRQNkprUFViT0wrQ2M4Z2RoSUg4bzR5SW9NMDY3QUZ5NDF3cTZRa1hxZjlhRHJiUjVNZ2txVXZ1M0RxdUJjQytYWnl6ZkIyTmZ2SFZ6L1R1R3E4d3plbUgxUnVoalVhVmIvSTdlUlNkaGFnNzlqUHIySExlWFZ6QlZJeG9tTG85dk12VC85eS9aQ0RQdUZOaEdRZllDMVBCMy9MOERod3Q5Zk42V2ZrUW92R2VvZEcvbnpoZkdNQmREcXJQZlowVWxicUFZK09CQjQ0VWZXRnpvNndlT0N4RGdBa1dlK2sySUkrVlNUSHlncm9NNXlXYkhLWWJxVmlRUlg0L2FOMmlSSXU0TGp3dW9tVnl5UUJOWGhnUFpQYm96TnFMNnNsRXJCTDB0eHk2UGFtRDY4WnZJcGtFUlBDVVoxS0RxMTNHN3R4NVZoTy8rOGtMa01QeHc4ZGxGdU9SdkdHSll1UVlzY1BWMkVhUFlVK1JPOW5ISjJPOEp5Sm5uWjlkQ1dkOU5pREJVL242UEtXTXBxcVZBYnlNYzJSUHNmd1hOMzdhT2FQNmVGQ0VJOTdMeWQ3R1AxLzRLb3hpSHFscGR2MGNCVmNTL3VRN2QzMDA3MTBPOUxQU0grMmVWZUUzaGRHUi9vNEMzZTVhOWVJVWl3dXJFc1FOVkRUdkx3NmNRTDRNTi9IeG5uWXlaOUdVY3pkMjgwSGVUWnFKMFRJNnQvUFB3SjdKSS9PZGRrSUJtK2dkckgvWjkyWlpwZzhXNDhxakVUUXdNZWtnaW0vOUhIV2M0NWJrZklaTDc5T1o1TEEzT2tFM1hxamFnR1JjUXVsd0RSQnZEUlJhd0pUd0IwWFp3QS9NdUhUbU9wQVdwQlJ2NEtiOHNBcm1yRVcyOEtBUzFHSFowcmI0RFlWMkZaUlhicmllb0JXemJJV0FZQ3YxbitzWEs5UE5HcDdzcElsRVdpcGJDVXFEcUIxQ3MrRGRPM2ZBT1ZzeUNqZUh6MmIzdUUwb0Y4SS81eU82Z0ZUQURPZDUrYzYzOUNDa0IxdCs1dXdTdVRxeGdGUVBEanRmVkh4RGRDRkNzQU9QaU8xcU5BaW9jNXIvbG1QcVArUXNYOHlmK200cnNuL2EraVgzRVVQN3M1V1praFMydFcvL01XWVVzNHJrLzkrbWRVK2h4Q0MyeDQxbytSTUFORlBpOGFsYUIzUnRvSFhEYkVteHd2M0xET1dpVC81Z1QyT0RpcXgraGNXSDBTT2NBd2tCd2VYanhhRXprQXJDWEJWbCtjdnphYzc0RG1sa01wZDcvWmdFRjB2dWU1eEFSQlFuT0MwNmc0dVR2UVdoa0NDamFpZkk4UVBZeXBQTFp6K2NGYzZIZ0MxaGtDR2c4Tkg1OUVpVWhmZngxOHdOS0l6RGdBQk1qNHh1NEMyRUo0bzF1N1RWaTZ2RVhEQXdjL0JoZEFUbHNGZjBpZStlWjZDcDViaWllbFVjUjBUNy9YeFMxbFhxWVFjUDhIRklMRkZudXdyKzlpMUM4VERKQXJwY2hOVExUZmdvTlJHdmJMUHJXZUliYXpTZVpCWCtreWRiTWduWDhVRmp2TUxrRytxNEhBQlZ0S3A5dFE5SnRBQUFBQUVsRlRrU3VRbUNDIiB5PSIyNjkuMjUiLz48IS0tTUQ1PVs0N2Y3MjAyZTRkZGVmN2JkNDllZjY0MzQzNGQwMWZkMl0KQHN0YXJ0dW1sDQp2ZXJzaW9uDQpAZW5kdW1sDQoKUGxhbnRVTUwgdmVyc2lvbiAxLjIwMTkuMTMoVHVlIERlYyAxMCAxODoxODoyOSBDRVQgMjAxOSkKKEdQTCBzb3VyY2UgZGlzdHJpYnV0aW9uKQpKYXZhIFJ1bnRpbWU6IE9wZW5KREsgUnVudGltZSBFbnZpcm9ubWVudApKVk06IE9wZW5KREsgNjQtQml0IFNlcnZlciBWTQpKYXZhIFZlcnNpb246IDEuOC4wXzIzMi1iMDkKT3BlcmF0aW5nIFN5c3RlbTogTGludXgKRGVmYXVsdCBFbmNvZGluZzogVVRGLTgKTGFuZ3VhZ2U6IGZyCkNvdW50cnk6IEZSCi0tPjwvZz48L3N2Zz4=" /></p>
 <h2 id="ditaa-1">ditaa</h2>
-<p>ditaa.jar is integrated in <a href="https://cdsoft.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a>. <a href="http://ditaa.sourceforge.net/">ditaa</a> is distributed under the <a href="http://sourceforge.net/directory/license:gpl/">GNU General Public License version 2.0 (GPLv2)</a>. See <a href="http://sourceforge.net/projects/ditaa/" class="uri">http://sourceforge.net/projects/ditaa/</a>.</p>
+<p>ditaa.jar is integrated in <a href="http://cdelord.fr/pp" title="PP - Generic Preprocessor (for Pandoc)">PP</a>. <a href="http://ditaa.sourceforge.net/">ditaa</a> is distributed under the <a href="http://sourceforge.net/directory/license:gpl/">GNU General Public License version 2.0 (GPLv2)</a>. See <a href="http://sourceforge.net/projects/ditaa/" class="uri">http://sourceforge.net/projects/ditaa/</a>.</p>
 <h1 id="feedback">Feedback</h1>
-<p>Your feedback and contributions are welcome. You can contact me at <a href="https://cdsoft.fr" class="uri">https://cdsoft.fr</a></p>
+<p>Your feedback and contributions are welcome. You can contact me at <a href="http://cdelord.fr" class="uri">http://cdelord.fr</a></p>
 </body>
 </html>

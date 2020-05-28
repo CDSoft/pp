@@ -4,8 +4,8 @@
 Introduction
 ============
 
-This document is a test file for `pp` version 2.14.0 by Christophe Delord.
-Copyright 2015-2019 Christophe Delord.
+This document is a test file for `pp` version 2.14.1 by Christophe Delord.
+Copyright 2015-2020 Christophe Delord.
 
 It is preprocessed and compared with `pp-test.ref`.
 

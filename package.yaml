@@ -1,10 +1,10 @@
 name:                pp
-version:             "2.14.0"
+version:             "2.14.1"
 github:              "CDSoft/pp"
 license:             GPL-3
 author:              "Christophe Delord"
-maintainer:          "cdsoft.fr"
-copyright:           "2015-2019 Christophe Delord"
+maintainer:          "cdelord.fr"
+copyright:           "2015-2020 Christophe Delord"
 
 extra-source-files:
 - README.md

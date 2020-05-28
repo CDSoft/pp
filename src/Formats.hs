@@ -1,8 +1,8 @@
 {- PP
 
-Copyright (C) 2015-2019 Christophe Delord
+Copyright (C) 2015-2020 Christophe Delord
 
-https://www.cdsoft.fr/pp
+http://cdelord.fr/pp
 
 This file is part of PP.
 
