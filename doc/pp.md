@@ -54,6 +54,17 @@ And finally [PP] which merges the functionalities of [GPP] and [DPP].
 - [Bash], [Cmd], [PowerShell], [Python], [Lua], [Haskell] and [R] scripts
 - [Mustache]
 
+Warning: PP may not be supported in the future
+==============================================
+
+Their is no plan to support PP from now on.
+PP is meant to be replaced by a combination of:
+
+- [UPP](http://cdelord.fr/upp): Lua-scriptable Universal PreProcessor
+- [Panda](http://cdelord.fr/panda): Pandoc add-ons (Lua filters for Pandoc)
+
+Upp and Panda are written in Lua and are way easier to deploy.
+
 Open source
 ===========
 
@@ -683,7 +694,7 @@ Once generated the graph looks like:
     point pO = (0,0), pM=angpoint(ar,90+theta);
     abscissa abscM = nodabscissa(el,pM);
     real     timeM = abscM.x;
-    vector utangM = -dir(el,timeM), 
+    vector utangM = -dir(el,timeM),
         unormM = rotate(90)*utangM,
         vpoids=(0,-poids),
         vreactionN = -dot(vpoids,unormM)*unormM,
@@ -722,7 +733,7 @@ path p = (0,-b-1)--ar--(a+1,0)--(a+1,-b-1)--cycle;
 point pO = (0,0), pM=angpoint(ar,90+theta);
 abscissa abscM = nodabscissa(el,pM);
 real     timeM = abscM.x;
-vector utangM = -dir(el,timeM), 
+vector utangM = -dir(el,timeM),
     unormM = rotate(90)*utangM,
     vpoids=(0,-poids),
     vreactionN = -dot(vpoids,unormM)*unormM,
@@ -792,7 +803,7 @@ echo "Here are a few random numbers: $RANDOM, $RANDOM, $RANDOM"
 §def(hascmd)
 §ifne(os)(windows)
 ````````````````````````````````````````````
-§ifne(§sh(hash wine; echo $?))(0)
+§ifne(§sh(hash wine 2>/dev/null; echo $?))(0)
 ~~~~~~~~~
 §undef(hascmd)
 ~~~~~~~~~

@@ -12,7 +12,7 @@ path p = (0,-b-1)--ar--(a+1,0)--(a+1,-b-1)--cycle;
 point pO = (0,0), pM=angpoint(ar,90+theta);
 abscissa abscM = nodabscissa(el,pM);
 real     timeM = abscM.x;
-vector utangM = -dir(el,timeM), 
+vector utangM = -dir(el,timeM),
     unormM = rotate(90)*utangM,
     vpoids=(0,-poids),
     vreactionN = -dot(vpoids,unormM)*unormM,

@@ -29,6 +29,7 @@ module UTF8 ( setUTF8Encoding
             )
 where
 
+import Control.Monad
 import System.IO
 import System.Exit
 import qualified System.IO.Strict as SIO
@@ -69,12 +70,7 @@ hWriteFileUTF8 handle content = do
 
 -- "runrocessUTF8 cmd arg" executes "cmd args"
 runProcessUTF8 :: String -> [String] -> IO ()
-runProcessUTF8 cmd args = do
-    (_, _, _, hProc) <- createProcess (proc cmd args)
-    code <- waitForProcess hProc
-    case code of
-        ExitSuccess -> return ()
-        ExitFailure _ -> exitWith code
+runProcessUTF8 cmd args = void $ readProcessUTF8 cmd args
 
 -- "readProcessUTF8 cmd arg" executes "cmd args"
 -- and returns the standard output produced by the command.

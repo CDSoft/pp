@@ -44,6 +44,17 @@ repository.
     [R](https://www.r-project.org/) scripts
   - [Mustache](https://github.com/JustusAdam/mustache)
 
+# Warning: PP may not be supported in the future
+
+Their is no plan to support PP from now on. PP is meant to be replaced
+by a combination of:
+
+  - [UPP](http://cdelord.fr/upp): Lua-scriptable Universal PreProcessor
+  - [Panda](http://cdelord.fr/panda): Pandoc add-ons (Lua filters for
+    Pandoc)
+
+Upp and Panda are written in Lua and are way easier to deploy.
+
 # Open source
 
 [PP](http://cdelord.fr/pp "PP - Generic Preprocessor (for Pandoc)") is
@@ -98,7 +109,7 @@ precompiled binaries.
 
   - Latest Linux and Windows binaries:
     
-      - Fedora 32 (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
+      - Fedora 34 (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
       - Windows (64 bit): <http://cdelord.fr/pp/pp-win.7z>
 
   - Older version archive:
@@ -854,7 +865,7 @@ keyword `asy` is used.
     point pO = (0,0), pM=angpoint(ar,90+theta);
     abscissa abscM = nodabscissa(el,pM);
     real     timeM = abscM.x;
-    vector utangM = -dir(el,timeM), 
+    vector utangM = -dir(el,timeM),
         unormM = rotate(90)*utangM,
         vpoids=(0,-poids),
         vreactionN = -dot(vpoids,unormM)*unormM,
@@ -914,35 +925,11 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 5.0.11(1)-release
-    Here are a few random numbers: 17766, 11151, 23481
+    Hi, I'm bash 5.1.0(1)-release
+    Here are a few random numbers: 17772, 26794, 1435
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
 `bash`.
-
-### Cmd
-
-Windows’ [command-line
-interpreter](https://en.wikipedia.org/wiki/Cmd.exe) is executed when the
-keyword `cmd` is used.
-
-    !cmd
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo Hi, I'm %COMSPEC%
-    ver
-    if "%WINELOADER%%WINELOADERNOEXEC%%WINEDEBUG%" == "" (
-        echo This script is run from wine under Linux
-    ) else (
-        echo This script is run from a real Windows
-    )
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This script outputs:
-
-    Hi, I'm C:\windows\system32\cmd.exe
-    
-    Microsoft Windows 10.0.17134
-    This script is run from wine under Linux
 
 ### Python
 
@@ -963,8 +950,8 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 3.8.2 (default, Feb 28 2020, 00:00:00) 
-    [GCC 10.0.1 20200216 (Red Hat 10.0.1-0.8)]
+    Hi, I'm Python 3.9.5 (default, May 14 2021, 00:00:00) 
+    [GCC 11.1.1 20210428 (Red Hat 11.1.1-1)]
     Here are a few random numbers: 654, 114, 25
 
 ### Lua
@@ -982,8 +969,8 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Lua 5.3
-    Here are a few random numbers: 329, 690, 422
+    Hi, I'm Lua 5.4
+    Here are a few random numbers: 741, 49, 331
 
 ### Haskell
 
@@ -1010,7 +997,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 8.6
+    Hi, I'm Haskell 8.10
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### Stack
@@ -1021,7 +1008,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-14.17 --package base -}
+    {- stack script --resolver lts-18.0 --package base -}
     
     import System.Info
     import Data.Version
@@ -1041,7 +1028,7 @@ beginning of the script.
 
 This script outputs:
 
-    Hi, I'm Haskell 8.6
+    Hi, I'm Haskell 8.10
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### R (script)
@@ -1096,7 +1083,7 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.14.1"
+    version:             "2.14.2"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
@@ -1111,7 +1098,7 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.14.1 by Christophe Delord.
+    This is the documentation for `pp` version 2.14.2 by Christophe Delord.
     Copyright **2015-2020 Christophe Delord**.
 
 # CSV tables
