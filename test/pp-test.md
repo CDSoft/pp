@@ -362,9 +362,9 @@ Command line (uses sh):             exec(echo "hi é")
 `sh` script:                        !sh(echo "hi é")
 `bash` script:                      !bash(echo hi à)
 `zsh` script:                       !zsh(echo hi à)
-`fish` script:                      !fish(echo hi à)
-`bat` script:                       !bat(echo hi ç)
-`cmd` script:                       !cmd(echo hi ç)
+`fish` script:                      not tested
+`bat` script:                       not tested
+`cmd` script:                       not tested
 `python` script:                    !python(print("hi"))
 `python2` script:                   !python2(print "hi")
 `python3` script:                   !python3(print("hi"))
