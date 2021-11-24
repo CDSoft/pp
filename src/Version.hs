@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015-2020 Christophe Delord
+Copyright (C) 2015-2021 Christophe Delord
 
 http://cdelord.fr/pp
 
@@ -34,7 +34,7 @@ author :: String
 author = "Christophe Delord"
 
 dates :: String
-dates = "2015-2020"
+dates = "2015-2021"
 
 url :: String
 url = "http://cdelord.fr/" ++ name
