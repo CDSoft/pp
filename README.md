@@ -28,30 +28,30 @@ repository.
 
 `pp` now implements:
 
--   macros
--   literate programming
--   [GraphViz](http://graphviz.org/),
-    [PlantUML](http://plantuml.sourceforge.net/),
-    [ditaa](http://ditaa.sourceforge.net/) and
-    [blockdiag](http://blockdiag.com/) diagrams
--   [Asymptote](http://asymptote.sourceforge.net/) and
-    [R](https://www.r-project.org/) figures
--   [Bash](https://www.gnu.org/software/bash/),
-    [Cmd](https://en.wikipedia.org/wiki/Cmd.exe),
-    [PowerShell](https://en.wikipedia.org/wiki/PowerShell),
-    [Python](https://www.python.org/), [Lua](http://www.lua.org/),
-    [Haskell](https://www.haskell.org/) and
-    [R](https://www.r-project.org/) scripts
--   [Mustache](https://github.com/JustusAdam/mustache)
+- macros
+- literate programming
+- [GraphViz](http://graphviz.org/),
+  [PlantUML](http://plantuml.sourceforge.net/),
+  [ditaa](http://ditaa.sourceforge.net/) and
+  [blockdiag](http://blockdiag.com/) diagrams
+- [Asymptote](http://asymptote.sourceforge.net/) and
+  [R](https://www.r-project.org/) figures
+- [Bash](https://www.gnu.org/software/bash/),
+  [Cmd](https://en.wikipedia.org/wiki/Cmd.exe),
+  [PowerShell](https://en.wikipedia.org/wiki/PowerShell),
+  [Python](https://www.python.org/), [Lua](http://www.lua.org/),
+  [Haskell](https://www.haskell.org/) and
+  [R](https://www.r-project.org/) scripts
+- [Mustache](https://github.com/JustusAdam/mustache)
 
 # Warning: PP may not be supported in the future
 
 Their is no plan to support PP from now on. PP is meant to be replaced
 by a combination of:
 
--   [UPP](http://cdelord.fr/upp): Lua-scriptable Universal PreProcessor
--   [Panda](http://cdelord.fr/panda): Pandoc add-ons (Lua filters for
-    Pandoc)
+- [UPP](http://cdelord.fr/upp): Lua-scriptable Universal PreProcessor
+- [Panda](http://cdelord.fr/panda): Pandoc add-ons (Lua filters for
+  Pandoc)
 
 Upp and Panda are written in Lua and are way easier to deploy.
 
@@ -61,12 +61,12 @@ Upp and Panda are written in Lua and are way easier to deploy.
 an Open source software. Anybody can contribute on
 [GitHub](https://github.com/CDSoft/pp) to:
 
--   suggest or add new features
--   report or fix bugs
--   improve the documentation
--   add some nicer examples
--   find new usages
--   …
+- suggest or add new features
+- report or fix bugs
+- improve the documentation
+- add some nicer examples
+- find new usages
+- …
 
 # Installation
 
@@ -86,13 +86,13 @@ with `brew install gnu-tar`.
 A Linux docker made by [Joshua Dotson](https://github.com/josdotso) is
 available here:
 
--   https://hub.docker.com/r/josdotso/pp
--   https://github.com/josdotso/docker-pp
+- https://hub.docker.com/r/josdotso/pp
+- https://github.com/josdotso/docker-pp
 
 **Installation**:
 
--   Run `make install` to copy `pp` in `~/.local/bin`.
--   or copy `pp` (`pp.exe` on Windows) wherever you want.
+- Run `make install` to copy `pp` in `~/.local/bin`.
+- or copy `pp` (`pp.exe` on Windows) wherever you want.
 
 `pp` requires (*optionally*) [Graphviz](http://graphviz.org/),
 [blockdiag](http://blockdiag.com/),
@@ -107,19 +107,20 @@ The recommended way to get PP binaries is to compile them from the
 sources. Anyway if you have no Haskell compiler, you can try some
 precompiled binaries.
 
--   Latest Linux and Windows binaries:
+- Latest Linux and Windows binaries:
 
-    -   Fedora 35 (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
-    -   Windows (64 bit): <http://cdelord.fr/pp/pp-win.7z>
+  - Fedora Linux 37 (Xfce) (64 bit):
+    <http://cdelord.fr/pp/pp-linux-x86_64.txz>
+  - Windows (64 bit): <http://cdelord.fr/pp/pp-win.7z>
 
--   Older version archive:
+- Older version archive:
 
-    -   Fedora & Windows: <http://cdelord.fr/pp/download.html>
+  - Fedora & Windows: <http://cdelord.fr/pp/download.html>
 
--   User contributed Mac OS binaries (outdated):
+- User contributed Mac OS binaries (outdated):
 
-    -   Mac OS (64 bit binaries):
-        <https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz>
+  - Mac OS (64 bit binaries):
+    <https://github.com/dlardi/pp/releases/download/v1.0/pp-darwin-x86_64.txz>
 
 # Usage
 
@@ -144,13 +145,13 @@ when no input is specified.
 `pp` executes arguments in the same order as the command line. It starts
 with an initial environment containing:
 
--   the environment variables of the current process
--   a `lang` variable containing the current langage (currently only
-    French (`fr`), Italian (`it`), Spanish (`es`) and English (`en`) are
-    supported)
--   a `format` variable containing the current output format (`html`,
-    `pdf`, `odt`, `epub` or `mobi`)
--   a `dialect` variable containing the current dialect (`md` or `rst`)
+- the environment variables of the current process
+- a `lang` variable containing the current langage (currently only
+  French (`fr`), Italian (`it`), Spanish (`es`) and English (`en`) are
+  supported)
+- a `format` variable containing the current output format (`html`,
+  `pdf`, `odt`, `epub` or `mobi`)
+- a `dialect` variable containing the current dialect (`md` or `rst`)
 
 The *dialect* is used to format links and images in the output
 documents. Currently only Markdown and reStructuredText are supported.
@@ -220,9 +221,9 @@ command line or in the documents.
 
 Macro names are:
 
--   case sensitive (i.e.: `!my_macro` and `!My_Macro` are different
-    macros)
--   made of letters, digits and underscores (`a-zA-Z0-9_`)
+- case sensitive (i.e.: `!my_macro` and `!My_Macro` are different
+  macros)
+- made of letters, digits and underscores (`a-zA-Z0-9_`)
 
 User macros starting with `_` are not listed in macros lists and help
 texts.
@@ -557,8 +558,8 @@ image with BlockDiag.
 Asymptote.
 
 **`Rplot`**  
-`!Rplot(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a Rplot image
-with R.
+`!Rplot(IMAGE)[(LEGEND)](GRAPH DESCRIPTION)` renders a Rplot image with
+R.
 
 **`literate`**, **`lit`**  
 `!lit[erate](FILENAME)[(LANG)][(CONTENT)]` appends `CONTENT` to the file
@@ -634,12 +635,12 @@ can start a literate programming macro (e.g. after
 The `!if` and `!eval` macros take an expression and evaluate it.
 Expressions are made of:
 
--   integers
--   string (`"..."`)
--   integer operators (`+`, `-`, `*`, `/`)
--   boolean operators (`!`, `not`, `&&`, `and`, `||`, `or`, `xor`)
--   relational operators (`==`, `/=`, `!=`, `<`, `<=`, `>`, `>=`)
--   parentheses, brackets and braces
+- integers
+- string (`"..."`)
+- integer operators (`+`, `-`, `*`, `/`)
+- boolean operators (`!`, `not`, `&&`, `and`, `||`, `or`, `xor`)
+- relational operators (`==`, `/=`, `!=`, `<`, `<=`, `>`, `>=`)
+- parentheses, brackets and braces
 
 Boolean values are coded as integers or string (`0` and `""` are false,
 other values are true).
@@ -692,13 +693,13 @@ And also finally “Goodbye”:
 Diagrams are written in code blocks as argument of a diagram macro. The
 first line contains the macro:
 
--   the diagram generator (the macro name)
--   the image name with or without the extension (first argument)
-    -   the default format is `svg` if no extension is provided (unless
-        for ditaa diagrams which support `png` only)
-    -   the supported formats are `png`, `svg` and ‘pdf’ (PDF support is
-        partial and may not work with PlantUML)
--   the legend (second optional argument)
+- the diagram generator (the macro name)
+- the image name with or without the extension (first argument)
+  - the default format is `svg` if no extension is provided (unless for
+    ditaa diagrams which support `png` only)
+  - the supported formats are `png`, `svg` and ‘pdf’ (PDF support is
+    partial and may not work with PlantUML)
+- the legend (second optional argument)
 
 Block delimiters are made of three or more tilda or back quotes, at the
 beginning of the line (no space and no tab). The end delimiter must at
@@ -748,18 +749,17 @@ in a different directory, there are two possibilities:
 1.  the document is a self contained HTML file (option
     `--self-contained`), i.e. the CSS and images are stored inside the
     document:
-    -   the CSS path shall be the actual path where the CSS file is
-        stored
-    -   the image path in diagrams shall be the actual path where the
-        images are stored (otherwise Pandoc won’t find them)
-    -   e.g.: `outputpath/img/diag42`
+    - the CSS path shall be the actual path where the CSS file is stored
+    - the image path in diagrams shall be the actual path where the
+      images are stored (otherwise Pandoc won’t find them)
+    - e.g.: `outputpath/img/diag42`
 2.  the document is not self contained, i.e. the CSS and images are
     stored apart from the document:
-    -   the CSS path shall be relative to the output document
-    -   the image path in diagrams shall be relative to output document
-        in HTML links and shall also describe the actual path where the
-        images are stored.
-    -   e.g.: `[outputpath/]img/diag42`
+    - the CSS path shall be relative to the output document
+    - the image path in diagrams shall be relative to output document in
+      HTML links and shall also describe the actual path where the
+      images are stored.
+    - e.g.: `[outputpath/]img/diag42`
 
 Pandoc also accepts additional attributes on images (`link_attributes`
 extension). These attributes can be added between curly brackets to the
@@ -773,24 +773,24 @@ will generate the following link in the markdown output:
 
 The diagram generator can be:
 
--   dot
--   neato
--   twopi
--   circo
--   fdp
--   sfdp
--   patchwork
--   osage
--   uml
--   ditaa
--   blockdiag
--   seqdiag
--   actdiag
--   nwdiag
--   rackdiag
--   packetdiag
--   asy
--   Rplot
+- dot
+- neato
+- twopi
+- circo
+- fdp
+- sfdp
+- patchwork
+- osage
+- uml
+- ditaa
+- blockdiag
+- seqdiag
+- actdiag
+- nwdiag
+- rackdiag
+- packetdiag
+- asy
+- Rplot
 
 `pp` will not create any directory, the path where the image is written
 must already exist.
@@ -812,14 +812,14 @@ With no surprise, this script generates:
 
 The script language macro can be:
 
--   `sh`, `bash`, `zsh`, `fish` or any other shell with `sh` and a
-    [shebang header](https://en.wikipedia.org/wiki/Shebang_(Unix))
--   `python`
--   `lua`
--   `haskell` (or `stack`)
--   `Rscript`
--   `cmd` (DOS/Windows batch language)
--   `powershell` (Windows only)
+- `sh`, `bash`, `zsh`, `fish` or any other shell with `sh` and a
+  [shebang header](https://en.wikipedia.org/wiki/Shebang_(Unix))
+- `python`
+- `lua`
+- `haskell` (or `stack`)
+- `Rscript`
+- `cmd` (DOS/Windows batch language)
+- `powershell` (Windows only)
 
 `pp` will create a temporary script before calling the associated
 interpretor.
@@ -857,16 +857,16 @@ is used: `dot`, `neato`, `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`,
     }
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--   `twopi` is the kind of graph (possible graph types: `dot`, `neato`,
-    `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
--   `doc/img/pp-graphviz-example` is the name of the image. `pp` will
-    generate `doc/img/pp-graphviz-example.dot` and
-    `doc/img/pp-graphviz-example.png`.
--   the rest of the first line is the legend of the graph.
--   other lines are written to `doc/img/pp-graphviz-example.dot` before
-    running [Graphviz](http://graphviz.org/).
--   if the command line argument `-img=prefix`, `prefix` is added at the
-    beginning of the image path.
+- `twopi` is the kind of graph (possible graph types: `dot`, `neato`,
+  `twopi`, `circo`, `fdp`, `sfdp`, `patchwork`).
+- `doc/img/pp-graphviz-example` is the name of the image. `pp` will
+  generate `doc/img/pp-graphviz-example.dot` and
+  `doc/img/pp-graphviz-example.png`.
+- the rest of the first line is the legend of the graph.
+- other lines are written to `doc/img/pp-graphviz-example.dot` before
+  running [Graphviz](http://graphviz.org/).
+- if the command line argument `-img=prefix`, `prefix` is added at the
+  beginning of the image path.
 
 Once generated the graph looks like:
 
@@ -989,7 +989,11 @@ keyword `asy` is used.
 Once generated the figure looks like:
 
 <figure>
-<img src="doc/img/pp-asy-example.svg" style="width:50.0%" alt="This is just an Asymptote example from http://asy.marris.fr/asymptote/Sciences_physiques/index.html" /><figcaption aria-hidden="true">This is just an Asymptote example from <a href="http://asy.marris.fr/asymptote/Sciences_physiques/index.html" class="uri">http://asy.marris.fr/asymptote/Sciences_physiques/index.html</a></figcaption>
+<img src="doc/img/pp-asy-example.svg" style="width:50.0%"
+alt="This is just an Asymptote example from http://asy.marris.fr/asymptote/Sciences_physiques/index.html" />
+<figcaption aria-hidden="true">This is just an Asymptote example from <a
+href="http://asy.marris.fr/asymptote/Sciences_physiques/index.html"
+class="uri">http://asy.marris.fr/asymptote/Sciences_physiques/index.html</a></figcaption>
 </figure>
 
 **Note**: Asymptote handles transparency in PDF format only, which is
@@ -1026,7 +1030,7 @@ Once generated the image looks like:
 
 This script outputs:
 
-    Hi, I'm bash 5.1.8(1)-release
+    Hi, I'm bash 5.2.15(1)-release
     Here are a few random numbers: 17772, 26794, 1435
 
 **Note**: the keyword `sh` executes `sh` which is generally a link to
@@ -1054,7 +1058,7 @@ This script outputs:
     Hi, I'm C:\windows\system32\cmd.exe
 
     Microsoft Windows 6.1.7601
-    This script is run from a real Windows
+    This script is run from wine under Linux
 
 ### Python
 
@@ -1075,7 +1079,7 @@ is used.
 
 This script outputs:
 
-    Hi, I'm Python 3.10.0 (default, Oct  4 2021, 00:00:00) [GCC 11.2.1 20210728 (Red Hat 11.2.1-1)]
+    Hi, I'm Python 3.11.1 (main, Dec  7 2022, 00:00:00) [GCC 12.2.1 20221121 (Red Hat 12.2.1-4)]
     Here are a few random numbers: 654, 114, 25
 
 ### Lua
@@ -1121,7 +1125,7 @@ This script outputs:
 
 This script outputs:
 
-    Hi, I'm Haskell 8.10
+    Hi, I'm Haskell 9.2
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### Stack
@@ -1132,7 +1136,7 @@ beginning of the script.
 
     !stack
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    {- stack script --resolver lts-18.17 --package base -}
+    {- stack script --resolver lts-20.6 --package base -}
 
     import System.Info
     import Data.Version
@@ -1152,7 +1156,7 @@ beginning of the script.
 
 This script outputs:
 
-    Hi, I'm Haskell 8.10
+    Hi, I'm Haskell 9.2
     The first 10 prime numbers are: 2 3 5 7 11 13 17 19 23 29
 
 ### R (script)
@@ -1205,12 +1209,12 @@ keyword `mustache` is used.
 `package.yaml` contains:
 
     name:                pp
-    version:             "2.14.3"
+    version:             "2.14.4"
     github:              "CDSoft/pp"
     license:             GPL-3
     author:              "Christophe Delord"
     maintainer:          "cdelord.fr"
-    copyright:           "2015-2021 Christophe Delord"
+    copyright:           "2015-2023 Christophe Delord"
 
 Lambdas are not supported but the template is preprocessed by `pp`
 before calling Mustache. E.g. `!bold` can be defined as
@@ -1220,8 +1224,8 @@ Mustache lambdas that works with `pp` only.
 
 This outputs:
 
-    This is the documentation for `pp` version 2.14.3 by Christophe Delord.
-    Copyright **2015-2021 Christophe Delord**.
+    This is the documentation for `pp` version 2.14.4 by Christophe Delord.
+    Copyright **2015-2023 Christophe Delord**.
 
 # CSV tables
 
@@ -1306,22 +1310,22 @@ according to the OS (`sh` on Linux and MacOS, `cmd` on Windows).
 `make test` will test most of pp capabilities. They have been designed
 to run on Linux and require a bunch of softwares:
 
--   a decent Linux distribution
--   [Stack](https://docs.haskellstack.org/en/stable/README/)
--   [Pandoc](http://pandoc.org/)
--   [Meld](https://meldmerge.org/)
--   [Bash](https://www.gnu.org/software/bash/),
-    [zsh](http://www.zsh.org/), [fish](https://fishshell.com/)
--   [Wine](https://www.winehq.org/)
--   [Python](https://www.python.org/)
--   [Lua](http://www.lua.org/)
--   [GraphViz](http://graphviz.org/)
--   [Asymptote](http://asymptote.sourceforge.net/)
--   [R](https://www.r-project.org/)
--   [Haskell](https://www.haskell.org/)
--   [blockdiag](http://blockdiag.com/)
--   [gcc](https://gcc.gnu.org/)
--   … and everything I have forgotten
+- a decent Linux distribution
+- [Stack](https://docs.haskellstack.org/en/stable/README/)
+- [Pandoc](http://pandoc.org/)
+- [Meld](https://meldmerge.org/)
+- [Bash](https://www.gnu.org/software/bash/),
+  [zsh](http://www.zsh.org/), [fish](https://fishshell.com/)
+- [Wine](https://www.winehq.org/)
+- [Python](https://www.python.org/)
+- [Lua](http://www.lua.org/)
+- [GraphViz](http://graphviz.org/)
+- [Asymptote](http://asymptote.sourceforge.net/)
+- [R](https://www.r-project.org/)
+- [Haskell](https://www.haskell.org/)
+- [blockdiag](http://blockdiag.com/)
+- [gcc](https://gcc.gnu.org/)
+- … and everything I have forgotten
 
 *note*: blockdiag is written in Python. According to your Python
 version, scripts may or may not be suffixed by `2` or `3`. In this case,
@@ -1342,20 +1346,20 @@ results.
 
 # Third-party documentations, tutorials and macros
 
--   [PP
-    tutorial](https://github.com/tajmone/markdown-guide/tree/master/pp)
-    by [tajmone](https://github.com/tajmone): a good starting point for
-    beginners.
--   [Pandoc-Goodies PP-Macros
-    Library](https://github.com/tajmone/pandoc-goodies/tree/master/pp)
-    by [tajmone](https://github.com/tajmone): an ongoing collaborative
-    effort to build a library of PP macros.
+- [PP
+  tutorial](https://github.com/tajmone/markdown-guide/tree/master/pp) by
+  [tajmone](https://github.com/tajmone): a good starting point for
+  beginners.
+- [Pandoc-Goodies PP-Macros
+  Library](https://github.com/tajmone/pandoc-goodies/tree/master/pp) by
+  [tajmone](https://github.com/tajmone): an ongoing collaborative effort
+  to build a library of PP macros.
 
 # Licenses
 
 ## PP
 
-Copyright (C) 2015-2021 Christophe Delord <br> <http://cdelord.fr/pp>
+Copyright (C) 2015-2023 Christophe Delord <br> <http://cdelord.fr/pp>
 
 PP is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free

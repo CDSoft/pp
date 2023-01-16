@@ -1,5 +1,5 @@
 # PP
-# Copyright (C) 2015-2021 Christophe Delord
+# Copyright (C) 2015-2023 Christophe Delord
 # http://cdelord.fr/pp
 #
 # This file is part of PP.
@@ -124,7 +124,8 @@ pp-darwin-%.txz: $(PP) doc/pp.html
 #####################################################################
 
 PLANTUML = Plantuml
-PLANTUML_URL_1 = http://sourceforge.net/projects/plantuml/files/plantuml.jar
+PLANTUML_VERSION = 1.2023.0
+PLANTUML_URL_1 = https://github.com/plantuml/plantuml/releases/download/v$(PLANTUML_VERSION)/plantuml.jar
 PLANTUML_URL_2 = http://cdelord.fr/pp/plantuml.jar
 
 DITAA = Ditaa
@@ -176,7 +177,7 @@ doc/pp.html: $(PP) doc/pp.css
 doc/pp.html: doc/pp.md
 	@$(call title,"preprocessing $<")
 	@mkdir -p $(dir $@) doc/img
-	stack exec -- pp -en -img=doc/img -DRESOLVER=$(RESOLVER) $< | pandoc --toc --self-contained -c doc/pp.css -f markdown -t html5 > $@
+	stack exec -- pp -en -img=doc/img -DRESOLVER=$(RESOLVER) $< | pandoc --toc --embed-resources --standalone -c doc/pp.css -f markdown -t html5 > $@
 	@$(call ok,"$@")
 
 #####################################################################

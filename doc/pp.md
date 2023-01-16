@@ -111,7 +111,7 @@ Anyway if you have no Haskell compiler, you can try some precompiled binaries.
 
 - Latest Linux and Windows binaries:
 
-    - Fedora §sh[(cat /etc/redhat-release | tr -d -c "[0-9]") || true] (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
+    - §sh[. /etc/os-release; echo $PRETTY_NAME] (64 bit): <http://cdelord.fr/pp/pp-linux-x86_64.txz>
     - Windows (64 bit): <http://cdelord.fr/pp/pp-win.7z>
 
 - Older version archive:
@@ -1176,7 +1176,7 @@ Licenses
 PP
 --
 
-Copyright (C) 2015-2021 Christophe Delord <br>
+Copyright (C) 2015-2023 Christophe Delord <br>
 <http://cdelord.fr/pp>
 
 PP is free software: you can redistribute it and/or modify

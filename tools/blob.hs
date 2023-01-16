@@ -8,7 +8,7 @@
 
 {- PP
 
-Copyright (C) 2015-2021 Christophe Delord
+Copyright (C) 2015-2023 Christophe Delord
 
 http://cdelord.fr/pp
 

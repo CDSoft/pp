@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015-2021 Christophe Delord
+Copyright (C) 2015-2023 Christophe Delord
 
 http://cdelord.fr/pp
 
@@ -114,7 +114,9 @@ makeTable dialect header csvData = unlines $ case dialect of
     where
 
         (columnFormats, table) = parseCSV header csvData
-        (headerRow : rows) = table
+        (headerRow, rows) = case table of
+            x:xs -> (x, xs)
+            _ -> error "Unexpected error: no header in the CSV table"
 
         makeRow corner cells = concat [ corner, intercalate corner cells, corner ]
         makeSepRow corner cell = makeRow corner (map cell columnFormats)

@@ -1,6 +1,6 @@
 {- PP
 
-Copyright (C) 2015-2021 Christophe Delord
+Copyright (C) 2015-2023 Christophe Delord
 
 http://cdelord.fr/pp
 
@@ -459,7 +459,7 @@ replaceUserArgs env (c:cs)
 identList :: String -> [String] -> String -> Macro
 identList name idents doc = Macro name []
     ("`!" ++ name ++ "` " ++ doc ++ " (" ++ intercalate ", " idents ++ ").")
-    (\env [] -> return (env, unwords $ sort idents))
+    (\env _ -> return (env, unwords $ sort idents))
 
 ---------------------------------------------------------------------
 -- Language macros
@@ -1013,7 +1013,9 @@ script lang cmd header ext doc = Macro lang []
         [src] -> do
             (env', _) <- flushlitImpl env []
             src' <- pp' env' (fromVal src)
-            let (exe:params) = words cmd
+            let (exe, params) = case words cmd of
+                    x:xs -> (x, xs)
+                    [] -> error "Unexpected error: empty command"
             output <- withSystemTempFile ("pp" <.> ext) $ \path handle -> do
                 hWriteFileUTF8 handle $ case header of
                                             [] -> src'
@@ -1532,7 +1534,9 @@ macroargs = Macro "macroargs" []
             chars' <- ppAndStrip' env chars
             let pairs = chunksOf 2 $ filter (not . isSpace) chars'
             unless (all ((==2) . length) pairs) $ macroargsError (fromVal chars)
-            let assoc = map (\[o,c] -> (o,c)) pairs
+            let listToTuple [o,c] = (o,c)
+                listToTuple _ = error "Unexpected error: wrong association list"
+            let assoc = map listToTuple pairs
             let env' = env{openCloseChars = assoc}
             unless (checkParserConsistency env') $ macroargsError (fromVal chars)
             return (env', "")

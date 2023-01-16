@@ -27,11 +27,11 @@
     <path stroke='none' stroke-width='1,000000' stroke-linecap='round' stroke-linejoin='round' fill='#000000' d='M365.0 126.0 L360.0 140.0 L370.0 140.0 z' />
     <path stroke='#000000' stroke-width='1,000000' stroke-linecap='round' stroke-linejoin='round' fill='none' d='M275.0 63.0 L305.0 63.0 ' />
     <path stroke='#000000' stroke-width='1,000000' stroke-linecap='round' stroke-linejoin='round' fill='none' d='M175.0 63.0 L195.0 63.0 ' />
-    <text x='91' y='82' font-family='Courier' font-size='15' stroke='none' fill='#000000' ><![CDATA[Text]]></text>
-    <text x='70' y='96' font-family='Courier' font-size='14' stroke='none' fill='#000000' ><![CDATA[Document]]></text>
-    <text x='204' y='96' font-family='Courier' font-size='15' stroke='none' fill='#000000' ><![CDATA[!magic!]]></text>
-    <text x='188' y='152' font-family='Courier' font-size='15' stroke='none' fill='#000000' ><![CDATA[Lots of work]]></text>
-    <text x='215' y='68' font-family='Courier' font-size='15' stroke='none' fill='#000000' ><![CDATA[ditaa]]></text>
-    <text x='332' y='82' font-family='Courier' font-size='15' stroke='none' fill='#000000' ><![CDATA[diagram]]></text>
+    <text x='96' y='82' font-family='Courier' font-size='13' stroke='none' fill='#000000' ><![CDATA[Text]]></text>
+    <text x='77' y='96' font-family='Courier' font-size='13' stroke='none' fill='#000000' ><![CDATA[Document]]></text>
+    <text x='213' y='96' font-family='Courier' font-size='13' stroke='none' fill='#000000' ><![CDATA[!magic!]]></text>
+    <text x='202' y='152' font-family='Courier' font-size='13' stroke='none' fill='#000000' ><![CDATA[Lots of work]]></text>
+    <text x='219' y='68' font-family='Courier' font-size='13' stroke='none' fill='#000000' ><![CDATA[ditaa]]></text>
+    <text x='339' y='82' font-family='Courier' font-size='13' stroke='none' fill='#000000' ><![CDATA[diagram]]></text>
   </g>
 </svg>
