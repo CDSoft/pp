@@ -44,16 +44,16 @@ repository.
   [R](https://www.r-project.org/) scripts
 - [Mustache](https://github.com/JustusAdam/mustache)
 
-# Warning: PP may not be supported in the future
+# Warning: PP is not supported anymore
 
 Their is no plan to support PP from now on. PP is meant to be replaced
 by a combination of:
 
-- [UPP](http://cdelord.fr/upp): Lua-scriptable Universal PreProcessor
+- [ypp](http://cdelord.fr/ypp): Lua-scriptable PreProcessor
 - [Panda](http://cdelord.fr/panda): Pandoc add-ons (Lua filters for
   Pandoc)
 
-Upp and Panda are written in Lua and are way easier to deploy.
+ypp and Panda are written in Lua and are way easier to deploy.
 
 # Open source
 
@@ -115,7 +115,7 @@ precompiled binaries.
 
 - Older version archive:
 
-  - Fedora & Windows: <http://cdelord.fr/pp/download.html>
+  - no longer available
 
 - User contributed Mac OS binaries (outdated):
 
